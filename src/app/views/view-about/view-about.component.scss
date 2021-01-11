@@ -1,0 +1,60 @@
+@import '~scss/colors';
+@import '~scss/variables';
+
+.container{
+    display: block;
+    height: 100%;
+}
+.content__panel{
+    margin-top: 1px;
+    margin-left: 11px; //split bar width
+    // max-width: 600px;
+    width: calc(100% - 10px);
+    height: calc(100% - 41px);
+    overflow: scroll;
+
+    .logo{
+        float: right;
+        margin-right: 50px;
+    }
+    .text{
+        max-width: 600px;
+    }
+    .key {
+        margin-left: 25px;
+        td {
+            padding: 10px;
+        }
+    }
+}
+
+h3 {
+    line-height: 30px;
+    height: 30px;
+    color: $color8;
+}
+
+p, li, td{
+    color: $color8;
+    text-align: left;
+    margin-bottom: 14px;
+    font-size: 12px;
+    line-height: 14px;
+    //height: 14px;
+}
+
+mat-icon{
+    color: $color1;
+    margin: 0px;
+    padding: 0px;
+    cursor: pointer;
+}
+
+.embedded-vid {
+    width: calc(100vw - 700px);
+    height: calc((100vw - 700px) * 315 / 560);
+    max-width: 562px;
+    max-height: 317px;
+    border: 1px solid $color1;
+    padding: 1px;
+}

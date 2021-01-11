@@ -1,0 +1,105 @@
+<div id="help-container">
+    <h1 id = 'help-tab' (click)='openHelpMenu($event)'><span class='activeModName'>{{getActiveModule()||"Select Module"}}</span><span>▾</span></h1>
+    <div id="helpMenu">
+        <ng-container *ngFor='let mod of Modules; let i = index'>
+            <li (click)="switchHelp(i)">
+                {{mod.module}}
+            </li>
+        </ng-container>
+    </div>
+
+    <div class = 'container' *ngIf='output; else module_help'>
+        <showdown [value]="output" ngPreserveWhitespaces></showdown>
+
+        <!-- <h2>{{output.displayedName}}</h2>
+        <div class = 'body--container'>
+            <h5>Description:</h5>
+            <div class = 'descr--container' [innerHTML]="description">
+            </div>
+            <div class = 'param--container'>
+                <h5 *ngIf='output.parameters?.length > 0'>Parameters:</h5>
+                <ul class='params'>
+                    <ng-container *ngFor='let param of output.parameters'>
+                        <li *ngIf='param'>
+                            <div class = 'li--item'>
+                                <span>{{param.name}}: </span>{{param.description}}
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+            </div>        
+            <div class = 'ret--container' *ngIf='output.returns'>
+                <h5>Returns:</h5>
+                <p>{{output.returns}}</p>
+            </div>
+
+            <div *ngIf='output.example' class = 'exam--container'>
+                <h5>Examples:</h5>
+                <div *ngFor='let ex of output.example; let i = index;' class = 'examp'>
+                    <ul>
+                        <li [innerHTML]='ex'></li>
+                        <p *ngIf='output.example_info' [innerHTML]='output.example_info[i]'></p>
+                    </ul>
+                </div>
+            </div>
+
+            <div *ngIf='output.example_link' class = 'exam--container'>
+                <h5>Example URLs:</h5>
+                <ul *ngFor='let ex of output.example_link; let i = index;'>
+                    <li>{{i+1}}) <a class='hyperlink' href={{urlString+ex.split()}} target="help_example">{{ex.split('&node=')[0]}}</a></li>
+                </ul>
+            </div>
+        </div> -->
+    </div>
+
+    <ng-template #module_help>
+        <div class = 'container'> 
+            <ng-container *ngIf='Modules[activeModIndex]?.src'>
+                <showdown [src]="Modules[activeModIndex].src" ngPreserveWhitespaces></showdown>
+            </ng-container>
+            <!-- <div class='moduleDesc' *ngIf='Modules[activeModIndex]?.description' [innerHTML]='Modules[activeModIndex].description'></div>
+            <ng-container *ngFor='let func of getFuncs()'>
+                <h2>{{func.displayedName}}</h2>
+                <div class = 'body--container'>
+                    <div class = 'descr--container'>
+                        <h5>Description:</h5>
+                        <div [innerHTML]='func.description'></div>
+                    </div>
+            
+                    <div class = 'param--container'>
+                        <h5 *ngIf='func.parameters?.length > 0'>Parameters:</h5>
+                        <ul class='params'>
+                            <ng-container *ngFor='let param of func.parameters'>
+                                <li *ngIf='param'>
+                                    <div class = 'li--item'>
+                                        <span>{{param.name}}: </span>{{param.description}}
+                                    </div>
+                                </li>
+                            </ng-container>
+                        </ul>
+                    </div>
+                    <div class = 'ret--container' *ngIf='func.returns'>
+                        <h5>Returns:</h5>
+                        <p>{{func.returns}}</p>
+                    </div>
+        
+                    <div *ngIf='func.example' class = 'exam--container'>
+                        <h5>Examples:</h5>
+                        <div *ngFor='let ex of func.example; let i = index;' class = 'examp'>
+                            <ul>
+                                <li [innerHTML]='ex'></li>
+                                <p *ngIf='func.example_info'  [innerHTML]='func.example_info[i]'></p>
+                            </ul>
+                        </div>
+                    </div>
+                    <div *ngIf='func.example_link' class = 'exam--container'>
+                        <h5>Example URLs:</h5>
+                        <ul *ngFor='let ex of func.example_link; let i = index;'>
+                            <li>{{i+1}}) <a class='hyperlink' href={{urlString+ex.split()}} target="help_example">{{ex.split('&node=')[0]}}</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </ng-container> -->
+        </div>
+    </ng-template>
+</div>

@@ -1,0 +1,18 @@
+@import '~scss/colors';
+@import '~scss/variables';
+
+.content__panel{
+    margin-top: $header-height;
+    padding-left: 11px; //split bar width
+
+    height: calc(100% - 40px); //header height;
+    overflow-y: auto;
+}
+
+h3 {
+    margin: 0px;
+    padding: 0px;
+    line-height: 30px;
+    height: 30px;
+    color: $color8;
+}
