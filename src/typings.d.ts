@@ -10,3 +10,4 @@ declare module "*.mob" {
     export default value;
 }
 
+declare var AFRAME;

@@ -11,13 +11,17 @@ import { CytoscapeViewerModule } from './all-viewers/cytoscape-viewer/cytoscape-
 import { GIGeoViewerComponent } from './all-viewers/gi-geo-viewer/gi-geo-viewer.component';
 import { GIGeoViewerModule } from './all-viewers/gi-geo-viewer/gi-geo-viewer';
 
+import { AframeViewerComponent } from './all-viewers/aframe-viewer/aframe-viewer.component';
+import { AframeViewerModule } from './all-viewers/aframe-viewer/aframe-viewer';
+
 // Viewer Components array
 export const VIEWER_ARR = [
     ConsoleViewerComponent,
     HelpViewerComponent,
     // Step-1: Add Component here
     GIViewerComponent,
-    GIGeoViewerComponent
+    GIGeoViewerComponent,
+    AframeViewerComponent
     // CytoscapeViewerComponent
 ];
 
@@ -26,6 +30,7 @@ export const VIEWER_MOD = [
     // Step-2: Add Module here
     GIViewerModule,
     GIGeoViewerModule,
+    AframeViewerModule,
     // CytoscapeViewerModule,
 ];
 
@@ -35,6 +40,7 @@ export const Viewers: IView[] = [
     // The order of these views here will influence the order of the view appearing in the viewer header.
     { name: '3D Viewer', icon: undefined, component: GIViewerComponent },
     { name: 'Three Geo Viewer', icon: undefined, component: GIGeoViewerComponent },
+    { name: 'VR Viewer', icon: undefined, component: AframeViewerComponent },
     // { name: 'Cytoscape Viewer', icon: undefined, component: CytoscapeViewerComponent },
     { name: 'Console', icon: undefined, component: ConsoleViewerComponent },
     { name: 'Help', icon: undefined, component: HelpViewerComponent }

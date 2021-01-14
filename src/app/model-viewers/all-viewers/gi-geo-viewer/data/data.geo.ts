@@ -237,15 +237,15 @@ export class DataGeo {
     }
 
     removeMobiusObjs() {
-        let i = 0;
-        while (i < this.view.scene.children.length) {
-            const scene_obj = this.view.scene.children[i];
-            if (scene_obj.name.startsWith('mobius')) {
-                this.view.scene.children.splice(i, 1);
-            } else {
-                i++;
-            }
-        }
+        // let i = 0;
+        // while (i < this.view.scene.children.length) {
+        //     const scene_obj = this.view.scene.children[i];
+        //     if (scene_obj.name.startsWith('mobius')) {
+        //         this.view.scene.children.splice(i, 1);
+        //     } else {
+        //         i++;
+        //     }
+        // }
     }
 
     refreshModel(threejsScene) {

@@ -960,7 +960,6 @@ export class DataThreejs extends DataThreejsLookAt {
         input.children.splice(3, 1);
         input.children.splice(0, 1);
         while (i < input.children.length) {
-            console.log(input.children[i])
             if (input.children[i].name !== '' || input.children[i].type === 'AmbientLight' ||
             input.children[i].type === 'HemisphereLight'
             // || input.children[i].type === 'LineSegments'
