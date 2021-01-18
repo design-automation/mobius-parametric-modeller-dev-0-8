@@ -1,4 +1,4 @@
-import { OnChanges, Component, Input, AfterViewInit } from '@angular/core';
+import { OnChanges, Component, Input, AfterViewInit, OnDestroy } from '@angular/core';
 // import @angular stuff
 import {  } from '@angular/core';
 // import app services
@@ -48,11 +48,6 @@ export class AframeMainComponent implements AfterViewInit, OnChanges {
     ngOnChanges(changes) {
         if (changes.model || changes.nodeIndex) {
             if (this.model && this.nodeIndex) {
-                // if (this.dataService.switch_page) {
-                //     this.dataService.switch_page = false;
-                //     return;
-                // }
-                // this.model.outputSnapshot = this.nodeIndex;
                 const data = this.dataService.getAframeData();
                 const threejsScene = this.threeJSDataService.getThreejsScene();
                 if (!threejsScene || !data) { return; }
@@ -71,4 +66,5 @@ export class AframeMainComponent implements AfterViewInit, OnChanges {
             }
         }
     }
+
 }

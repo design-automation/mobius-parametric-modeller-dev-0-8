@@ -1,10 +1,8 @@
+<button id='load-aframe'></button>
 <div id="aframe-container">
     <a-scene embedded>
         <a-camera wasd-controls='acceleration: 500%; fly: false'></a-camera>
-        <a-assets>
-            <img id="sky" src="https://raw.githubusercontent.com/design-automation/mobius-parametric-modeller-dev/88419c67cd2a84adcd086a4a87e5f16f163aa529/src/assets/testing/test_aframe/aframe_test_background.png" crossorigin="anonymous">
-        </a-assets>
-        <a-sky src="#sky"></a-sky>
+        <a-sky src="https://raw.githubusercontent.com/design-automation/mobius-parametric-modeller-dev/88419c67cd2a84adcd086a4a87e5f16f163aa529/src/assets/testing/test_aframe/aframe_test_background.png"></a-sky>
         <a-entity id='mobius_geom' mobius_geom rotation="-90 0 0" position="0 -2 0" ></a-entity>
         <a-plane position="0 -2.1 -4" rotation="-90 0 0" width="1000" height="1000" color="#AAAAAA"></a-plane>
     </a-scene>

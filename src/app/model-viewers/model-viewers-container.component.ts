@@ -21,7 +21,7 @@ import { _parameterTypes } from '@assets/core/modules';
 export class DataViewersContainerComponent implements DoCheck, OnInit, OnDestroy {
     @ViewChild('vc', { read: ViewContainerRef, static: true }) vc: ViewContainerRef;
     // @Input() data: any;
-    private views = [];
+    private views = {};
     private activeView: IView;
     private emptyModel: GIModel;
     Viewers = Viewers;
@@ -151,10 +151,15 @@ export class DataViewersContainerComponent implements DoCheck, OnInit, OnDestroy
     updateView(view: IView): void {
         this.activeView = view;
 
+        if (this.views['VR Viewer']) {
+            this.views['VR Viewer'].destroy();
+            this.views['VR Viewer'] = undefined;
+        }
+
         if ( this.views[ this.activeView.name ] === undefined) {
             this.views[ this.activeView.name ] = this.createView(view);
         }
-
+        console.log(this.views)
         this.updateValue();
 
         this.vc.detach();
@@ -165,7 +170,7 @@ export class DataViewersContainerComponent implements DoCheck, OnInit, OnDestroy
      */
     updateValue() {
         try {
-            const componentRef =  this.views[ this.activeView.name ];
+            const componentRef =  this.views[this.activeView.name];
             if (this.activeView.name === 'Help') {
                 // componentRef.instance['output'] = this.dataService.helpView[1];
             } else if (this.activeView.name !== 'Console') {
