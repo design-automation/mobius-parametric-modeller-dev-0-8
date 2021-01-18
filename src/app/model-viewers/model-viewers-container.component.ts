@@ -159,7 +159,7 @@ export class DataViewersContainerComponent implements DoCheck, OnInit, OnDestroy
         if ( this.views[ this.activeView.name ] === undefined) {
             this.views[ this.activeView.name ] = this.createView(view);
         }
-        console.log(this.views)
+
         this.updateValue();
 
         this.vc.detach();

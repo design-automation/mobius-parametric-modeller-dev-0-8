@@ -62,6 +62,7 @@ export class DataAframe {
     }
 
     refreshModel(threejsScene) {
+        console.log('   refresh', threejsScene)
         this.removeMobiusObjs();
         const threeJSGroup = new AFRAME.THREE.Group();
 

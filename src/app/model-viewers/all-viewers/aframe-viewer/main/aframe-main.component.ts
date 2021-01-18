@@ -41,6 +41,7 @@ export class AframeMainComponent implements AfterViewInit, OnChanges {
         const threejsScene = this.threeJSDataService.getThreejsScene();
         if (!threejsScene || !data) { return; }
         data.model = this.model;
+        console.log('..... ngAfterViewInit')
         data.refreshModel(threejsScene);
         // this.dataService.createAframeViewer(this.threeJSDataService.getThreejsScene());
     }
@@ -55,6 +56,7 @@ export class AframeMainComponent implements AfterViewInit, OnChanges {
                     data.removeMobiusObjs();
                     return;
                 }
+                if ((changes.model && !changes.model.previousValue) || (changes.nodeIndex && !changes.nodeIndex.previousValue)) { return; }
                 data.model = this.model;
                 if (!threejsScene.model || threejsScene.model !== this.model || threejsScene.nodeIndex !== this.nodeIndex) {
                     threejsScene.model = this.model;

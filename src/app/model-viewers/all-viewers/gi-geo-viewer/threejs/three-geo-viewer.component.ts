@@ -64,6 +64,7 @@ export class ThreeGeoComponent implements OnInit, OnChanges {
                     data.removeMobiusObjs();
                     return;
                 }
+                if ((changes.model && !changes.model.previousValue) || (changes.nodeIndex && !changes.nodeIndex.previousValue)) { return; }
                 data.model = this.model;
                 if (!threejsScene.model || threejsScene.model !== this.model || threejsScene.nodeIndex !== this.nodeIndex) {
                     threejsScene.model = this.model;

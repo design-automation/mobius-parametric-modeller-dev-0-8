@@ -245,7 +245,7 @@ export class ThreejsViewerComponent implements OnInit, DoCheck, OnChanges, OnDes
                 //     this.dataService.switch_page = false;
                 //     return;
                 // }
-                if (!this.container) { return; }
+                if (!this.container || (changes.model && !changes.model.previousValue) || (changes.nodeIndex && !changes.nodeIndex.previousValue)) { return; }
                 this.updateModel(this.model);
             }
         }
