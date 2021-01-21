@@ -1,7 +1,9 @@
-<button id='load-aframe'></button>
+<div id='save_aframe_camera' (click)='saveCamPos()'></div>
 <div id="aframe-container">
-    <a-scene embedded>
-        <a-camera wasd-controls='acceleration: 500%; fly: false'></a-camera>
+    <a-scene id='aframe_scene' light='defaultLightsEnabled: false' embedded>
+        <a-entity id='aframe_ambientLight' light='type: ambient; color: #EEE; intensity: 0.5' position='-1 1 0'></a-entity>
+        <a-entity id='aframe_directionalLight' light='type: directional; color: #EEE; intensity: 0.5' position='-1 1 0'></a-entity>
+        <a-camera id='aframe_camera' wasd-controls='acceleration: 500%; fly: false' look-controls></a-camera>
         <a-sky src="https://raw.githubusercontent.com/design-automation/mobius-parametric-modeller-dev/88419c67cd2a84adcd086a4a87e5f16f163aa529/src/assets/testing/test_aframe/aframe_test_background.png"></a-sky>
         <a-entity id='mobius_geom' mobius_geom rotation="-90 0 0" position="0 -2 0" ></a-entity>
         <a-plane position="0 -2.1 -4" rotation="-90 0 0" width="1000" height="1000" color="#AAAAAA"></a-plane>

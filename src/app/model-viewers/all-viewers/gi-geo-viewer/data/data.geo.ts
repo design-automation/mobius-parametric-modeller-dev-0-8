@@ -70,9 +70,6 @@ export class DataGeo {
      *
      */
     public createGeoViewer(threejsScene) {
-        this._getLayers();
-        this._getTerrains();
-
         const placement = {
             coord: new itowns.Coordinates('EPSG:4326', LONGLAT[0], LONGLAT[1]),
             range: 1000,
@@ -377,7 +374,6 @@ export class DataGeo {
         } else {
             lighting.intensity = 1;
         }
-        console.log('tilt:', lightingPos.altitude * 180 / Math.PI, 'heading:', lightingPos.azimuth * 180 / Math.PI )
 
         // lighting.matrix.copy(this.lightingCamera.matrix);
         // lighting.matrixWorld.copy(this.lightingCamera.matrixWorld);

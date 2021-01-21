@@ -29,6 +29,8 @@ export class DataService {
 
     selectingEntityType: { id: EEntType, name: string } ;
 
+    aframe_cam: any;
+
     switch_page: boolean;
     /**
      * Create a data service.

@@ -14,7 +14,6 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { AframeViewerComponent } from './aframe-viewer.component';
 
 import { ModalService } from './html/modal-window.service';
-import { DataAframeService } from './data/data.aframe.service';
 import { AframeMainComponent } from './main/aframe-main.component';
 import { ModalWindowComponent } from './html/modal-window.component';
 import { DropdownMenuComponent } from './html/dropdown-menu.component';
@@ -49,8 +48,7 @@ import { TabComponent } from './html/tab.component';
         ColorPickerModule
     ],
     providers: [
-        ModalService,
-        DataAframeService
+        ModalService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

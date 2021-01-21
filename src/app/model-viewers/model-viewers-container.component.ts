@@ -152,8 +152,11 @@ export class DataViewersContainerComponent implements DoCheck, OnInit, OnDestroy
         this.activeView = view;
 
         if (this.views['VR Viewer']) {
-            this.views['VR Viewer'].destroy();
-            this.views['VR Viewer'] = undefined;
+            (<HTMLElement> document.getElementById('save_aframe_camera')).click();
+            setTimeout(() => {
+                this.views['VR Viewer'].destroy();
+                this.views['VR Viewer'] = undefined;
+            }, 0);
         }
 
         if ( this.views[ this.activeView.name ] === undefined) {

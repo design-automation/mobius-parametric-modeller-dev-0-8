@@ -1,12 +1,18 @@
 import { GIModel } from '@assets/libs/geo-info/GIModel';
 import * as THREE from 'three';
 
-
+const DEFAUT_CAMERA_POS = {
+    position: new AFRAME.THREE.Vector3(0, 0, 0),
+    rotation: new AFRAME.THREE.Vector3(0, 0, 0)
+}
 /**
- * Cesium data
+ * Aframe data
  */
 export class DataAframe {
     public model: GIModel;
+    public container: HTMLDivElement;
+    public scene;
+    public camera;
 
     constructor(settings?) {
     }
@@ -62,7 +68,6 @@ export class DataAframe {
     }
 
     refreshModel(threejsScene) {
-        console.log('   refresh', threejsScene)
         this.removeMobiusObjs();
         const threeJSGroup = new AFRAME.THREE.Group();
 
@@ -85,5 +90,45 @@ export class DataAframe {
         }
     }
 
+    getCameraPos() {
+        const cameraEl = this.camera;
+        if (cameraEl) {
+            const camera_pos = {
+                position: new AFRAME.THREE.Vector3(),
+                rotation: cameraEl.getAttribute('rotation')
+            };
+            cameraEl.object3D.getWorldPosition(camera_pos.position);
+            console.log('     pos:', camera_pos)
+            return camera_pos;
+        }
+        return null;
+    }
+
+    updateCameraPos(camera_pos = DEFAUT_CAMERA_POS) {
+        setTimeout(() => {
+            const cameraEl = <any> document.getElementById('aframe_camera');
+            console.log('~~~~~~~~~~~~~', cameraEl, camera_pos)
+            if (cameraEl && camera_pos) {
+                cameraEl.setAttribute('position', camera_pos.position);
+                cameraEl.setAttribute('look-controls', {enabled: false});
+                cameraEl.setAttribute('rotation', camera_pos.rotation);
+                const newX = cameraEl.object3D.rotation.x;
+                const newY = cameraEl.object3D.rotation.y;
+                cameraEl.components['look-controls'].pitchObject.rotation.x = newX;
+                cameraEl.components['look-controls'].yawObject.rotation.y = newY;
+                cameraEl.setAttribute('look-controls', {enabled: true});
+            }
+        }, 0);
+    }
+
+    detachAframeView() {
+        // const viewcontainer = <HTMLDivElement> document.getElementById('aframe-view');
+        // viewcontainer.removeChild(this.container);
+        if (!this.scene || !this.scene.renderer) { return; }
+        this.scene.renderer.forceContextLoss();
+        this.scene.renderer.dispose();
+        this.scene.renderer = undefined;
+        AFRAME.THREE.Cache.clear();
+    }
 }
 

@@ -1,7 +1,7 @@
 @import '~scss/colors';
 @import '~scss/variables';
 
-#aframe-container {
+#aframe-view {
     position: relative;
     // padding:50px;
     height: 100%;
@@ -11,7 +11,13 @@
     // color: blue;
     font-family:sans-serif;
 }
-
-#load-aframe {
-    display: none;
+#aframe-container {
+    position: relative;
+    // padding:50px;
+    height: 100%;
+    width: 100%;
+    margin:0px;
+    overflow: hidden;
+    // color: blue;
+    font-family:sans-serif;
 }

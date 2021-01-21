@@ -13,6 +13,7 @@ import { DataAframe } from './data.aframe';
 export class DataAframeService {
     private _aframe_data: DataAframe;
     private _aframe_settings: AframeSettings;
+    private _aframe_cam: any;
 
     /**
      * Create a data service.
@@ -45,6 +46,13 @@ export class DataAframeService {
      */
     setAframeSettings(settings: AframeSettings) {
         this._aframe_settings = settings;
+    }
+
+    public get aframe_cam(): any {
+        return this._aframe_cam;
+    }
+    public set aframe_cam(value: any) {
+        this._aframe_cam = value;
     }
 
     // createAframeViewer(threejsScene) {
