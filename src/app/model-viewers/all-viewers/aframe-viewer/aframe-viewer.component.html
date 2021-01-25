@@ -1,10 +1,61 @@
 <div id="gi-viewer-container">
     <aframe-main [model]="data" [nodeIndex]="nodeIndex"></aframe-main>
-    <button class='btn' id="settings_button" mat-icon-button (click)="openModal('geo_settings_modal')" title="Settings"><mat-icon svgIcon="settings"></mat-icon></button>
+    <button class='btn' id="settings_button" mat-icon-button (click)="openModal('aframe_settings_modal')" title="Settings"><mat-icon svgIcon="settings"></mat-icon></button>
     <button id="zoomingfit" mat-icon-button (click)="zoomfit()" title='Zoom to Fit Model'>
         <mat-icon svgIcon="cZoom"></mat-icon>
     </button>
-    <modal-window id="geo_settings_modal" (closeModal) = 'onCloseModal()'>
+    <modal-window id="aframe_settings_modal" (closeModal) = 'onCloseModal()'>
+        <h1>Aframe Viewer Settings</h1>
+        <tabs id="settingsTab">
+            <tab tabTitle="Scene">
+                <div class="mat-elevation-z1">
+                    <dl>
+                        <dd id='camera'>
+                            <div class="label">Camera Position</div>
+                            <input type="number"
+                            (change)="settingOnChange('camera.pos_x', $event.target.value)" 
+                            [value]="formatNumber(settings.camera.position.x)">
+                            <input type="number"
+                            (change)="settingOnChange('camera.pos_y', $event.target.value)" 
+                            [value]="formatNumber(settings.camera.position.y)">
+                            <input type="number"
+                            (change)="settingOnChange('camera.pos_z', $event.target.value)" 
+                            [value]="formatNumber(settings.camera.position.z)">
+                            <button (click)="settingOnChange('camera.get_camera_pos')" class="filebtn getbtn">Get</button>
+                        </dd>
+                        <dd id='camera_target'>
+                            <div class="label">Camera Target</div>
+                            <input type="number"
+                            (change)="settingOnChange('camera.target_x', $event.target.value)" 
+                            [value]="formatNumber(settings.camera.rotation.x)">
+                            <input type="number" 
+                            (change)="settingOnChange('camera.target_y', $event.target.value)"
+                            [value]="formatNumber(settings.camera.rotation.y)">
+                            <input type="number" 
+                            (change)="settingOnChange('camera.target_z', $event.target.value)"
+                            [value]="formatNumber(settings.camera.rotation.z)">
+                            <button (click)="settingOnChange('camera.get_target_pos')" class="filebtn getbtn">Get</button>
+                        </dd>
+                        <dd><hr></dd>
+                        <dd>
+                            <div class="label">Background</div>
+                            <select value={{settings.background.background_set}}
+                            (change)="settingOnChange('background.set', $event.target.value)">
+                                <option value=0>Sky 1</option>
+                                <option value=1>Sky 2</option>
+                                <option value=2>Sky 3</option>
+                                <!-- <option value=3>Sky 4</option>
+                                <option value=4>Sky 5</option>
+                                <option value=5>Sky 6</option>
+                                <option value=6>Sky 7</option> -->
+                            </select>
+                        </dd>
+                    </dl>
+                </div>
+            </tab>
+        </tabs>
+        <button (click)="closeModal('aframe_settings_modal', true);" class="filebtn closebtn setting">Apply</button>
+        <button (click)="closeModal('aframe_settings_modal');" class='filebtn closebtn setting'>Cancel</button>
     </modal-window>
     <div id='geo-attribution'></div>
 </div>

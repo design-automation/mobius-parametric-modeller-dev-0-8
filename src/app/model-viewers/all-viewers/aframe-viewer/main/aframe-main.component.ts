@@ -5,6 +5,7 @@ import {  } from '@angular/core';
 import { DataAframeService } from '../data/data.aframe.service';
 import { DataService as ThreeJSDataService } from '../../gi-viewer/data/data.service';
 import { GIModel } from '@libs/geo-info/GIModel';
+import { aframe_default_settings } from '../aframe-viewer.settings';
 /**
  * GIViewerComponent
  * This component is used in /app/model-viewers/model-viewers-container.component.html
@@ -27,9 +28,6 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy 
      * @param dataService
      */
     constructor(private dataService: DataAframeService, private threeJSDataService: ThreeJSDataService) {
-        if (!this.dataService.getAframeData()) {
-            this.dataService.setAframeScene('__dummy_settings_input__');
-        }
     }
 
     ngOnDestroy() {

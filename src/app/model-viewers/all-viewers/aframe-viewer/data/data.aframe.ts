@@ -13,8 +13,10 @@ export class DataAframe {
     public container: HTMLDivElement;
     public scene;
     public camera;
+    public settings;
 
-    constructor(settings?) {
+    constructor(settings) {
+        this.settings = JSON.parse(JSON.stringify(settings));
     }
 
     onChanges(changes, threejsScene) {
@@ -88,6 +90,12 @@ export class DataAframe {
         if (entity) {
             (<any> entity).setObject3D('mobius_geometry', threeJSGroup);
         }
+        const sky = document.getElementById('aframe_sky');
+        if (sky) {
+            console.log('....', this.settings.background.background_set);
+            (<any> sky).setAttribute('src', '/assets/img/background/bg' + this.settings.background.background_set + '/aframe.jpg')
+        }
+
     }
 
     getCameraPos() {
@@ -107,7 +115,6 @@ export class DataAframe {
     updateCameraPos(camera_pos = DEFAUT_CAMERA_POS) {
         setTimeout(() => {
             const cameraEl = <any> document.getElementById('aframe_camera');
-            console.log('~~~~~~~~~~~~~', cameraEl, camera_pos)
             if (cameraEl && camera_pos) {
                 cameraEl.setAttribute('position', camera_pos.position);
                 cameraEl.setAttribute('look-controls', {enabled: false});
