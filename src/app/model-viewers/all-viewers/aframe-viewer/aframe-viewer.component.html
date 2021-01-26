@@ -10,7 +10,7 @@
             <tab tabTitle="Scene">
                 <div class="mat-elevation-z1">
                     <dl>
-                        <dd id='camera'>
+                        <!-- <dd id='camera'>
                             <div class="label">Camera Position</div>
                             <input type="number"
                             (change)="settingOnChange('camera.pos_x', $event.target.value)" 
@@ -36,7 +36,7 @@
                             [value]="formatNumber(settings.camera.rotation.z)">
                             <button (click)="settingOnChange('camera.get_target_pos')" class="filebtn getbtn">Get</button>
                         </dd>
-                        <dd><hr></dd>
+                        <dd><hr></dd> -->
                         <dd>
                             <div class="label">Background</div>
                             <select value={{settings.background.background_set}}
@@ -49,6 +49,60 @@
                                 <option value=5>Sky 6</option>
                                 <option value=6>Sky 7</option> -->
                             </select>
+                        </dd>
+                        <dd><hr></dd>
+                        <dd>
+                            <div class="label">Ground</div>
+                            <div class="onoffswitch">
+                                <input type="checkbox"
+                                name="onoffswitch"
+                                class="onoffswitch-checkbox"
+                                id="GroundOnOff_aframe"
+                                [checked]='settings.ground.show'
+                                (change)="settingOnChange('ground.show')"
+                                >
+                                <label class="onoffswitch-label" for="GroundOnOff_aframe">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </dd>
+                        <dd>
+                            <div class="label">Width</div>
+                            <div class="slidecontainer light">
+                                <input type="range" min="0" max="100000" step="100" [value]="settings.ground.width" class="slider" (input)="settingOnChange('ground.width', $event.target.value)">
+                                <input type="number" [value]="settings.ground.width" min="0" max="100000" class="number" (input)="settingOnChange('ground.width', $event.target.value)">
+                            </div>
+                        </dd>
+                        <dd>
+                            <div class="label">Length</div>
+                            <div class="slidecontainer light">
+                                <input type="range" min="0" max="100000" step="100" [value]="settings.ground.length" class="slider" (input)="settingOnChange('ground.length', $event.target.value)">
+                                <input type="number" [value]="settings.ground.length" min="0" max="100000" class="number" (input)="settingOnChange('ground.length', $event.target.value)">
+                            </div>
+                        </dd>
+                        <dd>
+                            <div class="label">Height</div>
+                            <div class="slidecontainer light">
+                                <input type="range" min="-10" max="10" step="0.1" [value]="settings.ground.height" class="slider" (input)="settingOnChange('ground.height', $event.target.value)">
+                                <input type="number" [value]="settings.ground.height" min="-10" max="10" class="number" (input)="settingOnChange('ground.height', $event.target.value)">
+                            </div>
+                        </dd>
+                        <dd class='colors'>
+                            <div class="label">Color</div>
+                            <input
+                            [(colorPicker)]="settings.ground.color"
+                            [style.background]="settings.ground.color"
+                            [value]="settings.ground.color"
+                            [class.light] = "checkColor(settings.ground.color)"
+                            />
+                        </dd>
+                        <dd>
+                            <div class="label">Shininess</div>
+                            <div class="slidecontainer light">
+                                <input type="range" min="0" max="100" step="1" [value]="settings.ground.shininess" class="slider" (input)="settingOnChange('ground.shininess', $event.target.value)">
+                                <input type="number" min="0" max="100" [value]="settings.ground.shininess" class="number" (input)="settingOnChange('ground.shininess', $event.target.value)">
+                            </div>
                         </dd>
                     </dl>
                 </div>

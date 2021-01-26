@@ -90,12 +90,41 @@ export class DataAframe {
         if (entity) {
             (<any> entity).setObject3D('mobius_geometry', threeJSGroup);
         }
+
+        this.updateGround();
+        this.updateSky();
+    }
+
+    updateGround() {
+        for (const childNode of this.scene.children) {
+            if (childNode.id === 'aframe_ground') {
+                this.scene.removeChild(childNode);
+            }
+        }
+        if (!this.settings.ground.show) {
+            return;
+        }
+        const ground = document.createElement('a-plane');
+        ground.id = 'aframe_ground';
+        ground.setAttribute('position', '0 ' + this.settings.ground.height + ' 0');
+        ground.setAttribute('rotation', '-90 0 0');
+        ground.setAttribute('width', this.settings.ground.width);
+        ground.setAttribute('height', this.settings.ground.length);
+        ground.setAttribute('color', this.settings.ground.color);
+        ground.setAttribute('metalness', this.settings.ground.shininess);
+        this.scene.append(ground);
+    }
+
+    updateSky() {
         const sky = document.getElementById('aframe_sky');
         if (sky) {
-            console.log('....', this.settings.background.background_set);
-            (<any> sky).setAttribute('src', '/assets/img/background/bg' + this.settings.background.background_set + '/aframe.jpg')
+            (<any> sky).setAttribute('src', '/assets/img/background/bg' + this.settings.background.background_set + '/aframe.jpg');
+        } else {
+            const skyEnt = document.createElement('a-sky');
+            skyEnt.id = 'aframe_sky';
+            skyEnt.setAttribute('src', '/assets/img/background/bg' + this.settings.background.background_set + '/aframe.jpg');
+            this.scene.appendChild(skyEnt);
         }
-
     }
 
     getCameraPos() {
@@ -135,6 +164,10 @@ export class DataAframe {
         this.scene.renderer.forceContextLoss();
         this.scene.renderer.dispose();
         this.scene.renderer = undefined;
+        for (const childObj of this.scene.children) {
+            childObj.id = childObj.id + '_';
+            childObj.remove();
+        }
         AFRAME.THREE.Cache.clear();
     }
 }

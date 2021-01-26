@@ -34,7 +34,8 @@ export class AframeViewerComponent implements OnInit{
      * constructor
      * @param dataService
      */
-    constructor(private dataService: DataAframeService, private modalService: ModalService, private threeJSDataService: ThreeJSDataService) {
+    constructor(private dataService: DataAframeService, private modalService: ModalService,
+            private threeJSDataService: ThreeJSDataService, private cpService: ColorPickerService) {
         const previous_settings = JSON.parse(localStorage.getItem('aframe_settings'));
         // const devMode = isDevMode();
         const devMode = false;
@@ -127,6 +128,24 @@ export class AframeViewerComponent implements OnInit{
             case 'background.set':
                 this.settings.background.background_set = Number(value);
                 break;
+            case 'ground.show':
+                this.settings.ground.show = !this.settings.ground.show;
+                break;
+            case 'ground.width':
+                this.settings.ground.width = Number(value);
+                break;
+            case 'ground.length':
+                this.settings.ground.length = Number(value);
+                break;
+            case 'ground.height':
+                this.settings.ground.height = Number(value);
+                // if (scene.groundObj) {
+                //     scene.groundObj.position.setZ(this.settings.ground.height);
+                // }
+                break;
+            case 'ground.shininess':
+                this.settings.ground.shininess = Number(value);
+                break;
         }
     }
     /**
@@ -153,10 +172,9 @@ export class AframeViewerComponent implements OnInit{
     public closeModal(id: string, save = false) {
         this.modalService.close(id);
         if (save) {
-            // this.settings.select = {selector: _selector, tab: _tab, };
             // this.settings.camera = {
             //     position: this.temp_camera_pos,
-            //     rotation: this.temp_target_pos,
+            //     rotation: this.temp_camera_rot,
             // };
             this.dataService.getAframeData().settings = this.settings;
             console.log(this.dataService.getAframeData().settings);
@@ -200,6 +218,15 @@ export class AframeViewerComponent implements OnInit{
             } else if (checkChildren && obj1[i].constructor === {}.constructor && obj2[i].constructor === {}.constructor) {
                 this.propCheck(obj1[i], obj2[i], false);
             }
+        }
+    }
+
+    checkColor(color) {
+        const _color = this.cpService.hsvaToRgba(this.cpService.stringToHsva(color));
+        if ((_color.r + _color.g + _color.b) / _color.a < 1.5) {
+            return true;
+        } else {
+            return false;
         }
     }
 
