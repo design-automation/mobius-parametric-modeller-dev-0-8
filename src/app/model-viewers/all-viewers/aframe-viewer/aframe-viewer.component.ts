@@ -63,7 +63,7 @@ export class AframeViewerComponent implements OnInit{
 
         this.settingsUpdateInterval = setInterval(() => {
             if (this.mainDataService.aframeViewerSettingsUpdated) {
-                this.settings = this.dataService.getAframeData().settings;
+                this.settings = JSON.parse(localStorage.getItem('aframe_settings'));
                 const aframeData = this.dataService.getAframeData();
                 aframeData.settings = JSON.parse(localStorage.getItem('aframe_settings'));
                 aframeData.refreshModel(this.threeJSDataService.getThreejsScene());
