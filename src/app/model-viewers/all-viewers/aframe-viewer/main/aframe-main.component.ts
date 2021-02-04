@@ -44,12 +44,12 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy 
         if (!threejsScene || !data) { return; }
         data.scene = <any> document.getElementById('aframe_scene');
         data.camera = <any> document.getElementById('aframe_camera');
-        if (this.dataService.aframe_cam) {
-            data.updateCameraPos(this.dataService.aframe_cam);
-            this.dataService.aframe_cam = null;
-        }
         data.model = this.model;
         data.refreshModel(threejsScene);
+        if (this.dataService.aframe_cam) {
+            data.updateCamera(this.dataService.aframe_cam);
+            this.dataService.aframe_cam = null;
+        }
         // this.dataService.createAframeViewer(this.dataService.getThreejsScene());
     }
 
@@ -59,10 +59,6 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy 
                 const data = this.dataService.getAframeData();
                 const threejsScene = this.threeJSDataService.getThreejsScene();
                 if (!threejsScene || !data) { return; }
-                if (this.dataService.aframe_cam) {
-                    data.updateCameraPos(this.dataService.aframe_cam);
-                    this.dataService.aframe_cam = null;
-                }
                 if (!this.model) {
                     data.removeMobiusObjs();
                     return;
@@ -75,6 +71,10 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy 
                     threejsScene.populateScene(this.model, null);
                 }
                 data.refreshModel(threejsScene);
+                if (this.dataService.aframe_cam) {
+                    data.updateCamera(this.dataService.aframe_cam);
+                    this.dataService.aframe_cam = null;
+                }
                 // data.view.notifyChange();
             }
         }

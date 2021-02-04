@@ -245,7 +245,7 @@ export class ThreejsViewerComponent implements OnInit, DoCheck, OnChanges, OnDes
                 //     this.dataService.switch_page = false;
                 //     return;
                 // }
-                if (!this.container || (changes.model && !changes.model.previousValue) || (changes.nodeIndex && !changes.nodeIndex.previousValue)) { return; }
+                if (!this.container) { return; }
                 this.updateModel(this.model);
             }
         }
@@ -642,11 +642,13 @@ export class ThreejsViewerComponent implements OnInit, DoCheck, OnChanges, OnDes
                         this.attrTableSelect({ action: 'select', ent_type: type, id: select_groups[type] }, true);
                     }
 
+                    const selectionType = this.selections.find(selection => selection.id === selectingType);
+                    if (!selectionType) { return; }
                     sessionStorage.setItem('mpm_showSelected', 'true');
 
                     sessionStorage.setItem('mpm_changetab', 'true');
                     localStorage.setItem('mpm_attrib_current_tab', this.tab_rev_map[selectingType]);
-                    this.selectEntityType(this.selections.find(selection => selection.id === selectingType));
+                    this.selectEntityType(selectionType);
                 } else {
                     sessionStorage.setItem('mpm_showSelected', 'false');
                     sessionStorage.setItem('mpm_changetab', 'false');
@@ -1567,7 +1569,7 @@ export class ThreejsViewerComponent implements OnInit, DoCheck, OnChanges, OnDes
     private indexAsLabel(ent_type_str: string, ent_id: string, id: number, type: EEntType) {
         let indexAsLabel;
         const showSelected = JSON.parse(sessionStorage.getItem('mpm_showSelected'));
-        if (showSelected) {
+        if (showSelected && this.tab_map[this.getCurrentTab()] === type) {
             const sorted = sortByKey(this.dataService.selected_ents.get(ent_type_str));
             const arr = Array.from(sorted.values());
             indexAsLabel = String(arr.findIndex(ent => ent === id));
@@ -1845,6 +1847,7 @@ export class ThreejsViewerComponent implements OnInit, DoCheck, OnChanges, OnDes
     }
 
     private selectEntityType(selection: { id: number, name: string }) {
+        if (!selection) { return; }
         this.dataService.updateSelectingEntityType(selection);
         this.SelectingEntityType = selection;
         const settings = JSON.parse(localStorage.getItem('mpm_settings'));

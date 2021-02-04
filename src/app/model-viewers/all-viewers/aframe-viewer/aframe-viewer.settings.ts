@@ -21,7 +21,7 @@ export interface AframeSettings {
 
 export const aframe_default_settings: AframeSettings = {
     camera: {
-        position: {x: 0, y: 0, z: 0},
+        position: {x: 0, y: 2, z: 0},
         rotation: {x: 0, y: 0, z: 0}
     },
     background: {

@@ -10,7 +10,7 @@ import { SplitComponent } from 'angular-split';
 import { DataAframeService } from './data/data.aframe.service';
 import { ModalService } from './html/modal-window.service';
 import { DataService as ThreeJSDataService } from '../gi-viewer/data/data.service';
-import { aframe_default_settings } from './aframe-viewer.settings';
+import { AframeSettings, aframe_default_settings } from './aframe-viewer.settings';
 
 /**
  * GIViewerComponent
@@ -25,28 +25,31 @@ export class AframeViewerComponent implements OnInit{
     // model data passed to the viewer
     @Input() data: GIModel;
     @Input() nodeIndex: number;
-    public settings = aframe_default_settings;
+    public backup_settings: AframeSettings;
+    public settings: AframeSettings = aframe_default_settings;
 
     temp_camera_pos = new AFRAME.THREE.Vector3(0, 0, 0);
     temp_camera_rot = new AFRAME.THREE.Vector3(-1, 0, 0);
+
+    private settingsUpdateInterval;
 
     /**
      * constructor
      * @param dataService
      */
     constructor(private dataService: DataAframeService, private modalService: ModalService,
-            private threeJSDataService: ThreeJSDataService, private cpService: ColorPickerService) {
+            private threeJSDataService: ThreeJSDataService, private cpService: ColorPickerService,
+            private mainDataService: MD) {
         const previous_settings = JSON.parse(localStorage.getItem('aframe_settings'));
         // const devMode = isDevMode();
         const devMode = false;
-        console.log(previous_settings)
         if (previous_settings === null) {
             localStorage.setItem('aframe_settings', JSON.stringify(this.settings));
         } else {
             this.propCheck(previous_settings, this.settings);
             localStorage.setItem('aframe_settings', JSON.stringify(previous_settings));
+            this.settings = previous_settings;
         }
-        this.settings = previous_settings;
         this.dataService.setAframeScene(this.settings);
     }
 
@@ -58,13 +61,15 @@ export class AframeViewerComponent implements OnInit{
         localStorage.setItem('aframe_default_settings', JSON.stringify(aframe_default_settings));
         // this.temp_camera_pos = this.dataService.getThreejsScene().perspCam.position;
 
-        // this.settingsUpdateInterval = setInterval(() => {
-        //     if (this.mainDataService.viewerSettingsUpdated) {
-        //         this.settings = JSON.parse(localStorage.getItem('mpm_settings'));
-        //         this.closeModal('settings_modal', true);
-        //         this.mainDataService.viewerSettingsUpdated = false;
-        //     }
-        // }, 100);
+        this.settingsUpdateInterval = setInterval(() => {
+            if (this.mainDataService.aframeViewerSettingsUpdated) {
+                this.settings = this.dataService.getAframeData().settings;
+                const aframeData = this.dataService.getAframeData();
+                aframeData.settings = JSON.parse(localStorage.getItem('aframe_settings'));
+                aframeData.refreshModel(this.threeJSDataService.getThreejsScene());
+                this.mainDataService.aframeViewerSettingsUpdated = false;
+            }
+        }, 100);
     }
 
     private getSettings() {
@@ -122,8 +127,20 @@ export class AframeViewerComponent implements OnInit{
                 this.temp_camera_rot.z = Math.round(value);
                 break;
             case 'camera.get_camera_pos':
+                const cam_pos_data = this.dataService.getAframeData().getCameraPos();
+                if (!cam_pos_data) { break; }
+                this.temp_camera_pos.x = cam_pos_data.position.x;
+                this.temp_camera_pos.y = this.settings.camera.position.y;
+                this.temp_camera_pos.z = cam_pos_data.position.z;
+                this.settings.camera.position = this.temp_camera_pos;
                 break;
             case 'camera.get_camera_rot':
+                const cam_rot_data = this.dataService.getAframeData().getCameraPos();
+                if (!cam_rot_data) { break; }
+                this.temp_camera_rot.x = cam_rot_data.rotation.x;
+                this.temp_camera_rot.y = cam_rot_data.rotation.y;
+                this.temp_camera_rot.z = cam_rot_data.rotation.z;
+                this.settings.camera.rotation = this.temp_camera_rot;
                 break;
             case 'background.set':
                 this.settings.background.background_set = Number(value);
@@ -159,8 +176,9 @@ export class AframeViewerComponent implements OnInit{
         if (document.body.className === 'modal-open') {
             this.modalService.close(id);
         } else {
-            // this.backup_settings = <GeoSettings> JSON.parse(JSON.stringify(this.settings));
-            // const scene = this.dataService.getGeoScene();
+            this.backup_settings = <AframeSettings> JSON.parse(JSON.stringify(this.settings));
+            this.temp_camera_pos = this.settings.camera.position;
+            this.temp_camera_rot = this.settings.camera.rotation;
             this.modalService.open(id);
         }
     }
@@ -172,18 +190,14 @@ export class AframeViewerComponent implements OnInit{
     public closeModal(id: string, save = false) {
         this.modalService.close(id);
         if (save) {
-            // this.settings.camera = {
-            //     position: this.temp_camera_pos,
-            //     rotation: this.temp_camera_rot,
-            // };
-            this.dataService.getAframeData().settings = this.settings;
-            console.log(this.dataService.getAframeData().settings);
-            localStorage.setItem('aframe_settings', JSON.stringify(this.settings));
+            this.settings.camera = {
+                position: this.temp_camera_pos,
+                rotation: this.temp_camera_rot
+            };
+            this.dataService.getAframeData().updateSettings(this.settings);
+            // document.getElementById('executeButton').click();
         } else {
-            // tslint:disable-next-line: forin
-            for (const setting in this.dataService.getAframeData().settings) {
-                this.settings[setting] = this.dataService.getAframeData().settings[setting];
-            }
+            this.settings = this.backup_settings;
         }
         this.dataService.getAframeData().refreshModel(this.threeJSDataService.getThreejsScene());
     }

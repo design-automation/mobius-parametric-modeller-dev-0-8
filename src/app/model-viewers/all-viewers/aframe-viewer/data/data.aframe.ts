@@ -1,5 +1,6 @@
 import { GIModel } from '@assets/libs/geo-info/GIModel';
 import * as THREE from 'three';
+import { AframeSettings } from '../aframe-viewer.settings';
 
 const DEFAUT_CAMERA_POS = {
     position: new AFRAME.THREE.Vector3(0, 0, 0),
@@ -32,6 +33,38 @@ export class DataAframe {
             }
             this.refreshModel(threejsScene);
         }
+    }
+
+    public updateSettings(settings: AframeSettings = null) {
+        let newSetting: AframeSettings;
+        if (settings !== null) {
+            newSetting = <AframeSettings> JSON.parse(JSON.stringify(settings));
+        } else {
+            newSetting = <AframeSettings> JSON.parse(localStorage.getItem('aframe_settings'));
+        }
+        if (!newSetting) { return; }
+        if (newSetting.hasOwnProperty('background')) {
+            this.settings.background = newSetting.background;
+        }
+        if (newSetting.ground) {
+            this.settings.ground.show = newSetting.ground.show;
+            this.settings.ground.width = newSetting.ground.width;
+            this.settings.ground.length = newSetting.ground.length;
+            this.settings.ground.height = newSetting.ground.height;
+            this.settings.ground.color = newSetting.ground.color;
+            this.settings.ground.shininess = newSetting.ground.shininess;
+        }
+        if (newSetting.camera) {
+            if (newSetting.camera.position) {
+                this.settings.camera.position.x = newSetting.camera.position.x;
+                this.settings.camera.position.y = newSetting.camera.position.y;
+                this.settings.camera.position.z = newSetting.camera.position.z;
+                this.settings.camera.rotation.x = newSetting.camera.rotation.x;
+                this.settings.camera.rotation.y = newSetting.camera.rotation.y;
+                this.settings.camera.rotation.z = newSetting.camera.rotation.z;
+            }
+        }
+        localStorage.setItem('aframe_settings', JSON.stringify(this.settings));
     }
 
     removeMobiusObjs() {
@@ -93,6 +126,8 @@ export class DataAframe {
 
         this.updateGround();
         this.updateSky();
+        // console.log(this.settings.camera)
+        this.updateCamera(this.settings.camera);
     }
 
     updateGround() {
@@ -135,13 +170,13 @@ export class DataAframe {
                 rotation: cameraEl.getAttribute('rotation')
             };
             cameraEl.object3D.getWorldPosition(camera_pos.position);
-            console.log('     pos:', camera_pos)
+            // camera_pos.position.y = this.settings.camera.position.y;
             return camera_pos;
         }
         return null;
     }
 
-    updateCameraPos(camera_pos = DEFAUT_CAMERA_POS) {
+    updateCamera(camera_pos = DEFAUT_CAMERA_POS) {
         setTimeout(() => {
             const cameraEl = <any> document.getElementById('aframe_camera');
             if (cameraEl && camera_pos) {
@@ -158,12 +193,10 @@ export class DataAframe {
     }
 
     detachAframeView() {
-        // const viewcontainer = <HTMLDivElement> document.getElementById('aframe-view');
-        // viewcontainer.removeChild(this.container);
         if (!this.scene || !this.scene.renderer) { return; }
         this.scene.renderer.forceContextLoss();
         this.scene.renderer.dispose();
-        this.scene.renderer = undefined;
+        this.scene.renderer = null;
         for (const childObj of this.scene.children) {
             childObj.id = childObj.id + '_';
             childObj.remove();

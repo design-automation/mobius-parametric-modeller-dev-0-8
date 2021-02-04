@@ -100,9 +100,39 @@
                         <dd>
                             <div class="label">Shininess</div>
                             <div class="slidecontainer light">
-                                <input type="range" min="0" max="100" step="1" [value]="settings.ground.shininess" class="slider" (input)="settingOnChange('ground.shininess', $event.target.value)">
-                                <input type="number" min="0" max="100" [value]="settings.ground.shininess" class="number" (input)="settingOnChange('ground.shininess', $event.target.value)">
+                                <input type="range" min="0" max="1" step='0.01' [value]="settings.ground.shininess" class="slider" (input)="settingOnChange('ground.shininess', $event.target.value)">
+                                <input type="number" min="0" max="1" [value]="settings.ground.shininess" class="number" (input)="settingOnChange('ground.shininess', $event.target.value)">
                             </div>
+                        </dd>
+                        <dd><hr></dd>
+                        <dd id='aframe_camera'>
+                            <div class="label">Camera Position</div>
+                            <input type="number"
+                            (change)="settingOnChange('camera.pos_x', $event.target.value)" 
+                            [value]="formatNumber(settings.camera.position.x)">
+                            <input type="number"
+                            (change)="settingOnChange('camera.pos_z', $event.target.value)" 
+                            [value]="formatNumber(settings.camera.position.z)">
+                            <button (click)="settingOnChange('camera.get_camera_pos')" class="filebtn getbtn">Get</button>
+                        </dd>
+                        <dd id='aframe_camera_height'>
+                            <div class="label">Camera Height</div>
+                            <input type="number"
+                            (change)="settingOnChange('camera.pos_y', $event.target.value)" 
+                            [value]="formatNumber(settings.camera.position.y)">
+                        </dd>
+                        <dd id='aframe_camera_rot'>
+                            <div class="label">Camera Rotation</div>
+                            <input type="number"
+                            (change)="settingOnChange('camera.rot_x', $event.target.value)" 
+                            [value]="formatNumber(settings.camera.rotation.x)" disabled>
+                            <input type="number" 
+                            (change)="settingOnChange('camera.rot_y', $event.target.value)"
+                            [value]="formatNumber(settings.camera.rotation.y)" disabled>
+                            <input type="number" 
+                            (change)="settingOnChange('camera.rot_z', $event.target.value)"
+                            [value]="formatNumber(settings.camera.rotation.z)" disabled>
+                            <button (click)="settingOnChange('camera.get_camera_rot')" class="filebtn getbtn">Get</button>
                         </dd>
                     </dl>
                 </div>
