@@ -41,14 +41,18 @@
                             <div class="label">Background</div>
                             <select value={{settings.background.background_set}}
                             (change)="settingOnChange('background.set', $event.target.value)">
-                                <option value=0>Sky 1</option>
-                                <option value=1>Sky 2</option>
-                                <option value=2>Sky 3</option>
+                                <option value=1>Sky 1</option>
+                                <option value=2>Sky 2</option>
+                                <option value=3>Sky 3</option>
+                                <option value=0>Other</option>
                                 <!-- <option value=3>Sky 4</option>
                                 <option value=4>Sky 5</option>
                                 <option value=5>Sky 6</option>
                                 <option value=6>Sky 7</option> -->
                             </select>
+                        </dd>
+                        <dd>
+                            <textarea class="tArea" *ngIf='settings.background.background_set==0' [(ngModel)]='settings.background.background_url'></textarea>
                         </dd>
                         <dd><hr></dd>
                         <dd>

@@ -6,6 +6,10 @@ const DEFAUT_CAMERA_POS = {
     position: new AFRAME.THREE.Vector3(0, 0, 0),
     rotation: new AFRAME.THREE.Vector3(0, 0, 0)
 }
+function postloadSkyImg() {
+    const sky = document.getElementById('aframe_sky');
+    (<any> sky).setAttribute('src', '#aframe_sky_img');
+}
 /**
  * Aframe data
  */
@@ -15,6 +19,8 @@ export class DataAframe {
     public scene;
     public camera;
     public settings;
+
+    // test file: https://raw.githubusercontent.com/design-automation/mobius-vr/master/assets/Street%20View%20360_1.jpg
 
     constructor(settings) {
         this.settings = JSON.parse(JSON.stringify(settings));
@@ -45,6 +51,10 @@ export class DataAframe {
         if (!newSetting) { return; }
         if (newSetting.hasOwnProperty('background')) {
             this.settings.background = newSetting.background;
+        }
+        if (newSetting.background) {
+            this.settings.background.background_set = newSetting.background.background_set;
+            this.settings.background.background_url = newSetting.background.background_url;
         }
         if (newSetting.ground) {
             this.settings.ground.show = newSetting.ground.show;
@@ -124,10 +134,10 @@ export class DataAframe {
             (<any> entity).setObject3D('mobius_geometry', threeJSGroup);
         }
 
+        this.updateCamera(this.settings.camera);
         this.updateGround();
         this.updateSky();
         // console.log(this.settings.camera)
-        this.updateCamera(this.settings.camera);
     }
 
     updateGround() {
@@ -152,12 +162,36 @@ export class DataAframe {
 
     updateSky() {
         const sky = document.getElementById('aframe_sky');
+        let skyURL;
+        const backgroundSet = (Number(this.settings.background.background_set) - 1);
+        if (backgroundSet < 0) {
+            setTimeout(() => {
+                const assetEnt = document.getElementById('aframe_assets');
+                const allImages = document.querySelectorAll('img');
+                allImages.forEach(img => {
+                    try {
+                        assetEnt.removeChild(img);
+                    } catch (ex) {}
+                    img.removeEventListener('load', postloadSkyImg);
+                });
+                const imgEnt = document.createElement('img');
+                imgEnt.id = 'aframe_sky_img';
+                    imgEnt.setAttribute('crossorigin', 'anonymous');
+                imgEnt.setAttribute('src', this.settings.background.background_url);
+                assetEnt.appendChild(imgEnt);
+                imgEnt.addEventListener('load', postloadSkyImg);
+            }, 0);
+            skyURL = '';
+        } else {
+            skyURL = '/assets/img/background/bg' + backgroundSet + '/aframe.jpg';
+        }
+
         if (sky) {
-            (<any> sky).setAttribute('src', '/assets/img/background/bg' + this.settings.background.background_set + '/aframe.jpg');
+            (<any> sky).setAttribute('src', skyURL);
         } else {
             const skyEnt = document.createElement('a-sky');
             skyEnt.id = 'aframe_sky';
-            skyEnt.setAttribute('src', '/assets/img/background/bg' + this.settings.background.background_set + '/aframe.jpg');
+            skyEnt.setAttribute('src', skyURL);
             this.scene.appendChild(skyEnt);
         }
     }

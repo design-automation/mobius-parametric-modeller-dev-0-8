@@ -61,6 +61,21 @@ export class AppComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.googleAnalyticsService.subscribe();
+        this.dataService.rendererInfo = this.getVideoCardInfo();
+        let errorMsg = null;
+        if (this.dataService.rendererInfo.error) {
+            errorMsg = 'No WebGL renderer detected.';
+        } else if (this.dataService.rendererInfo.renderer.toLowerCase().indexOf('google') !== -1) {
+            errorMsg = `<div>You have not enabled hardware support for WebGL rendering. Performance will be degraded.
+                        <br> 1. In Chrome, select "Menu" > "Settings"
+                        <br> 2. Scroll down to the bottom and select the “Advanced” option.
+                        <br> 3. Scroll to the “System” section and switch on “Use hardware acceleration when available”.</div>`;
+        }
+        if (errorMsg) {
+            setTimeout(() => {
+                this.dataService.notifyMessage(errorMsg);
+            }, 1000);
+        }
     }
     ngOnDestroy() {
         this.googleAnalyticsService.unsubscribe();
@@ -75,6 +90,21 @@ export class AppComponent implements OnInit, OnDestroy {
         return this.dataService.notificationTrigger;
     }
 
+    getVideoCardInfo() {
+        const gl = document.createElement('canvas').getContext('webgl');
+        if (!gl) {
+          return {
+            error: 'no webgl',
+          };
+        }
+        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+        return debugInfo ? {
+          vendor: gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL),
+          renderer:  gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL),
+        } : {
+          error: 'no WEBGL_debug_renderer_info',
+        };
+      }
 }
 
 @Injectable()
