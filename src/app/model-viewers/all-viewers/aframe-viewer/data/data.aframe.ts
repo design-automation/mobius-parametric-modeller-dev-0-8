@@ -235,6 +235,15 @@ export class DataAframe {
     }
 
     detachAframeView() {
+        const assetEnt = document.getElementById('aframe_assets');
+        const allImages = document.querySelectorAll('img');
+        allImages.forEach(img => {
+            try {
+                assetEnt.removeChild(img);
+            } catch (ex) {}
+            img.removeEventListener('load', postloadSkyImg);
+        });
+
         if (!this.scene || !this.scene.renderer) { return; }
         this.scene.renderer.forceContextLoss();
         this.scene.renderer.dispose();
@@ -244,6 +253,7 @@ export class DataAframe {
             childObj.remove();
         }
         AFRAME.THREE.Cache.clear();
+
     }
 }
 
