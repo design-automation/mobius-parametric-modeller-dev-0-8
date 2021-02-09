@@ -165,7 +165,15 @@ export class DataAframe {
         let skyURL;
         const backgroundSet = (Number(this.settings.background.background_set) - 1);
         if (backgroundSet < 0) {
-            setTimeout(() => {
+            fetch(this.settings.background.background_url).then(res => {
+                if (!res.ok) {
+                    const notifyButton = <HTMLButtonElement> document.getElementById('hidden_notify_button');
+                    if (!notifyButton) { return; }
+                    notifyButton.value = `Unable to retrieve background image from URL<br>${this.settings.background.background_url}`;
+                    notifyButton.click();
+                } else if (this.settings.background.background_url.trim() === '') {
+                    return;
+                }
                 const assetEnt = document.getElementById('aframe_assets');
                 const allImages = document.querySelectorAll('img');
                 allImages.forEach(img => {
@@ -180,7 +188,7 @@ export class DataAframe {
                 imgEnt.setAttribute('src', this.settings.background.background_url);
                 assetEnt.appendChild(imgEnt);
                 imgEnt.addEventListener('load', postloadSkyImg);
-            }, 0);
+            });
             skyURL = '';
         } else {
             skyURL = '/assets/img/background/bg' + backgroundSet + '/aframe.jpg';
