@@ -25,7 +25,7 @@ export const aframe_default_settings: AframeSettings = {
         rotation: {x: 0, y: 0, z: 0}
     },
     background: {
-        background_set: 0,
+        background_set: 1,
         background_url: ''
     },
     ground: {
