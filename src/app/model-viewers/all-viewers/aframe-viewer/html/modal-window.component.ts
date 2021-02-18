@@ -43,7 +43,7 @@ export class ModalWindowComponent implements OnInit, OnDestroy {
         this.element.addEventListener('click', function (e: any) {
             if (e.target.className === 'modal-background') {
                 modal.close();
-                closeModal.emit()
+                closeModal.emit();
             }
         });
 
@@ -63,7 +63,7 @@ export class ModalWindowComponent implements OnInit, OnDestroy {
 
     // open modal
     open(): void {
-        let modalWindow = document.getElementById('geo-modal-window');
+        let modalWindow = document.getElementById('aframe-modal-window');
         modalWindow.classList.add('open');
         this.element.style.display = 'block';
         document.body.classList.add('modal-open');
