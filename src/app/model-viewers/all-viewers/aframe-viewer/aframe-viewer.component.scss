@@ -56,7 +56,7 @@ as-split-area{
     }
 }
 
-.date-picker-div{
+.position-picker{
     position: absolute;
     bottom: 10px;
     left: 10px;
@@ -356,7 +356,7 @@ body.modal-open {
         float: left;
     }
 
-    #aframe_camera, #aframe_camera_rot, #aframe_camera_height, #grid_pos{
+    .vector_input_div{
         input{
             width: 65px;
             border: 1px solid #bdbdbd;

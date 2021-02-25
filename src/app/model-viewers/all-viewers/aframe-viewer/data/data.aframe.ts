@@ -1,6 +1,8 @@
 import { GIModel } from '@assets/libs/geo-info/GIModel';
 import * as THREE from 'three';
 import { AframeSettings } from '../aframe-viewer.settings';
+import * as Modules from '@assets/core/modules';
+import { _EEntType } from '@assets/core/modules/basic/query';
 
 const DEFAUT_CAMERA_POS = {
     position: new AFRAME.THREE.Vector3(0, 0, 0),
@@ -19,6 +21,9 @@ export class DataAframe {
     public scene;
     public camera;
     public settings;
+
+    public camPosList = [null];
+    public staticCamOn = false;
 
     // test file: https://raw.githubusercontent.com/design-automation/mobius-vr/master/assets/Street%20View%20360_1.jpg
 
@@ -55,6 +60,9 @@ export class DataAframe {
         if (newSetting.background) {
             this.settings.background.background_set = newSetting.background.background_set;
             this.settings.background.background_url = newSetting.background.background_url;
+            this.settings.background.background_position.x = newSetting.background.background_position.x;
+            this.settings.background.background_position.z = newSetting.background.background_position.z;
+            this.settings.background.background_rotation = newSetting.background.background_rotation;
         }
         if (newSetting.ground) {
             this.settings.ground.show = newSetting.ground.show;
@@ -134,10 +142,15 @@ export class DataAframe {
             (<any> entity).setObject3D('mobius_geometry', threeJSGroup);
         }
 
-        this.updateCamera(this.settings.camera);
+        this.updateCamPos();
+
+        if (!this.staticCamOn) {
+            this.updateCamera(this.settings.camera);
+            this.updateSky();
+        }
+
         this.updateGround();
-        this.updateSky();
-        // console.log(this.settings.camera)
+
     }
 
     updateGround() {
@@ -188,6 +201,12 @@ export class DataAframe {
                 imgEnt.setAttribute('src', this.settings.background.background_url);
                 assetEnt.appendChild(imgEnt);
                 imgEnt.addEventListener('load', postloadSkyImg);
+
+                const skyPos = new AFRAME.THREE.Vector3(0, 0, 0);
+                skyPos.copy(this.settings.background.background_position);
+                skyPos.z = - skyPos.z;
+                sky.setAttribute('position', skyPos);
+                sky.setAttribute('rotation', `0 ${90 + this.settings.background.background_rotation} 0`);
             });
             skyURL = '';
         } else {
@@ -212,19 +231,45 @@ export class DataAframe {
                 rotation: cameraEl.getAttribute('rotation')
             };
             cameraEl.object3D.getWorldPosition(camera_pos.position);
+            camera_pos.position.z =  - camera_pos.position.z;
             // camera_pos.position.y = this.settings.camera.position.y;
+            // camera_pos.rotation.y -= 90;
             return camera_pos;
         }
         return null;
+    }
+
+    updateCamPos() {
+        const pts = <string[]> Modules.query.Get(this.model, Modules.query._EEntType.POINT, null);
+        const pos = Modules.attrib.Get(this.model, Modules.query.Get(this.model, Modules.query._EEntType.POSI, pts), 'xyz');
+        const ptAttribs = Modules.attrib.Get(this.model, pts, 'vr');
+        this.camPosList = [{
+            name: 'default',
+            value: null
+        }];
+        for (let i = 0; i < pts.length; i++) {
+            if (!ptAttribs[i]) { continue; }
+            const cam = JSON.parse(JSON.stringify(ptAttribs[i]));
+            cam.pos = pos[i];
+            if (!cam.name) { cam.name = pts[i]; }
+            this.camPosList.push(cam);
+        }
     }
 
     updateCamera(camera_pos = DEFAUT_CAMERA_POS) {
         setTimeout(() => {
             const cameraEl = <any> document.getElementById('aframe_camera');
             if (cameraEl && camera_pos) {
-                cameraEl.setAttribute('position', camera_pos.position);
+                const trueCameraPos = new AFRAME.THREE.Vector3();
+                trueCameraPos.copy(camera_pos.position);
+                trueCameraPos.z = - trueCameraPos.z;
+                cameraEl.setAttribute('position', trueCameraPos);
+
+                const trueCamerarot = new AFRAME.THREE.Vector3();
+                trueCamerarot.copy(camera_pos.rotation);
+                // trueCamerarot.y = 90 +  trueCameraPos.y;
                 cameraEl.setAttribute('look-controls', {enabled: false});
-                cameraEl.setAttribute('rotation', camera_pos.rotation);
+                cameraEl.setAttribute('rotation', trueCamerarot);
                 const newX = cameraEl.object3D.rotation.x;
                 const newY = cameraEl.object3D.rotation.y;
                 cameraEl.components['look-controls'].pitchObject.rotation.x = newX;
@@ -232,6 +277,71 @@ export class DataAframe {
                 cameraEl.setAttribute('look-controls', {enabled: true});
             }
         }, 0);
+    }
+
+    updateCameraPos(posDetails) {
+        const cameraEl = <any> document.getElementById('aframe_camera');
+        const sky = document.getElementById('aframe_sky');
+        sky.setAttribute('position', '0 0 0');
+        sky.setAttribute('rotation', '0 0 0');
+        if (!posDetails || !posDetails.pos || posDetails.pos.length < 2) {
+            this.staticCamOn = false;
+            cameraEl.setAttribute('wasd-controls', 'enabled: true; acceleration: 500%; fly: false');
+            this.updateSky();
+            this.updateCamera(this.settings.camera);
+            return;
+        }
+        this.staticCamOn = true;
+        cameraEl.setAttribute('wasd-controls', 'enabled: false;');
+        const camPos = new AFRAME.THREE.Vector3(0, 0, 0);
+        camPos.x = posDetails.pos[0];
+        camPos.z = 0 - posDetails.pos[1];
+        if (posDetails.pos[2]) {
+            camPos.y = posDetails.pos[2];
+        }
+        camPos.y = 10;
+        cameraEl.setAttribute('position', camPos);
+        if (posDetails.camera_rotation) {
+            cameraEl.setAttribute('rotation', new AFRAME.THREE.Vector3(0, 90 + posDetails.camera_rotation, 0));
+            const newX = cameraEl.object3D.rotation.x;
+            const newY = cameraEl.object3D.rotation.y;
+            cameraEl.components['look-controls'].pitchObject.rotation.x = newX;
+            cameraEl.components['look-controls'].yawObject.rotation.y = newY;
+        }
+
+        if (posDetails.background_url && posDetails.background_rotation) {
+            sky.setAttribute('src', '');
+
+            fetch(posDetails.background_url).then(res => {
+                if (!res.ok) {
+                    const notifyButton = <HTMLButtonElement> document.getElementById('hidden_notify_button');
+                    if (!notifyButton) { return; }
+                    notifyButton.value = `Unable to retrieve background image from URL<br>${this.settings.background.background_url}`;
+                    notifyButton.click();
+                }
+                const assetEnt = document.getElementById('aframe_assets');
+                const allImages = document.querySelectorAll('img');
+                allImages.forEach(img => {
+                    try {
+                        assetEnt.removeChild(img);
+                    } catch (ex) {}
+                    img.removeEventListener('load', postloadSkyImg);
+                });
+                const imgEnt = document.createElement('img');
+                imgEnt.id = 'aframe_sky_img';
+                imgEnt.setAttribute('crossorigin', 'anonymous');
+                imgEnt.setAttribute('src', posDetails.background_url);
+                assetEnt.appendChild(imgEnt);
+                imgEnt.addEventListener('load', postloadSkyImg);
+                const skypos = new AFRAME.THREE.Vector3(0, 0, 0);
+                skypos.copy(camPos);
+                skypos.y = 0;
+                sky.setAttribute('position', camPos);
+                sky.setAttribute('rotation', `0 ${90 + posDetails.background_rotation} 0`);
+            });
+
+        }
+
     }
 
     detachAframeView() {

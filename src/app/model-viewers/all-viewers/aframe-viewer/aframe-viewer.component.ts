@@ -28,6 +28,10 @@ export class AframeViewerComponent implements OnInit{
     public backup_settings: AframeSettings;
     public settings: AframeSettings = aframe_default_settings;
 
+    public showCamPosList = false;
+    public camPosList = [null];
+    public selectedCamPos = 0;
+
     temp_camera_pos = new AFRAME.THREE.Vector3(0, 0, 0);
     temp_camera_rot = new AFRAME.THREE.Vector3(-1, 0, 0);
 
@@ -78,6 +82,43 @@ export class AframeViewerComponent implements OnInit{
         }
     }
 
+    public onEventAction(event) {
+        if (event.type === 'posListUpdate' && event.posList) {
+            this.camPosList = event.posList;
+            if (this.camPosList && this.camPosList.length > 1) {
+                this.showCamPosList = true;
+            } else {
+                this.showCamPosList = false;
+            }
+            if (this.showCamPosList && this.dataService.aframeCamPos) {
+                let posCheck = false;
+                for (let i = 0 ; i < this.camPosList.length; i ++) {
+                    if (this.dataService.aframeCamPos === this.camPosList[i].name) {
+                        posCheck = true;
+                        this.changePos(i);
+                    }
+                }
+                if (!posCheck) {
+                    this.selectedCamPos = 0;
+                    this.dataService.aframeCamPos = 'default';
+                }
+            }
+        }
+    }
+
+    changePos(value) {
+        const selectedIndex = Number(value);
+        // this.selectedCamPos = this.camPosList[selectedIndex];
+        this.selectedCamPos = selectedIndex;
+        const aframeData = this.dataService.getAframeData();
+        if (selectedIndex > 0) {
+            aframeData.updateCameraPos(this.camPosList[selectedIndex]);
+        } else {
+            aframeData.updateCameraPos(null);
+        }
+        this.dataService.aframeCamPos = this.camPosList[selectedIndex].name;
+        (<HTMLElement> document.activeElement).blur();
+    }
 
     zoomfit() {
     }
@@ -144,6 +185,24 @@ export class AframeViewerComponent implements OnInit{
                 break;
             case 'background.set':
                 this.settings.background.background_set = Number(value);
+                break;
+            case 'background.pos_x':
+                if (isNaN(value)) {
+                    return;
+                }
+                this.settings.background.background_position.x = Number(value);
+                break;
+            case 'background.pos_z':
+                if (isNaN(value)) {
+                    return;
+                }
+                this.settings.background.background_position.z = Number(value);
+                break;
+            case 'background.rotation':
+                if (isNaN(value)) {
+                    return;
+                }
+                this.settings.background.background_rotation = Number(value);
                 break;
             case 'ground.show':
                 this.settings.ground.show = !this.settings.ground.show;
@@ -244,4 +303,9 @@ export class AframeViewerComponent implements OnInit{
         }
     }
 
+    resetToDefault() {
+        this.settings = JSON.parse(JSON.stringify(aframe_default_settings));
+        this.temp_camera_pos = JSON.parse(JSON.stringify(aframe_default_settings.camera.position));
+        this.temp_camera_rot = JSON.parse(JSON.stringify(aframe_default_settings.camera.rotation));
+    }
 }

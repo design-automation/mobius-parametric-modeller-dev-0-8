@@ -1,4 +1,4 @@
-import { OnChanges, Component, Input, AfterViewInit, OnDestroy } from '@angular/core';
+import { OnChanges, Component, Input, AfterViewInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 // import @angular stuff
 import {  } from '@angular/core';
 // import app services
@@ -19,6 +19,7 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy 
     // model data passed to the viewer
     @Input() model: GIModel;
     @Input() nodeIndex: number;
+    @Output() eventAction = new EventEmitter();
 
     camPosSaved = false;
 
@@ -50,7 +51,9 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy 
             data.updateCamera(this.dataService.aframe_cam);
             this.dataService.aframe_cam = null;
         }
-        // this.dataService.createAframeViewer(this.dataService.getThreejsScene());
+        setTimeout(() => {
+            this.updateCamList(data);
+        }, 0);
     }
 
     ngOnChanges(changes) {
@@ -75,7 +78,8 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy 
                     data.updateCamera(this.dataService.aframe_cam);
                     this.dataService.aframe_cam = null;
                 }
-                // data.view.notifyChange();
+                // ###############################
+                this.updateCamList(data);
             }
         }
     }
@@ -84,5 +88,18 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy 
         const data = this.dataService.getAframeData();
         this.dataService.aframe_cam = data.getCameraPos();
         this.camPosSaved = true;
+    }
+
+    updateCamList(data) {
+        this.eventAction.emit({
+            'type': 'posListUpdate',
+            'posList': data.camPosList
+        });
+        // data.updateCameraPos(null);
+    }
+
+    onmousedown(event) {
+        (<HTMLElement> document.activeElement).blur();
+        event.preventDefault();
     }
 }

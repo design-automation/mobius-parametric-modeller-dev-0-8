@@ -1,16 +1,17 @@
 <div id='save_aframe_camera' (click)='saveCamPos()'></div>
-<div id="aframe-container">
+<div id="aframe-container" (mousedown)='onmousedown($event)'>
     <a-scene id='aframe_scene' light='defaultLightsEnabled: false'
     webxr="requiredFeatures: hit-test,local-floor;
     optionalFeatures: dom-overlay,unbounded;
     overlayElement: #overlay;"
     embedded>
         <a-assets id='aframe_assets'></a-assets>
-        <a-entity id='aframe_ambientLight' light='type: ambient; color: #EEE; intensity: 0.5' position='-1 1 0'></a-entity>
-        <a-entity id='aframe_directionalLight' light='type: directional; color: #EEE; intensity: 0.5' position='-1 1 0'></a-entity>
+        <a-entity id='aframe_ambientLight' light='type: ambient; color: #EEE; intensity: 0.15' position='0 0 0'></a-entity>
+        <a-entity id='aframe_hemisphereLight' light='type: hemisphere; color: #EEE; groundColor: #EEE; intensity: 0.15' position='0 0 0'></a-entity>
+        <a-entity id='aframe_directionalLight' light='type: directional; color: #EEE; intensity: 1' position='-1 1 1'></a-entity>
         <a-camera id='aframe_camera' wasd-controls='acceleration: 500%; fly: false' position='0 2 0'  rotation='0 0 0' look-controls></a-camera>
         <a-sky id='aframe_sky'></a-sky>
-        <a-entity id='mobius_geom' mobius_geom rotation="-90 0 0" position="0 0 0"></a-entity>
+        <a-entity id='mobius_geom' shadow="receive: true" mobius_geom rotation="-90 0 0" position="0 0 0"></a-entity>
         <!-- <a-plane position="0 -2.1 -4" rotation="-90 0 0" width="1000" height="1000" color="#AAAAAA"></a-plane> -->
     </a-scene>
 </div>
