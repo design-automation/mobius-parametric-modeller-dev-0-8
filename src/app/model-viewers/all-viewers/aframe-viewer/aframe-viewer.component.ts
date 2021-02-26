@@ -183,6 +183,11 @@ export class AframeViewerComponent implements OnInit{
                 this.temp_camera_rot.z = cam_rot_data.rotation.z;
                 this.settings.camera.rotation = this.temp_camera_rot;
                 break;
+            case 'background.get_background_pos':
+                const cam_pos = this.dataService.getAframeData().getCameraPos();
+                this.settings.background.background_position.x = cam_pos.position.x;
+                this.settings.background.background_position.z = cam_pos.position.z;
+                break;
             case 'background.set':
                 this.settings.background.background_set = Number(value);
                 break;

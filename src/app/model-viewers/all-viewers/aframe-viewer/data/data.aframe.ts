@@ -282,8 +282,11 @@ export class DataAframe {
     updateCameraPos(posDetails) {
         const cameraEl = <any> document.getElementById('aframe_camera');
         const sky = document.getElementById('aframe_sky');
+        const mobiusGeom = document.getElementById('mobius_geom');
         sky.setAttribute('position', '0 0 0');
         sky.setAttribute('rotation', '0 0 0');
+        sky.setAttribute('scale', '-1 1 1');
+        mobiusGeom.setAttribute('scale', '1 1 1');
         if (!posDetails || !posDetails.pos || posDetails.pos.length < 2) {
             this.staticCamOn = false;
             cameraEl.setAttribute('wasd-controls', 'enabled: true; acceleration: 500%; fly: false');
@@ -291,15 +294,24 @@ export class DataAframe {
             this.updateCamera(this.settings.camera);
             return;
         }
+        let scaleVal = 1;
+        if (posDetails.scaling) {
+            scaleVal = Number(posDetails.scaling);
+            if (scaleVal) {
+                const scaleString = `${scaleVal} ${scaleVal} ${scaleVal}`;
+                mobiusGeom.setAttribute('scale', scaleString);
+                sky.setAttribute('scale', '-' + scaleString);
+            }
+        }
         this.staticCamOn = true;
         cameraEl.setAttribute('wasd-controls', 'enabled: false;');
         const camPos = new AFRAME.THREE.Vector3(0, 0, 0);
-        camPos.x = posDetails.pos[0];
-        camPos.z = 0 - posDetails.pos[1];
-        if (posDetails.pos[2]) {
-            camPos.y = posDetails.pos[2];
+        camPos.x = posDetails.pos[0] * scaleVal;
+        camPos.z = (0 - posDetails.pos[1]) * scaleVal;
+        camPos.y = posDetails.pos[2] * scaleVal;
+        if (!camPos.y && camPos.y !== 0) {
+            camPos.y = 10 * scaleVal;
         }
-        camPos.y = 10;
         cameraEl.setAttribute('position', camPos);
         if (posDetails.camera_rotation) {
             cameraEl.setAttribute('rotation', new AFRAME.THREE.Vector3(0, 90 + posDetails.camera_rotation, 0));
@@ -336,12 +348,11 @@ export class DataAframe {
                 const skypos = new AFRAME.THREE.Vector3(0, 0, 0);
                 skypos.copy(camPos);
                 skypos.y = 0;
-                sky.setAttribute('position', camPos);
+                sky.setAttribute('position', skypos);
                 sky.setAttribute('rotation', `0 ${90 + posDetails.background_rotation} 0`);
             });
 
         }
-
     }
 
     detachAframeView() {

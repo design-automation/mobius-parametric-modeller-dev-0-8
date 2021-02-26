@@ -37,6 +37,7 @@
                                 <input type="number"
                                 (change)="settingOnChange('background.pos_z', $event.target.value)" 
                                 [value]="formatNumber(settings.background.background_position.z)">
+                                <button (click)="settingOnChange('background.get_background_pos')" class="filebtn getbtn">Get</button>
                             </dd>
                             <dd class='vector_input_div'>
                                 <div class="label">Background Rotation</div>
