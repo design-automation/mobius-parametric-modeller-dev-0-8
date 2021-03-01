@@ -77,7 +77,7 @@ export const aframe_default_settings: AframeSettings = {
         shadowSize: 2048
     },
     ground: {
-        show: true,
+        show: false,
         width: 1000,
         length: 1000,
         height: -0.5,

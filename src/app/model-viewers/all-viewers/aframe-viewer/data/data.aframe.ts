@@ -207,6 +207,9 @@ export class DataAframe {
                 skyPos.z = - skyPos.z;
                 sky.setAttribute('position', skyPos);
                 sky.setAttribute('rotation', `0 ${90 + this.settings.background.background_rotation} 0`);
+                // sky.setAttribute('rotation', `0 ${this.settings.background.background_rotation} 0`);
+                // sky.setAttribute('rotation', `0 ${90 - this.settings.background.background_rotation} 0`);
+                // sky.setAttribute('rotation', `0 0 0`);
             });
             skyURL = '';
         } else {
@@ -232,8 +235,10 @@ export class DataAframe {
             };
             cameraEl.object3D.getWorldPosition(camera_pos.position);
             camera_pos.position.z =  - camera_pos.position.z;
-            // camera_pos.position.y = this.settings.camera.position.y;
-            // camera_pos.rotation.y -= 90;
+            camera_pos.position.y = this.settings.camera.position.y;
+            camera_pos.rotation.y = 0 - camera_pos.rotation.y;
+            while (camera_pos.rotation.y < -180) { camera_pos.rotation.y += 360; }
+            while (camera_pos.rotation.y > 180) { camera_pos.rotation.y -= 360; }
             return camera_pos;
         }
         return null;
@@ -267,7 +272,7 @@ export class DataAframe {
 
                 const trueCamerarot = new AFRAME.THREE.Vector3();
                 trueCamerarot.copy(camera_pos.rotation);
-                // trueCamerarot.y = 90 +  trueCameraPos.y;
+                trueCamerarot.y = 0 - camera_pos.rotation.y;
                 cameraEl.setAttribute('look-controls', {enabled: false});
                 cameraEl.setAttribute('rotation', trueCamerarot);
                 const newX = cameraEl.object3D.rotation.x;
@@ -314,7 +319,7 @@ export class DataAframe {
         }
         cameraEl.setAttribute('position', camPos);
         if (posDetails.camera_rotation) {
-            cameraEl.setAttribute('rotation', new AFRAME.THREE.Vector3(0, 90 + posDetails.camera_rotation, 0));
+            cameraEl.setAttribute('rotation', new AFRAME.THREE.Vector3(0, 0 - posDetails.camera_rotation, 0));
             const newX = cameraEl.object3D.rotation.x;
             const newY = cameraEl.object3D.rotation.y;
             cameraEl.components['look-controls'].pitchObject.rotation.x = newX;
@@ -350,6 +355,9 @@ export class DataAframe {
                 skypos.y = 0;
                 sky.setAttribute('position', skypos);
                 sky.setAttribute('rotation', `0 ${90 + posDetails.background_rotation} 0`);
+                // sky.setAttribute('rotation', `0 ${posDetails.background_rotation} 0`);
+                // sky.setAttribute('rotation', `0 ${90 - posDetails.background_rotation} 0`);
+                // sky.setAttribute('rotation', `0 0 0`);
             });
 
         }
