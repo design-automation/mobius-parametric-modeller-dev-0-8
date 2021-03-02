@@ -147,10 +147,75 @@ export class DataAframe {
         if (!this.staticCamOn) {
             this.updateCamera(this.settings.camera);
             this.updateSky();
+            this.updateLight(threeJSGroup);
         }
 
         this.updateGround();
 
+    }
+
+    updateLight(threeJSGroup) {
+        const dirLightElement = <any> document.getElementById('aframe_directionalLight');
+        // const lightSetting = {
+        //     shadowCameraTop: boundingSphere.radius,
+        //     shadowCameraLeft: boundingSphere.radius,
+        //     shadowCameraRight: boundingSphere.radius,
+        //     shadowCameraBottom: boundingSphere.radius,
+        //     shadowCameraFar: boundingSphere.radius * 2,
+        //     shadowCameraVisible: true,
+        //     castShadow: true
+        // };
+        // dirLight.setAttribute('light', JSON.stringify(lightSetting));
+        const dirLight = dirLightElement.object3D.children[0];
+        if (!dirLight) {
+            setTimeout(() => {this.updateLight(threeJSGroup); }, 50);
+            return;
+        }
+        const boundingSphere = this._getAllObjsSphere(threeJSGroup);
+        dirLight.shadow.camera.top = boundingSphere.radius;
+        dirLight.shadow.camera.left = -boundingSphere.radius;
+        dirLight.shadow.camera.right = boundingSphere.radius;
+        dirLight.shadow.camera.bottom = -boundingSphere.radius;
+        dirLight.shadow.camera.far = boundingSphere.radius * 20;
+        dirLight.shadow.bias = -0.0001;
+        dirLight.shadow.mapSize.width = 2048;  // default
+        dirLight.shadow.mapSize.height = 2048; // default
+
+        const dirLightPos = this.getDLPosition(boundingSphere.radius, 90, 45, boundingSphere.center);
+        dirLight.position.set(...dirLightPos);
+
+        // dirLight.setAttribute('', )
+    }
+
+    /**
+     *
+     * @param scale
+     * @param azimuth
+     * @param altitude
+     */
+    public getDLPosition(scale, azimuth, altitude, objSphereCenter): number[] {
+        if (scale === 0) { scale = 100; }
+        const azimuth_calc = -90 + azimuth;
+        let posX = Math.cos(altitude * Math.PI * 2 / 360) * Math.cos(azimuth_calc * Math.PI * 2 / 360) * scale * 2,
+            posY = Math.cos(altitude * Math.PI * 2 / 360) * Math.sin(azimuth_calc * Math.PI * 2 / 360) * scale * 2,
+            posZ = Math.sin(altitude * Math.PI * 2 / 360) * scale * 2;
+
+        if (objSphereCenter) {
+            posX += objSphereCenter.x;
+            posY += objSphereCenter.y;
+            posZ += objSphereCenter.z;
+        }
+        return [posX, posZ, posY];
+    }
+
+    /**
+     * Get the bounding sphere of all objects
+     */
+    private _getAllObjsSphere(threeJSGroup) {
+        const boxHelper = new THREE.BoxHelper(threeJSGroup);
+        boxHelper.geometry.computeBoundingSphere();
+        const boundingSphere = boxHelper.geometry.boundingSphere;
+        return boundingSphere;
     }
 
     updateGround() {

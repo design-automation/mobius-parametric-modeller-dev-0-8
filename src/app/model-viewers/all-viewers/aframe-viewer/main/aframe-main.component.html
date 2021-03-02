@@ -4,11 +4,12 @@
     webxr="requiredFeatures: hit-test,local-floor;
     optionalFeatures: dom-overlay,unbounded;
     overlayElement: #overlay;"
+    shadow="type: pcfsoft"
     embedded>
         <a-assets id='aframe_assets'></a-assets>
         <a-entity id='aframe_ambientLight' light='type: ambient; color: #EEE; intensity: 0.15' position='0 0 0'></a-entity>
         <a-entity id='aframe_hemisphereLight' light='type: hemisphere; color: #EEE; groundColor: #EEE; intensity: 0.15' position='0 0 0'></a-entity>
-        <a-entity id='aframe_directionalLight' light='type: directional; color: #EEE; intensity: 1' position='-1 1 1'></a-entity>
+        <a-entity id='aframe_directionalLight' light='type: directional; color: #EEE; intensity: 1; castShadow:true;' position='1 1 1'></a-entity>
         <a-camera id='aframe_camera' wasd-controls='acceleration: 500%; fly: false' position='0 2 0'  rotation='0 0 0' look-controls></a-camera>
         <a-sky id='aframe_sky'></a-sky>
         <a-entity id='mobius_geom' shadow="receive: true" mobius_geom rotation="-90 0 0" position="0 0 0"></a-entity>
