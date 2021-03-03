@@ -85,11 +85,11 @@
                                 <input type="checkbox"
                                 name="onoffswitch"
                                 class="onoffswitch-checkbox"
-                                id="AmbientOnOff"
+                                id="aframeAmbientOnOff"
                                 [checked]='settings.ambient_light.show'
                                 (change)="settingOnChange('ambient_light.show')"
                                 >
-                                <label class="onoffswitch-label" for="AmbientOnOff">
+                                <label class="onoffswitch-label" for="aframeAmbientOnOff">
                                     <span class="onoffswitch-inner"></span>
                                     <span class="onoffswitch-switch"></span>
                                 </label>
@@ -119,11 +119,11 @@
                                 <input type="checkbox"
                                 name="onoffswitch"
                                 class="onoffswitch-checkbox"
-                                id="HemisphereOnOff"
+                                id="aframeHemisphereOnOff"
                                 [checked]='settings.hemisphere_light.show'
                                 (change)="settingOnChange('hemisphere_light.show')"
                                 >
-                                <label class="onoffswitch-label" for="HemisphereOnOff">
+                                <label class="onoffswitch-label" for="aframeHemisphereOnOff">
                                     <span class="onoffswitch-inner"></span>
                                     <span class="onoffswitch-switch"></span>
                                 </label>
@@ -163,11 +163,11 @@
                                 <input type="checkbox"
                                 name="onoffswitch"
                                 class="onoffswitch-checkbox"
-                                id="DirectionalOnOff"
+                                id="aframeDirectionalOnOff"
                                 [checked]='settings.directional_light.show'
                                 (change)="settingOnChange('directional_light.show')"
                                 >
-                                <label class="onoffswitch-label" for="DirectionalOnOff">
+                                <label class="onoffswitch-label" for="aframeDirectionalOnOff">
                                     <span class="onoffswitch-inner"></span>
                                     <span class="onoffswitch-switch"></span>
                                 </label>
@@ -188,22 +188,6 @@
                             <div class="slidecontainer light">
                                 <input type="range" min="0" max="1" step="0.01" [value]="settings.directional_light.intensity" class="slider" (input)="settingOnChange('directional_light.intensity', $event.target.value)">
                                 <input type="text" [value]="settings.directional_light.intensity" disabled>
-                            </div>
-                        </dd>
-                        <dd>
-                            <div class="label">Shadow</div>
-                            <div class="onoffswitch">
-                                <input type="checkbox"
-                                name="onoffswitch"
-                                class="onoffswitch-checkbox"
-                                id="DirectionalShadowOnOff"
-                                [checked]='settings.directional_light.shadow'
-                                (change)="settingOnChange('directional_light.shadow')"
-                                >
-                                <label class="onoffswitch-label" for="DirectionalShadowOnOff">
-                                    <span class="onoffswitch-inner"></span>
-                                    <span class="onoffswitch-switch"></span>
-                                </label>
                             </div>
                         </dd>
                         <dd>
@@ -246,11 +230,11 @@
                                 <input type="checkbox"
                                 name="onoffswitch"
                                 class="onoffswitch-checkbox"
-                                id="GroundOnOff_aframe"
+                                id="aframeGroundOnOff"
                                 [checked]='settings.ground.show'
                                 (change)="settingOnChange('ground.show')"
                                 >
-                                <label class="onoffswitch-label" for="GroundOnOff_aframe">
+                                <label class="onoffswitch-label" for="aframeGroundOnOff">
                                     <span class="onoffswitch-inner"></span>
                                     <span class="onoffswitch-switch"></span>
                                 </label>
@@ -301,5 +285,4 @@
         <button (click)="closeModal('aframe_settings_modal');" class='filebtn closebtn setting'>Cancel</button>
         <button (click)="resetToDefault();" class='filebtn closebtn setting' style="float: right;">Default</button>
     </modal-window>
-    <div id='geo-attribution'></div>
 </div>

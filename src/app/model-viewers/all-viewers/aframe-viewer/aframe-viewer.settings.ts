@@ -26,11 +26,8 @@ export interface AframeSettings {
         show: boolean,
         color: string,
         intensity: number,
-        shadow: boolean,
         azimuth: number,
         altitude: number,
-        distance: number,
-        type: string,
         shadowSize: number
     };
     ground: {
@@ -69,11 +66,8 @@ export const aframe_default_settings: AframeSettings = {
         show: true,
         color: '#FFFFFF',
         intensity: 1,
-        shadow: true,
         azimuth: 90,
         altitude: 45,
-        distance: 10,
-        type: 'directional',
         shadowSize: 2048
     },
     ground: {

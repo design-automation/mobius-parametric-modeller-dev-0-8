@@ -209,6 +209,42 @@ export class AframeViewerComponent implements OnInit{
                 }
                 this.settings.background.background_rotation = Number(value);
                 break;
+
+            case 'ambient_light.show': // Ambient Light
+                this.settings.ambient_light.show = !this.settings.ambient_light.show;
+                break;
+            case 'ambient_light.intensity':
+                this.settings.ambient_light.intensity = Number(value);
+                break;
+            case 'hemisphere_light.show': // Hemisphere Light
+                this.settings.hemisphere_light.show = !this.settings.hemisphere_light.show;
+                break;
+            case 'hemisphere_light.intensity':
+                this.settings.hemisphere_light.intensity = Number(value);
+                break;
+            case 'directional_light.show': // Directional Light
+                console.log('?????????/')
+                this.settings.directional_light.show = !this.settings.directional_light.show;
+                if (this.settings.directional_light.show) {
+                    this.settings.ambient_light.intensity = 0.15;
+                    this.settings.hemisphere_light.intensity = 0.15;
+                } else {
+                    this.settings.ambient_light.intensity = 0.5;
+                    this.settings.hemisphere_light.intensity = 0.5;
+                }
+                break;
+            case 'directional_light.intensity':
+                this.settings.directional_light.intensity = Number(value);
+                break;
+            case 'directional_light.shadowSize':
+                this.settings.directional_light.shadowSize = Number(value);
+                break;
+            case 'directional_light.azimuth':
+                this.settings.directional_light.azimuth = Number(value);
+                break;
+            case 'directional_light.altitude':
+                this.settings.directional_light.altitude = Number(value);
+                break;
             case 'ground.show':
                 this.settings.ground.show = !this.settings.ground.show;
                 break;

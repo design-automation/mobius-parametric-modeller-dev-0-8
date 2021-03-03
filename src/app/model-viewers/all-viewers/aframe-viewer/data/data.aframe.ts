@@ -20,7 +20,7 @@ export class DataAframe {
     public container: HTMLDivElement;
     public scene;
     public camera;
-    public settings;
+    public settings: AframeSettings;
 
     public camPosList = [null];
     public staticCamOn = false;
@@ -81,6 +81,25 @@ export class DataAframe {
                 this.settings.camera.rotation.y = newSetting.camera.rotation.y;
                 this.settings.camera.rotation.z = newSetting.camera.rotation.z;
             }
+        }
+        if (newSetting.ambient_light) {
+            this.settings.ambient_light.show = newSetting.ambient_light.show;
+            this.settings.ambient_light.color = newSetting.ambient_light.color;
+            this.settings.ambient_light.intensity = newSetting.ambient_light.intensity;
+        }
+        if (newSetting.hemisphere_light) {
+            this.settings.hemisphere_light.show = newSetting.hemisphere_light.show;
+            this.settings.hemisphere_light.skyColor = newSetting.hemisphere_light.skyColor;
+            this.settings.hemisphere_light.groundColor = newSetting.hemisphere_light.groundColor;
+            this.settings.hemisphere_light.intensity = newSetting.hemisphere_light.intensity;
+        }
+        if (newSetting.directional_light) {
+            this.settings.directional_light.show = newSetting.directional_light.show;
+            this.settings.directional_light.color = newSetting.directional_light.color;
+            this.settings.directional_light.intensity = newSetting.directional_light.intensity;
+            this.settings.directional_light.azimuth = newSetting.directional_light.azimuth;
+            this.settings.directional_light.altitude = newSetting.directional_light.altitude;
+            this.settings.directional_light.shadowSize = newSetting.directional_light.shadowSize;
         }
         localStorage.setItem('aframe_settings', JSON.stringify(this.settings));
     }
@@ -155,36 +174,52 @@ export class DataAframe {
     }
 
     updateLight(threeJSGroup) {
+        const ambLightElement = <any> document.getElementById('aframe_ambientLight');
+        const hemLightElement = <any> document.getElementById('aframe_hemisphereLight');
         const dirLightElement = <any> document.getElementById('aframe_directionalLight');
-        // const lightSetting = {
-        //     shadowCameraTop: boundingSphere.radius,
-        //     shadowCameraLeft: boundingSphere.radius,
-        //     shadowCameraRight: boundingSphere.radius,
-        //     shadowCameraBottom: boundingSphere.radius,
-        //     shadowCameraFar: boundingSphere.radius * 2,
-        //     shadowCameraVisible: true,
-        //     castShadow: true
-        // };
-        // dirLight.setAttribute('light', JSON.stringify(lightSetting));
+        const ambLight = ambLightElement.object3D.children[0];
+        const hemLight = hemLightElement.object3D.children[0];
         const dirLight = dirLightElement.object3D.children[0];
-        if (!dirLight) {
+        if (!ambLight || !hemLight || !dirLight) {
             setTimeout(() => {this.updateLight(threeJSGroup); }, 50);
             return;
         }
-        const boundingSphere = this._getAllObjsSphere(threeJSGroup);
-        dirLight.shadow.camera.top = boundingSphere.radius;
-        dirLight.shadow.camera.left = -boundingSphere.radius;
-        dirLight.shadow.camera.right = boundingSphere.radius;
-        dirLight.shadow.camera.bottom = -boundingSphere.radius;
-        dirLight.shadow.camera.far = boundingSphere.radius * 20;
-        dirLight.shadow.bias = -0.0001;
-        dirLight.shadow.mapSize.width = 2048;  // default
-        dirLight.shadow.mapSize.height = 2048; // default
+        if (this.settings.ambient_light.show) {
+            ambLight.visible = true;
+            ambLight.color = new AFRAME.THREE.Color(parseInt(this.settings.ambient_light.color.replace('#', '0x'), 16));
+            ambLight.intensity = this.settings.ambient_light.intensity;
+        } else {
+            ambLight.visible = false;
+        }
 
-        const dirLightPos = this.getDLPosition(boundingSphere.radius, 90, 45, boundingSphere.center);
-        dirLight.position.set(...dirLightPos);
+        if (this.settings.hemisphere_light.show) {
+            hemLight.visible = true;
+            hemLight.intensity = this.settings.hemisphere_light.intensity;
+            hemLight.color = new AFRAME.THREE.Color(parseInt(this.settings.hemisphere_light.skyColor.replace('#', '0x'), 16));
+            hemLight.groundColor = new AFRAME.THREE.Color(parseInt(this.settings.hemisphere_light.groundColor.replace('#', '0x'), 16));
+        } else {
+            hemLight.visible = false;
+        }
 
-        // dirLight.setAttribute('', )
+        if (this.settings.directional_light.show) {
+            const boundingSphere = this._getAllObjsSphere(threeJSGroup);
+            dirLight.visible = true;
+            dirLight.intensity = this.settings.directional_light.intensity;
+            dirLight.color = new AFRAME.THREE.Color(parseInt(this.settings.directional_light.color.replace('#', '0x'), 16));
+            dirLight.shadow.camera.top = boundingSphere.radius;
+            dirLight.shadow.camera.left = -boundingSphere.radius;
+            dirLight.shadow.camera.right = boundingSphere.radius;
+            dirLight.shadow.camera.bottom = -boundingSphere.radius;
+            dirLight.shadow.camera.far = boundingSphere.radius * 20;
+            dirLight.shadow.bias = -0.0001;
+            dirLight.shadow.mapSize.width = this.settings.directional_light.shadowSize;  // default
+            dirLight.shadow.mapSize.height = this.settings.directional_light.shadowSize; // default
+            const dirLightPos = this.getDLPosition(boundingSphere.radius, this.settings.directional_light.azimuth, this.settings.directional_light.altitude, boundingSphere.center);
+            dirLight.position.set(...dirLightPos);
+        } else {
+            dirLight.visible = false;
+        }
+
     }
 
     /**
@@ -231,10 +266,11 @@ export class DataAframe {
         ground.id = 'aframe_ground';
         ground.setAttribute('position', '0 ' + this.settings.ground.height + ' 0');
         ground.setAttribute('rotation', '-90 0 0');
-        ground.setAttribute('width', this.settings.ground.width);
-        ground.setAttribute('height', this.settings.ground.length);
+        ground.setAttribute('width', this.settings.ground.width.toString());
+        ground.setAttribute('height', this.settings.ground.length.toString());
         ground.setAttribute('color', this.settings.ground.color);
-        ground.setAttribute('metalness', this.settings.ground.shininess);
+        ground.setAttribute('metalness', this.settings.ground.shininess.toString());
+        ground.setAttribute('shadow', 'receive: true');
         this.scene.append(ground);
     }
 
