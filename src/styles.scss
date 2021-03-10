@@ -202,6 +202,7 @@ input, textarea, select, a {
 }
 
 .mat-slider-thumb{
+    display: none;
 	border-radius: 0 !important;
 	background-color: $color5 !important;
 	border: 1px solid $color1 !important;
