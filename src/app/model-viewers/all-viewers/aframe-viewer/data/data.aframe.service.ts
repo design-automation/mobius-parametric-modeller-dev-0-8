@@ -25,7 +25,7 @@ export class DataAframeService {
     /**
      * Get the Aframe Scene
      */
-    getAframeData(): any {
+    getAframeData(): DataAframe {
         return this._aframe_data;
     }
     /**
@@ -63,7 +63,4 @@ export class DataAframeService {
         this._aframeCamPos = value;
     }
 
-    // createAframeViewer(threejsScene) {
-    //     this._aframe_data.createAframeViewer(threejsScene);
-    // }
 }

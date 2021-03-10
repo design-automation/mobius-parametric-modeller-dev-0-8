@@ -11,6 +11,9 @@ import { DataAframeService } from './data/data.aframe.service';
 import { ModalService } from './html/modal-window.service';
 import { DataService as ThreeJSDataService } from '../gi-viewer/data/data.service';
 import { AframeSettings, aframe_default_settings } from './aframe-viewer.settings';
+import { IProcedure, ProcedureTypes } from '@models/procedure';
+import { NodeUtils } from '@models/node';
+import { checkNodeValidity } from '@shared/parser';
 
 /**
  * GIViewerComponent
@@ -31,6 +34,14 @@ export class AframeViewerComponent implements OnInit{
     public showCamPosList = false;
     public camPosList = [null];
     public selectedCamPos = 0;
+
+    public vr = {
+        enabled: false,
+        background_url: '',
+        background_rotation: 0,
+        camera_position: new AFRAME.THREE.Vector3(0, 0, 0),
+        camera_rotation: new AFRAME.THREE.Vector3(0, 0, 0),
+    };
 
     temp_camera_pos = new AFRAME.THREE.Vector3(0, 0, 0);
     temp_camera_rot = new AFRAME.THREE.Vector3(-1, 0, 0);
@@ -54,7 +65,11 @@ export class AframeViewerComponent implements OnInit{
             localStorage.setItem('aframe_settings', JSON.stringify(previous_settings));
             this.settings = previous_settings;
         }
-        this.dataService.setAframeScene(this.settings);
+        const data = this.dataService.getAframeData();
+        if (!data) {
+            this.dataService.setAframeScene(this.settings);
+        }
+        this.resetVRSettings();
     }
 
     /**
@@ -89,6 +104,9 @@ export class AframeViewerComponent implements OnInit{
                 this.showCamPosList = true;
             } else {
                 this.showCamPosList = false;
+                this.selectedCamPos = 0;
+                this.dataService.aframeCamPos = 'default';
+                this.changePos(0);
             }
             if (this.showCamPosList && this.dataService.aframeCamPos) {
                 let posCheck = false;
@@ -101,6 +119,7 @@ export class AframeViewerComponent implements OnInit{
                 if (!posCheck) {
                     this.selectedCamPos = 0;
                     this.dataService.aframeCamPos = 'default';
+                    this.changePos(0);
                 }
             }
         }
@@ -209,6 +228,57 @@ export class AframeViewerComponent implements OnInit{
                 }
                 this.settings.background.background_rotation = Number(value);
                 break;
+            case 'vr.enabled':
+                this.vr.enabled = !this.vr.enabled;
+                break;
+            case 'vr.background_rotation':
+                if (isNaN(value)) {
+                    return;
+                }
+                this.vr.background_rotation = Number(value);
+                break;
+            case 'vr.camera.pos_x':
+                if (isNaN(value)) {
+                    return;
+                }
+                this.vr.camera_position.x = Math.round(value);
+                break;
+            case 'vr.camera.pos_y':
+                if (isNaN(value)) {
+                    return;
+                }
+                this.vr.camera_position.y = Math.round(value);
+                break;
+            case 'vr.camera.pos_z':
+                if (isNaN(value)) {
+                    return;
+                }
+                this.vr.camera_position.z = Math.round(value);
+                break;
+            case 'vr.camera.rot_x':
+                if (isNaN(value)) {
+                    return;
+                }
+                this.vr.camera_rotation.x = Math.round(value);
+                break;
+            case 'vr.camera.rot_y':
+                if (isNaN(value)) {
+                    return;
+                }
+                this.vr.camera_rotation.y = Math.round(value);
+                break;
+            case 'camera.get_vr_camera_pos':
+                const vr_cam_pos_data = this.dataService.getAframeData().getCameraPos();
+                if (!vr_cam_pos_data) { break; }
+                this.vr.camera_position.x = vr_cam_pos_data.position.x;
+                this.vr.camera_position.z = vr_cam_pos_data.position.z;
+                break;
+            case 'camera.get_vr_camera_rot':
+                const vr_cam_rot_data = this.dataService.getAframeData().getCameraPos();
+                if (!vr_cam_rot_data) { break; }
+                this.vr.camera_rotation.x = vr_cam_rot_data.rotation.x;
+                this.vr.camera_rotation.y = vr_cam_rot_data.rotation.y;
+                break;
 
             case 'ambient_light.show': // Ambient Light
                 this.settings.ambient_light.show = !this.settings.ambient_light.show;
@@ -223,7 +293,6 @@ export class AframeViewerComponent implements OnInit{
                 this.settings.hemisphere_light.intensity = Number(value);
                 break;
             case 'directional_light.show': // Directional Light
-                console.log('?????????/')
                 this.settings.directional_light.show = !this.settings.directional_light.show;
                 if (this.settings.directional_light.show) {
                     this.settings.ambient_light.intensity = 0.15;
@@ -294,10 +363,12 @@ export class AframeViewerComponent implements OnInit{
                 position: this.temp_camera_pos,
                 rotation: this.temp_camera_rot
             };
+            this.updateVRSettings();
             this.dataService.getAframeData().updateSettings(this.settings);
             // document.getElementById('executeButton').click();
         } else {
             this.settings = this.backup_settings;
+            this.resetVRSettings();
         }
         this.dataService.getAframeData().refreshModel(this.threeJSDataService.getThreejsScene());
     }
@@ -309,10 +380,62 @@ export class AframeViewerComponent implements OnInit{
         }
     }
 
-    public updateSettings(thisSettings: any, newSettings: any) {
+    public resetVRSettings() {
+        const data = this.dataService.getAframeData();
+        this.vr.enabled = data.vr.enabled;
+        this.vr.background_url = data.vr.background_url;
+        this.vr.background_rotation = data.vr.background_rotation;
+        this.vr.camera_position.copy(data.vr.camera_position);
+        this.vr.camera_rotation.copy(data.vr.camera_rotation);
     }
 
-    public updateLighting(event) {
+    public updateVRSettings() {
+        const data = this.dataService.getAframeData();
+        data.updateVRSettings(this.vr);
+    }
+
+    public addVRProcedure() {
+        const attribVal = `{"background_url": "${this.vr.background_url}",`
+                        + `"background_rotation": ${this.vr.background_rotation},`
+                        + `"camera_rotation": ${this.vr.camera_rotation.y}}`;
+
+        const startNode = this.mainDataService.flowchart.nodes[0];
+        NodeUtils.deselect_procedure(startNode);
+        NodeUtils.add_procedure(startNode, ProcedureTypes.MainFunction, {
+            argCount: 2,
+            args: [{name: '__model__', value: undefined}, {name: 'coords', value: undefined}],
+            length: 2,
+            hasReturn: true,
+            module: 'make',
+            name: 'Position'
+        });
+        NodeUtils.add_procedure(startNode, ProcedureTypes.MainFunction, {
+            argCount: 2,
+            args: [{name: '__model__', value: undefined}, {name: 'entities', value: undefined}],
+            hasReturn: true,
+            module: 'make',
+            name: 'Point'
+        });
+        NodeUtils.add_procedure(startNode, ProcedureTypes.Variable, null);
+
+        for (let i = startNode.procedure.length - 1; i >= 0; i--) {
+            const prod = startNode.procedure[i];
+            if (prod.type === ProcedureTypes.Variable) {
+                prod.args[0].value = 'vr_view_data@vr';
+                prod.args[1].value = attribVal;
+            } else if (prod.type === ProcedureTypes.MainFunction) {
+                if (prod.meta.name === 'Point') {
+                    prod.args[0].value = 'vr_view_data';
+                    prod.args[2].value = 'vr_view_data';
+                } else if (prod.meta.name === 'Position') {
+                    prod.args[0].value = 'vr_view_data';
+                    prod.args[2].value = `[${this.vr.camera_position.x},${this.vr.camera_position.z},${this.vr.camera_position.y}]`;
+                    break;
+                }
+            }
+        }
+        checkNodeValidity(startNode);
+        this.mainDataService.notifyMessage('Added VR procedures to start node main code');
     }
 
     formatNumber(value) {

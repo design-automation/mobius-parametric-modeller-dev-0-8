@@ -5,7 +5,10 @@ import {  } from '@angular/core';
 import { DataAframeService } from '../data/data.aframe.service';
 import { DataService as ThreeJSDataService } from '../../gi-viewer/data/data.service';
 import { GIModel } from '@libs/geo-info/GIModel';
-import { aframe_default_settings } from '../aframe-viewer.settings';
+
+const SKY_REFRESH_RATE = 33;
+
+let prevCamPos = new AFRAME.THREE.Vector3();
 /**
  * GIViewerComponent
  * This component is used in /app/model-viewers/model-viewers-container.component.html
@@ -22,6 +25,8 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy 
     @Output() eventAction = new EventEmitter();
 
     camPosSaved = false;
+    interval: NodeJS.Timer;
+
 
 
     /**
@@ -29,9 +34,23 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy 
      * @param dataService
      */
     constructor(private dataService: DataAframeService, private threeJSDataService: ThreeJSDataService) {
+        this.interval = setInterval(AframeMainComponent.updateCamSkyPos, SKY_REFRESH_RATE);
+    }
+
+    static updateCamSkyPos() {
+        const cameraEl = <any> document.getElementById('aframe_camera');
+        const sky = document.getElementById('aframe_sky');
+        if (!cameraEl || !sky) { return; }
+        const posVec = new AFRAME.THREE.Vector3();
+        cameraEl.object3D.getWorldPosition(posVec);
+        if (!prevCamPos || (posVec.x !== prevCamPos.x && posVec.z !== prevCamPos.z)) {
+            sky.setAttribute('position', posVec);
+            prevCamPos = posVec;
+        }
     }
 
     ngOnDestroy() {
+        clearInterval(this.interval);
         const data = this.dataService.getAframeData();
         if (!this.camPosSaved) {
             this.dataService.aframe_cam = data.getCameraPos();
@@ -95,7 +114,6 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy 
             'type': 'posListUpdate',
             'posList': data.camPosList
         });
-        // data.updateCameraPos(null);
     }
 
     onmousedown(event) {

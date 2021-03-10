@@ -1,4 +1,3 @@
-import { VERSION } from '@env/version';
 
 export interface AframeSettings {
     camera: {
