@@ -32,7 +32,7 @@ export class DataAframe {
         enabled: false,
         background_url: '',
         background_rotation: 0,
-        camera_position: new AFRAME.THREE.Vector3(0, 0, 0),
+        camera_position: new AFRAME.THREE.Vector3(0, 5, 0),
         camera_rotation: new AFRAME.THREE.Vector3(0, 0, 0),
     };
 

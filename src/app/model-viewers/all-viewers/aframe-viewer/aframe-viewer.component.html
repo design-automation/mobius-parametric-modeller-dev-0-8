@@ -88,16 +88,15 @@
                         <dd>
                             <textarea class="tArea" [(ngModel)]='vr.background_url'></textarea>
                         </dd>
-                        <dd class='vector_input_div'>
+                        <dd>
                             <div class="label">VR Background Rotation</div>
                             <div class="slidecontainer light">
-                                <input type="range" min="0" max="1" step="0.01" [value]="settings.ambient_light.intensity" class="slider" (input)="settingOnChange('ambient_light.intensity', $event.target.value)">
-                                <input type="text" [value]="settings.ambient_light.intensity" disabled>
+                                <input type="range" min="0" max="360" step="1" [value]="vr.background_rotation" class="slider" (input)="settingOnChange('vr.background_rotation', $event.target.value)">
+                                <input type="number"
+                                (change)="settingOnChange('vr.background_rotation', $event.target.value)" 
+                                [value]="formatNumber(vr.background_rotation)">
+                                <!-- <input type="text" [value]="vr.background_rotation" disabled> -->
                             </div>
-
-                            <input type="number"
-                            (change)="settingOnChange('vr.background_rotation', $event.target.value)" 
-                            [value]="formatNumber(vr.background_rotation)">
                         </dd>
                         <dd><hr></dd>
                         <dd class='vector_input_div'>
