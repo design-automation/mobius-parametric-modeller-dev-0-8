@@ -289,7 +289,11 @@ export class DataAframe {
         const sky = document.getElementById('aframe_sky');
         let skyURL;
         const backgroundSet = (Number(this.settings.background.background_set) - 1);
-        skyURL = '/assets/img/background/bg' + backgroundSet + '/aframe.jpg';
+        let baseLink = window.location.origin;
+        if (baseLink.indexOf('design-automation.github.io') !== -1) {
+            baseLink += '/mobius-parametric-modeller-dev-0-8';
+        }
+        skyURL = baseLink + '/assets/img/background/bg' + backgroundSet + '/aframe.jpg';
         if (this.vr.enabled) {
             fetch(this.vr.background_url).then(res => {
                 if (!res.ok) {
