@@ -25,7 +25,7 @@ export class MbFileReaderDirective {
         reader.readAsText(f, 'UTF-8');
         const ins = this;
         reader.onload = function (evt) {
-            const fileString: string = evt.target['result'];
+            const fileString: any = evt.target['result'];
             ins.load_flowchart_from_string(fileString);
         };
         reader.onerror = function (evt) {

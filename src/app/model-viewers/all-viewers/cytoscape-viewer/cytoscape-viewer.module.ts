@@ -50,7 +50,7 @@ import { CytoscapeService } from './service/cytoscape.service';
     ]
 })
 export class CytoscapeViewerModule {
-     static forRoot(): ModuleWithProviders {
+     static forRoot(): ModuleWithProviders<CytoscapeViewerModule> {
         return {
             ngModule: CytoscapeViewerModule
         };

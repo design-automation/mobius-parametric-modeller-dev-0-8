@@ -53,7 +53,7 @@ import { TabComponent } from './html/tab.component';
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AframeViewerModule {
-     static forRoot(): ModuleWithProviders {
+     static forRoot(): ModuleWithProviders<AframeViewerModule> {
         return {
             ngModule: AframeViewerModule
         };

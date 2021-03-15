@@ -52,7 +52,7 @@ import { TabComponent } from './html/tab.component';
     ]
 })
 export class GIGeoViewerModule {
-     static forRoot(): ModuleWithProviders {
+     static forRoot(): ModuleWithProviders<GIGeoViewerModule> {
         return {
             ngModule: GIGeoViewerModule
         };

@@ -26,7 +26,7 @@ export class ViewGalleryComponent implements AfterViewInit {
     allGalleriesData = galleryUrls.data;
     urlPrefix = '';
     @Output() switch = new EventEmitter();
-    @ViewChild('gallerySplit', { static: false }) gallerySplit: SplitComponent;
+    @ViewChild('gallerySplit') gallerySplit: SplitComponent;
 
     /*
     constructor(private http: HttpClient, private dataService: DataService, private router: Router) {

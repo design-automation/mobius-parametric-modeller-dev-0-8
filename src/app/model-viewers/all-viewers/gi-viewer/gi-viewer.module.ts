@@ -63,7 +63,7 @@ import { ThreeJSViewerService } from './threejs/threejs-viewer.service';
     ]
 })
 export class GIViewerModule {
-     static forRoot(): ModuleWithProviders {
+     static forRoot(): ModuleWithProviders<GIViewerModule> {
         return {
             ngModule: GIViewerModule
         };
