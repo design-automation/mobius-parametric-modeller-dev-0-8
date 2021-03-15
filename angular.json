@@ -11,6 +11,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "util", "chroma-js", "showdown", "lodash", "mathjs", "cytoscape", "@doodle3d/clipper-js"
+            ],      
             "aot": true,
             "outputPath": "dist",
             "index": "src/index.html",
@@ -19,7 +22,7 @@
             "polyfills": "src/polyfills.ts",
             "assets": [
               "src/assets",
-              "src/mobius.ico",
+              "src/mobius.ico"
             ],
             "styles": [
               "src/styles.scss"
