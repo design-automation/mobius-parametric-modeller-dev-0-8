@@ -4,7 +4,7 @@ import { DataThreejs } from './data.threejs';
 // import @angular stuff
 import { Injectable } from '@angular/core';
 import { DataService as DS } from '@services';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
 /**
  * DataService
  * The data service for the Goe-Info viewer.
