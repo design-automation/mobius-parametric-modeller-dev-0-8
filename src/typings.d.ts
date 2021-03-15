@@ -1,4 +1,5 @@
 /* SystemJS module definition */
+declare var AFRAME: any;
 declare var module: NodeModule;
 interface NodeModule {
   id: string;
@@ -10,4 +11,3 @@ declare module "*.mob" {
     export default value;
 }
 
-declare var AFRAME;

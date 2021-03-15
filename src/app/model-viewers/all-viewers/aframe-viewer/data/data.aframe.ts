@@ -4,6 +4,7 @@ import { AframeSettings } from '../aframe-viewer.settings';
 import * as Modules from '@assets/core/modules';
 import { _EEntType } from '@assets/core/modules/basic/query';
 
+declare var AFRAME;
 const DEFAUT_CAMERA_POS = {
     position: new AFRAME.THREE.Vector3(0, 0, 0),
     rotation: new AFRAME.THREE.Vector3(0, 0, 0)

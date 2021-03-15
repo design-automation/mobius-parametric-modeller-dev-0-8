@@ -6,6 +6,7 @@ import { DataAframeService } from '../data/data.aframe.service';
 import { DataService as ThreeJSDataService } from '../../gi-viewer/data/data.service';
 import { GIModel } from '@libs/geo-info/GIModel';
 
+declare var AFRAME;
 const SKY_REFRESH_RATE = 33;
 
 let prevCamPos = new AFRAME.THREE.Vector3();

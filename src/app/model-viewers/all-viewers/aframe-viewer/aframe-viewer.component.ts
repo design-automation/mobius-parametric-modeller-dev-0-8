@@ -14,6 +14,7 @@ import { AframeSettings, aframe_default_settings } from './aframe-viewer.setting
 import { IProcedure, ProcedureTypes } from '@models/procedure';
 import { NodeUtils } from '@models/node';
 import { checkNodeValidity } from '@shared/parser';
+declare var AFRAME;
 
 /**
  * GIViewerComponent
