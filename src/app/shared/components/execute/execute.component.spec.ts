@@ -1,6 +1,6 @@
 import { DataService } from '../../../shared/services/data.service';
 import { Router } from '@angular/router';
-import { TestBed, ComponentFixture, fakeAsync, tick, async } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { LoadUrlComponent } from '../file/loadurl.component';
 import { ExecuteComponent } from './execute.component';
 import { MatIconModule } from '@angular/material/icon';
