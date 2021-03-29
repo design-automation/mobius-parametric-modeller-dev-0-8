@@ -7,7 +7,7 @@ import { DataService as ThreeJSDataService } from '../../gi-viewer/data/data.ser
 import { GIModel } from '@libs/geo-info/GIModel';
 
 declare var AFRAME;
-const SKY_REFRESH_RATE = 33;
+const SKY_REFRESH_RATE = 5;
 
 let prevCamPos = new AFRAME.THREE.Vector3();
 /**
@@ -41,11 +41,13 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy 
     static updateCamSkyPos() {
         const cameraEl = <any> document.getElementById('aframe_camera');
         const sky = document.getElementById('aframe_sky');
+        // const skyFG = document.getElementById('aframe_sky_foreground');
         if (!cameraEl || !sky) { return; }
         const posVec = new AFRAME.THREE.Vector3();
         cameraEl.object3D.getWorldPosition(posVec);
         if (!prevCamPos || (posVec.x !== prevCamPos.x && posVec.z !== prevCamPos.z)) {
-            sky.setAttribute('position', posVec);
+            // sky.setAttribute('position', posVec);
+            // skyFG.setAttribute('position', posVec);
             prevCamPos = posVec;
         }
     }
