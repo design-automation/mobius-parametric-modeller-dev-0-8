@@ -357,6 +357,7 @@ function _area(__model__: GIModel, ents_arrs: TEntTypeIdx|TEntTypeIdx[]): number
             let total_area = 0;
             for (const tri_i of tris_i) {
                 const corners_i: number[] = __model__.modeldata.geom.nav_tri.navTriToPosi(tri_i);
+                if (corners_i.length !== 3) { continue; } // two or more verts have same posi, so area is 0
                 const corners_xyzs: Txyz[] = corners_i.map(corner_i => __model__.modeldata.attribs.posis.getPosiCoords(corner_i));
                 const tri_area: number = area( corners_xyzs[0], corners_xyzs[1], corners_xyzs[2] );
                 total_area += tri_area;
@@ -423,10 +424,10 @@ function _vector(__model__: GIModel, ents_arrs: TEntTypeIdx|TEntTypeIdx[]): Txyz
     if (getArrDepth(ents_arrs) === 1) {
         const [ent_type, index]: [EEntType, number] = ents_arrs as TEntTypeIdx;
         if (ent_type === EEntType.EDGE) {
-            const posis_i: number[] = __model__.modeldata.geom.nav.navAnyToPosi(ent_type, index);
-            const start: Txyz = __model__.modeldata.attribs.posis.getPosiCoords(posis_i[0]);
-            const end: Txyz = __model__.modeldata.attribs.posis.getPosiCoords(posis_i[1]);
-            // console.log(">>>>", start, end);
+            const verts_i: number[] = __model__.modeldata.geom.nav.navAnyToVert(ent_type, index);
+            const start: Txyz = __model__.modeldata.attribs.posis.getVertCoords(verts_i[0]);
+            const end: Txyz = __model__.modeldata.attribs.posis.getVertCoords(verts_i[1]);
+            // if (!start || !end) { console.log(">>>>", verts_i, start, end, __model__.modeldata.geom._geom_maps); }
             return vecSub(end, start);
         } else {
             const edges_i: number[] = __model__.modeldata.geom.nav.navAnyToEdge(ent_type, index);
