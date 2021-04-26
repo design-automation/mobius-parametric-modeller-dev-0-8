@@ -38,7 +38,11 @@
   
 **Description:** Inserts a 'Return' statement into either the body of a procedure or the body of a local function.  
   
-## Error  
+## Exit  
   
-**Description:** Inserts an 'Error' statement. When executed, the 'Error' statement will raise an error and print an error message to the console. The 'Error' statement is typically nested inside a conditional 'If' statement.  
+**Description:** ...  
+  
+## Break-branch  
+  
+**Description:** ...  
   

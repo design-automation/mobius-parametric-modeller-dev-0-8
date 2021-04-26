@@ -25,6 +25,10 @@ export class ConsoleViewerComponent implements OnInit, AfterViewInit, DoCheck, A
     }
 
     ngOnDestroy() {
+        if (this.consoleDiv) {
+            this.consoleDiv.id = 'tbd_userConsole';
+            this.consoleDiv = null;
+        }
         let ct = document.getElementById('console-container');
         if (!ct) { return; }
         this.dataService.consoleScroll = ct.scrollTop;

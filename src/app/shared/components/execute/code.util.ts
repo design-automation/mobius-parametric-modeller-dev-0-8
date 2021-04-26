@@ -367,13 +367,16 @@ export class CodeUtils {
                     }
                 }
                 codeStr.push(`__params__.model.postGlobalFunc(__params__.curr_ss.${nodeId})`);
-                // codeStr.push(`__params__.prevModel.merge(__params__.model);`);
-                // codeStr.push(`__params__.model = __params__.prevModel;`);
-                // codeStr.push(`__params__.prevModel = null;`);
                 codeStr.push(`__params__.console.push('</div>')`);
                 break;
             case ProcedureTypes.Error:
-                codeStr.push(`throw new Error('____' + ${prod.args[0].jsValue});`);
+                codeStr.push(`__params__.misc.exit = true;`);
+                codeStr.push(`__params__.misc.exit_value = ${prod.args[0].jsValue};`);
+                codeStr.push(`throw new Error('__EXIT__');`);
+                break;
+            case ProcedureTypes.BreakBranch:
+                codeStr.push(`__params__.misc.breakbranch['${nodeId}'] = true;`);
+                codeStr.push(`throw new Error('__BREAK_BRANCH__');`);
                 break;
         }
 
@@ -761,7 +764,8 @@ export class CodeUtils {
                 const codeRes = CodeUtils.getNodeCode(node, false, nodeIndices, func.name, node.id)[0];
                 const nodecode = codeRes[0].join('\n').split('_-_-_+_-_-_');
                 fullCode += `${nodecode[0]}\nasync function ${nodeFuncName}` +
-                            `(__params__${func.args.map(arg => ', ' + arg.name + '_').join('')}){` +
+                            `(__params__${func.args.map(arg => ', ' + arg.name + '_').join('')}){\n` +
+                            `if (__debug__) { printFunc(__params__.console, 'Executing: ${node.name}', '__null__') }\n` +
                             nodecode[1] + `\n}\n\n`;
 
                 // const activeNodes = [];

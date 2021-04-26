@@ -542,6 +542,11 @@ export abstract class NodeUtils {
                 prod.args = [{name: 'error_message', value: undefined}];
                 break;
 
+            case ProcedureTypes.BreakBranch:
+                prod.argCount = 0;
+                prod.args = [];
+                break;
+
             case ProcedureTypes.EndReturn:
                 prod.meta = { module: 'Output', name: 'Return', description: undefined};
                 prod.argCount = 1;

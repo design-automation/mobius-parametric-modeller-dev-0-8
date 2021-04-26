@@ -486,7 +486,7 @@
         </div>
     </div>
 
-    <!-- Error -->
+    <!-- Exit -->
     <div id='prodDiv_{{data.ID}}'
     class='container--line' 
     [class.selected]="data.selected"
@@ -500,16 +500,16 @@
     *ngSwitchCase="ProcedureTypes.Error">
         <div class='container--item' >
             <div class='line--item'>
-                <input class='input--error'
-                value='ERROR'
-                disabled>
+                <div class='basic-function-text'>
+                    Exit
+                </div>
                 <input class='input--error'
                 [(ngModel)]='data.args[0].value'
                 [class.error]='data.args[0].invalidVar'
                 [class.disabled]='disableInput'
                 (focus)='onInputFocus(0, true)'
                 (blur)='argMod($event, 0)'
-                placeholder='error message'
+                placeholder='Return Value'
                 [style.width.px]='inputSize(data.args[0].value||data.args[0].name)'>
                 <!-- <p class='input--arg input--arg--p' [innerHTML]='argHighlight(data.args[1].value)'></p> -->
             </div>
@@ -523,6 +523,36 @@
             </div>
         </div>
     </div>
+
+    <!-- BreakBranch -->
+    <div id='prodDiv_{{data.ID}}'
+    class='container--line' 
+    [class.selected]="data.selected"
+    [class.lastSelected]="data.lastSelected"
+    [class.disabled]="!data.enabled"
+    [ngSwitch]="data.type"
+    (click)='emitSelect($event, data)'
+    (mousedown)='disableShift($event)'
+    (mouseenter)='onenter($event)'
+    (mouseleave)='onleave($event)'
+    *ngSwitchCase="ProcedureTypes.BreakBranch">
+        <div class='container--item' >
+            <div class='line--item'>
+                <div class='basic-function-text'>
+                    Break-branch
+                </div>
+            </div>
+        </div>
+        <div class = "btn-container">
+            <div class = "btns">
+                <!-- Disable button-->
+                <button class='btn' mat-icon-button [class.disableOn]='!data.enabled' title="Disable Procedure" (click)='markDisabled($event)' tabindex="-1">
+                    <mat-icon class='icon' svgIcon='disabled'></mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- MainFunction -->
     <div id='prodDiv_{{data.ID}}'

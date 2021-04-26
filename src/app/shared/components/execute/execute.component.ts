@@ -467,6 +467,11 @@ export class ExecuteComponent {
     async executeFlowchart() {
         let globalVars = '';
         const constantList = {};
+        const miscData = {
+            'exit': false,
+            'exit_value': null,
+            'breakbranch': {}
+        };
 
         // console.log(this.extractAnswerList(this.dataService.flowchart))
 
@@ -507,9 +512,9 @@ export class ExecuteComponent {
         }
         for (let i = 0; i < this.dataService.flowchart.nodes.length; i++) {
             if (executeSet.has(i)) {
-                this.dataService.flowchart.nodes[i].hasExecuted = false;
+                this.dataService.flowchart.nodes[i].state.hasExecuted = false;
             } else {
-                this.dataService.flowchart.nodes[i].hasExecuted = true;
+                this.dataService.flowchart.nodes[i].state.hasExecuted = true;
             }
         }
 
@@ -523,12 +528,22 @@ export class ExecuteComponent {
                 node.output.value = undefined;
                 continue;
             }
+            if (miscData.exit) {
+                if (node.type === 'end') {
+                    this.dataService.log('<h4 style="padding: 2px 0px 2px 0px; color:red;">PROCESS EXITED. ' +
+                    `Return Value: ${JSON.stringify(miscData.exit_value)}</h5>`);
+                    node.output.value = miscData.exit_value;
+                } else {
+                    node.output.value = null;
+                }
+                continue;
+            }
 
             // if the node is not to be executed
             // if (!executeSet.has(i)) {
             //     let exCheck = false;
             //     for (const edge of node.output.edges) {
-            //         if (!edge.target.parentNode.hasExecuted) {
+            //         if (!edge.target.parentNode.state.hasExecuted) {
             //             exCheck = true;
             //         }
             //     }
@@ -541,7 +556,7 @@ export class ExecuteComponent {
             // }
             // execute valid node
             node.model = null;
-            globalVars = await this.executeNode(node, funcStrings, globalVars, constantList, nodeIndices);
+            globalVars = await this.executeNode(node, funcStrings, globalVars, constantList, nodeIndices, miscData);
         }
 
         // delete each node.output.value to save memory
@@ -573,7 +588,7 @@ export class ExecuteComponent {
     }
 
 
-    async executeNode(node: INode, funcStrings, globalVars, constantList, nodeIndices): Promise<string> {
+    async executeNode(node: INode, funcStrings, globalVars, constantList, nodeIndices, miscData): Promise<string> {
         const params = {
             'currentProcedure': [''],
             'console': this.dataService.getLog(),
@@ -581,10 +596,11 @@ export class ExecuteComponent {
             'fileName': this.dataService.flowchart.name,
             'curr_ss': {},
             'message': null,
-            'terminated': false
+            'terminated': false,
+            'misc': miscData,
         };
 
-        if (node.hasError){
+        if (node.hasError) {
             document.getElementById('Console').click();
             this.dataService.log('<h4 style="padding: 2px 0px 2px 0px; style="color:red">Error: Invalid Argument ' +
                                     'detected. Check marked node(s) and procedure(s)!</h5>');
@@ -600,6 +616,7 @@ export class ExecuteComponent {
 
         let fnString = '';
         const startTime = performance.now();
+        let snapshotID;
         try {
             if (this.terminated) {
                 this.dataService.notifyMessage(`PROCESS TERMINATED IN NODE: "${this.terminated}"`);
@@ -674,8 +691,26 @@ export class ExecuteComponent {
             }
 
             params['model'] = this.dataService.executeModel;
-            const snapshotID = params['model'].nextSnapshot(node.input.value);
+
+            snapshotID = params['model'].nextSnapshot(node.input.value);
             node.model = null;
+
+            if (node.type !== 'start') {
+                let breakbranch = true;
+                for (const edge of node.input.edges) {
+                    if (miscData.breakbranch[edge.source.parentNode.id]) {
+                        continue;
+                    }
+                    breakbranch = false;
+                    break;
+                }
+                if (breakbranch) {
+                    node.model = snapshotID;
+                    miscData.breakbranch[node.id] = true;
+                    this.dataService.log('<h4 style="padding: 2px 0px 2px 0px; color:red;">BRANCH BREAK</h4>');
+                    return globalVars;
+                }
+            }
 
             // create the function with the string: new Function ([arg1[, arg2[, ...argN]],] functionBody)
 
@@ -720,19 +755,19 @@ export class ExecuteComponent {
             }
 
             // mark the node as has been executed
-            node.hasExecuted = true;
+            node.state.hasExecuted = true;
 
-            // check all the input nodes of this node, if all of their children nodes are all executed,
-            // change their output.value to null to preserve memory space.
-            node.input.edges.forEach( edge => {
-                const inputNode = edge.source.parentNode;
-                if (inputNode.output.edges.length > 1) {
-                    for (const outputEdge of inputNode.output.edges) {
-                        if (!outputEdge.target.parentNode.hasExecuted) { return; }
-                    }
-                }
-                inputNode.output.value = null;
-            });
+            // // check all the input nodes of this node, if all of their children nodes are all executed,
+            // // change their output.value to null to preserve memory space.
+            // node.input.edges.forEach( edge => {
+            //     const inputNode = edge.source.parentNode;
+            //     if (inputNode.output.edges.length > 1) {
+            //         for (const outputEdge of inputNode.output.edges) {
+            //             if (!outputEdge.target.parentNode.state.hasExecuted) { return; }
+            //         }
+            //     }
+            //     inputNode.output.value = null;
+            // });
 
             // if start node ->
             if (node.type === 'start') {
@@ -767,9 +802,15 @@ export class ExecuteComponent {
             }
             return globalVars;
         } catch (ex) {
-            // for (const str of params.console) {
-            //     this.dataService.log(str);
-            // }
+            if (ex.message === '__EXIT__') {
+                node.model = snapshotID;
+                return;
+            }
+            if (ex.message === '__BREAK_BRANCH__') {
+                node.model = snapshotID;
+                this.dataService.log('<h4 style="padding: 2px 0px 2px 0px; color:red;">BRANCH BREAK</h4>');
+                return;
+            }
             this.dataService.flowchart.model = this.dataService.executeModel;
             document.getElementById('spinner-off').click();
             const endTime = performance.now();
