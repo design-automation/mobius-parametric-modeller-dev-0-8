@@ -70,8 +70,16 @@
     &.terminate{
         border-left: 2px solid $terminate-color;
         border-bottom: 2px solid $terminate-color;
+        background-color: $terminate-color-lt;
         padding-bottom: 0px;
         padding-left: 8px;
+        &:not(.selected) {
+            .btn-container {
+                .btn{
+                    background-color: $terminate-color-lt;
+                }
+            }
+        }
     }
 
     &.error{
@@ -83,6 +91,18 @@
 
     &.onhover{
         background-color: $color5;
+        &:not(.selected) {
+            &.terminate {
+                background-color: $terminate-color-lt1;
+                .btn-container {
+                    &.onhover {
+                        .btn{
+                            background-color: $terminate-color-lt1;
+                        }
+                    }
+                }
+            }
+        }
         &.selected{
             // .btn-container &.onhover .btn{
             //     background-color: $selected-color1;
