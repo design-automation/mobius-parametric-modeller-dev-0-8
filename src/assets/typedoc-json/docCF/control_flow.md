@@ -26,13 +26,13 @@
   
 **Description:** Inserts a 'While' loop statement. The body of the loop can be executed zero or more times.  
   
-## Break  
+## Break-loop  
   
-**Description:** Inserts a 'Break' statement into the body of either a 'For-each' loop or a 'While' loop. When the 'Break' is executed, execution will break out of the loop and procedure to the next line of code immediatley after the loop statement. The 'Break' statement os typically nested inside a conditional 'If' statement.  
+**Description:** Inserts a 'Break-loop' statement into the body of either a 'For-each' loop or a 'While' loop. When the 'Break-loop' is executed, execution will break out of the loop and procedure to the next line of code immediatley after the loop statement. The 'Break-loop' statement is typically nested inside a conditional 'If' statement.  
   
-## Continue  
+## Continue-loop  
   
-**Description:** Inserts a 'Continue' statement into the body of either a 'For-each' loop or a 'While' loop. When the 'Continue' is executed, execution will skips the subsequent lines of code in the loop body and continue with the next iteration of the loop. The 'Continue' statement is typically nested inside a conditional 'If' statement.  
+**Description:** Inserts a 'Continue-loop' statement into the body of either a 'For-each' loop or a 'While' loop. When the 'Continue-loop' is executed, execution will skips the subsequent lines of code in the loop body and continue with the next iteration of the loop. The 'Continue-loop' statement is typically nested inside a conditional 'If' statement.  
   
 ## Return  
   
