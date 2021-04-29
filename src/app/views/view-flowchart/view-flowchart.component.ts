@@ -103,8 +103,7 @@ export class ViewFlowchartComponent implements OnInit, AfterViewInit, OnDestroy 
         // const panZoom = svgPanZoom(this.canvas);
         let bRect = <DOMRect>this.canvas.getBoundingClientRect();
         let boundingDiv = <DOMRect>document.getElementById('flowchart-main-container').getBoundingClientRect();
-        this.offset = [bRect.left, bRect.top];
-
+        this.offset = [bRect.left - boundingDiv.left, bRect.top - boundingDiv.top];
         /*
         */
         // transform
