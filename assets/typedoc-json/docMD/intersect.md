@@ -3,54 +3,43 @@
 ## RayFace  
   
   
-**Description:** Calculates the xyz intersection between a ray or a plane and a list of entities.
+**Description:** Calculates the xyz intersection between a ray and one or more polygons.
 
 
-For a ray, the intersection between the ray and one or more faces is return.
-The intersection between each face triangle and the ray is caclulated.
+The intersection between each polygon face triangle and the ray is caclulated.
 This ignores the intersections between rays and edges (including polyline edges).
-
-
-For a plane, the intersection between the plane and one or more edges is returned.
-This ignores the intersections between planes and face triangles (including polygon faces).
 
   
   
 **Parameters:**  
   * *ray:* A ray.  
-  * *entities:* List of entities.  
+  * *entities:* A polygon or list of polygons.  
   
 **Returns:** A list of xyz intersection coordinates.  
 **Examples:**  
-  * coords = virtual.Intersect(plane, polyline1)  
-    Returns a list of coordinates where the plane intersects with polyline1.
+  * coords = intersect.RayFace(ray, polygon1)  
+    Returns a list of coordinates where the ray  intersects with the polygon.
   
   
   
 ## PlaneEdge  
   
   
-**Description:** Calculates the xyz intersection between a ray or a plane and a list of entities.
+**Description:** Calculates the xyz intersection between a plane and a list of edges.
 
 
-For a ray, the intersection between the ray and one or more faces is return.
-The intersection between each face triangle and the ray is caclulated.
-This ignores the intersections between rays and edges (including polyline edges).
-
-
-For a plane, the intersection between the plane and one or more edges is returned.
-This ignores the intersections between planes and face triangles (including polygon faces).
+This ignores the intersections between planes and polygon face triangles.
 
   
   
 **Parameters:**  
   * *plane:* A plane.  
-  * *entities:* List of entities.  
+  * *entities:* An edge or list of edges, or entities from which edges can be extracted.  
   
 **Returns:** A list of xyz intersection coordinates.  
 **Examples:**  
-  * coords = virtual.Intersect(plane, polyline1)  
-    Returns a list of coordinates where the plane intersects with polyline1.
+  * coords = intersect.PlaneEdge(plane, polyline1)  
+    Returns a list of coordinates where the plane intersects with the edges of polyline1.
   
   
   
