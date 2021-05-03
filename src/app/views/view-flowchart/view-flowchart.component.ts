@@ -57,15 +57,8 @@ export class ViewFlowchartComponent implements OnInit, AfterViewInit, OnDestroy 
 
     // variable for copied node
     private copied: string;
-    private copySub: any;
-    private pasteSub: any;
-    private keyupSub: any;
     private splitDragSub: any;
 
-    // listener for events, only activated when the mouse is hovering over the svg component
-    private keyupListener = fromEvent(document, 'keyup');
-    private copyListener = fromEvent(document, 'copy');
-    private pasteListener = fromEvent(document, 'paste');
     private listenerActive = false;
 
     // notificationMessage = '';
@@ -116,194 +109,173 @@ export class ViewFlowchartComponent implements OnInit, AfterViewInit, OnDestroy 
 
         this.canvas.style.transform = this.dataService.flowchartPos;
 
-        // copy: copy node
-        this.copySub = this.copyListener.subscribe(val => {
-            if (!this.listenerActive) { return; }
-            const saved = [];
-            const copied = [];
-            let message = '';
-            for (const nodeIndex of this.dataService.flowchart.meta.selected_nodes) {
-                const node = this.dataService.flowchart.nodes[nodeIndex];
-                if (node.type !== '') {
-                    message += 'Cannot copy Start/End nodes.<br>';
-                    continue;
-                }
-                saved.push({
-                    'input': node.input,
-                    'output': node.output,
-                    'model': node.model
-                });
-                node.input = undefined;
-                node.output = undefined;
-                node.model = undefined;
-                copied.push(node);
-            }
-            localStorage.setItem('mobius_copied_nodes', circularJSON.stringify(copied));
-
-            for (const nodeIndex of this.dataService.flowchart.meta.selected_nodes) {
-                const node = this.dataService.flowchart.nodes[nodeIndex];
-                if (node.type !== '') { continue; }
-                const savedData = saved.shift();
-                node.input = savedData.input;
-                node.output = savedData.output;
-                node.model = savedData.model;
-            }
-            this.dataService.notifyMessage(message + `${copied.length} Nodes copied.`);
-
-            // if (!this.listenerActive) { return; }
-            // const node = this.dataService.node;
-            // if (node.type === '') {
-            //     const saved = {
-            //         'input': node.input,
-            //         'output': node.output,
-            //         'model': node.model
-            //     };
-            //     node.input = undefined;
-            //     node.output = undefined;
-            //     node.model = undefined;
-            //     this.copied = circularJSON.stringify(node);
-
-            //     node.input = saved.input;
-            //     node.output = saved.output;
-            //     node.model = saved.model;
-
-            //     this.dataService.notifyMessage(`Copied Last Selected Node`);
-            // }
-        });
-
-        // paste: paste copied node
-        this.pasteSub = this.pasteListener.subscribe((val: ClipboardEvent) => {
-            //
-            if (!this.listenerActive || document.activeElement.tagName === 'TEXTAREA' ||
-            !this.router.url.startsWith('/flowchart')) { return; }
-            const copiedNodes = circularJSON.parse(localStorage.getItem('mobius_copied_nodes'));
-            if (copiedNodes.length === 0) {
-                this.dataService.notifyMessage(`Error: No saved nodes to be pasted!`);
-                return;
-            }
-            val.preventDefault();
-            const pt = this.canvas.createSVGPoint();
-            pt.x = this.mousePos[0];
-            pt.y = this.mousePos[1];
-            for (const newNode of copiedNodes) {
-
-                const svgP = this.convertCoord(pt);
-
-                NodeUtils.updateNode(newNode, svgP);
-                newNode.enabled = false;
-
-                for (let i = 0; i < this.dataService.flowchart.meta.selected_nodes.length; i ++) {
-                    if (this.dataService.flowchart.meta.selected_nodes[i] === this.dataService.flowchart.nodes.length - 1) {
-                        this.dataService.flowchart.meta.selected_nodes[i] += 1;
-                    }
-                }
-                this.dataService.flowchart.nodes.splice(this.dataService.flowchart.nodes.length - 1, 0, newNode);
-
-                // ViewFlowchartComponent.enableNode(newNode);
-                // FlowchartUtils.orderNodes(this.dataService.flowchart);
-
-            }
-            this.dataService.notifyMessage(`Pasted ${copiedNodes.length} nodes`);
-            this.dataService.registerFlwAction({'type': 'add', 'nodes': copiedNodes});
-        });
-
         // delete: delete selected edge(s)
-        this.keyupSub = this.keyupListener.subscribe((event: KeyboardEvent) => {
-            if (!this.listenerActive || !this.router.url.startsWith('/flowchart')) { return; }
-            if (event.key === 'Delete' || event.key === 'Backspace') {
-                if (this.selectedEdge.length > 0) {
-                    this.deleteSelectedEdges();
-                } else {
-                    if (document.activeElement.id !== this.dataService.node.id) {
-                        this.deleteSelectedNodes();
-                    }
-                }
-            } else if (event.key.toLowerCase() === 'z' && (event.ctrlKey === true || event.metaKey === true)) {
-                let act: any;
-                if (event.shiftKey) {
-                    act = this.dataService.redoFlw();
-                } else {
-                    act = this.dataService.undoFlw();
-                }
-                if (!act) { return; }
-                if ( (act.type === 'add') !== event.shiftKey ) {
-                    if (act.edges) {
-                        for (const tbrEdge of act.edges) {
-                            for (let i = 0; i < this.dataService.flowchart.edges.length; i++) {
-                                if (this.dataService.flowchart.edges[i] === tbrEdge) {
-                                    this.deleteEdge(i);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    if (!act.nodes) { return; }
-                    for (const tbrNode of act.nodes) {
-                        let nodeIndex: number;
-                        for (let i = 0; i < this.dataService.flowchart.nodes.length; i++) {
-                            const node = this.dataService.flowchart.nodes[i];
-                            if (tbrNode.id === node.id) {
-                                nodeIndex = i;
-                                this.dataService.flowchart.nodes.splice(i, 1);
-                                break;
-                            }
-                        }
-                        let tbrSel: number;
-                        for (let j = 0; j < this.dataService.flowchart.meta.selected_nodes.length; j++) {
-                            if (tbrSel) {
-                                this.dataService.flowchart.meta.selected_nodes[j] -= 1;
-                            }
-                            if (this.dataService.flowchart.meta.selected_nodes[j] === nodeIndex) {
-                                tbrSel = nodeIndex;
-                            }
-                        }
-                        this.dataService.flowchart.meta.selected_nodes.splice(tbrSel, 1);
-                    }
-                } else {
-                    if (act.nodes) {
-                        const addingPlace = this.dataService.flowchart.nodes.length - 1;
-                        for (const tbaNode of act.nodes) {
-                            this.dataService.flowchart.nodes.splice(addingPlace, 0, tbaNode);
-                        }
-                    }
-                    if (!act.edges) { return; }
-                    for (const tbaEdge of act.edges) {
-                        this.dataService.flowchart.edges.push(tbaEdge);
-                        tbaEdge.target.edges.push(tbaEdge);
-                        tbaEdge.source.edges.push(tbaEdge);
-                        tbaEdge.selected = false;
-                        if (tbaEdge.source.parentNode.enabled) {
-                            tbaEdge.target.parentNode.enabled = true;
-                        }
-                    }
-                    while (true) {
-                        let check = false;
-                        for (const node of this.dataService.flowchart.nodes) {
-                            if (node.enabled) { continue; }
-                            for (const inp of node.input.edges) {
-                                if (inp.source.parentNode.enabled) {
-                                    node.enabled = true;
-                                    check = true;
-                                    break;
-                                }
-                            }
-                        }
-                        if (!check) {
-                            break;
-                        }
-                    }
-                }
-            }
-        });
         bRect = null;
         boundingDiv = null;
     }
 
+    @HostListener('window:keyup', ['$event'])
+    onKeyUp(event: KeyboardEvent) {
+        if (!this.listenerActive || !this.router.url.startsWith('/flowchart')) { return; }
+        if (event.key === 'Delete' || event.key === 'Backspace') {
+            if (this.selectedEdge.length > 0) {
+                this.deleteSelectedEdges();
+            } else {
+                if (document.activeElement.id !== this.dataService.node.id) {
+                    this.deleteSelectedNodes();
+                }
+            }
+        } else if (event.key.toLowerCase() === 'z' && (event.ctrlKey === true || event.metaKey === true)) {
+            let act: any;
+            if (event.shiftKey) {
+                act = this.dataService.redoFlw();
+            } else {
+                act = this.dataService.undoFlw();
+            }
+            if (!act) { return; }
+            if ( (act.type === 'add') !== event.shiftKey ) {
+                if (act.edges) {
+                    for (const tbrEdge of act.edges) {
+                        for (let i = 0; i < this.dataService.flowchart.edges.length; i++) {
+                            if (this.dataService.flowchart.edges[i] === tbrEdge) {
+                                this.deleteEdge(i);
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (!act.nodes) { return; }
+                for (const tbrNode of act.nodes) {
+                    let nodeIndex: number;
+                    for (let i = 0; i < this.dataService.flowchart.nodes.length; i++) {
+                        const node = this.dataService.flowchart.nodes[i];
+                        if (tbrNode.id === node.id) {
+                            nodeIndex = i;
+                            this.dataService.flowchart.nodes.splice(i, 1);
+                            break;
+                        }
+                    }
+                    let tbrSel: number;
+                    for (let j = 0; j < this.dataService.flowchart.meta.selected_nodes.length; j++) {
+                        if (tbrSel) {
+                            this.dataService.flowchart.meta.selected_nodes[j] -= 1;
+                        }
+                        if (this.dataService.flowchart.meta.selected_nodes[j] === nodeIndex) {
+                            tbrSel = nodeIndex;
+                        }
+                    }
+                    this.dataService.flowchart.meta.selected_nodes.splice(tbrSel, 1);
+                }
+            } else {
+                if (act.nodes) {
+                    const addingPlace = this.dataService.flowchart.nodes.length - 1;
+                    for (const tbaNode of act.nodes) {
+                        this.dataService.flowchart.nodes.splice(addingPlace, 0, tbaNode);
+                    }
+                }
+                if (!act.edges) { return; }
+                for (const tbaEdge of act.edges) {
+                    this.dataService.flowchart.edges.push(tbaEdge);
+                    tbaEdge.target.edges.push(tbaEdge);
+                    tbaEdge.source.edges.push(tbaEdge);
+                    tbaEdge.selected = false;
+                    if (tbaEdge.source.parentNode.enabled) {
+                        tbaEdge.target.parentNode.enabled = true;
+                    }
+                }
+                while (true) {
+                    let check = false;
+                    for (const node of this.dataService.flowchart.nodes) {
+                        if (node.enabled) { continue; }
+                        for (const inp of node.input.edges) {
+                            if (inp.source.parentNode.enabled) {
+                                node.enabled = true;
+                                check = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!check) {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    @HostListener('window:copy', ['$event'])
+    onCopy(event: KeyboardEvent) {
+        if (!this.listenerActive) { return; }
+        const saved = [];
+        const copied = [];
+        let message = '';
+        for (const nodeIndex of this.dataService.flowchart.meta.selected_nodes) {
+            const node = this.dataService.flowchart.nodes[nodeIndex];
+            if (node.type !== '') {
+                message += 'Cannot copy Start/End nodes.<br>';
+                continue;
+            }
+            saved.push({
+                'input': node.input,
+                'output': node.output,
+                'model': node.model
+            });
+            node.input = undefined;
+            node.output = undefined;
+            node.model = undefined;
+            copied.push(node);
+        }
+        localStorage.setItem('mobius_copied_nodes', circularJSON.stringify(copied));
+
+        for (const nodeIndex of this.dataService.flowchart.meta.selected_nodes) {
+            const node = this.dataService.flowchart.nodes[nodeIndex];
+            if (node.type !== '') { continue; }
+            const savedData = saved.shift();
+            node.input = savedData.input;
+            node.output = savedData.output;
+            node.model = savedData.model;
+        }
+        this.dataService.notifyMessage(message + `${copied.length} Nodes copied.`);
+    }
+
+    @HostListener('window:paste', ['$event'])
+    onPaste(event: KeyboardEvent) {
+        //
+        if (!this.listenerActive || document.activeElement.tagName === 'TEXTAREA' ||
+        !this.router.url.startsWith('/flowchart')) { return; }
+        const copiedNodes = circularJSON.parse(localStorage.getItem('mobius_copied_nodes'));
+        if (copiedNodes.length === 0) {
+            this.dataService.notifyMessage(`Error: No saved nodes to be pasted!`);
+            return;
+        }
+        event.preventDefault();
+        const pt = this.canvas.createSVGPoint();
+        pt.x = this.mousePos[0];
+        pt.y = this.mousePos[1];
+        for (const newNode of copiedNodes) {
+
+            const svgP = this.convertCoord(pt);
+
+            NodeUtils.updateNode(newNode, svgP);
+            newNode.enabled = false;
+
+            for (let i = 0; i < this.dataService.flowchart.meta.selected_nodes.length; i ++) {
+                if (this.dataService.flowchart.meta.selected_nodes[i] === this.dataService.flowchart.nodes.length - 1) {
+                    this.dataService.flowchart.meta.selected_nodes[i] += 1;
+                }
+            }
+            this.dataService.flowchart.nodes.splice(this.dataService.flowchart.nodes.length - 1, 0, newNode);
+
+            // ViewFlowchartComponent.enableNode(newNode);
+            // FlowchartUtils.orderNodes(this.dataService.flowchart);
+
+        }
+        this.dataService.notifyMessage(`Pasted ${copiedNodes.length} nodes`);
+        this.dataService.registerFlwAction({'type': 'add', 'nodes': copiedNodes});
+
+    }
 
     ngOnDestroy() {
-        this.copySub.unsubscribe();
-        this.pasteSub.unsubscribe();
-        this.keyupSub.unsubscribe();
         this.canvas = null;
         this.element = null;
     }
