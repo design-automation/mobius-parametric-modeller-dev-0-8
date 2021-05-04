@@ -30,6 +30,15 @@ export class ChromeComponent implements AfterViewInit {
         const isIOSChrome = winNav.userAgent.indexOf('CriOS') > -1;
         const isChrome = winNav.userAgent.indexOf('Chrome') > -1;
 
+        // console.log(
+        //     '\n isChromium:', isChromium,
+        //     '\n winNav:', winNav,
+        //     '\n vendorName:', vendorName ,
+        //     '\n isOpera:', isOpera,
+        //     '\n isIEedge:', isIEedge,
+        //     '\n isIOSChrome:', isIOSChrome,
+        //     '\n isChrome:', isChrome,
+        // )
         if (isIOSChrome || isChrome) {
         } else if (
           isChromium !== null &&
