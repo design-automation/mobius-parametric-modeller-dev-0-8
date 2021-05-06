@@ -8,7 +8,7 @@ import { checkNumArgs } from '../_check_inline_args';
  */
 export function isApprox(debug: boolean, n1: number, n2: number, t: number) {
     if (debug) {
-        checkNumArgs('isApprox', arguments, 1);
+        checkNumArgs('isApprox', arguments, 3);
     }
     return Math.abs(n1 - n2) < t;
 }
@@ -20,7 +20,7 @@ export function isApprox(debug: boolean, n1: number, n2: number, t: number) {
  */
 export function isIn(debug: boolean, v1: any, v2: any, v3: any): boolean {
     if (debug) {
-        checkNumArgs('isIn', arguments, 1);
+        checkNumArgs('isIn', arguments, 3);
     }
     return typeof v1 === 'number' && typeof v2 === 'number' && typeof v3 === 'number' &&
     v1 < v2 && v2 < v3;
@@ -33,7 +33,7 @@ export function isIn(debug: boolean, v1: any, v2: any, v3: any): boolean {
  */
 export function isWithin(debug: boolean, v1: any, v2: any, v3: any): boolean {
     if (debug) {
-        checkNumArgs('isWithin', arguments, 1);
+        checkNumArgs('isWithin', arguments, 3);
     }
     return typeof v1 === 'number' && typeof v2 === 'number' && typeof v3 === 'number' &&
     v1 <= v2 && v2 <= v3;
