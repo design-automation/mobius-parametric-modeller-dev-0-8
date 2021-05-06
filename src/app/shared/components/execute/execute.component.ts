@@ -530,7 +530,7 @@ export class ExecuteComponent {
             }
             if (miscData.exit) {
                 if (node.type === 'end') {
-                    this.dataService.log('<h4 style="padding: 2px 0px 2px 0px; color:red;">PROCESS EXITED. ' +
+                    this.dataService.log('<h4 style="padding: 2px 0px 2px 0px; color:black;">PROCESS EXITED. ' +
                     `Return Value: ${JSON.stringify(miscData.exit_value)}</h5>`);
                     node.output.value = miscData.exit_value;
                 } else {
@@ -707,7 +707,7 @@ export class ExecuteComponent {
                 if (breakbranch) {
                     node.model = snapshotID;
                     miscData.breakbranch[node.id] = true;
-                    this.dataService.log('<h4 style="padding: 2px 0px 2px 0px; color:red;">BRANCH BREAK</h4>');
+                    this.dataService.log('<h4 style="padding: 2px 0px 2px 0px; color:black;">Bypass Node</h4>');
                     return globalVars;
                 }
             }
@@ -808,7 +808,7 @@ export class ExecuteComponent {
             }
             if (ex.message === '__BREAK_BRANCH__') {
                 node.model = snapshotID;
-                this.dataService.log('<h4 style="padding: 2px 0px 2px 0px; color:red;">BRANCH BREAK</h4>');
+                this.dataService.log('<h4 style="padding: 2px 0px 2px 0px; color:black;">Bypass Node</h4>');
                 return;
             }
             this.dataService.flowchart.model = this.dataService.executeModel;

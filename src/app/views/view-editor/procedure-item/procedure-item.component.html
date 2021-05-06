@@ -503,15 +503,15 @@
                 <div class='basic-function-text'>
                     Exit
                 </div>
-                <input class='input--error'
-                [(ngModel)]='data.args[0].value'
-                [class.error]='data.args[0].invalidVar'
-                [class.disabled]='disableInput'
-                (focus)='onInputFocus(0, true)'
-                (blur)='argMod($event, 0)'
-                placeholder='Return Value'
-                [style.width.px]='inputSize(data.args[0].value||data.args[0].name)'>
-                <!-- <p class='input--arg input--arg--p' [innerHTML]='argHighlight(data.args[1].value)'></p> -->
+                <input class='input--arg'
+                    [(ngModel)]='data.args[0].value'
+                    [class.error]='data.args[0].invalidVar'
+                    [class.disabled]='disableInput'
+                    (focus)='onInputFocus(0, true)'
+                    (blur)='argMod($event, 0)'
+                    placeholder='Return Value'
+                    [style.width.px]='inputSize(data.args[0].value||data.args[0].name)'>
+                    <!-- <p class='input--arg input--arg--p' [innerHTML]='argHighlight(data.args[1].value)'></p> -->
             </div>
         </div>
         <div class = "btn-container">
@@ -539,7 +539,7 @@
         <div class='container--item' >
             <div class='line--item'>
                 <div class='basic-function-text'>
-                    Bypass-node
+                    Break-branch
                 </div>
             </div>
         </div>
