@@ -391,7 +391,7 @@ export class DataGeo {
         itowns.CameraUtils.transformCameraToLookAtTarget(this.view, cam, {
             coord: this.camTarget,
             tilt: tilt,
-            heading: lightingPos.azimuth * 180 / Math.PI,
+            heading: -lightingPos.azimuth * 180 / Math.PI,
             // tilt: 45,
             // heading: -90,
             range: this.scale
