@@ -2,7 +2,7 @@
 
     <!-- Variable Assignment Template -->
     <div id='prodDiv_{{data.ID}}'
-    class='container--line'
+    class='container--line variable-prod'
     [class.selected]="data.selected"
     [class.lastSelected]="data.lastSelected"
     [class.error]="data.hasError"
@@ -66,7 +66,7 @@
 
     <!-- IF Template -->
     <div id='prodDiv_{{data.ID}}'
-    class='container--line' 
+    class='container--line controlflow-prod' 
     [class.strong]="true"
     [class.selected]="data.selected"
     [class.lastSelected]="data.lastSelected"
@@ -122,7 +122,7 @@
 
     <!-- ELSEIF Template -->
     <div id='prodDiv_{{data.ID}}'
-    class='container--line' 
+    class='container--line controlflow-prod'
     [class.strong]="true"
     [class.selected]="data.selected"
     [class.lastSelected]="data.lastSelected"
@@ -177,7 +177,7 @@
 
     <!-- ELSE Template -->
     <div id='prodDiv_{{data.ID}}'
-    class='container--line' 
+    class='container--line controlflow-prod' 
     [class.strong]="true"
     [class.selected]="data.selected"
     [class.lastSelected]="data.lastSelected"
@@ -222,7 +222,7 @@
 
     <!-- FOREACH Template -->
     <div id='prodDiv_{{data.ID}}'
-    class='container--line' 
+    class='container--line controlflow-prod' 
     [class.strong]="true"
     [class.selected]="data.selected"
     [class.lastSelected]="data.lastSelected"
@@ -293,7 +293,7 @@
 
     <!-- WHILE Template -->
     <div id='prodDiv_{{data.ID}}'
-    class='container--line' 
+    class='container--line controlflow-prod' 
     [class.strong]="true"
     [class.selected]="data.selected"
     [class.lastSelected]="data.lastSelected"
@@ -350,7 +350,7 @@
 
     <!-- BREAK Template -->
     <div id='prodDiv_{{data.ID}}'
-    class='container--line' 
+    class='container--line controlflow-prod' 
     [class.selected]="data.selected"
     [class.lastSelected]="data.lastSelected"
     [class.error]="data.hasError"
@@ -382,7 +382,7 @@
 
     <!-- CONTINUE Template -->
     <div id='prodDiv_{{data.ID}}'
-    class='container--line' 
+    class='container--line controlflow-prod' 
     [class.selected]="data.selected"
     [class.lastSelected]="data.lastSelected"
     [class.error]="data.hasError"
@@ -413,7 +413,7 @@
 
     <!-- Blank (always the first procedure of if/else/else-if/for/while) -->
     <div id='prodDiv_{{data.ID}}'
-    class='container--line' 
+    class='container--line aux-prod' 
     [class.selected]="data.selected"
     [class.lastSelected]="data.lastSelected"
     [ngSwitch]="data.type"
@@ -431,7 +431,7 @@
 
     <!-- Comment -->
     <div id='prodDiv_{{data.ID}}'
-    class='container--line' 
+    class='container--line aux-prod' 
     [class.selected]="data.selected"
     [class.lastSelected]="data.lastSelected"
     [class.error]="data.hasError"
@@ -458,7 +458,7 @@
 
     <!-- Terminate -->
     <div id='prodDiv_{{data.ID}}'
-    class='container--line' 
+    class='container--line exit-prod' 
     [class.selected]="data.selected"
     [class.lastSelected]="data.lastSelected"
     [class.error]="data.hasError"
@@ -488,7 +488,7 @@
 
     <!-- Exit -->
     <div id='prodDiv_{{data.ID}}'
-    class='container--line' 
+    class='container--line exit-prod' 
     [class.selected]="data.selected"
     [class.lastSelected]="data.lastSelected"
     [class.disabled]="!data.enabled"
@@ -526,7 +526,7 @@
 
     <!-- BreakBranch -->
     <div id='prodDiv_{{data.ID}}'
-    class='container--line' 
+    class='container--line exit-prod' 
     [class.selected]="data.selected"
     [class.lastSelected]="data.lastSelected"
     [class.disabled]="!data.enabled"
@@ -556,7 +556,7 @@
 
     <!-- MainFunction -->
     <div id='prodDiv_{{data.ID}}'
-    class='container--line' 
+    class='container--line mainfunction-prod' 
     [class.selected]="data.selected"
     [class.lastSelected]="data.lastSelected"
     [class.error]="data.hasError"
@@ -642,7 +642,7 @@
 
     <!-- globalFuncCall -->
     <div id='prodDiv_{{data.ID}}'
-    class='container--line' 
+    class='container--line globalfunction-prod' 
     [class.selected]="data.selected"
     [class.lastSelected]="data.lastSelected"
     [class.error]="data.hasError"
@@ -669,7 +669,7 @@
                         [style.width.px]='inputSize(data.args[0].value||data.args[0].name)'>
                     = 
                 </ng-container>
-                <div class='function-text'><span class='module-name'>global.</span>{{data.meta.name}}</div> 
+                <div class='global-function-text'><span class='module-name'>global.</span>{{data.meta.name}}</div> 
                 <ng-container *ngFor='let p of data.args.slice(1);let i=index'>
                     <input class='input--arg' 
                         *ngIf='p.type !== 5'
@@ -713,7 +713,7 @@
     <!-- LocalFuncDef -->
     <ng-container *ngSwitchCase="ProcedureTypes.LocalFuncDef">
         <div id='prodDiv_{{data.ID}}'
-        class='container--line' 
+        class='container--line localfunction-prod' 
         [class.strong]="true"
         [class.selected]="data.selected"
         [class.lastSelected]="data.lastSelected"
@@ -739,7 +739,7 @@
                     placeholder={{data.args[0].name}}
                     [style.width.px]='inputSizeBold(data.args[0].value||data.args[0].name)'
                     >
-                    <span class='function-text'>  Function</span>
+                    <span class='local-function-text'>  Function</span>
                     <ng-container *ngFor='let p of data.args;let i=index'>
                         <input class='input--var' 
                         *ngIf="p.name[0] !== '_' && i > 0" 
@@ -788,7 +788,7 @@
 
     <!-- LocalFuncReturn -->
     <div id='prodDiv_{{data.ID}}'
-    class='container--line' 
+    class='container--line exit-prod' 
     [class.selected]="data.selected"
     [class.lastSelected]="data.lastSelected"
     [class.error]="data.hasError"
@@ -836,7 +836,7 @@
 
     <!-- LocalFuncCall -->
     <div id='prodDiv_{{data.ID}}'
-    class='container--line' 
+    class='container--line localfunction-prod' 
     [class.selected]="data.selected"
     [class.lastSelected]="data.lastSelected"
     [class.error]="data.hasError"
@@ -864,7 +864,7 @@
                     = 
                 </ng-container>
 
-                <div class='function-text'><span class='module-name'>local.</span>{{data.meta.name}} </div> 
+                <div class='local-function-text'><span class='module-name'>local.</span>{{data.meta.name}} </div> 
                 
                 <ng-container *ngFor='let p of data.args.slice(1);let i=index'>
                     <input class='input--arg' 

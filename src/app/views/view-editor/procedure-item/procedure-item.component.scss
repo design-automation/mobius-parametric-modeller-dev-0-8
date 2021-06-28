@@ -6,19 +6,19 @@
 }
 
 .container--line{
-    background-color: transparent;
+    background-color: $color6;
     font-size: $fsize2;
-    margin: 0px 0px 1px 0px;
-    padding: 0px 0px 1px 9px;
+    margin: 1px 0px 0px 0px;
+    padding: 2px 0px 1px 9px;
     // padding-bottom: 1px;
     // padding-left: 2px;
     //border-bottom: 1px solid red;
-    border-bottom: 1px solid $color4-5;
-    border-left: 1px solid $color4-5;
-    box-shadow: inset 1px -1px 0px 0px white;
+    border-bottom: 1px solid $color4;
+    border-left: 1px solid $color4;
     color: $color1;
     //min-height: 22px;
     opacity: 1;
+    vertical-align: bottom;
 
     display: flex;
     // white-space: nowrap;
@@ -31,9 +31,31 @@
     width: calc(100% - 13px);
     // min-width: fit-content; // for global side scroll
 
+    &.variable-prod {
+        background-color: #eeeeff;
+    }
+    &.controlflow-prod {
+        background-color: #feeeff;
+    }
+    &.exit-prod {
+        background-color: #ffe4ee;
+    }
+    &.mainfunction-prod {
+        background-color: #fff3ea;
+    }
+    &.localfunction-prod {
+        background-color: #e7f3e8;
+    }
+    &.globalfunction-prod {
+        background-color: #e1eff1;
+    }
+    &.aux-prod {
+        background-color: #f1f1f1;
+    }
+
     &.strong{
-        border-bottom: 1px solid $color2;
-        border-left: 1px solid $color2;
+        border-bottom: 1px solid $color1;
+        border-left: 1px solid $color1;
     }
 
     &.disabled{
@@ -90,7 +112,7 @@
     }
 
     &.onhover{
-        background-color: $color5;
+        background-color: $color4;
         &:not(.selected) {
             &.terminate {
                 background-color: $terminate-color-lt1;
@@ -332,7 +354,7 @@
             // display: inline-flex;
             .btn{
                 color: $color1;
-                background-color: $color5;
+                background-color: $color4;
                 // display: flex;
                 // justify-content: center;
             }
@@ -465,7 +487,37 @@
     color: $basic-function-text-color;
     font-weight: 700;
     text-align: center;
-    min-height: 17px;
+    min-height: 15px;
+
+    .module-name{
+        color: $selected-color;
+    }
+}
+
+.local-function-text{
+    font-family: $inputTextFontFam;
+    display: inline-block;
+    white-space: nowrap;
+    font-style: italic;
+    color: $local-function-text-color;
+    font-weight: 700;
+    text-align: center;
+    min-height: 15px;
+
+    .module-name{
+        color: $selected-color;
+    }
+}
+
+.global-function-text{
+    font-family: $inputTextFontFam;
+    display: inline-block;
+    white-space: nowrap;
+    font-style: italic;
+    color: $global-function-text-color;
+    font-weight: 700;
+    text-align: center;
+    min-height: 15px;
 
     .module-name{
         color: $selected-color;
