@@ -342,6 +342,15 @@ export class ViewEditorComponent implements AfterViewInit, OnDestroy {
             if (prod.parent) {
                 parentArray = prod.parent.children;
             } else if (prod.type === ProcedureTypes.LocalFuncDef) {
+                const checkLocal = this.checkRemovableLocalFuncDef(node.localFunc, prod);
+                const checkMain = this.checkRemovableLocalFuncDef(node.procedure, prod);
+                if (!checkLocal || !checkMain) {
+                    prod.selected = false;
+                    prod.lastSelected = false;
+                    prod.hasError = true;
+                    this.dataService.notifyMessage(`Unable to delete local function "${prod.args[0].value}" def! Existing function call detected.`);
+                    continue;
+                }
                 parentArray = node.localFunc;
             } else { parentArray = node.procedure; }
 
@@ -483,6 +492,28 @@ export class ViewEditorComponent implements AfterViewInit, OnDestroy {
         // this.data.enabled = !this.data.enabled;
     }
 
+    checkRemovableLocalFuncDef(prodList, func) {
+        let check = true;
+        for (const prod of prodList) {
+            if (prod.children) {
+                if (!this.checkRemovableLocalFuncDef(prod.children, func)) {
+                    check = false;
+                }
+            }
+            if (prod.type === ProcedureTypes.LocalFuncCall && prod.meta.name === func.args[0].value) {
+                prod.hasError = true;
+                let parentProd = prod;
+                while ( parentProd.parent ) {
+                    parentProd = parentProd.parent;
+                }
+                if (parentProd.type === ProcedureTypes.LocalFuncDef) {
+                    parentProd.hasError = true;
+                }
+                check = false;
+            }
+        }
+        return check;
+    }
 
     deleteSelectedProds() {
         const node = this.dataService.node;
@@ -516,6 +547,15 @@ export class ViewEditorComponent implements AfterViewInit, OnDestroy {
             if (prod.parent) {
                 prodList = prod.parent.children;
             } else if (prod.type === ProcedureTypes.LocalFuncDef) {
+                const checkLocal = this.checkRemovableLocalFuncDef(node.localFunc, prod);
+                const checkMain = this.checkRemovableLocalFuncDef(node.procedure, prod);
+                if (!checkLocal || !checkMain) {
+                    prod.selected = false;
+                    prod.lastSelected = false;
+                    prod.hasError = true;
+                    this.dataService.notifyMessage(`Unable to delete local function "${prod.args[0].value}" def! Existing function call detected.`);
+                    continue;
+                }
                 prodList = node.localFunc;
             } else {
                 prodList = node.procedure;
