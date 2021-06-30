@@ -1,5 +1,5 @@
 import { GIModel } from '@libs/geo-info/GIModel';
-import { isDevMode, ViewChild, HostListener, OnChanges } from '@angular/core';
+import { isDevMode, ViewChild, HostListener, OnChanges, OnDestroy } from '@angular/core';
 // import @angular stuff
 import { Component, Input, OnInit } from '@angular/core';
 // import app services
@@ -19,7 +19,7 @@ import { DefaultSettings } from '../../gi-viewer/gi-viewer.settings';
     templateUrl: './three-geo-viewer.component.html',
     styleUrls: ['./three-geo-viewer.component.scss'],
 })
-export class ThreeGeoComponent implements OnInit, OnChanges {
+export class ThreeGeoComponent implements OnInit, OnChanges, OnDestroy {
     // model data passed to the viewer
     @Input() model: GIModel;
     @Input() nodeIndex: number;
@@ -59,10 +59,6 @@ export class ThreeGeoComponent implements OnInit, OnChanges {
             this.dataService.createGeoViewer(threeJSScene);
         } else {
             const data = this.dataService.getGeoScene();
-            const geoCont = <HTMLDivElement> document.getElementById('geo-container');
-            const childCont = <HTMLDivElement> document.getElementById('threejs-geo-container');
-            geoCont.removeChild(childCont);
-            geoCont.appendChild(data.container);
             data.model = this.model;
             const threejsScene = this.threeJSDataService.getThreejsScene();
             if (!threejsScene.model || threejsScene.model !== this.model || threejsScene.nodeIndex !== this.nodeIndex) {
@@ -72,6 +68,19 @@ export class ThreeGeoComponent implements OnInit, OnChanges {
             }
             data.refreshModel(threejsScene);
             data.view.notifyChange();
+            setTimeout(() => {
+                const geoCont = <HTMLDivElement> document.getElementById('geo-container');
+                const childCont = <HTMLDivElement> document.getElementById('threejs-geo-container');
+                geoCont.removeChild(childCont);
+                geoCont.appendChild(data.container);
+            }, 0);
+        }
+    }
+
+    ngOnDestroy() {
+        const geoCont = document.getElementById('geo-container');
+        if (geoCont) {
+            geoCont.id = 'geo-container-tbd';
         }
     }
 
