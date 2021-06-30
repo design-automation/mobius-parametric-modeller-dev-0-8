@@ -14,15 +14,15 @@
     color: $color1;
     vertical-align: bottom;
     // border-left: 1px solid red;
-    border-bottom: 1px solid $color5;
-    border-left: 1px solid $color5;
-    padding: 0px 0px 1px 1px;
+    border-bottom: 1px solid $color3;
+    border-left: 1px solid $color3;
+    padding: 2px 0px 3px 1px;
 
     overflow: hidden;
     // width: calc(100% - 20px);
     width: 100%;
 
-    box-shadow: inset 1px -1px 0px 0px white;
+    // box-shadow: inset 1px -1px 0px 0px white;
 
     &.inputDisabled{
         opacity: $disabled-opacity;
@@ -75,7 +75,7 @@ input, select {
     font-family: $inputFontFam;
     color: $color8;
     font-weight: 400;
-    background-color: transparent;
+    background-color: $color7;
     border: 2px solid $color5;
     margin: 0px 2px;
     height: $fsize1;
@@ -95,7 +95,7 @@ input, select {
         padding: 0px;
         border: none;
         &:hover{ // no change
-            background-color: transparent;
+            background-color: $color7;
             color: $color1;
         }
     }
@@ -262,7 +262,7 @@ select{
         margin-left: 3px;
         color: $color8;
         border: 2px solid $color5;
-        background-color: transparent;
+        background-color: $color7;
 
         padding-left: 5px;
         font-family: arial;
