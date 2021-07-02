@@ -20,7 +20,6 @@ import {ViewEditorModule, ViewDashboardModule, ViewGalleryModule,
     ViewFlowchartComponent, ViewFlowchartModule,
     ViewAboutComponent, ViewAboutModule, ViewPublishModule, ViewPublishComponent, ViewMinimalModule, ViewMinimalComponent} from '@views';
 import { AppRoutingModule } from './app-routing.module';
-import { GoogleAnalyticsService } from '@shared/services/google.analytics';
 import { DataOutputService } from '@shared/services/dataOutput.service';
 import { CytoscapeService } from '../model-viewers/all-viewers/cytoscape-viewer/service/cytoscape.service';
 // import { WebWorkerService } from 'ngx-web-worker';
@@ -61,7 +60,6 @@ import { CytoscapeService } from '../model-viewers/all-viewers/cytoscape-viewer/
     providers: [ DataService, DataOutputService, KeyboardService,
                  ThreeJSViewerDataService, ThreeGeoViewerDataService, DataAframeService,
                  CytoscapeService,
-                 GoogleAnalyticsService,
                  {
                     provide: HTTP_INTERCEPTORS,
                     useClass: NoCacheHeadersInterceptor,

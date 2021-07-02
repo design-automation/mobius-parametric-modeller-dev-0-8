@@ -8,7 +8,6 @@ import * as Modules from '@modules';
 import { DataService } from '@services';
 // import { WebWorkerService } from 'ngx-web-worker';
 import { InputType } from '@models/port';
-import { GoogleAnalyticsService } from '@shared/services/google.analytics';
 import { Router } from '@angular/router';
 import { DataOutputService } from '@shared/services/dataOutput.service';
 import { SaveFileComponent } from '@shared/components/file';
@@ -228,8 +227,7 @@ export class ExecuteComponent {
 
     constructor(private dataService: DataService,
                 private dataOutputService: DataOutputService,
-                private router: Router,
-                private googleAnalyticsService: GoogleAnalyticsService) {
+                private router: Router) {
         this.isDev = isDevMode();
     }
 
@@ -362,8 +360,6 @@ export class ExecuteComponent {
                         document.getElementById('Console').click();
                         this.dataService.flagModifiedNode(this.dataService.flowchart.nodes[0].id);
                         const _category = this.isDev ? 'dev' : 'execute';
-                        this.googleAnalyticsService.trackEvent(_category, `error: Reserved Word Argument`,
-                            'click', performance.now() - this.startTime);
                         this.dataService.log(`<h4 style="padding: 2px 0px 2px 0px; color:red;">Error: ${ex.message}</h4>`);
                         throw(ex);
                     }
@@ -575,7 +571,6 @@ export class ExecuteComponent {
         this.dataOutputService.resetIModel();
         document.getElementById('spinner-off').click();
         const category = this.isDev ? 'dev' : 'execute';
-        this.googleAnalyticsService.trackEvent(category, 'successful', 'click', performance.now() - this.startTime);
         const duration: number = Math.round(performance.now() - this.startTime);
         let duration_msg: string;
         if (duration < 1000)  {
@@ -608,8 +603,6 @@ export class ExecuteComponent {
             this.dataService.flowchart.model = this.dataService.executeModel;
             this.dataService.flagModifiedNode(this.dataService.flowchart.nodes[0].id);
             const _category = this.isDev ? 'dev' : 'execute';
-            this.googleAnalyticsService.trackEvent(_category, `error: Reserved Word Argument`,
-                'click', performance.now() - this.startTime);
             throw new Error('Reserved Word Argument');
         }
         // const consoleLength = params.console.length;
@@ -897,7 +890,6 @@ export class ExecuteComponent {
             // console.log('---------------\nError node code:');
             // console.log(fnString);
             const category = this.isDev ? 'dev' : 'execute';
-            this.googleAnalyticsService.trackEvent(category, `error: ${ex.name}`, 'click', performance.now() - this.startTime);
             throw ex;
 
         }

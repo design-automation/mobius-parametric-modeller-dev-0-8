@@ -4,7 +4,6 @@ import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angul
 import { LoadUrlComponent } from '../file/loadurl.component';
 import { ExecuteComponent } from './execute.component';
 import { MatIconModule } from '@angular/material/icon';
-import { GoogleAnalyticsService } from '@shared/services/google.analytics';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { FlowchartUtils } from '@models/flowchart';
 import { _model } from '@modules';
@@ -40,8 +39,7 @@ describe('Execute Component test', () => {
             providers: [
                 DataService,
                 DataOutputService,
-                { provide: Router,      useValue: routerSpy },
-                GoogleAnalyticsService
+                { provide: Router,      useValue: routerSpy }
             ]
         }).compileComponents();
         loadURLfixture = TestBed.createComponent(LoadUrlComponent);
@@ -210,8 +208,7 @@ describe('Execute Model Comparison test', () => {
             providers: [
                 DataService,
                 DataOutputService,
-                { provide: Router,      useValue: routerSpy },
-                GoogleAnalyticsService
+                { provide: Router,      useValue: routerSpy }
             ]
         }).compileComponents();
         loadURLfixture = TestBed.createComponent(LoadUrlComponent);

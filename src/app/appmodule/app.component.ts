@@ -2,7 +2,6 @@ import { Component, Injector, OnInit, OnDestroy, Injectable } from '@angular/cor
 import { DataService } from '@services';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { GoogleAnalyticsService } from '@shared/services/google.analytics';
 import { HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 
 @Component({
@@ -11,13 +10,11 @@ import { HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http'
     styleUrls: ['app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
-    subscribe: any;
     // notificationMessage = 'Saving Flowchart...';
     // notificationTrigger = true;
 
     constructor(private dataService: DataService, private injector: Injector,
-        private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer,
-        private googleAnalyticsService: GoogleAnalyticsService) {
+        private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
         this.matIconRegistry.addSvgIcon('printDis', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/Icons/Print_disabled.svg'));
         this.matIconRegistry.addSvgIcon('print', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/Icons/iconPrint.svg'));
         this.matIconRegistry.addSvgIcon('disabled', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/Icons/iconDisabled.svg'));
@@ -51,7 +48,6 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.googleAnalyticsService.subscribe();
         this.dataService.rendererInfo = this.getVideoCardInfo();
         let errorMsg = null;
         if (this.dataService.rendererInfo.error) {
@@ -69,8 +65,6 @@ export class AppComponent implements OnInit, OnDestroy {
         }
     }
     ngOnDestroy() {
-        this.googleAnalyticsService.unsubscribe();
-        this.subscribe.unsubscribe();
     }
 
     notificationMsg() {
