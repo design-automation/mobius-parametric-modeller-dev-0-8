@@ -1053,7 +1053,7 @@ export class PanelHeaderComponent implements OnDestroy {
             }
             const funcs = [];
             for (const fn of fnCategory[1]) {
-                if (fn[0].toLowerCase().indexOf(searchTerm) !== -1) {
+                if (fn.toLowerCase().indexOf(searchTerm) !== -1) {
                     funcs.push(fn);
                 }
             }
