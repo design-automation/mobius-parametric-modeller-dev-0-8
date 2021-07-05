@@ -972,7 +972,7 @@ export class PanelHeaderComponent implements OnDestroy {
         setTimeout(() => {
             let baseLink = window.location.origin;
             if (baseLink.indexOf('design-automation.github.io') !== -1) {
-                baseLink += '/mobius-parametric-modeller-dev-0-7';
+                baseLink += '/' + window.location.pathname.split('/')[1];
             }
             window.open(`${baseLink}/editor?file=temp`, '_blank');
         }, 200);

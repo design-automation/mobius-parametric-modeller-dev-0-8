@@ -468,10 +468,10 @@ export class CodeUtils {
             // return [`__modules__.${_parameterTypes.setattrib}(__params__.model, ${val_0}, '${name}', ` +
             //         `${val_1.substring(bracketIndex + 12, index - 2)},`, `);`];
             return [`__modules__.${_parameterTypes.setattrib}(__params__.model, ${val_0},` +
-                    `['${name}', ${val_1.substring(bracketIndex + 12, index - 2)}], `, `);`];
+                    `[\`${name}\`, ${val_1.substring(bracketIndex + 12, index - 2)}], `, `);`];
         } else {
             // return [`__modules__.${_parameterTypes.setattrib}(__params__.model, ${val_0}, '${val_1}', null, `, ');'];
-            return [`__modules__.${_parameterTypes.setattrib}(__params__.model, ${val_0}, '${val_1}', `, ');'];
+            return [`__modules__.${_parameterTypes.setattrib}(__params__.model, ${val_0}, \`${val_1}\`, `, ');'];
         }
     }
 
