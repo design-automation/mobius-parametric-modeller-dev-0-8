@@ -116311,7 +116311,7 @@
 					"sources": [
 						{
 							"fileName": "libs/geo-info/io/io_geojson.ts",
-							"line": 544,
+							"line": 547,
 							"character": 31
 						}
 					]
@@ -116437,7 +116437,7 @@
 					"sources": [
 						{
 							"fileName": "libs/geo-info/io/io_geojson.ts",
-							"line": 569,
+							"line": 572,
 							"character": 31
 						}
 					]
@@ -120348,7 +120348,7 @@
 					"sources": [
 						{
 							"fileName": "libs/geom/vectors.ts",
-							"line": 186,
+							"line": 187,
 							"character": 20
 						}
 					]
@@ -120419,7 +120419,7 @@
 					"sources": [
 						{
 							"fileName": "libs/geom/vectors.ts",
-							"line": 220,
+							"line": 221,
 							"character": 27
 						}
 					]
@@ -120493,7 +120493,7 @@
 					"sources": [
 						{
 							"fileName": "libs/geom/vectors.ts",
-							"line": 209,
+							"line": 210,
 							"character": 27
 						}
 					]
@@ -120544,7 +120544,7 @@
 					"sources": [
 						{
 							"fileName": "libs/geom/vectors.ts",
-							"line": 193,
+							"line": 194,
 							"character": 26
 						}
 					]
@@ -120737,7 +120737,7 @@
 					"sources": [
 						{
 							"fileName": "libs/geom/vectors.ts",
-							"line": 140,
+							"line": 141,
 							"character": 23
 						}
 					]
@@ -120841,7 +120841,7 @@
 					"sources": [
 						{
 							"fileName": "libs/geom/vectors.ts",
-							"line": 179,
+							"line": 180,
 							"character": 24
 						}
 					]
@@ -121146,7 +121146,7 @@
 					"sources": [
 						{
 							"fileName": "libs/geom/vectors.ts",
-							"line": 171,
+							"line": 172,
 							"character": 25
 						}
 					]
@@ -121190,7 +121190,7 @@
 					"sources": [
 						{
 							"fileName": "libs/geom/vectors.ts",
-							"line": 156,
+							"line": 157,
 							"character": 22
 						}
 					]
@@ -121247,7 +121247,7 @@
 					"sources": [
 						{
 							"fileName": "libs/geom/vectors.ts",
-							"line": 175,
+							"line": 176,
 							"character": 28
 						}
 					]
@@ -121393,7 +121393,7 @@
 					"sources": [
 						{
 							"fileName": "libs/geom/vectors.ts",
-							"line": 163,
+							"line": 164,
 							"character": 22
 						}
 					]
@@ -121517,7 +121517,7 @@
 					"sources": [
 						{
 							"fileName": "libs/geom/vectors.ts",
-							"line": 159,
+							"line": 160,
 							"character": 25
 						}
 					]
