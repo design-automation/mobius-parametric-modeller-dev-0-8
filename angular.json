@@ -13,8 +13,7 @@
           "options": {
             "allowedCommonJsDependencies": [
               "util", "chroma-js", "showdown", "lodash", "mathjs", "cytoscape", "@doodle3d/clipper-js"
-            ],      
-            "aot": true,
+            ],
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -28,7 +27,13 @@
               "src/styles.scss"
             ],
             "scripts": [
-            ]
+            ],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -38,11 +43,8 @@
                   "maximumWarning": "100kb"
                 }
               ],
-              "optimization": false,
               "outputHashing": "all",
-              "sourceMap": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -57,7 +59,8 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
