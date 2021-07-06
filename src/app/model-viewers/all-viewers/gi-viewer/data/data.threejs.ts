@@ -624,7 +624,7 @@ export class DataThreejs extends DataThreejsLookAt {
      */
     private _addPointLabels(model: GIModel): void {
         const labels = model.modeldata.attribs.get.getModelAttribVal('labels');
-        if (!labels || !isArray(labels) || labels.length === 0) {
+        if (!labels || !Array.isArray(labels) || labels.length === 0) {
             return;
         }
 
@@ -641,19 +641,18 @@ export class DataThreejs extends DataThreejsLookAt {
         for (const label of labels) {
             const labelText = label.text;
             const labelOrient = label.position || label.location;
-            if (!labelText || !labelOrient || !isArray(labelOrient)) { continue; }
+            if (!labelText || !labelOrient || !Array.isArray(labelOrient)) { continue; }
             const labelSize = label.size || 20;
 
             const shape = this._text_font.generateShapes( labelText, labelSize , 1);
             const geom = new THREE.ShapeBufferGeometry(shape);
 
             let labelPos = labelOrient[0];
-
-            if (!isArray(labelPos)) {
+            if (!Array.isArray(labelPos)) {
                 labelPos = labelOrient;
             } else {
-                let toVec = new THREE.Vector3(...labelOrient[1]);
-                const pVec2 = new THREE.Vector3(...labelOrient[2]);
+                let toVec = new THREE.Vector3(...(<any>labelOrient[1]));
+                const pVec2 = new THREE.Vector3(...(<any>labelOrient[2]));
                 toVec = toVec.cross(pVec2).normalize();
 
                 if (labelOrient[1][0] !== 0 || labelOrient[1][1] !== 0) {
