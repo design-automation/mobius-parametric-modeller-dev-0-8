@@ -61,7 +61,8 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
 }
 // ================================================================================================
 /**
- * Returns am html string representation of the parameters in this model
+ * Returns am html string representation of the parameters in this model.
+ * The string can be printed to the console for viewing.
  *
  * @param __model__
  * @param __constList__
@@ -73,6 +74,7 @@ export function ParamInfo(__model__: GIModel, __constList__: {}): string {
 // ================================================================================================
 /**
  * Returns an html string representation of one or more entities in the model.
+ * The string can be printed to the console for viewing.
  *
  * @param __model__
  * @param entities One or more objects ot collections.
@@ -254,7 +256,8 @@ function _collInfo(__model__: GIModel, coll_i: number): string {
 }
 // ================================================================================================
 /**
- * Returns an html string representation of the contents of this model
+ * Returns an html string representation of the contents of this model.
+ * The string can be printed to the console for viewing.
  *
  * @param __model__
  * @returns Text that summarises what is in the model, click print to see this text.
@@ -328,7 +331,7 @@ export function ModelInfo(__model__: GIModel): string {
 }
 // ================================================================================================
 /**
- * Checks the internal consistency of the model.
+ * Checks the internal consistency of the model. Used for debugigng Mobius.
  *
  * @param __model__
  * @returns Text that summarises what is in the model, click print to see this text.
@@ -348,7 +351,8 @@ export function ModelCheck(__model__: GIModel): string {
 }
 // ================================================================================================
 /**
- * Compares two models.
+ * Compares two models. Used for grading models.
+ * 
  * Checks that every entity in this model also exists in the input_data.
  *
  * Additional entitis in the input data will not affect the score.
