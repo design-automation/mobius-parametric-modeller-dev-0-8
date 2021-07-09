@@ -497,10 +497,22 @@ function _skyRayDirsTjs(detail: number): THREE.Vector3[] {
     const hedron_tjs: THREE.IcosahedronGeometry = new THREE.IcosahedronGeometry(1, detail + 2);
     // calc vectors
     const vecs: THREE.Vector3[] = [];
-    for (const vec of hedron_tjs.vertices) {
-        // vec.applyAxisAngle(YAXIS, Math.PI / 2);
-        if (vec.z > -1e-6) {
-            vecs.push(vec);
+    // THREE JS UPDATE --> EDITED
+    // for (const vec of hedron_tjs.vertices) {
+    //     // vec.applyAxisAngle(YAXIS, Math.PI / 2);
+    //     if (vec.z > -1e-6) {
+    //         vecs.push(vec);
+    //     }
+    // }
+
+    let vec: number[] = [];
+    for (const coord of <Float32Array> hedron_tjs.getAttribute('position').array) {
+        vec.push(coord);
+        if (vec.length === 3) {
+            if (vec[2] > -1e-6) {
+                vecs.push(new THREE.Vector3(...vec));
+            }
+            vec = [];
         }
     }
     return vecs;
@@ -789,15 +801,33 @@ function _solarRaysIndirectTjs(latitude: number, north: Txy, detail: number): TH
     const north_rad = vecAng2([north[0], north[1], 0], [0, 1, 0], [0, 0, 1]);
     // calc vectors
     const indirect_vecs: THREE.Vector3[] = [];
-    for (const vec of hedron_tjs.vertices) {
-        if (Math.abs(vec.y) > solar_offset) {
-            vec.applyAxisAngle(XAXIS, latitude_rad);
-            vec.applyAxisAngle(ZAXIS, -north_rad);
-            if (vec.z > -1e-6) {
-                indirect_vecs.push(vec);
+
+    // THREE JS UPDATE --> EDITED
+    // for (const vec of hedron_tjs.vertices) {
+    //     if (Math.abs(vec.y) > solar_offset) {
+    //         vec.applyAxisAngle(XAXIS, latitude_rad);
+    //         vec.applyAxisAngle(ZAXIS, -north_rad);
+    //         if (vec.z > -1e-6) {
+    //             indirect_vecs.push(vec);
+    //         }
+    //     }
+    // }
+    let coordList: number[] = [];
+    for (const coord of <Float32Array> hedron_tjs.getAttribute('position').array) {
+        coordList.push(coord);
+        if (coordList.length === 3) {
+            const vec = new THREE.Vector3(...coordList);
+            if (Math.abs(vec.y) > solar_offset) {
+                vec.applyAxisAngle(XAXIS, latitude_rad);
+                vec.applyAxisAngle(ZAXIS, -north_rad);
+                if (vec.z > -1e-6) {
+                    indirect_vecs.push(vec);
+                }
             }
+            coordList = [];
         }
     }
+
     // console.log("num rays = ", indirect_vecs.length);
     return indirect_vecs;
 }

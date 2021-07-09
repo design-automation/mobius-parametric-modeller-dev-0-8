@@ -6,6 +6,7 @@ import { GIModel } from '@libs/geo-info/GIModel';
 import { DataService } from '@services';
 import { ISettings } from './data.threejsSettings';
 // import { WEBVR } from 'three/examples/jsm/vr/WebVR.js';
+import { VertexNormalsHelper } from 'three/examples/jsm/helpers/VertexNormalsHelper';
 
 /**
  * ThreejsScene
@@ -83,7 +84,7 @@ export class DataThreejsBase {
     public timeline_groups = null;
 
     // Show Normals
-    public vnh: THREE.VertexNormalsHelper;
+    public vnh: VertexNormalsHelper;
 
     // Settings
     public settings: ISettings;

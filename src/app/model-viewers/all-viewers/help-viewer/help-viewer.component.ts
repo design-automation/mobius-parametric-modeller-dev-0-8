@@ -2,7 +2,6 @@ import { Component, DoCheck, OnDestroy } from '@angular/core';
 import { ModuleList} from '@shared/decorators';
 import { DataService } from '@shared/services';
 import * as showdown from 'showdown';
-import { FaceNormalsHelper } from 'three';
 /**
  * HelpViewerComponent
  */

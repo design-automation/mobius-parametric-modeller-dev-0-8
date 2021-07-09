@@ -10,7 +10,7 @@ import { DataService } from '@services';
 import * as circularJSON from 'circular-json';
 import { Router } from '@angular/router';
 
-import * as galleryUrls from '@assets/gallery/__config__.json';
+import galleryUrls from '@assets/gallery/__config__.json';
 import { DataOutputService } from '@shared/services/dataOutput.service';
 import { SplitComponent } from 'angular-split';
 

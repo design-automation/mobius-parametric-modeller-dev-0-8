@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { GIModel } from '@libs/geo-info/GIModel';
 import { IThreeJS } from '@libs/geo-info/ThreejsJSON';
 import { EEntTypeStr, EEntType } from '@libs/geo-info/common';
-import { Vector3 } from 'three';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import { DataService } from '@services';
 import { Vector } from '@assets/core/modules/basic/calc';
@@ -10,7 +9,7 @@ import { ISettings } from './data.threejsSettings';
 
 import { DataThreejsLookAt } from './data.threejsLookAt';
 import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { isArray } from 'util';
+import { VertexNormalsHelper } from 'three/examples/jsm/helpers/VertexNormalsHelper';
 
 enum MaterialType {
     MeshBasicMaterial = 'MeshBasicMaterial',
@@ -499,7 +498,7 @@ export class DataThreejs extends DataThreejsLookAt {
         mesh.receiveShadow = true;
 
         // show vertex normals
-        this.vnh = new THREE.VertexNormalsHelper(mesh, this.settings.normals.size, 0x0000ff);
+        this.vnh = new VertexNormalsHelper(mesh, this.settings.normals.size, 0x0000ff);
         this.vnh.visible = this.settings.normals.show;
         this.scene.add(this.vnh);
         this.scene_objs.push(mesh);
@@ -522,10 +521,9 @@ export class DataThreejs extends DataThreejsLookAt {
         geom.setAttribute('color', color_buffer);
         // this._buffer_geoms.push(geom);
 
-        // // // geom.addAttribute( 'color', new THREE.Float32BufferAttribute( colors_flat, 3 ) );
         // const mat = new THREE.LineDashedMaterial({
         //     color: 0x000000,
-        //     vertexColors: THREE.VertexColors,
+        //     vertexColors: true,
         //     gapSize: 0
         // });
         // const line = new THREE.LineSegments(geom, mat);
@@ -538,10 +536,9 @@ export class DataThreejs extends DataThreejsLookAt {
         // geom_white.setAttribute('color', color_buffer);
         // // this._buffer_geoms.push(geom_white);
 
-        // // // geom.addAttribute( 'color', new THREE.Float32BufferAttribute( colors_flat, 3 ) );
         // const mat_white = new THREE.LineDashedMaterial({
         //     color: 0xFFFFFF,
-        //     vertexColors: THREE.VertexColors,
+        //     vertexColors: true,
         //     gapSize: 0
         // });
         // const line_white = new THREE.LineSegments(geom_white, mat_white);
@@ -559,7 +556,7 @@ export class DataThreejs extends DataThreejsLookAt {
             if (element.type === 'LineBasicMaterial') {
                 const mat = new THREE.LineDashedMaterial({
                     color: element.color || 0,
-                    vertexColors: THREE.VertexColors,
+                    vertexColors: true,
                     scale: 1,
                     dashSize: 1000,
                     gapSize: 0,
@@ -571,7 +568,7 @@ export class DataThreejs extends DataThreejsLookAt {
                     scale: element.scale || 1,
                     dashSize: element.dashSize || 2,
                     gapSize: element.gapSize || 1,
-                    vertexColors: THREE.VertexColors
+                    vertexColors: true
                 });
                 material_arr.push(mat);
             }
@@ -609,7 +606,7 @@ export class DataThreejs extends DataThreejsLookAt {
         const mat = new THREE.PointsMaterial({
             // color: new THREE.Color(rgb),
             size: size,
-            vertexColors: THREE.VertexColors,
+            vertexColors: true,
             sizeAttenuation: false
         });
         const point = new THREE.Points(geom, mat);
@@ -631,7 +628,7 @@ export class DataThreejs extends DataThreejsLookAt {
         const matLite = new THREE.MeshBasicMaterial( {
             transparent: false,
             side: THREE.DoubleSide,
-            vertexColors: THREE.VertexColors
+            vertexColors: true
         } );
         const shapes = [];
 
@@ -644,7 +641,7 @@ export class DataThreejs extends DataThreejsLookAt {
             if (!labelText || !labelOrient || !Array.isArray(labelOrient)) { continue; }
             const labelSize = label.size || 20;
 
-            const shape = this._text_font.generateShapes( labelText, labelSize , 1);
+            const shape = this._text_font.generateShapes( labelText, labelSize);
             const geom = new THREE.ShapeBufferGeometry(shape);
 
             let labelPos = labelOrient[0];
@@ -661,14 +658,14 @@ export class DataThreejs extends DataThreejsLookAt {
                     rotateQuat.setFromUnitVectors(checkVecFrom, checkVecTo);
                     const rotateMat = new THREE.Matrix4(); // create one and reuse it
                     rotateMat.makeRotationFromQuaternion(rotateQuat);
-                    geom.applyMatrix(rotateMat);
+                    geom.applyMatrix4(rotateMat);
                 }
 
                 const quaternion = new THREE.Quaternion();
                 quaternion.setFromUnitVectors(fromVec, toVec);
                 const matrix = new THREE.Matrix4(); // create one and reuse it
                 matrix.makeRotationFromQuaternion(quaternion);
-                geom.applyMatrix(matrix);
+                geom.applyMatrix4(matrix);
             }
             geom.translate( labelPos[0], labelPos[1], labelPos[2]);
 
@@ -676,7 +673,7 @@ export class DataThreejs extends DataThreejsLookAt {
             if (label.color  && label.color.length === 3) {
                 color = new THREE.Color(`rgb(${label.color[0]}, ${label.color[1]}, ${label.color[2]})`);
             }
-            const colors_buffer = new THREE.Float32BufferAttribute(geom.attributes.position.count * 3, 3);
+            const colors_buffer = new THREE.Float32BufferAttribute(new ArrayBuffer(geom.attributes.position.count * 3), 3);
             if (label.color && label.color.length === 3) {
                 for (let i = 0; i < colors_buffer.count; i++) {
                     colors_buffer.setXYZ(i, label.color[0], label.color[1], label.color[2]);
@@ -704,7 +701,6 @@ export class DataThreejs extends DataThreejsLookAt {
         size: number = 1): void {
         const geom = new THREE.BufferGeometry();
         geom.setIndex(points_i);
-        // geom.addAttribute('position', posis_buffer);
         geom.setAttribute('position', posis_buffer);
         // this._buffer_geoms.push(geom);
         // geom.computeBoundingSphere();
@@ -712,7 +708,7 @@ export class DataThreejs extends DataThreejsLookAt {
             color: new THREE.Color(parseInt(color.replace('#', '0x'), 16)),
             size: size,
             sizeAttenuation: false
-            // vertexColors: THREE.VertexColors
+            // vertexColors: true
         });
         const point = new THREE.Points(geom, mat);
         this.scene_objs.push(point);

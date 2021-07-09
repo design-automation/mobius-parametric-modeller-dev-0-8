@@ -1,17 +1,14 @@
 import { GIModel } from '@libs/geo-info/GIModel';
-import { isDevMode, ViewChild, HostListener, OnChanges } from '@angular/core';
 // import @angular stuff
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 // import app services
 import { DataService as MD } from '@services';
 import { ColorPickerService } from 'ngx-color-picker';
-import { Vector3, GridHelper } from 'three';
-import { SplitComponent } from 'angular-split';
 import { DataAframeService } from './data/data.aframe.service';
 import { ModalService } from './html/modal-window.service';
 import { DataService as ThreeJSDataService } from '../gi-viewer/data/data.service';
 import { AframeSettings, aframe_default_settings } from './aframe-viewer.settings';
-import { IProcedure, ProcedureTypes } from '@models/procedure';
+import { ProcedureTypes } from '@models/procedure';
 import { NodeUtils } from '@models/node';
 import { checkNodeValidity } from '@shared/parser';
 declare var AFRAME;
@@ -25,7 +22,7 @@ declare var AFRAME;
     templateUrl: './aframe-viewer.component.html',
     styleUrls: ['./aframe-viewer.component.scss'],
 })
-export class AframeViewerComponent implements OnInit{
+export class AframeViewerComponent implements OnInit, OnDestroy{
     // model data passed to the viewer
     @Input() data: GIModel;
     @Input() nodeIndex: number;
@@ -90,6 +87,10 @@ export class AframeViewerComponent implements OnInit{
                 this.mainDataService.aframeViewerSettingsUpdated = false;
             }
         }, 100);
+    }
+
+    ngOnDestroy() {
+        clearInterval(this.settingsUpdateInterval);
     }
 
     private getSettings() {

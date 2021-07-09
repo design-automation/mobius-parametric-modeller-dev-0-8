@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { IModule, IFunction } from '@models/procedure';
 import { IArgument } from '@models/code';
-import * as doc from '@assets/typedoc-json/doc.json';
+import doc from '@assets/typedoc-json/doc.json';
 import * as ctrlFlowDoc from '@assets/typedoc-json/controlFlowDoc.json';
 // const doc = require('@assets/typedoc-json/doc.json');
 import * as showdown from 'showdown';

@@ -1,3 +1,4 @@
+@use "sass:math";
 @import '~scss/colors';
 @import '~scss/variables';
 @import '../general-viewer.scss';
@@ -37,7 +38,7 @@ $ln-height: $fsize2 + 3px;
     padding: 6px 0px;
     border-top: 1px solid $color1;
     h5{
-        margin-bottom: $ln-height/4;
+        margin-bottom: math.div($ln-height, 4);
     }
 }
 
@@ -45,9 +46,9 @@ $ln-height: $fsize2 + 3px;
 .descr--container, .param--container, .ret--container, .exam--container{
     padding: 0px;
     line-height: $ln-height;
-    margin-bottom: $ln-height/2;
+    margin-bottom: math.div($ln-height, 2);
     h5{
-        margin-bottom: $ln-height/4;
+        margin-bottom: math.div($ln-height, 4);
     }
     ul{
         margin: 0px;
@@ -78,7 +79,7 @@ $ln-height: $fsize2 + 3px;
 
 .exam--container{
     h5{
-        margin-top: $ln-height/4;
+        margin-top: math.div($ln-height, 4);
     }
     .examp{
         padding: 0px;

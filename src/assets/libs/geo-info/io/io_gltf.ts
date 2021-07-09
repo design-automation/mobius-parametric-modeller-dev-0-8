@@ -183,13 +183,13 @@ function _addLines(scene: THREE.Scene,
         if (element.type === 'LineBasicMaterial') {
             const mat = new THREE.LineBasicMaterial({
                 color: element.color || 0,
-                vertexColors: THREE.VertexColors
+                vertexColors: true
             });
             material_arr.push(mat);
         } else {
             const mat = new THREE.LineBasicMaterial({
                 color: element.color || 0,
-                vertexColors: THREE.VertexColors
+                vertexColors: true
             });
             material_arr.push(mat);
         }
@@ -222,7 +222,7 @@ function _addPoints(scene: THREE.Scene,
     const mat = new THREE.PointsMaterial({
         // color: new THREE.Color(rgb),
         size: size,
-        vertexColors: THREE.VertexColors,
+        vertexColors: true,
         sizeAttenuation: false
     });
     const point = new THREE.Points(geom, mat);

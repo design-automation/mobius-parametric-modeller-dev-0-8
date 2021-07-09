@@ -4,7 +4,6 @@ import { EEntType, Txyz, TAttribDataTypes, LONGLAT } from '@libs/geo-info/common
 import * as itowns from 'itowns/dist/itowns';
 import { DataService } from '../../gi-viewer/data/data.service';
 import * as THREE from 'three';
-import { AmbientLight } from 'three';
 import * as suncalc from 'suncalc';
 
 
@@ -320,7 +319,7 @@ export class DataGeo {
         }
 
 
-        threeJSGroup.updateMatrixWorld();
+        threeJSGroup.updateMatrixWorld(true);
         this.view.scene.add(threeJSGroup);
 
         // this._addGround(threejsScene, cameraTargetPosition);
@@ -333,7 +332,7 @@ export class DataGeo {
         const lightTarget = new THREE.Object3D();
         lightTarget.name = 'mobius_lightTarget';
         lightTarget.position.copy(cameraTargetPosition);
-        lightTarget.updateMatrixWorld();
+        lightTarget.updateMatrixWorld(true);
         this.view.scene.add(lightTarget);
 
         // this.lookAtObj(threejsScene);
@@ -414,7 +413,7 @@ export class DataGeo {
         cam.top = this.scale;
         cam.bottom = -this.scale;
 
-        lighting.updateMatrixWorld();
+        lighting.updateMatrixWorld(true);
 
     }
     private _addGround(threejsScene, groundPos) {
@@ -439,7 +438,7 @@ export class DataGeo {
         plane.lookAt(new THREE.Vector3(0, 0, 0));
         plane.rotateY(Math.PI);
 
-        plane.updateMatrixWorld();
+        plane.updateMatrixWorld(true);
         this.view.scene.add(plane);
     }
 

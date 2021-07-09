@@ -41,9 +41,9 @@ export enum _Ecolors {
 function _convertSelectEcolorsToNum(select: _Ecolors): number {
     switch (select) {
         case _Ecolors.NO_VERT_COLORS:
-            return THREE.NoColors;
+            return 0;
         default:
-            return THREE.VertexColors;
+            return 1;
     }
 }
 function _clamp01(val: number): number {
