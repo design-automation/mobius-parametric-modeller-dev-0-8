@@ -645,6 +645,7 @@ export abstract class NodeUtils {
                 if (existingFunc.args[0].value === newProd.args[0].value) {
                     newProd.args[0].value += '_copy';
                     newProd.args[0].jsValue += 'copy_';
+                    newProd.meta.otherInfo.prev_name = newProd.args[0].value;
                 }
             }
         }
