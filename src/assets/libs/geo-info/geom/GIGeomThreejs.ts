@@ -294,7 +294,7 @@ export class GIGeomThreejs {
         const material =  {
             type: 'MeshPhongMaterial',
             side: THREE.DoubleSide,
-            vertexColors: THREE.VertexColors
+            vertexColors: true
         };
         if (settings) {
             for (const key of Object.keys(settings)) {

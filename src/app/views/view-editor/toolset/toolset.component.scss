@@ -104,9 +104,10 @@
         text-overflow: ellipsis;
 
     }
-    .user--Manage{
-        margin-bottom: 4px;
-        border-bottom: 1px solid $color3;
+    .user--manage{
+        color: #1c8997;
+        // margin-bottom: 4px;
+        // border-bottom: 1px solid $color3;
     }
     :hover{
         background-color: $color4;

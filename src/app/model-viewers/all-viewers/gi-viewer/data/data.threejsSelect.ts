@@ -428,8 +428,6 @@ export class DataThreejsSelect extends DataThreejsBase {
         } else {
             geom.setIndex([0, 1]);
         }
-        // geom.addAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-        // geom.addAttribute('normal', new THREE.Float32BufferAttribute(Array(positions.length).fill(0), 3));
         geom.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
         geom.setAttribute('normal', new THREE.Float32BufferAttribute(Array(positions.length).fill(0), 3));
         const rgb = `rgb(${colors.toString()})`;
@@ -460,11 +458,9 @@ export class DataThreejsSelect extends DataThreejsBase {
         if (point_indices) {
             geom.setIndex(point_indices);
         }
-        // geom.addAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
         geom.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
         const color_rgb = new THREE.Color(parseInt(color.replace('#', '0x'), 16));
         if (colors) {
-            // geom.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
             geom.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
         } else {
             let color_data;
@@ -477,7 +473,6 @@ export class DataThreejsSelect extends DataThreejsBase {
                 }
             }
             const color_buffer = new Uint8Array(color_data);
-            // geom.addAttribute('color', new THREE.BufferAttribute(color_buffer, 3, true));
             geom.setAttribute('color', new THREE.BufferAttribute(color_buffer, 3, true));
         }
         geom.computeBoundingSphere();
@@ -485,7 +480,7 @@ export class DataThreejsSelect extends DataThreejsBase {
             color: color_rgb,
             size: size,
             sizeAttenuation: false
-            // vertexColors: THREE.VertexColors
+            // vertexColors: true
         });
         const bg = { geom, mat };
         return bg;

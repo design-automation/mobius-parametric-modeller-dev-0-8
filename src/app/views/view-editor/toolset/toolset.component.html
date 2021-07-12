@@ -221,7 +221,12 @@
                         <ul class='toolset__functions--subset user_set'>
                             <li 
                             (mousedown)='selectPrevProd()'
-                            (click)='add_local_func_def(0)'>Def Func</li>
+                            (click)='add_local_func_def(0)'>
+                                Def Func
+                                <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "local_func", "define function")'>
+                                    <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                                </button>
+                            </li>
                             <li *ngFor='let func_prod of getNode().localFunc.slice(1)' 
                             (mousedown)='selectPrevProd()'
                             (click)='add_local_func_call(func_prod)'
@@ -236,10 +241,11 @@
                     (click)='toggleAccordion("CreateGlobal")'>global func</button>
                     <div class="panel">
                         <ul class='toolset__functions--subset'>
-                            <li class = 'user--manage'>
-                                <button class = 'add-btn' (click)="open_globalFunc_dialog($event);" title="Manage Global Functions">
-                                    Manage
-                                </button>
+                            <li class = 'user--manage' (click)="open_globalFunc_dialog($event);" title="Manage Global Functions">
+                                Manage
+                                <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "global_func", "manage")'>
+                                    <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                                </button>    
                             </li>
                             <div class='tooltip user--def' *ngFor='let fn of getFlowchart().functions'>
                                 <div class = 'user--def-lnContainer'

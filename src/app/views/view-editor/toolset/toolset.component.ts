@@ -668,6 +668,7 @@ export class ToolsetComponent implements OnInit {
 
     emitHelpText(event, functype, func) {
         event.stopPropagation();
+        console.log('>>>>>>>>>',this.AllFuncsDoc)
         if (functype === 'core') {
             this.dataService.helpView = this.AllFuncsDoc[func.module.toLowerCase()][func.name.toLowerCase()];
             this.dataService.toggleHelp(true);

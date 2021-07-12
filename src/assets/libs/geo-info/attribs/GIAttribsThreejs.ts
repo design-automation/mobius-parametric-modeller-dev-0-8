@@ -1,5 +1,4 @@
 import { TAttribDataTypes, EEntType, EAttribNames, EEntTypeStr, Txyz, TEntTypeIdx } from '../common';
-import { isString } from 'util';
 import { sortByKey } from '../../util/maps';
 import { GIModelData } from '../GIModelData';
 import { GIAttribMapBase } from '../attrib_classes/GIAttribMapBase';
@@ -199,10 +198,10 @@ export class GIAttribsThreejs {
                                 data_obj_map.get(ent_i)[attrib_name] = JSON.stringify(attrib_value);
                             }
                         } else if(Array.isArray(attrib_value)) {
-                            const _attrib_value = isString(attrib_value[0]) ? `'${attrib_value[0]}'` : attrib_value[0];
+                            const _attrib_value = (typeof attrib_value[0] === 'string') ? `'${attrib_value[0]}'` : attrib_value[0];
                             data_obj_map.get(ent_i)[`${attrib_name}[0]`] = _attrib_value;
                         } else {
-                            const _attrib_value = isString(attrib_value) ? `'${attrib_value}'` : attrib_value;
+                            const _attrib_value = (typeof attrib_value === 'string') ? `'${attrib_value}'` : attrib_value;
                             data_obj_map.get(ent_i)[`${attrib_name}`] = _attrib_value;
                         }
                     }
@@ -325,7 +324,7 @@ export class GIAttribsThreejs {
                         data_map.set(attrib_name, JSON.stringify(attrib_value));
                     }
                 } else {
-                    const _attrib_value = isString(attrib_value) ? `'${attrib_value}'` : attrib_value;
+                    const _attrib_value = (typeof attrib_value === 'string') ? `'${attrib_value}'` : attrib_value;
                     data_map.set(`${attrib_name}`, _attrib_value);
                 }
             }
@@ -391,7 +390,7 @@ export class GIAttribsThreejs {
                                 data_obj_map.get(ent_i)[attrib_name] = JSON.stringify(attrib_value);
                             }
                         } else {
-                            const _attrib_value = isString(attrib_value) ? `'${attrib_value}'` : attrib_value;
+                            const _attrib_value = (typeof attrib_value === 'string') ? `'${attrib_value}'` : attrib_value;
                             data_obj_map.get(ent_i)[`${attrib_name}`] = _attrib_value;
                         }
                     }
