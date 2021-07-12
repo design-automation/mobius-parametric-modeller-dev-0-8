@@ -14,11 +14,11 @@
         <a-entity id='aframe_directionalLight' light='type: directional; color: #EEE; intensity: 1; castShadow:true;' position='1 1 1'></a-entity>
 
         <a-entity camera id='aframe_camera' wasd-controls='acceleration: 500%; fly: false' position='0 2 0'  rotation='0 0 0' look-controls>
-        <!-- <a-entity camera active='false' id='aframe_camera' look-controls='enabled:false' wasd-controls="acceleration:500% ; fly: false" position='0 2 0'  rotation='0 0 0' > -->
-                <!-- <a-camera look-controls wasd-controls="enabled:false"></a-camera> -->
-            <a-sky id='aframe_sky' radius='5000'></a-sky>
+        <!-- <a-entity camera active='false' id='aframe_camera' look-controls='enabled:false' wasd-controls="acceleration:500% ; fly: false" position='0 2 0'  rotation='0 0 0' >
+                <a-camera look-controls wasd-controls="enabled:false"></a-camera> -->
             <!-- <a-sky id='aframe_sky_foreground' src='#sky_foreground' rotation='0 240 0' radius='5' transparent='true'></a-sky> -->
         </a-entity>
+        <a-sky id='aframe_sky' radius='5000'></a-sky>
 
         <a-entity id='mobius_geom' shadow="receive: true" rotation="-90 0 0" position="0 0 0"></a-entity>
         <!-- <a-plane position="0 -2.1 -4" rotation="-90 0 0" width="1000" height="1000" color="#AAAAAA"></a-plane> -->

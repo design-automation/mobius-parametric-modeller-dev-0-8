@@ -13,7 +13,7 @@ import * as Modules from 'assets/core/modules';
 
 const mdConverter = new showdown.Converter({literalMidWordUnderscores: true});
 const module_list = [];
-const extraMods = ['variable', 'comment', 'expression', 'control_flow'];
+const extraMods = ['variable', 'comment', 'expression', 'control_flow', 'global_func', 'local_func'];
 
 // todo: bug fix for defaults
 function extract_params(func: Function): [IArgument[], boolean] {
@@ -220,7 +220,6 @@ for (const mod of doc.children) {
 for (const i of extraMods) {
     addModFuncDoc(functionDocs, `assets/typedoc-json/docCF/${i}.md`, i)
 }
-
 export const ModuleList = module_list;
 export const ModuleDocList = moduleDocs;
 export const AllFunctionDoc = functionDocs;
