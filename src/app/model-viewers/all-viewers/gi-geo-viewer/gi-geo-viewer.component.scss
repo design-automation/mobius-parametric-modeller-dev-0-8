@@ -56,6 +56,26 @@ as-split-area{
     }
 }
 
+#viewer_help_button{
+    z-index: 2;
+    outline: none;
+    width: 40px;
+    height: 30px;
+    font-size:$fsize1;
+    position: absolute;
+    top:0px;
+    right:30px; 
+    text-align:center;
+    color: $color1;
+    background-color:transparent;
+    border:0;
+    cursor: pointer;
+    &:hover {
+        color:$selected-color;
+    }
+}
+
+
 .date-picker-div{
     position: absolute;
     bottom: 10px;

@@ -10,7 +10,7 @@ const DEFAUT_CAMERA_POS = {
     rotation: new AFRAME.THREE.Vector3(0, 0, 0)
 }
 function postloadSkyImg() {
-    const sky = document.getElementById('aframe_sky');
+    const sky = document.getElementById('aframe_sky_background');
     (<any> sky).setAttribute('src', '#aframe_sky_img');
 }
 function resizeScene() {
@@ -287,7 +287,8 @@ export class DataAframe {
     }
 
     updateSky() {
-        const sky = document.getElementById('aframe_sky');
+        const skyBG = document.getElementById('aframe_sky_background');
+        const skyFG = document.getElementById('aframe_sky_foreground');
         let skyURL;
         const backgroundSet = (Number(this.settings.background.background_set) - 1);
         let baseLink = window.location.origin;
@@ -320,57 +321,15 @@ export class DataAframe {
                 assetEnt.appendChild(imgEnt);
                 imgEnt.addEventListener('load', postloadSkyImg);
 
-                const skyPos = new AFRAME.THREE.Vector3(0, 0, 0);
-                skyPos.copy(this.vr.camera_position);
-                skyPos.z = - skyPos.z;
-                sky.setAttribute('position', skyPos);
-                sky.setAttribute('rotation', `0 ${90 + this.vr.background_rotation} 0`);
+                skyBG.setAttribute('rotation', `0 ${90 + this.vr.background_rotation} 0`);
             });
         }
-        // if (backgroundSet < 0) {
-        //     fetch(this.settings.background.background_url).then(res => {
-        //         if (!res.ok) {
-        //             const notifyButton = <HTMLButtonElement> document.getElementById('hidden_notify_button');
-        //             if (!notifyButton) { return; }
-        //             notifyButton.value = `Unable to retrieve background image from URL<br>${this.settings.background.background_url}`;
-        //             notifyButton.click();
-        //         } else if (this.settings.background.background_url.trim() === '') {
-        //             return;
-        //         }
-        //         const assetEnt = document.getElementById('aframe_assets');
-        //         const allImages = document.querySelectorAll('img');
-        //         allImages.forEach(img => {
-        //             try {
-        //                 assetEnt.removeChild(img);
-        //             } catch (ex) {}
-        //             img.removeEventListener('load', postloadSkyImg);
-        //         });
-        //         const imgEnt = document.createElement('img');
-        //         imgEnt.id = 'aframe_sky_img';
-        //             imgEnt.setAttribute('crossorigin', 'anonymous');
-        //         imgEnt.setAttribute('src', this.settings.background.background_url);
-        //         assetEnt.appendChild(imgEnt);
-        //         imgEnt.addEventListener('load', postloadSkyImg);
 
-        //         const skyPos = new AFRAME.THREE.Vector3(0, 0, 0);
-        //         skyPos.copy(this.settings.camera.position);
-        //         skyPos.z = - skyPos.z;
-        //         sky.setAttribute('position', skyPos);
-        //         sky.setAttribute('rotation', `0 ${90 + this.settings.background.background_rotation} 0`);
-        //         // sky.setAttribute('rotation', `0 ${this.settings.background.background_rotation} 0`);
-        //         // sky.setAttribute('rotation', `0 ${90 - this.settings.background.background_rotation} 0`);
-        //         // sky.setAttribute('rotation', `0 0 0`);
-        //     });
-        //     skyURL = '';
-        // } else {
-        //     skyURL = '/assets/img/background/bg' + backgroundSet + '/aframe.jpg';
-        // }
-
-        if (sky) {
-            (<any> sky).setAttribute('src', skyURL);
+        if (skyBG) {
+            (<any> skyBG).setAttribute('src', skyURL);
         } else {
             const skyEnt = document.createElement('a-sky');
-            skyEnt.id = 'aframe_sky';
+            skyEnt.id = 'aframe_sky_background';
             skyEnt.setAttribute('src', skyURL);
             this.scene.appendChild(skyEnt);
         }
@@ -414,7 +373,7 @@ export class DataAframe {
     updateCamera(camera_pos = DEFAUT_CAMERA_POS) {
         if (this.vr.enabled) {
             setTimeout(() => {
-                const cameraEl = <any> document.getElementById('aframe_camera');
+                const cameraEl = <any> document.getElementById('aframe_camera_rig');
                 if (cameraEl) {
                     // const trueCameraPos = new AFRAME.THREE.Vector3();
                     // trueCameraPos.copy(this.vr.camera_position);
@@ -437,7 +396,7 @@ export class DataAframe {
             return;
         }
         setTimeout(() => {
-            const cameraEl = <any> document.getElementById('aframe_camera');
+            const cameraEl = <any> document.getElementById('aframe_camera_rig');
             if (cameraEl && camera_pos) {
                 // const trueCameraPos = new AFRAME.THREE.Vector3();
                 // trueCameraPos.copy(camera_pos.position);
@@ -461,16 +420,15 @@ export class DataAframe {
     }
 
     updateCameraPos(posDetails) {
-        const cameraEl = <any> document.getElementById('aframe_camera');
-        const sky = document.getElementById('aframe_sky');
+        const cameraEl = <any> document.getElementById('aframe_camera_rig');
+        const sky = document.getElementById('aframe_sky_background');
         // const skyFG = document.getElementById('aframe_sky_foreground');
         const mobiusGeom = document.getElementById('mobius_geom');
-        sky.setAttribute('position', '0 0 0');
         sky.setAttribute('rotation', '0 0 0');
         mobiusGeom.setAttribute('scale', '1 1 1');
         if (!posDetails || !posDetails.pos || posDetails.pos.length < 2) {
             this.staticCamOn = false;
-            cameraEl.setAttribute('wasd-controls', 'enabled: true; acceleration: 500%; fly: false');
+            cameraEl.setAttribute('custom-wasd-controls', 'enabled: true; acceleration: 500%; fly: false');
             this.updateSky();
             // this.updateCamera(this.settings.camera);
             return;
@@ -485,7 +443,7 @@ export class DataAframe {
             }
         }
         this.staticCamOn = true;
-        cameraEl.setAttribute('wasd-controls', 'enabled: false;');
+        cameraEl.setAttribute('custom-wasd-controls', 'enabled: false;');
         const camPos = new AFRAME.THREE.Vector3(0, 0, 0);
         camPos.x = posDetails.pos[0] * scaleVal;
         camPos.z = (0 - posDetails.pos[1]) * scaleVal;
@@ -528,15 +486,7 @@ export class DataAframe {
                 imgEnt.setAttribute('src', posDetails.background_url);
                 assetEnt.appendChild(imgEnt);
                 imgEnt.addEventListener('load', postloadSkyImg);
-                const skypos = new AFRAME.THREE.Vector3(0, 0, 0);
-                skypos.copy(camPos);
-                skypos.y = 0;
-                sky.setAttribute('position', skypos);
-                // skyFG.setAttribute('position', skypos);
                 sky.setAttribute('rotation', `0 ${90 + posDetails.background_rotation} 0`);
-                // sky.setAttribute('rotation', `0 ${posDetails.background_rotation} 0`);
-                // sky.setAttribute('rotation', `0 ${90 - posDetails.background_rotation} 0`);
-                // sky.setAttribute('rotation', `0 0 0`);
             });
 
         }
@@ -554,7 +504,7 @@ export class DataAframe {
         });
 
         const tbrElements = [   'aframe_ambientLight', 'aframe_hemisphereLight', 'aframe_directionalLight',
-                                'aframe_assets', 'aframe_camera', 'aframe_sky', 'mobius_geom', 'aframe_ground'];
+                                'aframe_assets', 'aframe_camera_rig', 'aframe_sky_background', 'mobius_geom', 'aframe_ground'];
         for (const tbrElmName of tbrElements) {
             const tbr = document.getElementById(tbrElmName);
             if (!tbr) { continue; }

@@ -1,6 +1,7 @@
 <div id="gi-viewer-container">
     <aframe-main [model]="data" [nodeIndex]="nodeIndex" (eventAction)='onEventAction($event)'></aframe-main>
     <button class='btn' id="settings_button" mat-icon-button (click)="openModal('aframe_settings_modal')" title="Settings"><mat-icon svgIcon="settings"></mat-icon></button>
+    <button class='btn' id="viewer_help_button" mat-icon-button (click)="openViewerHelp()" title="Help"><mat-icon svgIcon="cHelp"></mat-icon></button>
     <button id="zoomingfit" mat-icon-button (click)="zoomfit()" title='Zoom to Fit Model'>
         <mat-icon svgIcon="cZoom"></mat-icon>
     </button>

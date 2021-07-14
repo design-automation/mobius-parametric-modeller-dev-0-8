@@ -13,7 +13,7 @@ import * as Modules from 'assets/core/modules';
 
 const mdConverter = new showdown.Converter({literalMidWordUnderscores: true});
 const module_list = [];
-const extraMods = ['variable', 'comment', 'expression', 'control_flow', 'global_func', 'local_func'];
+const extraMods = ['variable', 'comment', 'expression', 'control_flow', 'global_func', 'local_func', 'mobius_pages', 'mobius_viewers'];
 
 // todo: bug fix for defaults
 function extract_params(func: Function): [IArgument[], boolean] {
