@@ -21,7 +21,7 @@
         <div class='inline-div'>
             <ng-container *ngIf='prod.type == 10'>
                 <ng-container [ngSwitch]="prod.meta.inputMode">
-                    <input class = 'input--type' *ngSwitchCase='0' [class.disabled-input]='true' value='Simple Input' disabled>
+                    <input class = 'input--type' *ngSwitchCase='0' [class.disabled-input]='true' value='Basic Input' disabled>
                     <input class = 'input--type' *ngSwitchCase='1' [class.disabled-input]='true' value='Slider' disabled>
                     <input class = 'input--type' *ngSwitchCase='2' [class.disabled-input]='true' value='Check Box' disabled>
                     <input class = 'input--type' *ngSwitchCase='3' [class.disabled-input]='true' value='URL' disabled>
