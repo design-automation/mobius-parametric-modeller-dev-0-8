@@ -90,3 +90,6 @@ To give a global function access to geometric entities that are passed in as an 
 
 <img src="assets/typedoc-json/docCF/global_func_inputs.png" width="411">
 
+**Testing Global Functions**
+
+[to be completed]
