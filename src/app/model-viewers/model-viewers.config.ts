@@ -43,6 +43,6 @@ export const Viewers: IView[] = [
     { name: 'VR Viewer', icon: undefined, component: AframeViewerComponent },
     // { name: 'Cytoscape Viewer', icon: undefined, component: CytoscapeViewerComponent },
     { name: 'Console', icon: undefined, component: ConsoleViewerComponent },
-    { name: 'Help', icon: undefined, component: HelpViewerComponent }
+    { name: 'Documentation', icon: undefined, component: HelpViewerComponent }
 ];
 

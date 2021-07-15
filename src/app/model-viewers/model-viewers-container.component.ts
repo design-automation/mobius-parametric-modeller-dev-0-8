@@ -121,7 +121,7 @@ export class DataViewersContainerComponent implements DoCheck, OnInit, OnDestroy
         if (this.dataService.helpView[0] === true) {
             let view;
             for (const v of this.Viewers) {
-                if (v.name === 'Help') { view = v; }
+                if (v.name === 'Documentation') { view = v; }
             }
             this.dataService.toggleViewHelp(false);
             this.updateView(view);
@@ -175,7 +175,7 @@ export class DataViewersContainerComponent implements DoCheck, OnInit, OnDestroy
     updateValue() {
         try {
             const componentRef =  this.views[this.activeView.name];
-            if (this.activeView.name === 'Help') {
+            if (this.activeView.name === 'Documentation') {
                 // componentRef.instance['output'] = this.dataService.helpView[1];
             } else if (this.activeView.name !== 'Console') {
                 if (!this.dataService.node.enabled || !this.dataService.node.model) {

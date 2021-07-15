@@ -9,9 +9,13 @@ const DEFAUT_CAMERA_POS = {
     position: new AFRAME.THREE.Vector3(0, 0, 0),
     rotation: new AFRAME.THREE.Vector3(0, 0, 0)
 }
-function postloadSkyImg() {
+function postloadSkyBGImg() {
     const sky = document.getElementById('aframe_sky_background');
-    (<any> sky).setAttribute('src', '#aframe_sky_img');
+    (<any> sky).setAttribute('src', '#aframe_sky_background_img');
+}
+function postloadSkyFGImg() {
+    const sky = document.getElementById('aframe_sky_foreground');
+    (<any> sky).setAttribute('src', '#aframe_sky_foreground_img');
 }
 function resizeScene() {
     const scene = document.getElementById('aframe_scene');
@@ -33,6 +37,8 @@ export class DataAframe {
         enabled: false,
         background_url: '',
         background_rotation: 0,
+        foreground_url: '',
+        foreground_rotation: 0,
         camera_position: new AFRAME.THREE.Vector3(0, 5, 0),
         camera_rotation: new AFRAME.THREE.Vector3(0, 0, 0),
     };
@@ -41,6 +47,13 @@ export class DataAframe {
 
     constructor(settings) {
         this.settings = JSON.parse(JSON.stringify(settings));
+        if (this.settings.vr) {
+            console.log(this.settings.vr)
+            this.vr.background_url = this.settings.vr.background_url;
+            this.vr.background_rotation = this.settings.vr.background_rotation;
+            this.vr.foreground_url = this.settings.vr.foreground_url;
+            this.vr.foreground_rotation = this.settings.vr.foreground_rotation;
+        }
     }
 
     onChanges(changes, threejsScene) {
@@ -60,7 +73,7 @@ export class DataAframe {
 
     public updateSettings(settings: AframeSettings = null) {
         let newSetting: AframeSettings;
-        if (settings !== null) {
+        if (settings) {
             newSetting = <AframeSettings> JSON.parse(JSON.stringify(settings));
         } else {
             newSetting = <AframeSettings> JSON.parse(localStorage.getItem('aframe_settings'));
@@ -75,6 +88,12 @@ export class DataAframe {
             this.settings.background.background_position.x = newSetting.background.background_position.x;
             this.settings.background.background_position.z = newSetting.background.background_position.z;
             this.settings.background.background_rotation = newSetting.background.background_rotation;
+        }
+        if (newSetting.vr) {
+            this.settings.vr.background_url = newSetting.vr.background_url;
+            this.settings.vr.background_rotation = newSetting.vr.background_rotation;
+            this.settings.vr.foreground_url = newSetting.vr.foreground_url;
+            this.settings.vr.foreground_rotation = newSetting.vr.foreground_rotation;
         }
         if (newSetting.ground) {
             this.settings.ground.show = newSetting.ground.show;
@@ -289,7 +308,7 @@ export class DataAframe {
     updateSky() {
         const skyBG = document.getElementById('aframe_sky_background');
         const skyFG = document.getElementById('aframe_sky_foreground');
-        let skyURL;
+        let skyURL: string;
         const backgroundSet = (Number(this.settings.background.background_set) - 1);
         let baseLink = window.location.origin;
         if (baseLink.indexOf('design-automation.github.io') !== -1) {
@@ -303,26 +322,64 @@ export class DataAframe {
                     if (!notifyButton) { return; }
                     notifyButton.value = `Unable to retrieve background image from URL<br>${this.vr.background_url}`;
                     notifyButton.click();
+                    return;
                 } else if (this.vr.background_url.trim() === '') {
                     return;
                 }
                 const assetEnt = document.getElementById('aframe_assets');
                 const allImages = document.querySelectorAll('img');
                 allImages.forEach(img => {
+                    if (img.id !== 'aframe_sky_background_img') { return; }
                     try {
                         assetEnt.removeChild(img);
                     } catch (ex) {}
-                    img.removeEventListener('load', postloadSkyImg);
+                    img.removeEventListener('load', postloadSkyBGImg);
                 });
                 const imgEnt = document.createElement('img');
-                imgEnt.id = 'aframe_sky_img';
+                imgEnt.id = 'aframe_sky_background_img';
                     imgEnt.setAttribute('crossorigin', 'anonymous');
                 imgEnt.setAttribute('src', this.vr.background_url);
                 assetEnt.appendChild(imgEnt);
-                imgEnt.addEventListener('load', postloadSkyImg);
+                imgEnt.addEventListener('load', postloadSkyBGImg);
 
                 skyBG.setAttribute('rotation', `0 ${90 + this.vr.background_rotation} 0`);
             });
+            if (this.vr.foreground_url) {
+                skyFG.setAttribute('visible', 'false');
+                fetch(this.vr.foreground_url).then(res => {
+                    if (!res.ok) {
+                        const notifyButton = <HTMLButtonElement> document.getElementById('hidden_notify_button');
+                        if (!notifyButton) { return; }
+                        notifyButton.value = `Unable to retrieve foreground image from URL<br>${this.vr.foreground_url}`;
+                        notifyButton.click();
+                        return;
+                    } else if (this.vr.foreground_url.trim() === '') {
+                        return;
+                    }
+                    const assetEnt = document.getElementById('aframe_assets');
+                    const allImages = document.querySelectorAll('img');
+                    allImages.forEach(img => {
+                        if (img.id !== 'aframe_sky_foreground_img') { return; }
+                        try {
+                            assetEnt.removeChild(img);
+                        } catch (ex) {}
+                        img.removeEventListener('load', postloadSkyFGImg);
+                    });
+                    const imgEnt = document.createElement('img');
+                    imgEnt.id = 'aframe_sky_foreground_img';
+                        imgEnt.setAttribute('crossorigin', 'anonymous');
+                    imgEnt.setAttribute('src', this.vr.foreground_url);
+                    assetEnt.appendChild(imgEnt);
+                    imgEnt.addEventListener('load', postloadSkyFGImg);
+
+                    skyFG.setAttribute('rotation', `0 ${90 + this.vr.foreground_rotation} 0`);
+                    skyFG.setAttribute('visible', 'true');
+                });
+            } else {
+                skyFG.setAttribute('visible', 'false');
+            }
+        } else {
+            skyFG.setAttribute('visible', 'false');
         }
 
         if (skyBG) {
@@ -421,14 +478,16 @@ export class DataAframe {
 
     updateCameraPos(posDetails) {
         const cameraEl = <any> document.getElementById('aframe_camera_rig');
-        const sky = document.getElementById('aframe_sky_background');
-        // const skyFG = document.getElementById('aframe_sky_foreground');
+        const skyBG = document.getElementById('aframe_sky_background');
+        const skyFG = document.getElementById('aframe_sky_foreground');
         const mobiusGeom = document.getElementById('mobius_geom');
-        sky.setAttribute('rotation', '0 0 0');
+        skyBG.setAttribute('rotation', '0 0 0');
+        skyFG.setAttribute('rotation', '0 0 0');
         mobiusGeom.setAttribute('scale', '1 1 1');
+        console.log('~~~~~~~~', posDetails)
         if (!posDetails || !posDetails.pos || posDetails.pos.length < 2) {
             this.staticCamOn = false;
-            cameraEl.setAttribute('custom-wasd-controls', 'enabled: true; acceleration: 500%; fly: false');
+            cameraEl.setAttribute('custom-wasd-controls', 'enabled: true; acceleration: 100%; fly: false');
             this.updateSky();
             // this.updateCamera(this.settings.camera);
             return;
@@ -462,8 +521,8 @@ export class DataAframe {
             } catch (ex) {}
         }
 
-        if (posDetails.background_url && posDetails.background_rotation) {
-            sky.setAttribute('src', '');
+        if (posDetails.background_url) {
+            skyBG.setAttribute('src', '');
 
             fetch(posDetails.background_url).then(res => {
                 if (!res.ok) {
@@ -471,24 +530,55 @@ export class DataAframe {
                     if (!notifyButton) { return; }
                     notifyButton.value = `Unable to retrieve background image from URL<br>${posDetails.background_url}`;
                     notifyButton.click();
+                    return;
                 }
                 const assetEnt = document.getElementById('aframe_assets');
                 const allImages = document.querySelectorAll('img');
                 allImages.forEach(img => {
+                    if (img.id !== 'aframe_sky_background_img') { return; }
                     try {
                         assetEnt.removeChild(img);
                     } catch (ex) {}
-                    img.removeEventListener('load', postloadSkyImg);
+                    img.removeEventListener('load', postloadSkyBGImg);
                 });
                 const imgEnt = document.createElement('img');
-                imgEnt.id = 'aframe_sky_img';
+                imgEnt.id = 'aframe_sky_background_img';
                 imgEnt.setAttribute('crossorigin', 'anonymous');
                 imgEnt.setAttribute('src', posDetails.background_url);
                 assetEnt.appendChild(imgEnt);
-                imgEnt.addEventListener('load', postloadSkyImg);
-                sky.setAttribute('rotation', `0 ${90 + posDetails.background_rotation} 0`);
+                imgEnt.addEventListener('load', postloadSkyBGImg);
+                skyBG.setAttribute('rotation', `0 ${90 + posDetails.background_rotation} 0`);
             });
-
+        }
+        if (posDetails.foreground_url) {
+            skyFG.setAttribute('src', '');
+            skyFG.setAttribute('visible', 'false');
+            fetch(posDetails.foreground_url).then(res => {
+                if (!res.ok) {
+                    const notifyButton = <HTMLButtonElement> document.getElementById('hidden_notify_button');
+                    if (!notifyButton) { return; }
+                    notifyButton.value = `Unable to retrieve foreground image from URL<br>${posDetails.foreground_url}`;
+                    notifyButton.click();
+                    return;
+                }
+                const assetEnt = document.getElementById('aframe_assets');
+                const allImages = document.querySelectorAll('img');
+                allImages.forEach(img => {
+                    if (img.id !== 'aframe_sky_foreground_img') { return; }
+                    try {
+                        assetEnt.removeChild(img);
+                    } catch (ex) {}
+                    img.removeEventListener('load', postloadSkyFGImg);
+                });
+                const imgEnt = document.createElement('img');
+                imgEnt.id = 'aframe_sky_foreground_img';
+                imgEnt.setAttribute('crossorigin', 'anonymous');
+                imgEnt.setAttribute('src', posDetails.foreground_url);
+                assetEnt.appendChild(imgEnt);
+                imgEnt.addEventListener('load', postloadSkyFGImg);
+                skyFG.setAttribute('rotation', `0 ${90 + posDetails.foreground_rotation} 0`);
+                skyFG.setAttribute('visible', 'true');
+            });
         }
     }
 
@@ -500,7 +590,7 @@ export class DataAframe {
                 assetEnt.removeChild(img);
             } catch (ex) {}
             img.id = 'tbr_' + img.id;
-            img.removeEventListener('load', postloadSkyImg);
+            img.removeEventListener('load', postloadSkyBGImg);
         });
 
         const tbrElements = [   'aframe_ambientLight', 'aframe_hemisphereLight', 'aframe_directionalLight',
@@ -521,10 +611,12 @@ export class DataAframe {
         AFRAME.THREE.Cache.clear();
     }
 
-    updateVRSettings(vr_settings: { enabled: boolean; background_url: string; background_rotation: number; camera_position: any; camera_rotation: any; }) {
+    updateVRSettings(vr_settings: any) {
         this.vr.enabled = vr_settings.enabled;
         this.vr.background_url = vr_settings.background_url;
         this.vr.background_rotation = vr_settings.background_rotation;
+        this.vr.foreground_url = vr_settings.foreground_url;
+        this.vr.foreground_rotation = vr_settings.foreground_rotation;
         this.vr.camera_position.copy(vr_settings.camera_position);
         this.vr.camera_rotation.copy(vr_settings.camera_rotation);
     }

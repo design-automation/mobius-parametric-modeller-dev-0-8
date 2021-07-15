@@ -38,6 +38,8 @@ export class AframeViewerComponent implements OnInit, OnDestroy{
         enabled: false,
         background_url: '',
         background_rotation: 0,
+        foreground_url: '',
+        foreground_rotation: 0,
         camera_position: new AFRAME.THREE.Vector3(0, 5, 0),
         camera_rotation: new AFRAME.THREE.Vector3(0, 0, 0),
     };
@@ -239,6 +241,18 @@ export class AframeViewerComponent implements OnInit, OnDestroy{
                     return;
                 }
                 this.vr.background_rotation = Number(value);
+                this.settings.vr.background_rotation = Number(value);
+                this.vr.foreground_rotation = Number(value);
+                this.settings.vr.foreground_rotation = Number(value);
+                break;
+            case 'vr.foreground_rotation':
+                if (isNaN(value)) {
+                    return;
+                }
+                this.vr.foreground_rotation = Number(value);
+                this.settings.vr.foreground_rotation = Number(value);
+                this.vr.background_rotation = Number(value);
+                this.settings.vr.background_rotation = Number(value);
                 break;
             case 'vr.camera.pos_x':
                 if (isNaN(value)) {
@@ -366,6 +380,8 @@ export class AframeViewerComponent implements OnInit, OnDestroy{
                 position: this.temp_camera_pos,
                 rotation: this.temp_camera_rot
             };
+            this.settings.vr.background_url = this.vr.background_url;
+            this.settings.vr.foreground_url = this.vr.foreground_url;
             this.updateVRSettings();
             this.dataService.getAframeData().updateSettings(this.settings);
             // document.getElementById('executeButton').click();
@@ -384,7 +400,7 @@ export class AframeViewerComponent implements OnInit, OnDestroy{
     }
 
     openViewerHelp() {
-        this.mainDataService.helpView = AllFunctionDoc['mobius_viewers']['vr-viewer'];
+        this.mainDataService.helpView = AllFunctionDoc['vrviewer']['vr-viewer'];
         this.mainDataService.toggleHelp(true);
     }
 
@@ -393,6 +409,8 @@ export class AframeViewerComponent implements OnInit, OnDestroy{
         this.vr.enabled = data.vr.enabled;
         this.vr.background_url = data.vr.background_url;
         this.vr.background_rotation = data.vr.background_rotation;
+        this.vr.foreground_url = data.vr.foreground_url;
+        this.vr.foreground_rotation = data.vr.foreground_rotation;
         this.vr.camera_position.copy(data.vr.camera_position);
         this.vr.camera_rotation.copy(data.vr.camera_rotation);
     }
@@ -403,9 +421,13 @@ export class AframeViewerComponent implements OnInit, OnDestroy{
     }
 
     public addVRProcedure() {
-        const attribVal = `{"background_url": "${this.vr.background_url}",`
-                        + `"background_rotation": ${this.vr.background_rotation},`
-                        + `"camera_rotation": ${this.vr.camera_rotation.y}}`;
+        let attribVal = `{"background_url": "${this.vr.background_url}",`
+        + `"background_rotation": ${this.vr.background_rotation},`;
+        if (this.vr.foreground_url) {
+            attribVal +=  `"foreground_url": "${this.vr.foreground_url}",`
+            + `"foreground_rotation": ${this.vr.foreground_rotation},`;
+        }
+        attribVal += `"camera_rotation": ${this.vr.camera_rotation.y}}`;
 
         const startNode = this.mainDataService.flowchart.nodes[0];
         NodeUtils.deselect_procedure(startNode);

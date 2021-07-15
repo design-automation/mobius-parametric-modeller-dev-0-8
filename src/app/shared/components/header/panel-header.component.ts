@@ -20,7 +20,7 @@ const inputEvent = new Event('input', {
     'cancelable': true
 });
 
-const PATHSTRINGS = ['gallery', 'dashboard', 'flowchart', 'editor']
+const PATHSTRINGS = ['gallery', 'dashboard', 'flowchart', 'editor'];
 @Component({
     selector: 'panel-header',
     templateUrl: 'panel-header.component.html',
@@ -238,7 +238,7 @@ export class PanelHeaderComponent implements OnDestroy {
     openPageHelp(e: MouseEvent) {
         for (const pathStr of PATHSTRINGS) {
             if (window.location.pathname.indexOf('/' + pathStr) !== -1) {
-                this.dataService.helpView = AllFunctionDoc['mobius_pages'][pathStr];
+                this.dataService.helpView = AllFunctionDoc[pathStr][pathStr];
                 this.dataService.toggleHelp(true);
                 return;
             }

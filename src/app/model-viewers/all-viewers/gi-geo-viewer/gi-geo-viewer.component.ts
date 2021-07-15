@@ -220,7 +220,7 @@ export class GIGeoViewerComponent implements OnDestroy {
     }
 
     openViewerHelp() {
-        this.mainDataService.helpView = AllFunctionDoc['mobius_viewers']['geo-viewer'];
+        this.mainDataService.helpView = AllFunctionDoc['geoviewer']['geo-viewer'];
         this.mainDataService.toggleHelp(true);
     }
 

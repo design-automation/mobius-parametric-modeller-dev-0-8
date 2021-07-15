@@ -64,8 +64,6 @@ function registerAframeComponents() {
             this.onVisibilityChange = bind(this.onVisibilityChange, this);
             this.attachVisibilityEventListeners();
             this.lookCamera = document.getElementById('aframe_look_camera');
-            // this.lastsettimeout = null;
-            // console.log(this)
         },
 
         tick: function (time, delta) {
@@ -85,7 +83,6 @@ function registerAframeComponents() {
 
             // Get movement vector and translate position.
             el.object3D.position.add(this.getMovementVector(delta));
-            console.log(el.object3D.position, this.getMovementVector(delta))
             // if (bg) {
             //     bg.object3D.position.copy(el.object3D.position);
             // }
@@ -161,8 +158,6 @@ function registerAframeComponents() {
 
             return function (delta) {
                 const rotation = this.lookCamera.getAttribute('rotation');
-                const rotation0 = this.el.getAttribute('rotation');
-                const rotation1 = this.lookCamera.getAttribute('rotation');
                 const velocity = this.velocity;
                 let xRotation;
 
@@ -177,7 +172,6 @@ function registerAframeComponents() {
                 // Transform direction relative to heading.
                 rotationEuler.set(THREE.Math.degToRad(xRotation), THREE.Math.degToRad(rotation.y), 0);
                 directionVector.applyEuler(rotationEuler);
-                // console.log('...... rotationEuler', rotationEuler)
                 return directionVector;
             };
         })(),
@@ -280,7 +274,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.matIconRegistry.addSvgIcon('cCytoscape Viewer', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/Icons/cyto.svg'));
         this.matIconRegistry.addSvgIcon('cMobius Cesium', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/Icons/Geo2.svg'));
         this.matIconRegistry.addSvgIcon('cConsole', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/Icons/Console.svg'));
-        this.matIconRegistry.addSvgIcon('cHelp', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/Icons/Help.svg'));
+        this.matIconRegistry.addSvgIcon('cDocumentation', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/Icons/doc.svg'));
         this.matIconRegistry.addSvgIcon('cSummary', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/Icons/Summary.svg'));
         this.matIconRegistry.addSvgIcon('cZoom', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/Icons/Zoom.svg'));
         this.matIconRegistry.addSvgIcon('cfv', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/Icons/Mobius favicon.svg'));
@@ -295,6 +289,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.matIconRegistry.addSvgIcon('cUpArrow', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/Icons/arrowup.svg'));
         this.matIconRegistry.addSvgIcon('cDnArrow', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/Icons/arrowdown.svg'));
         this.matIconRegistry.addSvgIcon('cControlCam', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/Icons/ControlCam.svg'));
+        this.matIconRegistry.addSvgIcon('cHelp', this.domSanitizer.bypassSecurityTrustResourceUrl('assets/Icons/Help.svg'));
         registerAframeComponents();
     }
 

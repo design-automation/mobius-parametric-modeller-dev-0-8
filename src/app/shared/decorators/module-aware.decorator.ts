@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { IModule, IFunction } from '@models/procedure';
 import { IArgument } from '@models/code';
 import doc from '@assets/typedoc-json/doc.json';
-import * as ctrlFlowDoc from '@assets/typedoc-json/controlFlowDoc.json';
 // const doc = require('@assets/typedoc-json/doc.json');
 import * as showdown from 'showdown';
 import * as fs from 'fs';
@@ -13,8 +12,28 @@ import * as Modules from 'assets/core/modules';
 
 const mdConverter = new showdown.Converter({literalMidWordUnderscores: true});
 const module_list = [];
-const extraMods = ['variable', 'comment', 'expression', 'control_flow', 'global_func', 'local_func', 'mobius_pages', 'mobius_viewers'];
+const extraMods = [ 'variable', 'comment', 'expression',
+                    'control_flow', 'global_func', 'local_func',
+                    'dashboard', 'editor', 'flowchart', 'gallery',
+                    'console', 'geoviewer', 'giviewer', 'vrviewer'];
+const extraModPaths = {
+    variable: 'docCF/variable',
+    comment: 'docCF/comment',
+    expression: 'docCF/expression',
+    control_flow: 'docCF/control_flow',
+    local_func: 'docCF/local_func',
+    global_func: 'docCF/global_func',
 
+    dashboard: 'docUI/dashboard',
+    editor: 'docUI/editor',
+    flowchart: 'docUI/flowchart',
+    gallery: 'docUI/gallery',
+
+    console: 'docVW/console',
+    geoviewer: 'docVW/geo-viewer',
+    giviewer: 'docVW/gi-viewer',
+    vrviewer: 'docVW/vr-viewer',
+};
 // todo: bug fix for defaults
 function extract_params(func: Function): [IArgument[], boolean] {
     const fnStr = func.toString().replace( /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg, '');
@@ -214,11 +233,11 @@ for (const mod of doc.children) {
             continue;
         }
         addDoc(mod, modName, moduleDocs);
-        addModFuncDoc(functionDocs, `assets/typedoc-json/docMD/${modName}.md`, modName)
+        addModFuncDoc(functionDocs, `assets/typedoc-json/docMD/${modName}.md`, modName);
     }
 }
 for (const i of extraMods) {
-    addModFuncDoc(functionDocs, `assets/typedoc-json/docCF/${i}.md`, i)
+    addModFuncDoc(functionDocs, `assets/typedoc-json/${extraModPaths[i]}.md`, i);
 }
 export const ModuleList = module_list;
 export const ModuleDocList = moduleDocs;

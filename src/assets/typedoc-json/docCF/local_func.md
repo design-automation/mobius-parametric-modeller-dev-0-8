@@ -1,4 +1,4 @@
-# DEFINE FUNCTION  
+# LOCAL FUNCTION  
   
 Inserts a local function into the procedure. The local function appears at the top of the procedure, inside the local function area. The function name appears in the left menu, below the `Def Func` button.
 

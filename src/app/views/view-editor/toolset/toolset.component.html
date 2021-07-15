@@ -223,7 +223,7 @@
                             (mousedown)='selectPrevProd()'
                             (click)='add_local_func_def(0)'>
                                 Def Func
-                                <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "local_func", "define function")'>
+                                <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "local_func", "local function")'>
                                     <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
                                 </button>
                             </li>
@@ -243,7 +243,7 @@
                         <ul class='toolset__functions--subset'>
                             <li class = 'user--manage' (click)="open_globalFunc_dialog($event);" title="Manage Global Functions">
                                 Manage
-                                <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "global_func", "manage")'>
+                                <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "global_func", "global function")'>
                                     <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
                                 </button>    
                             </li>

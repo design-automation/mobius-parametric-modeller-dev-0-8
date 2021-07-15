@@ -37,6 +37,12 @@ export interface AframeSettings {
         color: string,
         shininess: number
     };
+    vr: {
+        background_url: string,
+        background_rotation: number,
+        foreground_url: string,
+        foreground_rotation: number
+    };
 }
 
 export const aframe_default_settings: AframeSettings = {
@@ -76,5 +82,12 @@ export const aframe_default_settings: AframeSettings = {
         height: -0.5,
         color: '#FFFFFF',
         shininess: 0
+    },
+    vr: {
+        background_url: '',
+        background_rotation: 0,
+        foreground_url: '',
+        foreground_rotation: 0,
+
     }
 };

@@ -102,6 +102,25 @@
                                 [value]="formatNumber(vr.background_rotation)">
                                 <!-- <input type="text" [value]="vr.background_rotation" disabled> -->
                             </div>
+                            <br/>
+                        </dd>
+                        <dd><hr></dd>
+                        <dd>
+                            <div class="label">VR Foreground URL</div>
+                        </dd>
+                        <dd>
+                            <textarea class="tArea" [(ngModel)]='vr.foreground_url'></textarea>
+                        </dd>
+                        <dd>
+                            <div class="label">VR Foreground Rotation</div>
+                            <div class="slidecontainer light">
+                                <input type="range" min="0" max="360" step="1" [value]="vr.foreground_rotation" class="slider" (input)="settingOnChange('vr.foreground_rotation', $event.target.value)">
+                                <input type="number"
+                                (change)="settingOnChange('vr.foreground_rotation', $event.target.value)" 
+                                [value]="formatNumber(vr.foreground_rotation)">
+                                <!-- <input type="text" [value]="vr.foreground_rotation" disabled> -->
+                            </div>
+                            <br/>
                         </dd>
                         <dd><hr></dd>
                         <dd class='vector_input_div'>

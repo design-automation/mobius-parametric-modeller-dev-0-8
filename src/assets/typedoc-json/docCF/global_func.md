@@ -1,4 +1,4 @@
-# MANAGE  
+# GLOBAL FUNCTION  
   
 Opens a dialog box for managing global functions.
 
