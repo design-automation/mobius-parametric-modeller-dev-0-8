@@ -12,6 +12,8 @@ import { ThreejsViewerComponent } from './threejs/threejs-viewer.component';
 import { Vector3, GridHelper } from 'three';
 import { SplitComponent } from 'angular-split';
 import { ISettings } from './data/data.threejsSettings';
+import { AllFunctionDoc } from '@shared/decorators';
+
 // import others
 // import { ThreejsViewerComponent } from './threejs/threejs-viewer.component';
 
@@ -163,6 +165,11 @@ export class GIViewerComponent implements OnInit, OnDestroy {
 
     resetTable() {
         this.attrTableReset = Date.now();
+    }
+
+    openViewerHelp() {
+        this.mainDataService.helpView = AllFunctionDoc['mobius_viewers']['gi-viewer'];
+        this.mainDataService.toggleHelp(true);
     }
 
     openModal(id: string) {

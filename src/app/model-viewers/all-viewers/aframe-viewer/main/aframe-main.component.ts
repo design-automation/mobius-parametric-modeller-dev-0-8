@@ -39,15 +39,11 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy 
     }
 
     static updateCamSkyPos() {
-        const cameraEl = <any> document.getElementById('aframe_camera');
-        const sky = document.getElementById('aframe_sky');
-        // const skyFG = document.getElementById('aframe_sky_foreground');
-        if (!cameraEl || !sky) { return; }
+        const cameraEl = <any> document.getElementById('aframe_camera_rig');
+        if (!cameraEl) { return; }
         const posVec = new AFRAME.THREE.Vector3();
         cameraEl.object3D.getWorldPosition(posVec);
         if (!prevCamPos || (posVec.x !== prevCamPos.x && posVec.z !== prevCamPos.z)) {
-            // sky.setAttribute('position', posVec);
-            // skyFG.setAttribute('position', posVec);
             prevCamPos = posVec;
         }
     }
@@ -66,7 +62,7 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy 
         const threejsScene = this.threeJSDataService.getThreejsScene();
         if (!threejsScene || !data) { return; }
         data.scene = <any> document.getElementById('aframe_scene');
-        data.camera = <any> document.getElementById('aframe_camera');
+        data.camera = <any> document.getElementById('aframe_camera_rig');
         data.model = this.model;
         data.refreshModel(threejsScene);
         if (this.dataService.aframe_cam) {

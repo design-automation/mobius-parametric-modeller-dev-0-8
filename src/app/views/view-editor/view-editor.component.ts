@@ -292,6 +292,7 @@ export class ViewEditorComponent implements AfterViewInit, OnDestroy {
     cutProd() {
         const node = this.dataService.node;
         let tobeSelected;
+        let localFuncDelError = false;
         if (node.state.procedure.length === 0) { return; }
         for (const selected of node.state.procedure) {
             if (!selected.lastSelected) {
@@ -345,11 +346,11 @@ export class ViewEditorComponent implements AfterViewInit, OnDestroy {
                 const checkLocal = this.checkRemovableLocalFuncDef(node.localFunc, prod);
                 const checkMain = this.checkRemovableLocalFuncDef(node.procedure, prod);
                 if (!checkLocal || !checkMain) {
-                    prod.selected = false;
-                    prod.lastSelected = false;
-                    prod.hasError = true;
-                    this.dataService.notifyMessage(`Unable to delete local function "${prod.args[0].value}" def! Existing function call detected.`);
-                    continue;
+                    // prod.selected = false;
+                    // prod.lastSelected = false;
+                    // prod.hasError = true;
+                    localFuncDelError = true;
+                    // continue;
                 }
                 parentArray = node.localFunc;
             } else { parentArray = node.procedure; }
@@ -370,7 +371,11 @@ export class ViewEditorComponent implements AfterViewInit, OnDestroy {
 
         // NodeUtils.deselect_procedure(node);
         NodeUtils.select_procedure(node, tobeSelected, false, false);
-        this.dataService.notifyMessage(`Cut ${copiedProds.length} Procedures`);
+        if (localFuncDelError) {
+            this.dataService.notifyMessage(`Warning: The procedure contains calls to the deleted function. Cut ${copiedProds.length} Procedures.`);
+        } else {
+            this.dataService.notifyMessage(`Cut ${copiedProds.length} Procedures.`);
+        }
     }
 
     // paste copied procedures
@@ -550,11 +555,11 @@ export class ViewEditorComponent implements AfterViewInit, OnDestroy {
                 const checkLocal = this.checkRemovableLocalFuncDef(node.localFunc, prod);
                 const checkMain = this.checkRemovableLocalFuncDef(node.procedure, prod);
                 if (!checkLocal || !checkMain) {
-                    prod.selected = false;
-                    prod.lastSelected = false;
-                    prod.hasError = true;
-                    this.dataService.notifyMessage(`Unable to delete local function "${prod.args[0].value}" def! Existing function call detected.`);
-                    continue;
+                    // prod.selected = false;
+                    // prod.lastSelected = false;
+                    // prod.hasError = true;
+                    this.dataService.notifyMessage(`Warning: The procedure contains calls to the deleted function.`);
+                    // continue;
                 }
                 prodList = node.localFunc;
             } else {

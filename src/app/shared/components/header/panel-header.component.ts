@@ -12,7 +12,7 @@ import * as Modules from '@modules';
 import { checkNodeValidity } from '@shared/parser';
 import { DownloadUtils } from '../file/download.utils';
 import { inline_func } from '@assets/core/inline/inline';
-import { InlineDocList } from '@shared/decorators';
+import { InlineDocList, AllFunctionDoc } from '@shared/decorators';
 import * as showdown from 'showdown';
 
 const inputEvent = new Event('input', {
@@ -20,6 +20,7 @@ const inputEvent = new Event('input', {
     'cancelable': true
 });
 
+const PATHSTRINGS = ['gallery', 'dashboard', 'flowchart', 'editor']
 @Component({
     selector: 'panel-header',
     templateUrl: 'panel-header.component.html',
@@ -231,6 +232,16 @@ export class PanelHeaderComponent implements OnDestroy {
         this.dataService.dialog.showModal();
         if (dialogType === 'backup') {
             this.dataService.setbackup_header();
+        }
+    }
+
+    openPageHelp(e: MouseEvent) {
+        for (const pathStr of PATHSTRINGS) {
+            if (window.location.pathname.indexOf('/' + pathStr) !== -1) {
+                this.dataService.helpView = AllFunctionDoc['mobius_pages'][pathStr];
+                this.dataService.toggleHelp(true);
+                return;
+            }
         }
     }
 

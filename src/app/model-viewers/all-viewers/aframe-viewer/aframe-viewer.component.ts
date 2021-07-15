@@ -11,6 +11,7 @@ import { AframeSettings, aframe_default_settings } from './aframe-viewer.setting
 import { ProcedureTypes } from '@models/procedure';
 import { NodeUtils } from '@models/node';
 import { checkNodeValidity } from '@shared/parser';
+import { AllFunctionDoc } from '@shared/decorators';
 declare var AFRAME;
 
 /**
@@ -380,6 +381,11 @@ export class AframeViewerComponent implements OnInit, OnDestroy{
         for (const setting in this.dataService.getAframeData().settings) {
             this.settings[setting] = this.dataService.getAframeData().settings[setting];
         }
+    }
+
+    openViewerHelp() {
+        this.mainDataService.helpView = AllFunctionDoc['mobius_viewers']['vr-viewer'];
+        this.mainDataService.toggleHelp(true);
     }
 
     public resetVRSettings() {

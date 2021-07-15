@@ -12,6 +12,7 @@ import { API_MAPS, API_MAPS_KEY_MAPPING, DataGeo } from './data/data.geo';
 import { GeoSettings, geo_default_settings } from './gi-geo-viewer.settings';
 import { ModalService } from './html/modal-window.service';
 import { DataService as ThreeJSDataService } from '../gi-viewer/data/data.service';
+import { AllFunctionDoc } from '@shared/decorators';
 
 /**
  * GIViewerComponent
@@ -216,6 +217,11 @@ export class GIGeoViewerComponent implements OnDestroy {
         //     this.settings[setting] = this.dataService.getThreejsScene().settings[setting];
         // }
         // this.threejs.updateModel(this.data);
+    }
+
+    openViewerHelp() {
+        this.mainDataService.helpView = AllFunctionDoc['mobius_viewers']['geo-viewer'];
+        this.mainDataService.toggleHelp(true);
     }
 
     public updateSettings(thisSettings: any, newSettings: any) {

@@ -158,6 +158,8 @@ p{
 
     transition: display 0.4s;
     // top: 60px;
+    overflow-y: scroll;
+    max-height: 300px;
 
     z-index: 1;
     background-color: $color6;
