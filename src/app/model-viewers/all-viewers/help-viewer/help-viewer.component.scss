@@ -164,7 +164,6 @@ p{
     z-index: 1;
     background-color: $color6;
     border: 1px solid $color1;
-    padding-left: 0px;
 
     button{
         cursor: pointer;
@@ -174,7 +173,6 @@ p{
         background-color: $color6;
         border: 0px;
         margin: 0px;
-        padding: 0px;
         line-height: $fsize3;
         height: $fsize3;
         font-size: $fsize2;
@@ -201,4 +199,76 @@ p{
         }
     }
 
+}
+
+.accordion {
+    position: relative;
+    background-color: $color4;
+    color: $color8;
+    cursor: pointer;
+    width: 100%;
+    height: 24px;
+    padding: 2px 8px 10px 8px;
+    border: none;
+    display: block;
+    text-align: left;
+    outline: none;
+    font-size: $fsize2;
+    transition: 0.4s;
+    font-weight: 550;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: $inputTextFontFam;
+    font-weight: 700;
+
+    &.mainAccordion{
+        &.active {
+            &:after {
+                content: "\2bc6"; /* Unicode character for "minus" sign (-) */
+            }
+        }
+        &:after{
+            content: '\2bc8'; 
+            font-size: 12px;
+            font-style: normal;
+            // color: #777;
+            float: right;
+            margin-left: 5px;
+        }
+    }
+    &.active {
+        background-color: $color3; 
+    }
+    &:hover {
+        background-color: $color3; 
+        .helpButton {
+            display: inline-block;
+            bottom: 1px;
+        }
+    }
+    &:disabled{
+        color: $color3;
+        background-color: $color5;
+        pointer-events: none;
+    }
+}
+
+.panel {
+    width: inherit;
+    border-left: 2px solid $color3;
+    margin-left: 3px;
+    display: none;
+    // background-color: $color5;
+    overflow: hidden;
+    button{
+        font-family: $inputTextFontFam;
+        font-weight: 700;
+        color: $selected-color;
+        font-style: italic;
+        white-space: nowrap;
+    }
+
+    &.opened{
+        display: block;
+    }
 }

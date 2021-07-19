@@ -13,9 +13,9 @@ import * as showdown from 'showdown';
 export class HelpViewerComponent implements DoCheck, OnDestroy {
     output: any;
     description = '';
-    Modules = [];
-    activeModIndex: string;
+    activeMod: string;
     mdConverter = new showdown.Converter({literalMidWordUnderscores: true});
+    modList;
 
     // TODO: update mobius url
     urlString: string;
@@ -27,29 +27,39 @@ export class HelpViewerComponent implements DoCheck, OnDestroy {
                         '/flowchart?file=' +
                         'https://raw.githubusercontent.com/design-automation/' +
                         'mobius-parametric-modeller/master/src/assets/gallery/function_examples/';
-
-        const extraMods = ['variable', 'comment', 'expression', 'control_flow'];
-        for (const i of extraMods) {
-            this.Modules.push({
-                'module': i,
-                'src': `assets/typedoc-json/docCF/${i}.md`,
-                'functions': {}
-            });
-        }
+        this.modList = [{
+            name: 'UI',
+            srcDir: 'assets/typedoc-json/docUI',
+            modnames: ['gallery', 'dashboard', 'flowchart', 'editor'],
+            opened: false
+        }, {
+            name: 'Viewers',
+            srcDir: 'assets/typedoc-json/docVW',
+            modnames: ['gi-viewer', 'geo-viewer', 'vr-viewer', 'console'],
+            opened: false
+        }, {
+            name: 'Operations',
+            srcDir: 'assets/typedoc-json/docCF',
+            modnames: ['variable', 'comment', 'expression', 'control_flow', 'local_func', 'global_func'],
+            opened: false
+        }, {
+            name: 'Modules',
+            srcDir: 'assets/typedoc-json/docMD',
+            modnames: [],
+            opened: false
+        }];
 
         for (const mod of ModuleList) {
             if (mod.module[0] === '_') {continue; }
-            const nMod = {  'module': mod.module,
-                            'src': `assets/typedoc-json/docMD/${mod.module}.md`,
-                            'functions': {}};
-            this.Modules.push(nMod);
+            this.modList[3].modnames.push(mod.module);
         }
+
         this.output = this.mainDataService.helpViewData[0];
-        this.activeModIndex = this.mainDataService.helpViewData[1];
+        this.activeMod = this.mainDataService.helpViewData[1];
     }
 
     ngOnDestroy() {
-        this.mainDataService.helpViewData = [this.output, this.activeModIndex];
+        this.mainDataService.helpViewData = [this.output, this.activeMod];
     }
 
     ngDoCheck() {
@@ -70,19 +80,23 @@ export class HelpViewerComponent implements DoCheck, OnDestroy {
         stl = null;
     }
 
-    getActiveModule() {
-        if (this.output) { return ''; }
-        if (this.activeModIndex === '') { return ''; }
-        return this.Modules[this.activeModIndex].module.toUpperCase();
-    }
-
-    getFuncs() {
-        if (this.activeModIndex === '') { return []; }
-        return this.Modules[this.activeModIndex].functions;
-    }
-
-    switchHelp(mod) {
+    switchHelp(modGroup, mod) {
         this.output = undefined;
-        this.activeModIndex = mod;
+        this.activeMod = `${modGroup.srcDir}/${mod}.md`;
+    }
+
+    toggleAccordion(event: MouseEvent, id: string) {
+        event.stopPropagation();
+        const acc = document.getElementById(id);
+        // acc = document.getElementsByClassName("accordion");
+        acc.classList.toggle('active');
+        const panel = <HTMLElement>acc.nextElementSibling;
+        if (panel.style.display === 'block') {
+            panel.style.display = 'none';
+        } else {
+            panel.style.display = 'block';
+        }
+        const stl = document.getElementById('helpMenu').style;
+        stl.display = 'block';
     }
 }
