@@ -58,8 +58,8 @@
                                 </div>
                                 <div id='modelViewButton--container'>
                                     <li (click)='toggleShowCode()'> 
-                                        <span *ngIf='getNode().state.show_code'>Main Code</span>
-                                        <span *ngIf='!getNode().state.show_code'>Main Code - Hidden</span>
+                                        <span *ngIf='getNode().state.show_code'>Procedure</span>
+                                        <span *ngIf='!getNode().state.show_code'>Procedure - Hidden</span>
                                     </li>
                                 </div>
                                 <div class = 'pro-container' *ngIf='getNode().state.show_code' [hidden]="getNode().type == 'start' && !getViewOutput()">

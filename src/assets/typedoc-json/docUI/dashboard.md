@@ -1,6 +1,6 @@
 ## DASHBOARD  
   
-The dashboard tab shows a description and parameters for the currently loaded script.
+The _Dashboard_ tab displays a description and a set of parameters for the currently loaded script.
 
 The dashboard description and dashboard parameters are defined in the `Start` node of the flowchart. The dashboard user-interface is designed for users who may be non-technical and who may prefer not to see any code. Such users can view the description, adjust the parameter values, click the 'Play' button, and view the resulting model without having to look at any code.
 
@@ -28,5 +28,16 @@ Typically, the capitalized parameter name may not be understandable to a user wh
 
 **Html Formatting**
 
-[to be completed]
-  
+The script descriptions and parameter descriptions both accept Html formatting. 
+
+Text can be formatted as follows:
+```
+<h1>This is a heading</h1>
+This is <b>bold text</b>.
+This is <i>italic text</i>.
+```
+
+Images can be inserted using a url of an online image, as follows:
+```
+<img src="https://www.abc.com/path/image.jpg">
+```

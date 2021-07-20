@@ -21,7 +21,7 @@ You can insert multiple calls to the same function. However, the function can on
 
 Here is a screenshot of the user interface, showing two local function definitions and below that, in the main code, two function calls.
 
-<img src="assets/typedoc-json/docCF/local_func_ui_code.png" width="411">
+<img src="assets/typedoc-json/docCF/imgs/local_func_ui_code.png" width="411">
 
 The two functions are as follows:
 
@@ -31,7 +31,7 @@ The two functions are as follows:
 
 The two function names are listed in the left menu. Clicking the function names will insert a function call into the code. 
 
-<img src="assets/typedoc-json/docCF/local_func_ui_menu.png" width="106">
+<img src="assets/typedoc-json/docCF/imgs/local_func_ui_menu.png" width="106">
 
 **Return Values**
 

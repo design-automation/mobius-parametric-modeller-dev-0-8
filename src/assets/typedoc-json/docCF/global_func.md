@@ -19,19 +19,19 @@ Below is a diagram of a simple global function, showing the flowchart, the param
 
 In this example, the flowchart performs a mathematical operation that takes a list of numeric values and calculates the square root of the sum of the square of each value in the list.
 
-<img src="assets/typedoc-json/docCF/global_func_diag.png" width="600">
+<img src="assets/typedoc-json/docCF/imgs/global_func_diag.png" width="600">
 
 This flowchart can be imported into another flowchart. The screenshot below shows the `Manage Global Functions` dialog box after the function has been imported. Importing copies the code from the imported Mobius file into the current Mobius file.
 
-<img src="assets/typedoc-json/docCF/global_func_ui_manage.png" width="600">
+<img src="assets/typedoc-json/docCF/imgs/global_func_ui_manage.png" width="600">
 
 After import, the global function now shows up in the list of functions in the left menu, below the `Manage` button. The function is now available and cab be used in any node in the flowchart.
 
-<img src="assets/typedoc-json/docCF/global_func_ui_menu.png" width="101">
+<img src="assets/typedoc-json/docCF/imgs/global_func_ui_menu.png" width="101">
 
 Clicking the name of the global function will insert a function call into the procedure. The procedure call is show in the screenshot below. 
 
-<img src="assets/typedoc-json/docCF/global_func_call.png" width="406">
+<img src="assets/typedoc-json/docCF/imgs/global_func_call.png" width="406">
 
 The original flowchart file was called `SqrtSumSq.mob`, and the flowchart had just the one argument, called `LIST`. 
 
@@ -41,7 +41,7 @@ When the flowchart is converted to a function, the name of the function becomes 
 
 A function can either return a value or not. In the example above, the function returns a value.
 
-<img src="assets/typedoc-json/docCF/global_func_return.png" width="281">
+<img src="assets/typedoc-json/docCF/imgs/global_func_return.png" width="281">
 
 The return value is set in the `End` node of the imported flowchart.
 * If the `End` node has a value in the `Return` input box, then the global function will return a value. A call to such a global function will result in an assignment statement.
@@ -88,7 +88,7 @@ The problem is that the code in the global function does not have access to the 
 
 To give a global function access to geometric entities that are passed in as an input, a `Basic Input` parameter has to be created in the `Start` node of the global function. In the settings for the parameter, the setting "Input entities for global function" needs to be ticked. This will ensure that the input entities are copied over to the new Mobius model that is initialized for the global function.
 
-<img src="assets/typedoc-json/docCF/global_func_inputs.png" width="411">
+<img src="assets/typedoc-json/docCF/imgs/global_func_inputs.png" width="411">
 
 **Testing Global Functions**
 
