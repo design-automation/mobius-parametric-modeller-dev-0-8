@@ -224,6 +224,25 @@ export class PanelHeaderComponent implements OnDestroy {
         stl = null;
     }
 
+    openMenuHelp(e: MouseEvent, path: string) {
+        e.stopPropagation();
+        this.dataService.helpView = AllFunctionDoc['menu'][path];
+        this.dataService.toggleHelp(true);
+        const stl = document.getElementById('dropdownMenu').style;
+        stl.display = 'none';
+
+    }
+
+    openPageHelp(e: MouseEvent) {
+        e.stopPropagation();
+        for (const pathStr of PATHSTRINGS) {
+            if (window.location.pathname.indexOf('/' + pathStr) !== -1) {
+                this.dataService.helpView = AllFunctionDoc[pathStr][pathStr];
+                this.dataService.toggleHelp(true);
+                return;
+            }
+        }
+    }
 
     openHeaderDialog(event, dialogType: string) {
         event.stopPropagation();
@@ -235,15 +254,6 @@ export class PanelHeaderComponent implements OnDestroy {
         }
     }
 
-    openPageHelp(e: MouseEvent) {
-        for (const pathStr of PATHSTRINGS) {
-            if (window.location.pathname.indexOf('/' + pathStr) !== -1) {
-                this.dataService.helpView = AllFunctionDoc[pathStr][pathStr];
-                this.dataService.toggleHelp(true);
-                return;
-            }
-        }
-    }
 
     closeDialog(closeLS = false) {
         if (closeLS) {
