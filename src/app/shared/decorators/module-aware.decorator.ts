@@ -14,7 +14,7 @@ const mdConverter = new showdown.Converter({literalMidWordUnderscores: true});
 const module_list = [];
 const extraMods = [ 'variable', 'comment', 'expression',
                     'control_flow', 'global_func', 'local_func',
-                    'dashboard', 'editor', 'flowchart', 'gallery',
+                    'dashboard', 'editor', 'flowchart', 'gallery', 'menu',
                     'console', 'geoviewer', 'giviewer', 'vrviewer'];
 const extraModPaths = {
     variable: 'docCF/variable',
@@ -28,6 +28,7 @@ const extraModPaths = {
     editor: 'docUI/editor',
     flowchart: 'docUI/flowchart',
     gallery: 'docUI/gallery',
+    menu: 'docUI/menu',
 
     console: 'docVW/console',
     geoviewer: 'docVW/geo-viewer',

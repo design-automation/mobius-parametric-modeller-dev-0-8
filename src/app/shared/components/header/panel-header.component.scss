@@ -123,7 +123,7 @@ button.mat-menu-item:hover{
     
     button{
         display: inline-block;
-        width: 110px;
+        width: 160px;
         line-height: $fsize3;
         height: $fsize3;
         font-size: $fsize2;
@@ -131,6 +131,7 @@ button.mat-menu-item:hover{
         text-align: left;
         padding: 0px 5px 0px 5px;
         color: $color8;
+        position: relative;
         mat-icon{
             color: inherit;
             vertical-align: middle;
@@ -141,6 +142,15 @@ button.mat-menu-item:hover{
         .mat-icon-svg{
             vertical-align: top;
             padding-top: 3px;
+        }
+        .help-btn {
+            position: absolute;
+            width: 30px;
+            right: 0px;
+            .icon{
+                position:absolute;
+                top: 3px;
+            }
         }
         &:hover{
             color: $selected-color;

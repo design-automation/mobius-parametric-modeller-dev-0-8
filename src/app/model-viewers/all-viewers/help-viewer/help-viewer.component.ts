@@ -30,7 +30,7 @@ export class HelpViewerComponent implements DoCheck, OnDestroy {
         this.modList = [{
             name: 'UI',
             srcDir: 'assets/typedoc-json/docUI',
-            modnames: ['gallery', 'dashboard', 'flowchart', 'editor'],
+            modnames: ['gallery', 'dashboard', 'flowchart', 'editor', 'menu'],
             opened: false
         }, {
             name: 'Viewers',

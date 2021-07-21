@@ -62,54 +62,81 @@
                 title="Create New Flowchart"> 
                     <mat-icon>rotate_left</mat-icon> 
                     New File
+                    <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "new file")'>
+                        <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                    </button>
                 </button>
                 <br>
                 <button (click)="loadFile()"
                 title="Load Flowchart File from Computer">
                     <mat-icon>launch</mat-icon>
                     Load File 
+                    <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "load file")'>
+                        <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                    </button>
                 </button>
                 <br>
                 <button onclick="document.getElementById('savefile').click();"
                 title="Save Flowchart File to Computer">
                     <mat-icon>save_alt</mat-icon>
                     Save File
+                    <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "save file")'>
+                        <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                    </button>
                 </button>
                 <br>
                 <button (click)="openHeaderDialog($event, 'savels')"
                 title="Save Flowchart File to The local Storage">
                     <mat-icon>input</mat-icon>
                     Save to LS
+                    <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "save to ls")'>
+                        <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                    </button>
                 </button>
                 <br>
                 <button onclick="document.getElementById('savejavascript').click();"
                 title="Save Javascript Execution code to Computer">
                     <mat-icon>save</mat-icon>
                     Save JS
+                    <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "save js")'>
+                        <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                    </button>
                 </button>
                 <br>
                 <button onclick="document.getElementById('savedata').click();"
                 title="Save generated model data to computer">
                     <mat-icon>play_for_work</mat-icon>
                     Save Model
+                    <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "save model")'>
+                        <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                    </button>
                 </button>
                 <br>
                 <button (click)="openHeaderDialog($event, 'backup')"
                 title="Load Flowchart Backup from Local Storage">
                     <mat-icon>autorenew</mat-icon>
                     Local Storage 
+                    <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "local storage")'>
+                        <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                    </button>
                 </button>
                 <br>
                 <button (click)="openHeaderDialog($event, 'url')"
                 title="Generate Möbius view url from url of .mob file">
                     <mat-icon>link</mat-icon>
                     Publish
+                    <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "publish")'>
+                        <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                    </button>
                 </button>
                 <br>
                 <button (click)="openHeaderDialog($event, 'settings')"
                 title="Generate Möbius view url from url of .mob file">
                     <mat-icon class='mat-icon-svg' svgIcon="settings"></mat-icon>
                     Settings
+                    <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "settings")'>
+                        <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                    </button>
                 </button>
             </div>
         </div>
