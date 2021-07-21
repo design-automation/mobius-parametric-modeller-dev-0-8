@@ -23,7 +23,9 @@ Save a Mobius `.mob` script file to your local drive. A dialog box will open up,
 
 Save a Mobius `.mob` script file to the browser's local storage. A dialog box will pop up allowing you to specify a filename.
 
-Note that each time you execute a script, it is also automatically saved to local storage. The name of the file will be the name of the script, as defined in the `Start` node. If no name has been defined, then the filename will be `Untitled.mob`. This works as a backup that allows you to recover your script if the Mobius browser web pages closes unexpectedly or crashes and you have forgotten to save your file. Note that it will automatically overwrite any existing files in local storage with the same name. 
+Note that each time you execute a script, it is also automatically saved to local storage. The name of the file will be the name of the script, as defined in the `Start` node. If no name has been defined, then the filename will be `Untitled.mob`. This works as a backup that allows you to recover your script if the Mobius browser web pages closes unexpectedly or crashes and you have forgotten to save your file. Note that it will automatically overwrite any existing files in local storage with the same name.
+
+Note that if you have multiple Mobius Modeller tabs open at the same time in the same browser, then they will all be sharing the same local storage. This means that if you have multiple models that are un-named, then they will all be saving to `Untitled.mob` each time you execute.
 
 ## SAVE JS
 
