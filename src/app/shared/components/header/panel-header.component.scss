@@ -144,7 +144,9 @@ button.mat-menu-item:hover{
             padding-top: 3px;
         }
         .help-btn {
+            display: none;
             position: absolute;
+            color: $color8;
             width: 30px;
             right: 0px;
             .icon{
@@ -155,6 +157,9 @@ button.mat-menu-item:hover{
         &:hover{
             color: $selected-color;
             background-color: $color5;
+            .help-btn {
+                display: inline-block;
+            }
         }
     }
 }
