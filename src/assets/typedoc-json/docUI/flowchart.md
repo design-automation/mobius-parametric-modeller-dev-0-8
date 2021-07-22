@@ -47,12 +47,12 @@ Script files can be loaded from and saved to your local drive:
 * _Load File_: Loads an existing `.mob` file from your local drive.
 * _Save File_: Saves a `.mob` file to your local drive.
 
-Script files can also be loaded from and saved to local storage. Local storage saves the data locally within your browser. Note that if you clear your browser's cache, it will delete all the files saved in local storage. 
-* _Local Storage_: Saves the `.mob` file to local storage.
+Script files can also be loaded from and saved to Local Storage. Local storage saves the data locally within your browser. Note that if you clear your browser's cache, it will delete all the files saved in Local Storage. 
+* _Local Storage_: Saves the `.mob` file to Local Storage.
 
-Every time you execute a script, it is also automatically saved to local storage, using the name set in the start node. This is a backup that allows you to recover the file if the Mobius browser web pages closes unexpectedly or crashes and you have forgotten to save your file.
+Every time you execute a script, it is also automatically saved to Local Storage, using the name set in the start node. This is a backup that allows you to recover the file if the Mobius browser web pages closes unexpectedly or crashes and you have forgotten to save your file.
 
-If no script name is set, then the file will be saved with the name `Untitled.mob` in local storage. (Note that if you have multiple un-named scripts, then they will overwrite each other.) Below is an example of setting the script name in the start node to `My Script Name`. In this case, the file would be saved with the name `My_Script_Name.mob`.
+If no script name is set, then the file will be saved with the name `Untitled.mob` in Local Storage. (Note that if you have multiple un-named scripts, then they will overwrite each other.) Below is an example of setting the script name in the start node to `My Script Name`. In this case, the file would be saved with the name `My_Script_Name.mob`.
 
 <img src="assets/typedoc-json/docUI/imgs/flowchart_script_name.png" width="540">
 

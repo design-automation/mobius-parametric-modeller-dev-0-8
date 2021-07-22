@@ -76,10 +76,10 @@ export class DataViewersContainerComponent implements DoCheck, OnInit, OnDestroy
                     this.dataService.activeView = 'Console';
                     break;
                 case '1':
-                    this.dataService.activeView = '3D Viewer';
+                    this.dataService.activeView = 'CAD Viewer';
                     break;
                 case '2':
-                    this.dataService.activeView = 'Three Geo Viewer';
+                    this.dataService.activeView = 'Geo Viewer';
                     break;
             }
         }
@@ -97,7 +97,7 @@ export class DataViewersContainerComponent implements DoCheck, OnInit, OnDestroy
                 }
             }
         }
-        if (this.activeView.name !== '3D Viewer') {
+        if (this.activeView.name !== 'CAD Viewer') {
             this.giDataService.switch_page = false;
         }
         this.updateView( this.activeView );
