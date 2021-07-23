@@ -6,9 +6,9 @@ A Mobius script consists of a flowchart of nodes. Each node contains a procedure
 
 A flowchart has a `Start` node and an `End` node. Between these two nodes, you can create multiple other nodes, connected with links. By default, when you create a new flowchart, one additional node gets generated, linked to the `Start` and `End` nodes.
 
-Here is an example of a flowchart with five additional nodes, labelled `A`, to `E`. 
+Here is an example of a flowchart with five nodes, labelled `A`, to `E`. 
 
-<img src="assets/typedoc-json/docUI/imgs/flowchart_example.png" width="372">
+![Example flowchart with five nodes](assets/typedoc-json/docUI/imgs/flowchart_example.png)
 
 **Executing Scripts**
 
@@ -30,7 +30,7 @@ Note also that for steps 3, 4 and 5, the order of execution makes no difference.
 
 The order of execution can be verified from the node dropdown menu, as follows:
 
-<img src="assets/typedoc-json/docUI/imgs/flowchart_node_order.png" width="172">
+![Execution order](assets/typedoc-json/docUI/imgs/flowchart_node_order.png)
 
 By default, the Mobius settings are set to automatically execute a script when it is first loaded. In some cases, this may not be desirable, either because your script is slow to execute or because you script has an error that crashes the browser (for example, an infinite loop). In such cases, you can change the default settings in the Mobius Menu > Settings.
 
@@ -38,7 +38,7 @@ By default, the Mobius settings are set to automatically execute a script when i
 
 A Mobius script can be saved as a `.mob` file. This file contains all parts of the script, including the dashboard, the flowchart, the procedures in each of the nodes, and the viewer settings. The Mobius Menu in the top bar can be used for loading and saving script files.
 
-<img src="assets/typedoc-json/docUI/imgs/menu.png" width="111">
+![Mobius Menu](assets/typedoc-json/docUI/imgs/menu2.png)
 
 By default, when you open Mobius a new script file is loaded. 
 * _New File_: Creates a new `.mob` file with a default flowchart.
@@ -54,17 +54,17 @@ Every time you execute a script, it is also automatically saved to Local Storage
 
 If no script name is set, then the file will be saved with the name `Untitled.mob` in Local Storage. (Note that if you have multiple un-named scripts, then they will overwrite each other.) Below is an example of setting the script name in the start node to `My Script Name`. In this case, the file would be saved with the name `My_Script_Name.mob`.
 
-<img src="assets/typedoc-json/docUI/imgs/flowchart_script_name.png" width="540">
+![Setting script name in Start node](assets/typedoc-json/docUI/imgs/flowchart_script_name.png)
 
 The saved file can be retrieved by selecting _Local Storage_ in the Mobius Menu. Below is the dialog box that opens up:
 
-<img src="assets/typedoc-json/docUI/imgs/flowchart_local_storage.png" width="557">
+![Retrieving file from Local Storage](assets/typedoc-json/docUI/imgs/flowchart_local_storage.png)
 
 **Node Styles**
 
 The nodes in the flowchart are styled differently, depending on a number of factors. The flowchart below shows the different node styles.
 
-<img src="assets/typedoc-json/docUI/imgs/flowchart_node_styles.png" width="603">
+![Node styles](assets/typedoc-json/docUI/imgs/flowchart_node_styles.png)
 
 Starting from the left, the nodes are as follows:
 * A normal node, with both input links and output links, and no errors.
@@ -110,7 +110,7 @@ In some cases, nodes will not have any output model:
 
 The flowchart below shows an example where only the first node is executed, so only the first node will have a model output. The other four nodes will all have no model output. As a result, clicking these nodes will not show anything in the viewer on the right. 
 
-<img src="assets/typedoc-json/docUI/imgs/flowchart_no_model.png" width="285">
+![Example flowchart with nodes that are not executed](assets/typedoc-json/docUI/imgs/flowchart_no_model.png)
 
 **Start and End Nodes**
 
@@ -141,7 +141,7 @@ However, the topology of objects coming in from an input model are immutable and
 
 Here is an example of a flowchart that first creates a polygon in one node, and then tries to edit that polygon in a downstream node, by divide the polygon edges. This results in an error.
 
-<img src="assets/typedoc-json/docUI/imgs/flowchart_immutable_error.png" width="587">
+![Editing immutable topology error](assets/typedoc-json/docUI/imgs/flowchart_immutable_error.png)
 
 In such cases, there is a straightforward solution, which is to clone the object before editing it. The `make.Clone` function will make a copy of the polygon (and delete the old polygon). The topology of the copied polygon can then be edited.
 
@@ -190,7 +190,7 @@ When merging, if entities have the same attribute but with different values, the
 
 Consider the following example. A polygon is created in the first node. The two downstream nodes then each create an attribute call `att_a`, but they assign different values to this attribute. As a result, an error is thrown in the `End` node, when the two models get merged.
 
-<img src="assets/typedoc-json/docUI/imgs/flowchart_attrib_merge_conflict.png" width="700"/>
+![Attribute conflict error for polygons](assets/typedoc-json/docUI/imgs/flowchart_attrib_merge_conflict.png)
 
 Merging models in the `End` node: 
 * `'pg0'` in input model 0 has attribute: `att_a: 123`
@@ -201,7 +201,7 @@ This type of error is usually a careless mistake. You ust need to decide which a
 
 Another common example of a merge conflict is when `xyz` attributes of a set of positions get changed, due to an object being transformed in some way. In the example below, a polygon is created in the first node, and the polygon is then later moved (up in the z direction by 8 units).
 
-<img src="assets/typedoc-json/docUI/imgs/flowchart_attrib_merge_conflict_xyz.png" width="642"/>
+![Attribute conflict error for positions](assets/typedoc-json/docUI/imgs/flowchart_attrib_merge_conflict_xyz.png)
 
 Merging models in the `End` node: 
 * `'ps0'` in input model 0 has attribute:  `xyz: [0,0,0]`

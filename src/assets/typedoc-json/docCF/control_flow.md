@@ -182,8 +182,4 @@ Inserts an `Exit` statement into the procedure.
 
 Inserts a `Break-branch` statement into the procedure. 
 
-... either the body of a procedure or the body of a local function
   
-<img src="assets/typedoc-json/docCF/diags.png" width="500">
-<img src="assets/typedoc-json/docCF/diags.png" width="400">
-<img src="assets/typedoc-json/docCF/diags.png" width="300">

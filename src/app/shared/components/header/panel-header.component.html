@@ -59,7 +59,7 @@
         <div class='dropdownContainer'>
             <div id="dropdownMenu">
                 <button onclick="document.getElementById('newfile').click();"
-                title="Create New Flowchart"> 
+                title="Create New Script"> 
                     <mat-icon>rotate_left</mat-icon> 
                     New File
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "new file")'>
@@ -68,7 +68,7 @@
                 </button>
                 <br>
                 <button (click)="loadFile()"
-                title="Load Flowchart File from Computer">
+                title="Load Script File from Computer">
                     <mat-icon>launch</mat-icon>
                     Load File 
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "load file")'>
@@ -77,7 +77,7 @@
                 </button>
                 <br>
                 <button onclick="document.getElementById('savefile').click();"
-                title="Save Flowchart File to Computer">
+                title="Save Script File to Computer">
                     <mat-icon>save_alt</mat-icon>
                     Save File
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "save file")'>
@@ -86,7 +86,7 @@
                 </button>
                 <br>
                 <button (click)="openHeaderDialog($event, 'savels')"
-                title="Save Flowchart File to The local Storage">
+                title="Save Script File to The local Storage">
                     <mat-icon>input</mat-icon>
                     Save to LS
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "save to ls")'>
@@ -95,7 +95,7 @@
                 </button>
                 <br>
                 <button onclick="document.getElementById('savejavascript').click();"
-                title="Save Javascript Execution code to Computer">
+                title="Save Javascript Code to Computer">
                     <mat-icon>save</mat-icon>
                     Save JS
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "save js")'>
@@ -104,7 +104,7 @@
                 </button>
                 <br>
                 <button onclick="document.getElementById('savedata').click();"
-                title="Save generated model data to computer">
+                title="Save Static Model to Computer">
                     <mat-icon>play_for_work</mat-icon>
                     Save Model
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "save model")'>
@@ -113,7 +113,7 @@
                 </button>
                 <br>
                 <button (click)="openHeaderDialog($event, 'backup')"
-                title="Load Flowchart Backup from Local Storage">
+                title="Manage Files in Local Storage">
                     <mat-icon>autorenew</mat-icon>
                     Local Storage 
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "local storage")'>
