@@ -143,20 +143,19 @@
                     <li class='tooltip-basic'
                         [class.basic]='true'
                         (mousedown)='selectPrevProd()'
-                        (click)='add_basic_func(ProcedureTypes.Error)'> 
-                            Exit
-                            <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "control_flow", "Exit")'>
-                                <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
-                            </button>
-                    </li>
-                    <li class='tooltip-basic'
-                        [class.basic]='true'
-                        (mousedown)='selectPrevProd()'
                         (click)='add_basic_func(ProcedureTypes.BreakBranch)'> 
                             Break-branch
                             <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "control_flow", "Break-branch")'>
                                 <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
                             </button>
+                    </li>
+                    <li class='tooltip-basic' [class.basic]='true' (mousedown)='selectPrevProd()'
+                        (click)='add_basic_func(ProcedureTypes.Error)'>
+                        Exit
+                        <button class='helpButton' mat-icon-button title="Help" tabindex="-1"
+                            (click)='emitHelpText($event, "control_flow", "Exit")'>
+                            <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                        </button>
                     </li>
                 </ul>
             </div>
