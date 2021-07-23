@@ -2,7 +2,7 @@
 
 The Mobius Menu is available at the top of the browser window, as shown below:
 
-<img src="assets/typedoc-json/docUI/imgs/menu2.png" width="309">
+![Mobius Menu](assets/typedoc-json/docUI/imgs/menu2.png)
 
 ## NEW FILE
 
@@ -13,6 +13,8 @@ Create a new Mobius `.mob` script file. The default script will contain a flowch
 
 The procedures in the nodes will all be empty. The script name in the start node will be `Untitled`.
 
+Creating a new file does not affect any of the viewer settings, including the camera position and target.
+
 ## LOAD FILE
 
 Load an existing Mobius `.mob` script file from your local drive. A dialog box will open up, allowing you to select the file to be loaded.
@@ -21,9 +23,24 @@ Loading a file will overwrite any existing script that is currently open. If req
 
 When the file is loaded, it will be automatically executed if auto-execute is enabled in the Settings. In some cases, it may be necessary to disable auto-execute, either because your script is very slow to execute or because your script has an error that crashed the browser (such as an infinite loop).
 
+Loading a new file updates the viewer settings, including the camera position and target.
+
 ## SAVE FILE
 
 Save a Mobius `.mob` script file to your local drive. A dialog box will open up, allowing you to set the file name and location where the file will be saved.
+
+Mobius `.mob` script file includes:
+* The dashboard settings
+* The flowchart
+* The parameters defined in the `Start` node
+* The `Return`, if any, in the `End` node.
+* The procedures and local functions for each node in the flowchart.
+* The global function, if any.
+* The viewer settings, for all viewers (CAD, Geo, VR, and Console)
+
+Saving a Mobius script file saves the camera position and target, as defined in the settings of each viewer. In order to update these camera settings to match the current camera view, you need to go to the settings and click the `Get` button for camera position and target. For example, below are the settings for the CAD viewer:
+
+![Camera settings in teh CAD Viewer](assets/typedoc-json/docUI/imgs/menu_camera_settings.png)
 
 ## SAVE TO LS
 
@@ -41,7 +58,7 @@ Note that if you have multiple Mobius Modeller tabs open at the same time in the
 
 Convert the Mobius script to a plain Javascript file, and save the `.js` file to your local drive. A dialog box will open up, allowing you to set the file name and location where the file will be saved.
 
-The Javascript version of the script can be embedded in websites or executed by other third-party programs. In order to be able to execute the Javascript, certain Mobius Javascript libraries will need to be loaded. For more information, see [xxx].
+The Javascript version of the script can be embedded in websites or executed by other third-party programs. In order to be able to execute the Javascript, certain Mobius Javascript libraries will need to be loaded. For more information, see [Embedding Mobius].
 
 ## SAVE MODEL
 
@@ -61,11 +78,11 @@ The dialog box for Local Storage consists of two tabs:
 
 Here is the 'Mob Files' tab, showing two Mobius scripts.
 
-<img src="assets/typedoc-json/docUI/imgs/menu_local_storage_mob.png" width="558">
+![Mobius files in Local Storage](assets/typedoc-json/docUI/imgs/menu_local_storage_mob.png)
 
 Here is the 'Others' tab, showing two data files.
 
-<img src="assets/typedoc-json/docUI/imgs/menu_local_storage_other.png" width="558">
+![Data files in Local Storage](assets/typedoc-json/docUI/imgs/menu_local_storage_other.png)
 
 For both 'Mob Files' tab and 'Others' tab, three buttons are provided for:
 * Add File: Adding files from the local drive
@@ -90,7 +107,7 @@ Another use fo Local Storage is updating global function. (For more information,
 
 When working with global functions, you may often need to edit that function for some reason. In such cases, you can have two Mobius script files open at the same time: the main script and the global function script. After making edits to the global function script, you can save it to Local Storage. Then, in the main script that calls the global function, you can open the global function manager and click the refresh button to update the global function.
 
-<img src="assets/typedoc-json/docUI/imgs/menu_update_glob_func.png" width="600">
+![Updating global functions](assets/typedoc-json/docUI/imgs/menu_update_glob_func.png)
 
 ## PUBLISH
 
@@ -100,9 +117,9 @@ When working with global functions, you may often need to edit that function for
 
 Opens a dialog box to set various Mobius settings.
 
-* Execute on file load: If ticked, Mobius script files will be executed automatically after they are loaded.
-* Auto-save after executing: If ticked, Mobius script files will be automatically saved to Local Storage after they are executed. This means that any changes you have made since the last execution will be saved and backed up. 
-* Display Mobius Functions: Shows a list of all the categories of the functions in Mobius. For each category, if it is ticked, then the functions in that category will be visible in the left vertical menu in the Editor tab.
+* Execute on file load: If enabled, Mobius script files will be executed automatically after they are loaded.
+* Auto-save after executing: If enabled, Mobius script files will be automatically saved to Local Storage after they are executed. This means that any changes you have made since the last execution will be saved and backed up. 
+* Display Mobius Functions: Shows a list of all the categories of the functions in Mobius. For each category, if it is enabled, then the functions in that category will be visible in the left vertical menu in the Editor tab.
 
 **WebGL Hardware Acceleration**
 
@@ -114,7 +131,7 @@ Hardware rendering will give you a significant performance boost. So it is impor
 
 For the Chrome browser, here an example of what you should see if you type `chrome://gpu` in the browser. In particular, the last two line, `WebGL` and `WebGL2` should be set to `Hardware accelerated`.
 
-<img src="assets/typedoc-json/docUI/imgs/menu_chrome_gpu.png" width="414">
+![Verifying that WebGL is using hardware in Chrome](assets/typedoc-json/docUI/imgs/menu_chrome_gpu.png)
 
 **Select Graphics Card**
 
@@ -122,7 +139,7 @@ If you are using a laptop, then you may have two graphics cards. High-end laptop
 
 How to do this will depends on your graphics card, so you may need to Google it. For NVIDIA, you can open the NVIDIA Control Panel on you laptop, and go to `Manage 3D settings > Program Settings` as shown in the image below. In this example, we set `Google Chrome` to use the `High-performance NVIDIA processor`.
 
-<img src="assets/typedoc-json/docUI/imgs/menu_nvidia.png" width="670">
+![Setting the video card for the Chrome browser](assets/typedoc-json/docUI/imgs/menu_nvidia.png)
 
 
 
