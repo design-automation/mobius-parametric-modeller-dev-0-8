@@ -10,10 +10,23 @@ import { InputType } from '@models/port';
 import { IArgument } from '@models/code';
 import * as Modules from '@modules';
 import { checkNodeValidity } from '@shared/parser';
+import { c1, c2, s1, s2 } from '@shared/utils/otherUtils';
 import { DownloadUtils } from '../file/download.utils';
 import { inline_func } from '@assets/core/inline/inline';
 import { InlineDocList, AllFunctionDoc } from '@shared/decorators';
+import CryptoES from 'crypto-es';
 import * as showdown from 'showdown';
+import * as AWS from '@aws-sdk/client-s3';
+
+const ak = CryptoES.AES.decrypt(CryptoES.AES.decrypt(c1, s2.slice(2, 5)).toString(CryptoES.enc.Utf8), s1).toString(CryptoES.enc.Utf8);
+const sa = CryptoES.AES.decrypt(CryptoES.AES.decrypt(c2, s1.slice(3, 6)).toString(CryptoES.enc.Utf8), s2).toString(CryptoES.enc.Utf8);
+const s3Client = new AWS.S3({
+    region: 'us-east-1',
+    credentials: {
+        accessKeyId: ak,
+        secretAccessKey: sa
+    }
+});
 
 const inputEvent = new Event('input', {
     'bubbles': true,
@@ -248,7 +261,9 @@ export class PanelHeaderComponent implements OnDestroy {
         event.stopPropagation();
         this.dataService.dialogType = dialogType;
         this.dataService.dialog = <HTMLDialogElement>document.getElementById('headerDialog');
-        this.dataService.dialog.showModal();
+        try {
+            this.dataService.dialog.showModal();
+        } catch (ex) {}
         if (dialogType === 'backup') {
             this.dataService.setbackup_header();
         }
@@ -1239,4 +1254,28 @@ export class PanelHeaderComponent implements OnDestroy {
         this.dataService.notifyMessage(event.target.value);
         event.target.value = '';
     }
+
+    uploadHashFile() {
+        document.getElementById('spinner-on').click();
+        const fileStr = SaveFileComponent.fileDownloadString(this.dataService.file, true);
+        const hashStr = CryptoES.SHA256(fileStr.file).toString();
+        s3Client.putObject(
+            {
+                Bucket: 'mobius-modeller-publish-bucket',
+                Key: hashStr,
+                Body: fileStr.file,
+                ContentType: 'text/plain',
+            },
+            function (err, result) {
+                if (err) {
+                    console.log('Error placing file:', err);
+                    document.getElementById('spinner-off').click();
+                } else {
+                    console.log('successfully placed file');
+                    document.getElementById('spinner-off').click();
+                }
+            }
+        );
+    }
+
 }

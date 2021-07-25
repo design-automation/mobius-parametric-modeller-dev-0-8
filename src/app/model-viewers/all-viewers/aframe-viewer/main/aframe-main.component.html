@@ -12,8 +12,8 @@
         <a-entity id='aframe_hemisphereLight' light='type: hemisphere; color: #EEE; groundColor: #EEE; intensity: 0.15' position='0 0 0'></a-entity>
         <a-entity id='aframe_directionalLight' light='type: directional; color: #EEE; intensity: 1; castShadow:true;' position='1 1 1'></a-entity>
 
-        <a-entity id='aframe_camera_rig' look-controls='enabled:false' custom-wasd-controls="acceleration:100% ; fly: false" position='0 2 0'  rotation='0 0 0' >
-            <a-camera id='aframe_look_camera' look-controls wasd-controls="enabled:false" position='0 0 0'></a-camera>
+        <a-entity id='aframe_camera_rig' custom-look-controls='enabled:false' custom-wasd-controls="acceleration:100% ; fly: false" position='0 2 0'  rotation='0 0 0' >
+            <a-camera id='aframe_look_camera' custom-look-controls wasd-controls="enabled:false" position='0 0 0'></a-camera>
             <a-sky id='aframe_sky_background' radius='5000'></a-sky>
             <a-sky id='aframe_sky_foreground' radius='1' transparent='true' visible='false'></a-sky>
         </a-entity>

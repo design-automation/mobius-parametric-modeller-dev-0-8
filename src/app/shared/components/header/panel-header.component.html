@@ -121,7 +121,7 @@
                     </button>
                 </button>
                 <br>
-                <button (click)="openHeaderDialog($event, 'url')"
+                <button (click)="openHeaderDialog($event, 'publish')"
                 title="Generate Möbius view url from url of .mob file">
                     <mat-icon>link</mat-icon>
                     Publish
@@ -148,11 +148,18 @@
 
 <dialog id='headerDialog'>
     <button class='closebutton' (click)='closeDialog(false)'><mat-icon class='icon'>close</mat-icon></button>
-    <div class='genUrlDialog' *ngIf='checkDialog("url")'>
+    <div class='genUrlDialog' *ngIf='checkDialog("publish")'>
+        <p>To publish your model, please upload your Möbius (.mob) file to an online file server to allows
+        you to share the URL. (For example, you can upload your file to platforms such Github or Dropbox.) 
+        Then paste the URL for file below, and click 'Validate Url'.</p>
+        <br>
+        <button (click)='uploadHashFile()'>Upload Model to Cloud</button>
+        <button (click)="openHeaderDialog($event, 'publish_url')">Use URL</button>
+    </div>
+    <div class='genUrlDialog' *ngIf='checkDialog("publish_url")'>
         <p>To publish your model, please upload your Möbius (.mob) file to an online file server to allows
         you to share the URL. (For example, you can upload your file to platforms such Github or Dropbox.) 
         Then paste the URL for file below, and click 'Validate Url'. </p>
-        <br>
         <br>
         MOB file URL: <br>
         <textarea [(ngModel)]='urlSet[0]' 

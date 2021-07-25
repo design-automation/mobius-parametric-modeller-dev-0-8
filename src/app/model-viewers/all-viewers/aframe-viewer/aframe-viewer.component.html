@@ -5,8 +5,11 @@
     <button id="zoomingfit" mat-icon-button (click)="zoomfit()" title='Zoom to Fit Model'>
         <mat-icon svgIcon="cZoom"></mat-icon>
     </button>
+    <button id='aframe-updatePos' class='hiddenElm' (click)="updatePos($event)"> </button>
+    <button id='aframe-updateLook' class='hiddenElm' (click)="updateLook($event)"> </button>
+
     <div class='position-picker' *ngIf='showCamPosList'>
-        <select value={{selectedCamPos}} (change)="changePos($event.target.value)">
+        <select id='selCamPosEl' value={{selectedCamPos}} (change)="changePos($event.target.value)">
             <option *ngFor="let item of camPosList; let i = index;" value ={{i}}>{{item.name}}</option>
         </select>
     </div>
@@ -46,10 +49,6 @@
                             <input type="number"
                             (change)="settingOnChange('camera.pos_z', $event.target.value)" 
                             [value]="formatNumber(settings.camera.position.z)">
-                            <button (click)="settingOnChange('camera.get_camera_pos')" class="filebtn getbtn">Get</button>
-                        </dd>
-                        <dd class='vector_input_div'>
-                            <div class="label">Camera Height</div>
                             <input type="number"
                             (change)="settingOnChange('camera.pos_y', $event.target.value)" 
                             [value]="formatNumber(settings.camera.position.y)">
@@ -62,7 +61,6 @@
                             <input type="number" 
                             (change)="settingOnChange('camera.rot_y', $event.target.value)"
                             [value]="formatNumber(settings.camera.rotation.y)" disabled>
-                            <button (click)="settingOnChange('camera.get_camera_rot')" class="filebtn getbtn">Get</button>
                         </dd>
                     </dl>
                 </div>
@@ -70,23 +68,6 @@
             <tab tabTitle="VR">
                 <div class="mat-elevation-z1">
                     <dl>
-                        <dd>
-                            <div class="label">VR Enabled</div>
-                            <div class="onoffswitch">
-                                <input type="checkbox"
-                                name="onoffswitch"
-                                class="onoffswitch-checkbox"
-                                id="aframeVRonoff"
-                                [checked]='vr.enabled'
-                                (change)="settingOnChange('vr.enabled')"
-                                >
-                                <label class="onoffswitch-label" for="aframeVRonoff">
-                                    <span class="onoffswitch-inner"></span>
-                                    <span class="onoffswitch-switch"></span>
-                                </label>
-                            </div>
-                        </dd>
-                        <dd><hr></dd>
                         <dd>
                             <div class="label">VR Background URL</div>
                         </dd>
@@ -131,10 +112,6 @@
                             <input type="number"
                             (change)="settingOnChange('vr.camera.pos_z', $event.target.value)" 
                             [value]="formatNumber(vr.camera_position.z)">
-                            <button (click)="settingOnChange('camera.get_vr_camera_pos')" class="filebtn getbtn">Get</button>
-                        </dd>
-                        <dd class='vector_input_div'>
-                            <div class="label">VR Camera Height</div>
                             <input type="number"
                             (change)="settingOnChange('vr.camera.pos_y', $event.target.value)" 
                             [value]="formatNumber(vr.camera_position.y)">
@@ -147,7 +124,6 @@
                             <input type="number" 
                             (change)="settingOnChange('vr.camera.rot_y', $event.target.value)"
                             [value]="formatNumber(vr.camera_rotation.y)" disabled>
-                            <button (click)="settingOnChange('camera.get_vr_camera_rot')" class="filebtn getbtn">Get</button>
                         </dd>
                         <dd><hr></dd>
                         <dd>
