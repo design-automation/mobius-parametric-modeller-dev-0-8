@@ -140,10 +140,10 @@ export class ViewGalleryComponent implements AfterViewInit {
                         viewerBtn = document.getElementById('Console');
                         break;
                     case '1':
-                        viewerBtn = document.getElementById('3D Viewer');
+                        viewerBtn = document.getElementById('CAD Viewer');
                         break;
                     case '2':
-                        viewerBtn = document.getElementById('Three Geo Viewer');
+                        viewerBtn = document.getElementById('Geo Viewer');
                         break;
                 }
                 if (viewerBtn) { viewerBtn.click(); }

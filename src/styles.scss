@@ -37,17 +37,15 @@ as-split-area{
     flex-grow: 1 !important;
 }
 
-
-
 .as-split-gutter{
     // background-image: none !important;
     background-color:$color6 !important;
-    // border-right: 1px solid $color4;
+    border-right: 1px solid $color3;
 }
 
 #gi-viewer-container{
-    as-split-gutter{
-        border-top: 1px solid $color4 !important;
+    .as-split-gutter{
+        border-top: 1px solid $color3;
     }
 }
 
@@ -88,7 +86,7 @@ as-split-area{
 }
 
 
-// for teh 4 views
+// for the 4 views
 
 .container{
     position: relative;
@@ -345,5 +343,6 @@ showdown {
         margin-left: auto;
         margin-right: auto;
         max-width: 100%;
+        border: 1px solid $color4;
     }
 }

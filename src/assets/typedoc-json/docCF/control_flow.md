@@ -146,7 +146,7 @@ While a < 100
 
 The condition is `a < 100`, and the body consists of two lines: `b = b + (a * a)` and `a = a + 1`. 
 
-The body of the loop can be executed zero or more times, depending on teh initial value of `a`. 
+The body of the loop can be executed zero or more times, depending on the initial value of `a`. 
 * If that starting value of `a` is greater than or equal to 100, then the body will never be executed. 
 * If the starting value of `a` is less than 100, then the body will be executed one or more times. Since the value of `a` keeps increasing, it will eventually become equal to 100, at which point the loop will exit. 
 
@@ -156,7 +156,19 @@ Inserts a `Break-loop` statement into the body of either a `For-each` loop or a 
 
 When the `Break-loop` is executed, execution will break out of the loop and procedure to the next line of code immediately after the loop statement. 
 
-The `Break-loop` statement is typically nested inside a conditional `If` statement.  
+The `Break-loop` statement is typically nested inside a conditional `If` statement.
+
+Here is a simple example:
+
+```
+total = 0
+For-each i in range(10)
+    If i > 5
+        Break-loop
+    total = total + i
+```
+
+In this case, the loop body will be executed 6 times (from `i = 0` to `i = 5`). On the 7th iteration, when `i` gets to 6, the loop exits. The result for `total` will be 15.
   
 ## Continue-loop
   
@@ -165,25 +177,70 @@ Inserts a `Continue-loop` statement into the body of either a `For-each` loop or
 When the `Continue-loop` is executed, execution will skips the subsequent lines of code in the loop body and continue with the next iteration of the loop. 
 
 The `Continue-loop` statement is typically nested inside a conditional `If` statement.  
-  
+
+
+Here is a simple example:
+
+```
+total = 0
+For-each i in range(10)
+    If i < 5
+        Continue-loop
+    total = total + i
+```
+
+In this case, the loop body will be executed 10 times (from `i = 0` to `i = 9`). However, for the first five iterations, when `i` is less than 5, the last line of the loop body will not be executed. The result for `total` will be 35.
+
 ## Return
   
-Inserts a `Return` statement into the procedure.
+Inserts a `Return` statement into a local function or a procedure.
 
-... either the body of a procedure or the body of a local function.
-  
-## Exit
-  
-Inserts an `Exit` statement into the procedure.
+**Return in a Local Function**
 
-... either the body of a procedure or the body of a local function.
+For local functions, `Return` statements allow the function to return a value. 
+
+The local function can have more than one `Return` statement. Once a `Return` statement is executed, the function will exit. If there are any other lines of code after the `Return`, then those lines will not be executed.
+
+Below is an example of a function the divides `num1` by `num2`. If `num2` is zero, then the function returns `num1`. Otherwise, it will return the result of `num1 / num2`. 
+
+![Example of a local function with two Return statements](assets/typedoc-json/docCF/imgs/return_func.png)
+  
+**Return in a Procedure**
+
+For a procedure, `Return` will exit out of the procedure. If there are any other lines of code after the `Return`, then those lines will not be executed. Execution of the script will then continue on to the next node in the flowchart.
+
+In procedures, `Return` statements are typically placed inside an `If` condition, so that the procedure can exit gracefully under certain conditions.
+
+Note that for procedures, the `Return` statement does not return any value.
+
+Below is an example of a procedure that extrudes some polygons using a `For-each` loop. The procedure first gets all the polygons in the model using the `#pg` expression. If the number of polygons is zero, then the `Return` statement is executed and the procedure exits. If not, then the polygons in the model are extruded.
+
+![Example of a procedure with a Return statement](assets/typedoc-json/docCF/imgs/return_proc.png)
   
 ## Break-branch
 
-Inserts a `Break-branch` statement into the procedure. 
+Inserts a `Break-branch` statement into the procedure. If an `Break-branch`statement is executed, the current branch in the flowchart will stop executing. If there are any other lines of code after the `Break-branch`, then those lines will not be executed. In addition, downstream nodes in the same branch will also not be executed but nodes in other branches will be executed.
 
-... either the body of a procedure or the body of a local function
+Below is an example of a flowchart with two branches. The `create skeleton` node creates a set of polylines for generating a model. The left branch then consists of two nodes: the `loft polygons` creates some polygons using the loft operation; the `extrude polygons` node then extrudes those polygons to give them a thickness. The right branch has just a single node that creates some beams.
+
+![Examples of a flowchart with two branches](assets/typedoc-json/docCF/imgs/break_branch.png)
+
+The procedure inside the `loft polygons` node first checks if at least two polylines have been found in the incoming model. If the number of polylines is less than two, then a `Break-branch` statement is executed. This will result in the `extrude polygons` node being skipped. However, the nodes in the right branch (in this case, `create beams`) and the `End` node will all still be executed. 
+
+![Example of a procedure with a Break-branch statement](assets/typedoc-json/docCF/imgs/break_branch_proc.png)
+
+## Exit
   
-<img src="assets/typedoc-json/docCF/diags.png" width="500">
-<img src="assets/typedoc-json/docCF/diags.png" width="400">
-<img src="assets/typedoc-json/docCF/diags.png" width="300">
+Inserts an `Exit` statement into the procedure. If an `Exit`statement is executed, the whole script will stop executing. If there are any other lines of code after the `Exit`, then those lines will not be executed. In addition, any other nodes in the flowchart will also not be executed. 
+
+`Exit` statements can be inserted anywhere, including local functions.
+
+`Exit` statements are typically placed inside an `If` condition, so that the whole script can exit gracefully under certain conditions.
+
+The `Exit` statement has an argument, which is the value to be returned by the whole script. This value is is only relevant if the Mobius script is being called as a global function. If this is not the case, then `null` can be entered.
+
+
+  
+
+
+  
