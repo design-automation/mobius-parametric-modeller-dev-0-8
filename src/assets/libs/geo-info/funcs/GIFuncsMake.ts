@@ -1,12 +1,13 @@
 import { multMatrix, xfromSourceTargetMatrix } from '../../geom/matrix';
 import { vecAdd, vecCross, vecDiv, vecFromTo, vecMult } from '../../geom/vectors';
-import { EEntType, Txyz, TEntTypeIdx, TPlane, EAttribNames } from '../common';
+import { EEntType, Txyz, TEntTypeIdx, TPlane, EAttribNames, EAttribDataTypeStrs, TAttribDataTypes } from '../common';
 import * as THREE from 'three';
 import { getEntIdxs, isDim0, isDim2 } from '../common_id_funcs';
 import { getArrDepth } from '@assets/libs/util/arrs';
 import { GIModelData } from '../GIModelData';
 import { listZip } from '@assets/core/inline/_list';
 import { distance } from '@libs/geom/distance';
+import { GIAttribMapBase } from '../attrib_classes/GIAttribMapBase';
 
 // Enums
 export enum _EClose {
@@ -920,6 +921,242 @@ export class GIFuncsMake {
         }
         // return the new posis
         return all_new_posis_i;
+    }
+    // ================================================================================================
+    /**
+     * Makes new polyline and polygons by joining existing polylines or polygons
+     * @param ents_arr
+     * @param plane
+     * @param method
+     */
+    public join(ents_arr: TEntTypeIdx[]): TEntTypeIdx[] {
+        // get polylines and polygons
+        const set_plines: Set<number> = new Set();
+        const set_pgons: Set<number> = new Set();
+        for (const [ent_type, ent_i] of ents_arr) {
+            if (ent_type === EEntType.PLINE) {
+                set_plines.add(ent_i);
+            } else if (ent_type === EEntType.PGON) {
+                set_pgons.add(ent_i);
+            } else {
+                const plines: number[] = this.modeldata.geom.nav.navAnyToPline(ent_type, ent_i);
+                for (const pline of plines) { set_plines.add(pline); }
+                const pgons: number[] = this.modeldata.geom.nav.navAnyToPline(ent_type, ent_i);
+                for (const pgon of pgons) { set_pgons.add(pgon); }
+            }
+        }
+        if (set_plines.size > 0) {
+            throw new Error('Join plines not implemented');
+        }
+        return this._joinPgons(Array.from(set_pgons)).map( pgon_i => [EEntType.PGON, pgon_i] );
+    }
+    // Return the posi pair, the key and the rev key for an edge
+    private _edgeKeys(edge_i: number): [[number, number], string, string] {
+        const posis_i: [number, number] = this.modeldata.geom.nav.navAnyToPosi(EEntType.EDGE, edge_i) as [number, number];
+        if (posis_i.length != 2) { return null; } // just one posi
+        return [posis_i, posis_i[0] + '_' + posis_i[1], posis_i[1] + '_' + posis_i[0]];
+    }
+    // Join polylines
+    private _joinPlines(plines_i: number[]): number[]  {
+        // pline edges TODO
+        const pline_edges_i: number[] = [];
+        for (const pline_i of plines_i) {
+            const edges_i: number[] = this.modeldata.geom.nav.navAnyToEdge(EEntType.PLINE, pline_i);
+            for (const edge_i of edges_i) { pline_edges_i.push(edge_i); }
+        }
+        //
+        // TODO complete this function
+        //
+        return null;
+    }
+    // Join polygons
+    private _joinPgons(pgons_i: number[]): number[]  {
+        // loop through all the pgons
+        // for each polygon make various maps that we need later
+        const map_pgon_edges: Map<number, number[]> = new Map();
+        const map_edge_pgon: Map<number, number> = new Map();
+        const edge_posis_map: Map<number, [number, number]> = new Map();
+        const edge_posisrevkey_map: Map<number, string> = new Map();
+        const posiskey_edge_map: Map<string, number> = new Map(); // TODO there could be more than one edge between 2 posis
+        for (const pgon_i of pgons_i) {
+            // we only take the first wire, so ignore holes
+            const wire_i: number = this.modeldata.geom.nav.navPgonToWire(pgon_i)[0];
+            const edges_i: number[] = this.modeldata.geom.nav.navWireToEdge(wire_i);
+            const filt_edges_i: number[] = []; // we will ignore edges with just one posi
+            map_pgon_edges.set(pgon_i, filt_edges_i);
+            // loop through the edges of this polygon
+            for (const edge_i of edges_i) {
+                const keys: [[number, number], string, string] = this._edgeKeys(edge_i);
+                if (keys === null) { continue; } // just one posi
+                filt_edges_i.push(edge_i);
+                edge_posis_map.set(edge_i, keys[0]);
+                edge_posisrevkey_map.set(edge_i, keys[2])
+                map_edge_pgon.set(edge_i, pgon_i);
+                posiskey_edge_map.set(keys[1], edge_i);
+            }
+        }
+        // find dup pgon edges
+        const grp_pgons_map: Map<number, Set<number>> = new Map();
+        const pgon_grp_map: Map<number, number> = new Map();
+        let grp_count = 0;
+        for (const pgon_i of pgons_i) {
+            let has_neighbour = false;
+            for (const edge_i of map_pgon_edges.get(pgon_i)) {
+                const revkey: string = edge_posisrevkey_map.get(edge_i);
+                if (posiskey_edge_map.has(revkey)) {
+                    // found a duplicate opposite edge
+                    has_neighbour = true;
+                    const other_edge_i: number = posiskey_edge_map.get(revkey);
+                    // create or add to a groups of polygons
+                    const this_pgon_i: number = map_edge_pgon.get(edge_i);
+                    const other_pgon_i: number = map_edge_pgon.get(other_edge_i);
+                    if (pgon_grp_map.has(this_pgon_i) && pgon_grp_map.has(other_pgon_i)) {
+                        // console.log("1>>>", 
+                        //     Array.from(grp_pgons_map),
+                        //     Array.from(pgon_grp_map)
+                        // );
+                        // we have two groups that are connected
+                        // merge the two groups into one
+                        const this_grp: number = pgon_grp_map.get(this_pgon_i);
+                        const other_grp: number = pgon_grp_map.get(other_pgon_i);
+                        if (this_grp !== other_grp) {
+                            const this_grp_set: Set<number> = grp_pgons_map.get(this_grp);
+                            const other_grp_set: Set<number> = grp_pgons_map.get(other_grp);
+                            for (const other_grp_pgon_i of Array.from(other_grp_set)) {
+                                this_grp_set.add(other_grp_pgon_i);
+                                pgon_grp_map.set(other_grp_pgon_i, this_grp);
+                            }
+                            grp_pgons_map.delete(other_grp);
+                        }
+                    } else if (pgon_grp_map.has(this_pgon_i)) {
+                        // console.log("2>>>",
+                        //     Array.from(grp_pgons_map),
+                        //     Array.from(pgon_grp_map)
+                        // );
+                        // we have a group for this pgon already
+                        // add other pgon to this group
+                        const this_grp: number = pgon_grp_map.get(this_pgon_i);
+                        console.log("this_grp = ", this_grp)
+                        grp_pgons_map.get(this_grp).add(other_pgon_i);
+                        pgon_grp_map.set(other_pgon_i, this_grp);
+                    } else if (pgon_grp_map.has(other_pgon_i)) {
+                        // console.log("3>>>",
+                        //     Array.from(grp_pgons_map),
+                        //     Array.from(pgon_grp_map)
+                        // );
+                        // we have a group for other pgon already
+                        // add this pgon to other group
+                        const other_grp: number = pgon_grp_map.get(other_pgon_i);
+                        grp_pgons_map.get(other_grp).add(this_pgon_i);
+                        pgon_grp_map.set(this_pgon_i, other_grp);
+                    } else {
+                        // console.log("4>>>",
+                        //     Array.from(grp_pgons_map),
+                        //     Array.from(pgon_grp_map)
+                        // );
+                        // we have no groups, so create a new group
+                        const grp = grp_count + 1;
+                        grp_count = grp;
+                        const grp_set: Set<number> = new Set();
+                        grp_pgons_map.set(grp, grp_set);
+                        // this
+                        grp_set.add(this_pgon_i);
+                        pgon_grp_map.set(this_pgon_i, grp);
+                        // other
+                        grp_set.add(other_pgon_i);
+                        pgon_grp_map.set(other_pgon_i, grp);
+                    }
+                }
+            }
+            if (!has_neighbour) {
+                // console.log("Pgon has no neighbour", pgon_i)
+                // if a pgon has no neighbours then we treat its edges as a group
+                // this will result in a duplicate of the pgon being generated
+                const grp = grp_count + 1;
+                grp_count = grp;
+                grp_pgons_map.set(grp, new Set([pgon_i]));
+            }
+        }
+        // console.log("grp_pgons_map = ", grp_pgons_map);
+        // loop through the pgon groups
+        const new_pgons_i: number[] = [];
+        for (const grp_set of Array.from(grp_pgons_map.values())) {
+            // create a map from start posi to the edge, skipping edges with dups
+            // these are the edges that will be used in the loops
+            const startposi_edge_map: Map<number, number> = new Map();
+            for (const pgon_i of Array.from(grp_set)) { // grp_set.values()) { // TODO check this <<<<<<
+                for (const edge_i of map_pgon_edges.get(pgon_i)) {
+                    if (posiskey_edge_map.has(edge_posisrevkey_map.get(edge_i))) { continue; }
+                    const posis_i: number[] = edge_posis_map.get(edge_i);
+                    startposi_edge_map.set(posis_i[0], edge_i);
+                }
+            }
+            // create loops for new pgons
+            // when joining pgons, it can result in more that one new pgon
+            // for example, consider a cylinder with optn top and bottom
+            // when you join, you get two disks, one top and one bottom
+            const loops_edges_i: number[][] = []; // list of lists of edges
+            const num_edges: number = startposi_edge_map.size;
+            let next_edge_i: number = startposi_edge_map.values().next().value; // first edge
+            // get an array of edge attribute objects
+            const edge_attribs: GIAttribMapBase[] = 
+                this.modeldata.attribs.getAttribNames(EEntType.EDGE).map( name => 
+                    this.modeldata.attribs.getAttrib(EEntType.EDGE, name));
+            // now follow the edges, they should form one or more closed loops
+            // at the same time as following the loops, also store the edge attribs for later
+            loops_edges_i.push([]);
+            let loop_start_posi: number = edge_posis_map.get(next_edge_i)[0]
+            const used_edges_set: Set<number> = new Set();
+            for (let i = 0; i < num_edges; i++) {
+                // check that no error orccured
+                if (used_edges_set.has(next_edge_i)) {
+                    throw new Error("Join error: Edge already used.")
+                }
+                used_edges_set.add(next_edge_i);
+                // add the edge to the last loop
+                loops_edges_i[loops_edges_i.length - 1].push(next_edge_i);
+                // check if we are at end of loop
+                const edge_posis_i: number[] = edge_posis_map.get(next_edge_i);
+                if (edge_posis_i[1] === loop_start_posi) {
+                    // current loop is finished, so there must be another loop
+                    loops_edges_i.push([]);
+                    // get next edge that is not already being used
+                    const edges_i: number[] = Array.from(startposi_edge_map.values());
+                    for (const edge_i of edges_i) {
+                        if (!used_edges_set.has(edge_i)) {
+                            // we found an unused edge, set it as next edge
+                            next_edge_i = edge_i;
+                            // set the start of the new loop
+                            loop_start_posi = edge_posis_map.get(next_edge_i)[0];
+                            break;
+                        }
+                    }
+                } else {
+                    // the loop continues
+                    // keep going, get the next edge
+                    next_edge_i = startposi_edge_map.get(edge_posis_i[1]);
+                }
+            }
+            // now make the joined polygons and also add edge attributes
+            for (const loop_edges_i of loops_edges_i) {
+                if (loop_edges_i.length < 3) { continue; }
+                const posis_i: number[] = loop_edges_i.map( edge_i => edge_posis_map.get(edge_i)[0] );
+                const new_pgon_i: number = this.modeldata.geom.add.addPgon(posis_i);
+                new_pgons_i.push(new_pgon_i);
+                // copy the edge attributes from the existing edge to the new edge
+                if (edge_attribs.length) {
+                    const new_edges_i: number[] = this.modeldata.geom.nav.navAnyToEdge(EEntType.PGON, new_pgon_i);
+                    for (let i = 0; i < new_edges_i.length; i++) {
+                        for (const edge_attrib of edge_attribs) {
+                            const loop_edge_i: number = loop_edges_i[i];
+                            const attrib_val: TAttribDataTypes = edge_attrib.getEntVal(loop_edge_i);
+                            edge_attrib.setEntVal(new_edges_i[i], attrib_val);
+                        }
+                    }
+                }
+            }
+        }
+        return new_pgons_i;
     }
     // ================================================================================================
     /**
