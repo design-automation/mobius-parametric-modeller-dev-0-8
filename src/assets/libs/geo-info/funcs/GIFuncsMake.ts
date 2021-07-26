@@ -1036,7 +1036,6 @@ export class GIFuncsMake {
                         // we have a group for this pgon already
                         // add other pgon to this group
                         const this_grp: number = pgon_grp_map.get(this_pgon_i);
-                        console.log("this_grp = ", this_grp)
                         grp_pgons_map.get(this_grp).add(other_pgon_i);
                         pgon_grp_map.set(other_pgon_i, this_grp);
                     } else if (pgon_grp_map.has(other_pgon_i)) {
@@ -1095,13 +1094,10 @@ export class GIFuncsMake {
             // when joining pgons, it can result in more that one new pgon
             // for example, consider a cylinder with optn top and bottom
             // when you join, you get two disks, one top and one bottom
-            const loops_edges_i: number[][] = []; // list of lists of edges
             const num_edges: number = startposi_edge_map.size;
+            if (num_edges === 0) { continue; }
             let next_edge_i: number = startposi_edge_map.values().next().value; // first edge
-            // get an array of edge attribute objects
-            const edge_attribs: GIAttribMapBase[] = 
-                this.modeldata.attribs.getAttribNames(EEntType.EDGE).map( name => 
-                    this.modeldata.attribs.getAttrib(EEntType.EDGE, name));
+            const loops_edges_i: number[][] = []; // list of lists of edges
             // now follow the edges, they should form one or more closed loops
             // at the same time as following the loops, also store the edge attribs for later
             loops_edges_i.push([]);
@@ -1137,6 +1133,10 @@ export class GIFuncsMake {
                     next_edge_i = startposi_edge_map.get(edge_posis_i[1]);
                 }
             }
+            // get an array of edge attribute objects
+            const edge_attribs: GIAttribMapBase[] =
+                this.modeldata.attribs.getAttribNames(EEntType.EDGE).map(name =>
+                    this.modeldata.attribs.getAttrib(EEntType.EDGE, name));
             // now make the joined polygons and also add edge attributes
             for (const loop_edges_i of loops_edges_i) {
                 if (loop_edges_i.length < 3) { continue; }
