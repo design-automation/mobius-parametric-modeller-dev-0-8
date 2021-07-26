@@ -15,6 +15,7 @@ import { isRay, isPlane, isXYZ } from '@assets/libs/geo-info/common_func';
 import { rayFromPln } from '@assets/core/inline/_ray';
 import { plnFromRay } from '@assets/core/inline/_plane';
 import * as THREE from 'three';
+import { Vector3 } from 'three';
 const EPS = 1e-8;
 
 // ================================================================================================
@@ -137,6 +138,7 @@ function _centerOfMassOfPgon(__model__: GIModel, pgon_i: number): [Txyz, number]
     const tri_areas: number[] = [];
     let total_area = 0;
     const map_posi_to_v3: Map< number, THREE.Vector3> = new Map();
+    let midpoint: THREE.Vector3 = new Vector3();
     for (const tri_i of __model__.modeldata.geom.nav_tri.navPgonToTri(pgon_i)) {
         const posis_i: number[] = __model__.modeldata.geom.nav_tri.navTriToPosi(tri_i);
         const posis_v3: THREE.Vector3[] = [];
@@ -149,8 +151,7 @@ function _centerOfMassOfPgon(__model__: GIModel, pgon_i: number): [Txyz, number]
             posis_v3.push(posi_v3);
         }
         const tri_tjs: THREE.Triangle = new THREE.Triangle(posis_v3[0], posis_v3[1], posis_v3[2]);
-        let midpoint: THREE.Vector3;
-        midpoint = tri_tjs.getMidpoint(midpoint);
+        tri_tjs.getMidpoint(midpoint);
         const midpoint_xyz: Txyz = [midpoint.x, midpoint.y, midpoint.z];
         const area: number = tri_tjs.getArea();
         tri_midpoints.push(midpoint_xyz);
