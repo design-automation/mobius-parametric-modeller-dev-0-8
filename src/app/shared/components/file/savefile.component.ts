@@ -320,7 +320,7 @@ export class SaveFileComponent implements OnDestroy{
         });
     }
 
-    static fileDownloadString(f: IMobius): {'name': string, 'file': string} {
+    static fileDownloadString(f: IMobius, noModification = false): {'name': string, 'file': string} {
         const main_settings = JSON.parse(localStorage.getItem('mpm_settings'));
         const geo_settings = JSON.parse(localStorage.getItem('geo_settings'));
         const aframe_settings = JSON.parse(localStorage.getItem('aframe_settings'));
@@ -389,13 +389,10 @@ export class SaveFileComponent implements OnDestroy{
         // reset each node's id in the new copy of the flowchart --> the same node will
         // have different id everytime it's saved
         // (to track if one single .mob file is passed around among the students)
-        for (const node of savedfile.flowchart.nodes) {
-            node.id = IdGenerator.getNodeID();
-            // for (const prod of node.state.procedure) {
-            //     prod.selected = false;
-            //     prod.lastSelected = false;
-            // }
-            // node.state.procedure = [];
+        if (!noModification) {
+            for (const node of savedfile.flowchart.nodes) {
+                node.id = IdGenerator.getNodeID();
+            }
         }
 
         // **** need to modify this when changing the input's constant function:
@@ -409,7 +406,9 @@ export class SaveFileComponent implements OnDestroy{
 
         // unselect all selected nodes + edges in the new flowchart copy
         savedfile.flowchart.meta.selected_nodes = [0];
-        savedfile.flowchart.last_updated = new Date();
+        if (!noModification) {
+            savedfile.flowchart.last_updated = new Date();
+        }
         for (const edge of savedfile.flowchart.edges) {
             // delete edge['selected'];
             edge.selected = false;

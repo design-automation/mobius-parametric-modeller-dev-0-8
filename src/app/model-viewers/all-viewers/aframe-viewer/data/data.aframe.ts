@@ -10,12 +10,14 @@ const DEFAUT_CAMERA_POS = {
     rotation: new AFRAME.THREE.Vector3(0, 0, 0)
 }
 function postloadSkyBGImg() {
-    const sky = document.getElementById('aframe_sky_background');
-    (<any> sky).setAttribute('src', '#aframe_sky_background_img');
+    const sky = <any> document.getElementById('aframe_sky_background');
+    sky.setAttribute('src', '');
+    sky.setAttribute('src', '#aframe_sky_background_img');
 }
 function postloadSkyFGImg() {
-    const sky = document.getElementById('aframe_sky_foreground');
-    (<any> sky).setAttribute('src', '#aframe_sky_foreground_img');
+    const sky = <any> document.getElementById('aframe_sky_foreground');
+    sky.setAttribute('src', '');
+    sky.setAttribute('src', '#aframe_sky_foreground_img');
 }
 function resizeScene() {
     const scene = document.getElementById('aframe_scene');
@@ -330,6 +332,7 @@ export class DataAframe {
                 const allImages = document.querySelectorAll('img');
                 allImages.forEach(img => {
                     if (img.id !== 'aframe_sky_background_img') { return; }
+                    img.id = 'aframe_sky_background_img_tbr';
                     try {
                         assetEnt.removeChild(img);
                     } catch (ex) {}
@@ -360,6 +363,7 @@ export class DataAframe {
                     const allImages = document.querySelectorAll('img');
                     allImages.forEach(img => {
                         if (img.id !== 'aframe_sky_foreground_img') { return; }
+                        img.id = 'aframe_sky_foreground_img_tbr';
                         try {
                             assetEnt.removeChild(img);
                         } catch (ex) {}
@@ -393,13 +397,13 @@ export class DataAframe {
     }
 
     getCameraPos() {
-        const cameraEl = this.camera;
-        if (cameraEl) {
+        const camEl = this.camera;
+        if (camEl) {
             const camera_pos = {
                 position: new AFRAME.THREE.Vector3(),
-                rotation: cameraEl.getAttribute('rotation')
+                rotation: camEl.getAttribute('rotation')
             };
-            cameraEl.object3D.getWorldPosition(camera_pos.position);
+            camEl.object3D.getWorldPosition(camera_pos.position);
             camera_pos.position.z =  - camera_pos.position.z;
             camera_pos.position.y = this.settings.camera.position.y;
             camera_pos.rotation.y = 0 - camera_pos.rotation.y;
@@ -417,77 +421,84 @@ export class DataAframe {
         this.camPosList = [{
             name: 'default',
             value: null
+        }, {
+            name: 'VR edit',
+            value: null
         }];
         for (let i = 0; i < pts.length; i++) {
             if (!ptAttribs[i]) { continue; }
             const cam = JSON.parse(JSON.stringify(ptAttribs[i]));
             cam.pos = pos[i];
             if (!cam.name) { cam.name = pts[i]; }
-            this.camPosList.push(cam);
+            this.camPosList.splice(this.camPosList.length - 1, 0, cam);
         }
     }
 
     updateCamera(camera_pos = DEFAUT_CAMERA_POS) {
+        console.log(camera_pos)
         if (this.vr.enabled) {
             setTimeout(() => {
-                const cameraEl = <any> document.getElementById('aframe_camera_rig');
-                if (cameraEl) {
-                    // const trueCameraPos = new AFRAME.THREE.Vector3();
-                    // trueCameraPos.copy(this.vr.camera_position);
-                    // trueCameraPos.z = - trueCameraPos.z;
-                    // cameraEl.setAttribute('position', trueCameraPos);
-                    // const trueCamerarot = new AFRAME.THREE.Vector3();
-                    // trueCamerarot.copy(this.vr.camera_rotation);
-                    // trueCamerarot.y = 0 - this.vr.camera_rotation.y;
-                    // cameraEl.setAttribute('look-controls', {enabled: false});
-                    // cameraEl.setAttribute('rotation', trueCamerarot);
-                    // const newX = cameraEl.object3D.rotation.x;
-                    // const newY = cameraEl.object3D.rotation.y;
-                    // try {
-                    //     cameraEl.components['look-controls'].pitchObject.rotation.x = newX;
-                    //     cameraEl.components['look-controls'].yawObject.rotation.y = newY;
-                    // } catch (ex) {}
-                    // cameraEl.setAttribute('look-controls', {enabled: true});
+                const rigEl = <any> document.getElementById('aframe_camera_rig');
+                const camEl = <any> document.getElementById('aframe_look_camera');
+                if (rigEl) {
+                    const trueCameraPos = new AFRAME.THREE.Vector3();
+                    trueCameraPos.copy(this.vr.camera_position);
+                    trueCameraPos.z = - trueCameraPos.z;
+                    rigEl.setAttribute('position', trueCameraPos);
+                    const trueCamerarot = new AFRAME.THREE.Vector3();
+                    trueCamerarot.copy(this.vr.camera_rotation);
+                    trueCamerarot.y = 0 - this.vr.camera_rotation.y;
+                    camEl.setAttribute('custom-look-controls', {enabled: false});
+                    camEl.setAttribute('rotation', trueCamerarot);
+                    const newX = camEl.object3D.rotation.x;
+                    const newY = camEl.object3D.rotation.y;
+                    try {
+                        camEl.components['custom-look-controls'].pitchObject.rotation.x = newX;
+                        camEl.components['custom-look-controls'].yawObject.rotation.y = newY;
+                    } catch (ex) {}
+                    camEl.setAttribute('custom-look-controls', {enabled: true});
                 }
             }, 0);
             return;
         }
         setTimeout(() => {
-            const cameraEl = <any> document.getElementById('aframe_camera_rig');
-            if (cameraEl && camera_pos) {
-                // const trueCameraPos = new AFRAME.THREE.Vector3();
-                // trueCameraPos.copy(camera_pos.position);
-                // trueCameraPos.z = - trueCameraPos.z;
-                // cameraEl.setAttribute('position', trueCameraPos);
+            const rigEl = <any> document.getElementById('aframe_camera_rig');
+            const camEl = <any> document.getElementById('aframe_look_camera');
+            if (rigEl && camera_pos) {
+                const trueCameraPos = new AFRAME.THREE.Vector3();
+                trueCameraPos.copy(camera_pos.position);
+                trueCameraPos.z = - trueCameraPos.z;
+                rigEl.setAttribute('position', trueCameraPos);
 
-                // const trueCamerarot = new AFRAME.THREE.Vector3();
-                // trueCamerarot.copy(camera_pos.rotation);
-                // trueCamerarot.y = 0 - camera_pos.rotation.y;
-                // cameraEl.setAttribute('look-controls', {enabled: false});
-                // cameraEl.setAttribute('rotation', trueCamerarot);
-                // const newX = cameraEl.object3D.rotation.x;
-                // const newY = cameraEl.object3D.rotation.y;
-                // try {
-                //     cameraEl.components['look-controls'].pitchObject.rotation.x = newX;
-                //     cameraEl.components['look-controls'].yawObject.rotation.y = newY;
-                // } catch (ex) {}
-                // cameraEl.setAttribute('look-controls', {enabled: true});
+                const trueCamerarot = new AFRAME.THREE.Vector3();
+                trueCamerarot.copy(camera_pos.rotation);
+                trueCamerarot.y = 0 - camera_pos.rotation.y;
+                camEl.setAttribute('custom-look-controls', {enabled: false});
+                camEl.setAttribute('rotation', trueCamerarot);
+                const newX = camEl.object3D.rotation.x;
+                const newY = camEl.object3D.rotation.y;
+                try {
+                    camEl.components['custom-look-controls'].pitchObject.rotation.x = newX;
+                    camEl.components['custom-look-controls'].yawObject.rotation.y = newY;
+                } catch (ex) {}
+                camEl.setAttribute('custom-look-controls', {enabled: true});
             }
         }, 0);
     }
 
     updateCameraPos(posDetails) {
-        const cameraEl = <any> document.getElementById('aframe_camera_rig');
+        const rigEl = <any> document.getElementById('aframe_camera_rig');
+        const camEl = <any> document.getElementById('aframe_look_camera');
         const skyBG = document.getElementById('aframe_sky_background');
         const skyFG = document.getElementById('aframe_sky_foreground');
         const mobiusGeom = document.getElementById('mobius_geom');
         skyBG.setAttribute('rotation', '0 0 0');
         skyFG.setAttribute('rotation', '0 0 0');
         mobiusGeom.setAttribute('scale', '1 1 1');
-        console.log('~~~~~~~~', posDetails)
+
         if (!posDetails || !posDetails.pos || posDetails.pos.length < 2) {
             this.staticCamOn = false;
-            cameraEl.setAttribute('custom-wasd-controls', 'enabled: true; acceleration: 100%; fly: false');
+            rigEl.setAttribute('custom-wasd-controls', 'enabled: true; acceleration: 100%; fly: false');
             this.updateSky();
             // this.updateCamera(this.settings.camera);
             return;
@@ -502,7 +513,7 @@ export class DataAframe {
             }
         }
         this.staticCamOn = true;
-        cameraEl.setAttribute('custom-wasd-controls', 'enabled: false;');
+        rigEl.setAttribute('custom-wasd-controls', 'enabled: false;');
         const camPos = new AFRAME.THREE.Vector3(0, 0, 0);
         camPos.x = posDetails.pos[0] * scaleVal;
         camPos.z = (0 - posDetails.pos[1]) * scaleVal;
@@ -510,14 +521,14 @@ export class DataAframe {
         if (!camPos.y && camPos.y !== 0) {
             camPos.y = 10 * scaleVal;
         }
-        cameraEl.setAttribute('position', camPos);
+        rigEl.setAttribute('position', camPos);
         if (posDetails.camera_rotation) {
-            cameraEl.setAttribute('rotation', new AFRAME.THREE.Vector3(0, 0 - posDetails.camera_rotation, 0));
-            const newX = cameraEl.object3D.rotation.x;
-            const newY = cameraEl.object3D.rotation.y;
+            camEl.setAttribute('rotation', new AFRAME.THREE.Vector3(0, 0 - posDetails.camera_rotation, 0));
+            const newX = camEl.object3D.rotation.x;
+            const newY = camEl.object3D.rotation.y;
             try {
-                cameraEl.components['look-controls'].pitchObject.rotation.x = newX;
-                cameraEl.components['look-controls'].yawObject.rotation.y = newY;
+                camEl.components['custom-look-controls'].pitchObject.rotation.x = newX;
+                camEl.components['custom-look-controls'].yawObject.rotation.y = newY;
             } catch (ex) {}
         }
 
@@ -536,6 +547,7 @@ export class DataAframe {
                 const allImages = document.querySelectorAll('img');
                 allImages.forEach(img => {
                     if (img.id !== 'aframe_sky_background_img') { return; }
+                    img.id = 'aframe_sky_background_img_tbr';
                     try {
                         assetEnt.removeChild(img);
                     } catch (ex) {}
@@ -565,6 +577,7 @@ export class DataAframe {
                 const allImages = document.querySelectorAll('img');
                 allImages.forEach(img => {
                     if (img.id !== 'aframe_sky_foreground_img') { return; }
+                    img.id = 'aframe_sky_foreground_img_tbr';
                     try {
                         assetEnt.removeChild(img);
                     } catch (ex) {}

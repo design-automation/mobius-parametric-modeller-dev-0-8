@@ -246,7 +246,8 @@ button.mat-menu-item:hover{
 #headerDialog{
     position: relative;
     background-color: $color6;
-    top: 10%;
+    margin-top: 100px;
+    // top: 10%;
 
     .closebutton {
         position:absolute;

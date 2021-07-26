@@ -79,8 +79,9 @@ export class AframeViewerComponent implements OnInit, OnDestroy{
     ngOnInit() {
         this.getSettings();
         localStorage.setItem('aframe_default_settings', JSON.stringify(aframe_default_settings));
-        // this.temp_camera_pos = this.dataService.getThreejsScene().perspCam.position;
-
+        if (this.vr.enabled) {
+            this.selectedCamPos = this.camPosList.length - 1;
+        }
         this.settingsUpdateInterval = setInterval(() => {
             if (this.mainDataService.aframeViewerSettingsUpdated) {
                 this.settings = JSON.parse(localStorage.getItem('aframe_settings'));
@@ -105,40 +106,56 @@ export class AframeViewerComponent implements OnInit, OnDestroy{
     public onEventAction(event) {
         if (event.type === 'posListUpdate' && event.posList) {
             this.camPosList = event.posList;
-            if (this.camPosList && this.camPosList.length > 1) {
-                this.showCamPosList = true;
-            } else {
-                this.showCamPosList = false;
-                this.selectedCamPos = 0;
-                this.dataService.aframeCamPos = 'default';
-                this.changePos(0);
-            }
-            if (this.showCamPosList && this.dataService.aframeCamPos) {
+            if (this.dataService.aframeCamPos) {
                 let posCheck = false;
                 for (let i = 0 ; i < this.camPosList.length; i ++) {
                     if (this.dataService.aframeCamPos === this.camPosList[i].name) {
-                        posCheck = true;
+                        this.selectedCamPos = i;
                         this.changePos(i);
+                        posCheck = true;
                     }
                 }
                 if (!posCheck) {
-                    this.selectedCamPos = 0;
-                    this.dataService.aframeCamPos = 'default';
-                    this.changePos(0);
+                    if (this.vr.enabled) {
+                        this.selectedCamPos = this.camPosList.length - 1;
+                        this.dataService.aframeCamPos = 'VR edit';
+                    } else {
+                        this.selectedCamPos = 0;
+                        this.dataService.aframeCamPos = 'default';
+                    }
+                    this.changePos(this.selectedCamPos);
                 }
             }
+            this.showCamPosList = true;
+            setTimeout(() => {
+                const selCamPosEl = <HTMLSelectElement> document.getElementById('selCamPosEl');
+                selCamPosEl.value = this.selectedCamPos.toString();
+            }, 0);
         }
     }
 
     changePos(value) {
         const selectedIndex = Number(value);
-        // this.selectedCamPos = this.camPosList[selectedIndex];
         this.selectedCamPos = selectedIndex;
         const aframeData = this.dataService.getAframeData();
-        if (selectedIndex > 0) {
-            aframeData.updateCameraPos(this.camPosList[selectedIndex]);
-        } else {
+        if (selectedIndex === this.camPosList.length - 1) {
             aframeData.updateCameraPos(null);
+            this.vr.enabled = true;
+            this.vr.background_url = this.settings.vr.background_url;
+            this.vr.foreground_url = this.settings.vr.foreground_url;
+            aframeData.updateVRSettings(this.vr);
+            aframeData.refreshModel(this.threeJSDataService.getThreejsScene());
+        } else if (selectedIndex === 0) {
+            aframeData.updateCameraPos(null);
+            this.vr.enabled = false;
+            this.vr.background_url = '';
+            this.vr.foreground_url = '';
+            aframeData.updateVRSettings(this.vr);
+            aframeData.refreshModel(this.threeJSDataService.getThreejsScene());
+            this.vr.background_url = this.settings.vr.background_url;
+            this.vr.foreground_url = this.settings.vr.foreground_url;
+        } else {
+            aframeData.updateCameraPos(this.camPosList[selectedIndex]);
         }
         this.dataService.aframeCamPos = this.camPosList[selectedIndex].name;
         (<HTMLElement> document.activeElement).blur();
@@ -501,5 +518,21 @@ export class AframeViewerComponent implements OnInit, OnDestroy{
         this.settings = JSON.parse(JSON.stringify(aframe_default_settings));
         this.temp_camera_pos = JSON.parse(JSON.stringify(aframe_default_settings.camera.position));
         this.temp_camera_rot = JSON.parse(JSON.stringify(aframe_default_settings.camera.rotation));
+    }
+
+    updatePos(event) {
+        try {
+            const pos = JSON.parse(event.target.value);
+            this.vr.camera_position.copy(pos);
+        } catch (ex) {}
+    }
+
+    updateLook(event) {
+        try {
+            const rot = JSON.parse(event.target.value);
+            this.vr.camera_rotation.x = rot._x;
+            this.vr.camera_rotation.y = rot._y;
+            this.vr.camera_rotation.z = rot._z;
+        } catch (ex) {}
     }
 }
