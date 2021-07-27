@@ -17,16 +17,10 @@ export class HelpViewerComponent implements DoCheck, OnDestroy {
     mdConverter = new showdown.Converter({literalMidWordUnderscores: true});
     modList;
 
-    // TODO: update mobius url
-    urlString: string;
     /**
      * constructor
      */
     constructor(private mainDataService: DataService) {
-        this.urlString = `${window.location.origin}` +
-                        '/flowchart?file=' +
-                        'https://raw.githubusercontent.com/design-automation/' +
-                        'mobius-parametric-modeller/master/src/assets/gallery/function_examples/';
         this.modList = [{
             name: 'UI',
             srcDir: 'assets/typedoc-json/docUI',
@@ -56,6 +50,19 @@ export class HelpViewerComponent implements DoCheck, OnDestroy {
 
         this.output = this.mainDataService.helpViewData[0];
         this.activeMod = this.mainDataService.helpViewData[1];
+        if (window.location.search) {
+            const helpSectionURI = decodeURI(window.location.search).split('docSection=');
+            if (helpSectionURI.length > 0) {
+                const modData = helpSectionURI[1].split('&')[0].split('.');
+                for (const modGroup of this.modList) {
+                    if (modGroup.name === modData[0]) {
+                        this.output = undefined;
+                        this.activeMod = `${modGroup.srcDir}/${modData[1]}.md`;
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     ngOnDestroy() {

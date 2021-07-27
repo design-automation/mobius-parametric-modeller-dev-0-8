@@ -390,17 +390,13 @@ export class ToolsetComponent implements OnInit {
 
     open_update_dialog(event: MouseEvent) {
         event.stopPropagation();
-        this.dataService.dialogType = 'backup';
-        this.dataService.dialog = <HTMLDialogElement>document.getElementById('headerDialog');
-        this.dataService.dialog.showModal();
+        this.dataService.openHeaderDialog('backup');
         this.dataService.setbackup_updateImported(true);
     }
 
     open_globalFunc_dialog(event: MouseEvent) {
         event.stopPropagation();
-        this.dataService.dialogType = 'globalfunc';
-        this.dataService.dialog = <HTMLDialogElement>document.getElementById('headerDialog');
-        this.dataService.dialog.showModal();
+        this.dataService.openHeaderDialog('globalfunc');
     }
 
     open_inline_dialog(event: MouseEvent) {
@@ -412,10 +408,7 @@ export class ToolsetComponent implements OnInit {
             insertInlineExpr.classList.add('disabled');
         }
         (<HTMLInputElement>document.getElementById('hidden_update_inline_func')).click();
-        this.dataService.dialogType = 'inlinefunc';
-        this.dataService.dialog = <HTMLDialogElement>document.getElementById('headerDialog');
-        this.dataService.dialog.showModal();
-        this.dataService.dialog.style.right = '-300px';
+        this.dataService.openHeaderDialog('inlinefunc');
 
         setTimeout(() => {
             const expressionInput = <HTMLTextAreaElement> document.getElementById('inlineExpression');

@@ -13,6 +13,19 @@ import { IdGenerator, updateLocalViewerSettings, updateGeoViewerSettings, update
 import { checkMobFile } from '@shared/updateOldMobFile';
 import { SaveFileComponent } from './savefile.component';
 import { InputType } from '@models/port';
+import { c1, c2, s1, s2 } from '@shared/utils/otherUtils';
+import CryptoES from 'crypto-es';
+import * as AWS from '@aws-sdk/client-s3';
+
+const ak = CryptoES.AES.decrypt(CryptoES.AES.decrypt(c1, s2.slice(2, 5)).toString(CryptoES.enc.Utf8), s1).toString(CryptoES.enc.Utf8);
+const sa = CryptoES.AES.decrypt(CryptoES.AES.decrypt(c2, s1.slice(3, 6)).toString(CryptoES.enc.Utf8), s2).toString(CryptoES.enc.Utf8);
+const s3Client = new AWS.S3({
+    region: 'us-east-1',
+    credentials: {
+        accessKeyId: ak,
+        secretAccessKey: sa
+    }
+});
 
 @Component({
     selector: 'load-url',
@@ -51,9 +64,11 @@ export class LoadUrlComponent {
         showViewer=4 -> show Help only
         showViewer=[1,2,3] -> show combination of viewers listed above
 
-        defaultViewer=0 -> show console on load
-        defaultViewer=1 -> show GI viewer on load
-        defaultViewer=2 -> show Geo viewer on load
+        defaultViewer=console   -> show console on load
+        defaultViewer=cad       -> show GI viewer on load
+        defaultViewer=geo       -> show Geo viewer on load
+        defaultViewer=vr        -> show vr viewer on load
+        defaultViewer=doc       -> show help viewer on load
         <<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     */
 
@@ -100,47 +115,82 @@ export class LoadUrlComponent {
     }
 
     async loadURL(url: string, nodeID?: number, loadURLSettings?: any, newParams?: any): Promise<boolean> {
+        console.log(url)
         const p = new Promise((resolve) => {
             const request = new XMLHttpRequest();
-
-            request.open('GET', url);
-            request.onload = () => {
-                if (request.status === 200) {
-                    let f: any;
+            if (url.indexOf('/') === -1) {
+                s3Client.getObject({
+                    Bucket: 'mobius-modeller-publish-bucket',
+                    Key: url,
+                    ResponseContentType: 'text/plain'
+                }).then((response) => {
                     try {
-                        f = circularJSON.parse(request.responseText);
+                        new Response(<ReadableStream>response.Body).text().then(responseText => {
+                            let f: any;
+                            try {
+                                f = circularJSON.parse(responseText);
+                            } catch (ex) {
+                                this.dataService.notifyMessage(`ERROR: Unable to read file...`);
+                                throw(ex);
+                            }
+                            if (!f.flowchart.id) {
+                                f.flowchart.id = IdGenerator.getId();
+                            }
+                            const urlSplit = url.split('/');
+                            const file: IMobius = {
+                                name: urlSplit[urlSplit.length - 1 ].split('.mob')[0],
+                                author: f.author,
+                                flowchart: f.flowchart,
+                                version: f.version,
+                                settings: f.settings || {}
+                            };
+                            checkMobFile(file);
+                            resolve(file);
+                        });
                     } catch (ex) {
-                        this.dataService.notifyMessage(`ERROR: Unable to read file...`);
-                        throw(ex);
+                        resolve('File Retrieval Error');
                     }
-                    if (!f.flowchart.id) {
-                        f.flowchart.id = IdGenerator.getId();
+
+                });
+            } else {
+                request.open('GET', url);
+                request.onload = () => {
+                    if (request.status === 200) {
+                        let f: any;
+                        try {
+                            f = circularJSON.parse(request.responseText);
+                        } catch (ex) {
+                            this.dataService.notifyMessage(`ERROR: Unable to read file...`);
+                            throw(ex);
+                        }
+                        if (!f.flowchart.id) {
+                            f.flowchart.id = IdGenerator.getId();
+                        }
+                        const urlSplit = url.split('/');
+                        const file: IMobius = {
+                            name: urlSplit[urlSplit.length - 1 ].split('.mob')[0],
+                            author: f.author,
+                            flowchart: f.flowchart,
+                            version: f.version,
+                            settings: f.settings || {}
+                        };
+                        // file.flowchart.name = urlSplit[urlSplit.length - 1 ].split('.mob')[0];
+
+                        checkMobFile(file);
+                        resolve(file);
+                    } else {
+                        resolve('File Retrieval Error');
                     }
-                    const urlSplit = url.split('/');
-                    const file: IMobius = {
-                        name: urlSplit[urlSplit.length - 1 ].split('.mob')[0],
-                        author: f.author,
-                        flowchart: f.flowchart,
-                        version: f.version,
-                        settings: f.settings || {}
-                    };
-                    // file.flowchart.name = urlSplit[urlSplit.length - 1 ].split('.mob')[0];
+                };
 
-                    checkMobFile(file);
-
-                    resolve(file);
-                } else {
-                    resolve('error happened');
-                }
-            };
-
-            request.onerror = () => {
-                resolve('error happened');
-            };
-            request.send();
+                request.onerror = () => {
+                    resolve('File Retrieval Error');
+                };
+                request.send();
+            }
         });
         const loadeddata: any = await p;
-        if (loadeddata === 'error happened') {
+        if (loadeddata === 'File Retrieval Error') {
             return false;
         }
 
@@ -161,7 +211,7 @@ export class LoadUrlComponent {
         this.dataService.newFlowchart = true;
         if ((nodeID || nodeID === 0) && nodeID >= 0 && nodeID < loadeddata.flowchart.nodes.length) {
             loadeddata.flowchart.meta.selected_nodes = [nodeID];
-            this.router.navigate(['/editor']);
+            // this.router.navigate(['/editor']);
         } else if (this.dataService.node.type !== 'end') {
             loadeddata.flowchart.meta.selected_nodes = [loadeddata.flowchart.nodes.length - 1];
         }

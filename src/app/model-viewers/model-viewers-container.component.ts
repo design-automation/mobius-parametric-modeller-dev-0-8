@@ -8,6 +8,18 @@ import { Router } from '@angular/router';
 import { GIModel } from '@assets/libs/geo-info/GIModel';
 import { _parameterTypes } from '@assets/core/modules';
 
+const VIEWER_MATCHING = {
+    '1': 'GIViewerComponent',
+    '2': 'GIGeoViewerComponent',
+    '3': 'ConsoleViewerComponent',
+    // '4': 'HelpViewerComponent',
+    'cad': 'GIViewerComponent',
+    'geo': 'GIGeoViewerComponent',
+    'vr': 'AframeViewerComponent',
+    'console': 'ConsoleViewerComponent',
+    // 'doc': 'HelpViewerComponent'
+};
+
 /**
  * A component that contains all the viewers.
  * This component is used in /app/appmodule/app.component.html
@@ -39,16 +51,19 @@ export class DataViewersContainerComponent implements DoCheck, OnInit, OnDestroy
         const page = this.router.url.split('?')[0]
         viewCheck = this.router.url.split('showViewer=');
         this.Viewers = [];
-        if (viewCheck.length === 1) { viewCheck = '';
-        } else { viewCheck = decodeURIComponent(viewCheck[1].split('&')[0]); }
+        if (viewCheck.length === 1) {
+            viewCheck = '';
+        } else {
+            viewCheck = decodeURIComponent(viewCheck[1].split('&')[0]);
+        }
         if (viewCheck.length > 0 && viewCheck[0] === '[') {
-            viewCheck = JSON.parse(viewCheck.split('&')[0]).sort();
-            for (const v of viewCheck) {
-                for (const view of Viewers) {
-                    if (v === 1 && view.component.name === 'GIViewerComponent') { this.Viewers.push(view); }
-                    if (v === 2 && view.component.name === 'GIGeoViewerComponent') { this.Viewers.push(view); }
-                    if (v === 3 && view.component.name === 'ConsoleViewerComponent') { this.Viewers.push(view); }
-                    if (v === 4 && view.component.name === 'HelpViewerComponent') { this.Viewers.push(view); }
+            viewCheck = viewCheck.slice(1, -1).split(',');
+            for (const view of Viewers) {
+                for (const v of viewCheck) {
+                    if (view.component.name === VIEWER_MATCHING[v.trim()]) {
+                        this.Viewers.push(view);
+                        break;
+                    }
                 }
             }
         } else {
@@ -80,6 +95,21 @@ export class DataViewersContainerComponent implements DoCheck, OnInit, OnDestroy
                     break;
                 case '2':
                     this.dataService.activeView = 'Geo Viewer';
+                    break;
+                case 'console':
+                    this.dataService.activeView = 'Console';
+                    break;
+                case 'cad':
+                    this.dataService.activeView = 'CAD Viewer';
+                    break;
+                case 'geo':
+                    this.dataService.activeView = 'Geo Viewer';
+                    break;
+                case 'vr':
+                    this.dataService.activeView = 'VR Viewer';
+                    break;
+                case 'doc':
+                    this.dataService.activeView = 'Documentation';
                     break;
             }
         }
