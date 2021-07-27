@@ -40,7 +40,7 @@ Mobius `.mob` script file includes:
 
 Saving a Mobius script file saves the camera position and target, as defined in the settings of each viewer. In order to update these camera settings to match the current camera view, you need to go to the settings and click the `Get` button for camera position and target. For example, below are the settings for the CAD viewer:
 
-![Camera settings in teh CAD Viewer](assets/typedoc-json/docUI/imgs/menu_camera_settings.png)
+![Camera settings in the CAD Viewer](assets/typedoc-json/docUI/imgs/menu_camera_settings.png)
 
 ## SAVE TO LS
 
@@ -103,7 +103,7 @@ If a script is reading or writing multiple files, then it is annoying for the pe
 
 **Updating Global Functions**
 
-Another use fo Local Storage is updating global function. (For more information, see [Global Functions].)
+Another use of Local Storage is updating global function. (For more information, see [Global Functions].)
 
 When working with global functions, you may often need to edit that function for some reason. In such cases, you can have two Mobius script files open at the same time: the main script and the global function script. After making edits to the global function script, you can save it to Local Storage. Then, in the main script that calls the global function, you can open the global function manager and click the refresh button to update the global function.
 
@@ -111,7 +111,25 @@ When working with global functions, you may often need to edit that function for
 
 ## PUBLISH
 
-[to be completed]
+Opens a dialog box for publishing your Mobius script.
+
+When a script is published, it is uploaded to the cloud. This allows people on the internet to interact with your script in various ways, such as changing the parameters and executing the script. Note that when you publish your script, other people will also be able to download your script and copy it.
+
+When a mobius script is published, it is uploaded to the cloud. The first dialog box that opens up allows you to select how you would like to upload your Mobius script. There are two options:
+* _Upload to Cloud_: This will upload the currently open script to the Mobius cloud. The file will be saved in the cloud for one year, after which it will be automatically deleted. You will not be able to manually delete the file after it has been uploaded.
+* _Use URL_: This will allow you to use a previously uploaded Mobius Script. (For example, you can upload your file to platforms such Github or Dropbox.) 
+
+![Updating global functions](assets/typedoc-json/docUI/imgs/publish_start.png)
+
+If you choose the 'Use URL' option, then a second dialog box pops up, allowing you to enter the URL. Just paste your existing URL into the input box. The URL will then be validated, to make sure that it points directly to a Mobius script file. 
+
+![Updating global functions](assets/typedoc-json/docUI/imgs/publish_url.png)
+
+In the last dialog box, you generate a link for the uploaded file. For the link there are various settings that you can define. For example, maybe you want a link that, when clicked, will open Mobius Modeller and load your file, and also only show the dashboard and 3D viewer, hiding the Flowchart and Editor tabs. (This may be useful for people who want to see your model, but who do not understand any of the coding behind it.)
+
+[To be completed]
+
+![Updating global functions](assets/typedoc-json/docUI/imgs/publish_settings.png)
 
 ## SETTINGS
 

@@ -149,17 +149,18 @@
 <dialog id='headerDialog'>
     <button class='closebutton' (click)='closeDialog(false)'><mat-icon class='icon'>close</mat-icon></button>
     <div id='headerDialog_publish'>
-        <p>To publish your model, please upload your Möbius (.mob) file to an online file server to allows
-        you to share the URL. (For example, you can upload your file to platforms such Github or Dropbox.) 
-        Then paste the URL for file below, and click 'Validate Url'.</p>
+        <p>In order publish your script, your Möbius (.mob) file needs to be uploaded to cloud. Clicking the 'Upload' button 
+        will upload the currently open script to the Mobius cloud. The file will be saved on the cloud for 1 year, after which it will be
+        automatically deleted. It will not be possible to manually delete your file. Clicking the 'Use URL' button will allow 
+        you to use a URL of script that you previously uploaded.</p>
         <br>
-        <button (click)='publishUpload($event)'>Upload Model to Cloud</button>
+        <button (click)='publishUpload($event)'>Upload to Cloud</button>
         <button (click)="publishUrl($event)">Use URL</button>
     </div>
     <div id='headerDialog_publish_url'>
-        <p>To publish your model, please upload your Möbius (.mob) file to an online file server to allows
-        you to share the URL. (For example, you can upload your file to platforms such Github or Dropbox.) 
-        Then paste the URL for file below, and click 'Validate Url'. </p>
+        <p>You can publish a Möbius script (.mob) that you previously uploaded to an online file server that allows you to share the
+        URL. (For example, you can upload your file to platforms such Github or Dropbox.) Please paste the URL for file below,
+        and click 'Validate Url'. </p>
         <br>
         <ng-container *ngIf="urlValid === true;else validateUrlTemplate">
             <hr>
