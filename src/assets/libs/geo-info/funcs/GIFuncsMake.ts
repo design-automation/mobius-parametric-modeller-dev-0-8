@@ -953,7 +953,7 @@ export class GIFuncsMake {
     // Return the posi pair, the key and the rev key for an edge
     private _edgeKeys(edge_i: number): [[number, number], string, string] {
         const posis_i: [number, number] = this.modeldata.geom.nav.navAnyToPosi(EEntType.EDGE, edge_i) as [number, number];
-        if (posis_i.length != 2) { return null; } // just one posi
+        if (posis_i.length !== 2) { return null; } // just one posi
         return [posis_i, posis_i[0] + '_' + posis_i[1], posis_i[1] + '_' + posis_i[0]];
     }
     // Join polylines
@@ -990,7 +990,7 @@ export class GIFuncsMake {
                 if (keys === null) { continue; } // just one posi
                 filt_edges_i.push(edge_i);
                 edge_posis_map.set(edge_i, keys[0]);
-                edge_posisrevkey_map.set(edge_i, keys[2])
+                edge_posisrevkey_map.set(edge_i, keys[2]);
                 map_edge_pgon.set(edge_i, pgon_i);
                 posiskey_edge_map.set(keys[1], edge_i);
             }
@@ -1011,7 +1011,7 @@ export class GIFuncsMake {
                     const this_pgon_i: number = map_edge_pgon.get(edge_i);
                     const other_pgon_i: number = map_edge_pgon.get(other_edge_i);
                     if (pgon_grp_map.has(this_pgon_i) && pgon_grp_map.has(other_pgon_i)) {
-                        // console.log("1>>>", 
+                        // console.log("1>>>",
                         //     Array.from(grp_pgons_map),
                         //     Array.from(pgon_grp_map)
                         // );
@@ -1101,12 +1101,12 @@ export class GIFuncsMake {
             // now follow the edges, they should form one or more closed loops
             // at the same time as following the loops, also store the edge attribs for later
             loops_edges_i.push([]);
-            let loop_start_posi: number = edge_posis_map.get(next_edge_i)[0]
+            let loop_start_posi: number = edge_posis_map.get(next_edge_i)[0];
             const used_edges_set: Set<number> = new Set();
             for (let i = 0; i < num_edges; i++) {
                 // check that no error orccured
                 if (used_edges_set.has(next_edge_i)) {
-                    throw new Error("Join error: Edge already used.")
+                    throw new Error('Join error: Edge already used.');
                 }
                 used_edges_set.add(next_edge_i);
                 // add the edge to the last loop
@@ -1219,7 +1219,7 @@ export class GIFuncsMake {
         // return
         return [above, below];
     }
-    //-------------------
+    // -------------------
     // cut each edge in the input geometry (can be edges from different objects)
     // store the intersection posi in a sparse array
     // the array is nested, the two indexes [i1][i2] is the two posi ends of the edge, the value is the isect posi
