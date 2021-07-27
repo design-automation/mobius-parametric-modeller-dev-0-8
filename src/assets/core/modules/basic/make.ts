@@ -284,11 +284,11 @@ export function Sweep(__model__: GIModel, entities: TId|TId[], x_section: TId, d
 // ================================================================================================
 /**
  * Joins existing polyline or polygons to create new polyline or polygons.
- * 
+ *
  * In order to be joined, the polylines or polygons must be fused (i.e. share the same positions)
- * 
+ *
  * The existing polygons are not affected.
- * 
+ *
  * Note: Joining polylines currently not implemented.
  *
  * @param __model__
