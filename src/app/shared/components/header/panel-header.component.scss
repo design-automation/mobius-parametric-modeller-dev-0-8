@@ -108,7 +108,7 @@ button.mat-menu-item:hover{
     // }
 }
 */
-#dropdownMenu {
+#mobiusDropdownMenu {
     display: none;
     position: fixed;
     top: 40px;
@@ -248,6 +248,10 @@ button.mat-menu-item:hover{
     background-color: $color6;
     margin-top: 100px;
     // top: 10%;
+    input {
+        vertical-align: bottom;
+        margin: 6px 3px 0px 4px
+    }
 
     .closebutton {
         position:absolute;
@@ -256,7 +260,28 @@ button.mat-menu-item:hover{
         right: 5px;
     }
 
-    .genUrlDialog{
+    #headerDialog_publish{
+        font-family: 12px sans-serif;
+        color: $color1;
+        background-color: $color6;
+        top: 10%;
+        max-width: 605px;
+        padding: 5px;
+    
+        select{
+            color: $color1;
+        }
+    
+        button{
+            width: fit-content;
+            padding: 0px 5px 0px 5px;
+            margin-right: 10px;
+            background-color: $color5;
+            color: $color1;
+        }
+    }
+
+    #headerDialog_publish_url{
         font-family: 12px sans-serif;
         color: $color1;
         background-color: $color6;
@@ -297,7 +322,7 @@ button.mat-menu-item:hover{
         }
     }
 
-    .loadBackupDialog{
+    #headerDialog_backup{
         font-family: 12px sans-serif;
         color: $color1;
         background-color: $color6;
@@ -427,7 +452,7 @@ button.mat-menu-item:hover{
             }
         }
     }
-    .globalFuncDialog{
+    #headerDialog_globalfunc{
         font-family: 12px sans-serif;
         color: $color1;
         background-color: $color6;
@@ -474,7 +499,7 @@ button.mat-menu-item:hover{
             display: inline-block;
         }
     }
-    .inlineFuncDialog{
+    #headerDialog_inlinefunc{
         font-family: 12px sans-serif;
         color: $color1;
         background-color: $color6;
@@ -670,7 +695,7 @@ button.mat-menu-item:hover{
             color: $color8;
         }
     }
-    .settingsDialog{
+    #headerDialog_settings{
         font-family: 12px sans-serif;
         color: $color1;
         background-color: $color6;
@@ -706,7 +731,7 @@ button.mat-menu-item:hover{
             padding-left: 20px;
         }
     }
-    .saveLocalDialog{
+    #headerDialog_savels{
         font-family: 12px sans-serif;
         color: $color1;
         background-color: $color6;

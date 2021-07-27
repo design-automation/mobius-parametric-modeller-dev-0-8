@@ -528,6 +528,7 @@ export class AframeViewerComponent implements OnInit, OnDestroy{
     }
 
     updateLook(event) {
+        event.stopPropagation();
         try {
             const rot = JSON.parse(event.target.value);
             this.vr.camera_rotation.x = rot._x;

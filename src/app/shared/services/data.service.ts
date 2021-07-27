@@ -11,6 +11,9 @@ import { inline_func } from '@assets/core/inline/inline';
 import { GIModel } from '@assets/libs/geo-info/GIModel';
 import { _parameterTypes } from '@assets/core/modules';
 
+const DIALOGSLIST = ['publish', 'publish_url', 'backup', 'globalfunc',
+                     'inlinefunc', 'savels', 'settings'];
+
 @Injectable()
 export class DataService {
     private static _data: IMobius = {
@@ -384,4 +387,23 @@ export class DataService {
         this.toolsetUpdate.next();
     }
 
+    openHeaderDialog(dialogType) {
+        DataService._dialogType = dialogType;
+        DataService._dialog = <HTMLDialogElement>document.getElementById('headerDialog');
+        try {
+            DataService._dialog.showModal();
+        } catch (ex) {}
+        for (const dialog of DIALOGSLIST) {
+            const childNode = <HTMLDialogElement>document.getElementById('headerDialog_' + dialog);
+            if (!childNode) { continue; }
+            if (dialog === DataService._dialogType) {
+                childNode.style.display = 'block';
+            } else {
+                childNode.style.display = 'none';
+            }
+        }
+        if (dialogType === 'backup') {
+            this.setbackup_header();
+        }
+    }
 }

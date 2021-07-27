@@ -605,12 +605,12 @@ export class CodeUtils {
                   observer.next(fl);
                   observer.complete();
               } else {
-                  observer.error('error happened');
+                  observer.error('File Retrieval Error');
               }
           };
 
           request.onerror = () => {
-          observer.error('error happened');
+          observer.error('File Retrieval Error');
           };
           request.send();
         });

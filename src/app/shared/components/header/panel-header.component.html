@@ -52,12 +52,12 @@
     <div class='filename-container' *ngIf='executeCheck'>
         <!-- <div class = "divider"></div> -->
 
-        <!-- <div id='filename' (click)='openDropdownMenu($event)'>{{getTitle()}}</div> -->
-        <button id='dropdownMenuButton' class='menu-btn' (click)='openDropdownMenu($event)' title='Menu'>
+        <!-- <div id='filename' (click)='openMobiusDropdownMenu($event)'>{{getTitle()}}</div> -->
+        <button id='mobiusDropdownMenuButton' class='menu-btn' (click)='openMobiusDropdownMenu($event)' title='Menu'>
             <mat-icon>menu</mat-icon>
         </button>
         <div class='dropdownContainer'>
-            <div id="dropdownMenu">
+            <div id="mobiusDropdownMenu">
                 <button onclick="document.getElementById('newfile').click();"
                 title="Create New Script"> 
                     <mat-icon>rotate_left</mat-icon> 
@@ -148,36 +148,29 @@
 
 <dialog id='headerDialog'>
     <button class='closebutton' (click)='closeDialog(false)'><mat-icon class='icon'>close</mat-icon></button>
-    <div class='genUrlDialog' *ngIf='checkDialog("publish")'>
+    <div id='headerDialog_publish'>
         <p>To publish your model, please upload your Möbius (.mob) file to an online file server to allows
         you to share the URL. (For example, you can upload your file to platforms such Github or Dropbox.) 
         Then paste the URL for file below, and click 'Validate Url'.</p>
         <br>
-        <button (click)='uploadHashFile()'>Upload Model to Cloud</button>
-        <button (click)="openHeaderDialog($event, 'publish_url')">Use URL</button>
+        <button (click)='publishUpload($event)'>Upload Model to Cloud</button>
+        <button (click)="publishUrl($event)">Use URL</button>
     </div>
-    <div class='genUrlDialog' *ngIf='checkDialog("publish_url")'>
+    <div id='headerDialog_publish_url'>
         <p>To publish your model, please upload your Möbius (.mob) file to an online file server to allows
         you to share the URL. (For example, you can upload your file to platforms such Github or Dropbox.) 
         Then paste the URL for file below, and click 'Validate Url'. </p>
         <br>
-        MOB file URL: <br>
-        <textarea [(ngModel)]='urlSet[0]' 
-                [class.valid]='urlValid === true' 
-                [class.invalid]='urlValid === false'
-                (keyup)='urlValid = undefined'></textarea><br>
-        <button (click)='validateUrl()'>Validate Url</button>
-    
-        <ng-container *ngIf='urlValid === true'>
-        
+        <ng-container *ngIf="urlValid === true;else validateUrlTemplate">
             <hr>
-            <input id='radio1' type='radio' name='showPage' value='publish' [(ngModel)]='urlSet[1]'/> <label for='radio1'>Uneditable</label> <br>
-            <input id='radio2' type='radio' name='showPage' value='dashboard' [(ngModel)]='urlSet[1]'/> <label for='radio2'>Editable</label>
+            <input id='showPage1' type='radio' name='showPage' value='publish' [(ngModel)]='urlSet[1]'/> <label for='showPage1'>Uneditable (publish page)</label> <br>
+            <input id='showPage2' type='radio' name='showPage' value='dashboard' [(ngModel)]='urlSet[1]'/> <label for='showPage2'>Editable (Mobius dashboard page)</label> <br>
+            <input id='showPage3' type='radio' name='showPage' value='editor' [(ngModel)]='urlSet[1]'/> <label for='showPage3'>Editable (Mobius editor page)</label>
             <hr>
         
-            <ng-container *ngIf='urlSet[1] == "dashboard"; else publish_template'>
-                <input id='radio3' type='radio' name='displayType' value='&node=' [(ngModel)]='urlSet[2]'/> <label for='radio3'>Show Specific Node</label> <br>
-                <input id='radio4' type='radio' name='displayType' value='' [(ngModel)]='urlSet[2]'/> <label for='radio4'>Show Dashboard</label> 
+            <ng-container *ngIf='urlSet[1] !== "publish"; else publish_template'>
+                <input id='displayType1' type='radio' name='displayType' value='&node=' [(ngModel)]='urlSet[2]'/> <label for='displayType1'>Show Specific Node</label> <br>
+                <input id='displayType2' type='radio' name='displayType' value='' [(ngModel)]='urlSet[2]'/> <label for='displayType2'>Show Dashboard</label> 
                 <hr>
                 <ng-container *ngIf='urlSet[2] == "&node="'>
                     Node Shown: <select [(ngModel)]='urlSet[3]'>
@@ -188,20 +181,44 @@
             </ng-container>
             <ng-template #publish_template>
                 <label>CAD Viewer Available</label><br>
-                <input id='radio3D' type='radio' name='showViewer' value='&showViewer=1' [(ngModel)]='urlSet[4]'/> <label for='radio3D'>CAD Viewer</label> <br>
-                <input id='radioGeo' type='radio' name='showViewer' value='&showViewer=2' [(ngModel)]='urlSet[4]'/> <label for='radioGeo'>Geo Viewer</label> <br>
-                <input id='radioBothV' type='radio' name='showViewer' value='' [(ngModel)]='urlSet[4]'/> <label for='radioBothV'>Both</label><br>
-                <input id='radioNoneV' type='radio' name='showViewer' value='&showViewer=0' [(ngModel)]='urlSet[4]'/> <label for='radioNoneV'>None</label>
+                <input id='radio3D' type='checkbox' [(ngModel)]='urlSet[4][0]' /> <label for='radio3D'>CAD Viewer</label> <br>
+                <input id='radioGeo' type='checkbox' [(ngModel)]='urlSet[4][1]'/> <label for='radioGeo'>Geo Viewer</label> <br>
+                <input id='radioVR' type='checkbox' [(ngModel)]='urlSet[4][2]'/> <label for='radioVR'>VR Viewer</label> <br>
+                <input id='radioConsole' type='checkbox' [(ngModel)]='urlSet[4][3]'/> <label for='radioConsole'>Console</label> <br>
                 <hr>
             </ng-template>
             <label>Default Viewer</label><br>
-            <input id='radioDefault3D' type='radio' name='defaultViewer' value='' [(ngModel)]='urlSet[5]'/>
-            <label for='radioDefault3D'>CAD Viewer</label> <br>
-            <input id='radioDefaultGeo' type='radio' name='defaultViewer' value='&defaultViewer=2' [(ngModel)]='urlSet[5]'/>
-            <label for='radioDefaultGeo'>Geo Viewer</label> <br>
-            <input id='radioDefaultConsole' type='radio' name='defaultViewer' value='defaultViewer=0' [(ngModel)]='urlSet[5]'/>
-            <label for='radioDefaultConsole'>Console Viewer</label>
+            <ng-container *ngIf='urlSet[1] !== "publish" || urlSet[4][0]' >
+                <input id='radioDefault3D' type='radio' name='defaultViewer' value='&defaultViewer=cad' [(ngModel)]='urlSet[5]'/>
+                <label for='radioDefault3D'>CAD Viewer</label> <br>
+            </ng-container>
+            <ng-container *ngIf='urlSet[1] !== "publish" || urlSet[4][1]' >
+                <input id='radioDefaultGeo' type='radio' name='defaultViewer' value='&defaultViewer=geo' [(ngModel)]='urlSet[5]'/>
+                <label for='radioDefaultGeo'>Geo Viewer</label> <br>
+            </ng-container>
+            <ng-container *ngIf='urlSet[1] !== "publish" || urlSet[4][2]' >
+                <input id='radioDefaultVR' type='radio' name='defaultViewer' value='&defaultViewer=vr' [(ngModel)]='urlSet[5]'/>
+                <label for='radioDefaultVR'>VR Viewer</label> <br>
+            </ng-container>
+            <ng-container *ngIf='urlSet[1] !== "publish" || urlSet[4][3]' >
+                <input id='radioDefaultConsole' type='radio' name='defaultViewer' value='&defaultViewer=console' [(ngModel)]='urlSet[5]'/>
+                <label for='radioDefaultConsole'>Console</label> <br>
+            </ng-container>
+            <ng-container *ngIf='urlSet[1] !== "publish"' >
+                <input id='radioDefaultDocs' type='radio' name='defaultViewer' value='&defaultViewer=doc' [(ngModel)]='urlSet[5]'/>
+                <label for='radioDefaultDocs'>Documentation</label>
+            </ng-container>
             <hr>
+            <ng-container *ngIf='urlSet[5] === "&defaultViewer=docs"'>
+                <label>Doc Section</label><br>
+                <select [(ngModel)]='urlSet[6]'>
+                    <optgroup *ngFor='let docMod of docModList' label ={{docMod.name}}>
+                        <option *ngFor='let section of docMod.modnames' value={{section}}>{{section.split('.')[1]}}</option>
+                    </optgroup>
+                </select>
+                <hr>
+            </ng-container>
+
 
             <button (click)='generateUrl()'>Create Link</button>
             <button (click)='generateEmbed()'>Create Embed Code</button>
@@ -212,8 +229,16 @@
                 <textarea [class.disabled]='true' id='generatedLink' disabled></textarea>
             </div>
         </ng-container>
+        <ng-template #validateUrlTemplate>
+            MOB file URL: <br>
+            <textarea [(ngModel)]='urlSet[0]'
+                    [class.valid]='urlValid === true' 
+                    [class.invalid]='urlValid === false'
+                    (keyup)='urlValid = undefined'></textarea><br>
+            <button (click)='validateUrl()'>Validate Url</button>
+        </ng-template>
     </div>
-    <div class='loadBackupDialog' *ngIf='checkDialog("backup")'>
+    <div id='headerDialog_backup'>
         <p>Select File from Local Storage: </p>
         <br>
         <div class="tab">
@@ -246,7 +271,7 @@
         <button class='downloadBackupButton' (click)="downloadBackup($event)"><mat-icon class='icon'>cloud_download_outline</mat-icon></button>
         <button class='deleteBackupButton' (click)="deleteBackup($event)"><mat-icon class='icon'>delete_outline</mat-icon></button>
     </div>
-    <div class='globalFuncDialog' *ngIf='checkDialog("globalfunc")'>
+    <div id='headerDialog_globalfunc'>
         <p>Manage Global Functions: </p>
         <br>
         <div *ngFor='let fn of flowchart.functions'>
@@ -271,18 +296,17 @@
         <button class='addGlobalButton' (click)="addGlobalFunc($event)">Import File</button>
         <button class='addGlobalButton' (click)="addGlobalFuncLS($event)">Import LS</button>
     </div>
-    <div class='inlineFuncDialog' *ngIf='checkDialog("inlinefunc")'>
+    <div id='headerDialog_inlinefunc'>
         <p>Create Expression: </p>
         <br>
         <div class='inlineFuncContainer'>
-            <input id='search_inline' class='searchBar' placeholder='Search Inline Function' value='' (keyup)="searchInlineFuncs($event)">
+            <input id='search_inline' class='searchBar' placeholder='Search Inline Function' value='' (keyup)="searchInlineFuncs()">
             <br>
             <br>
             <ng-container *ngFor='let fnCategory of searchedInlineFunc'>
                 <button  id='inlineAcc_{{fnCategory[0]}}' class='inlinefuncAccordion' (mousedown)='disableFocus($event)' (click)='openInlineMenu($event, fnCategory[0])'>{{fnCategory[0]}}</button>
                 <div id='inlinefunc_{{fnCategory[0]}}' class='inlinefuncDiv'>
                     <ul class='inlinefuncUL'>
-                        <!-- <li *ngFor='let fn of fnCategory[1]' (mousedown)='disableFocus($event)' (click)='addInlineFunc(fn)' title='{{getInlineHoverText(fn, fnCategory[0])}}'> -->
                         <li *ngFor='let fn of fnCategory[1]' (mousedown)='disableFocus($event)' (click)='addInlineFunc(fn)'>
                             {{fn}}
                             <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='updateInlineHelpText($event, fn, fnCategory[0])'>
@@ -304,16 +328,16 @@
             <button (click)='copyInlineFunc()'>Copy</button>
         </div>
     </div>
-    <div class='saveLocalDialog' *ngIf='checkDialog("savels")'>
+    <div id='headerDialog_savels'>
         <p>Save File to Local Storage as: </p>
         <br>
         <input id='savels-name' class='fileNameInput' name='savels-name' value={{flowchart.name}}>.mob
         <br>
         <br>
-        <button class='saveButtons' (click)="saveBackup(true)">Apply</button>
+        <button class='saveButtons' (click)="saveBackup()">Apply</button>
         <button class='saveButtons' (click)="closeDialog(true)">Cancel</button>
     </div>
-    <div class='settingsDialog' *ngIf='checkDialog("settings")'>
+    <div id='headerDialog_settings'>
         <p>Mobius Settings:</p>
         <br>
         <div class='settingLine'>
@@ -377,6 +401,6 @@
         <br>
         <br>
         <button class='settingsButton' (click)="closeDialog()">Cancel</button>
-        <button class='settingsButton' (click)="updateSettings($event, backup)">Apply</button>
+        <button class='settingsButton' (click)="updateSettings()">Apply</button>
     </div>
 </dialog>

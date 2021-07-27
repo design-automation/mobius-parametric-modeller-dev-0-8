@@ -13,7 +13,7 @@ import { checkNodeValidity } from '@shared/parser';
 import { c1, c2, s1, s2 } from '@shared/utils/otherUtils';
 import { DownloadUtils } from '../file/download.utils';
 import { inline_func } from '@assets/core/inline/inline';
-import { InlineDocList, AllFunctionDoc } from '@shared/decorators';
+import { InlineDocList, AllFunctionDoc, ModuleList } from '@shared/decorators';
 import CryptoES from 'crypto-es';
 import * as showdown from 'showdown';
 import * as AWS from '@aws-sdk/client-s3';
@@ -48,7 +48,7 @@ export class PanelHeaderComponent implements OnDestroy {
     selectedBackups: string[] = [];
     textareaMousedown = false;
 
-    urlSet = ['', 'publish', '', '', '', ''];
+    urlSet = ['', 'publish', '', '', [true, true, true, true], '', ''];
     urlValid: boolean;
     urlNodes;
 
@@ -61,6 +61,7 @@ export class PanelHeaderComponent implements OnDestroy {
     inlineDocs = {};
     searchedInlineFunc;
 
+    docModList;
 
     constructor(private dataService: DataService, private keyboardService: KeyboardService, private router: Router) {
         SaveFileComponent.updateBackupList();
@@ -134,6 +135,27 @@ export class PanelHeaderComponent implements OnDestroy {
                 }
             }
         }
+
+        this.docModList = [{
+            name: 'UI',
+            modnames: ['UI.gallery', 'UI.dashboard', 'UI.flowchart', 'UI.editor', 'UI.menu'],
+        }, {
+            name: 'Viewers',
+            modnames: ['Viewers.gi-viewer', 'Viewers.geo-viewer', 'Viewers.vr-viewer', 'Viewers.console'],
+        }, {
+            name: 'Operations',
+            modnames: ['Operations.variable', 'Operations.comment', 'Operations.expression',
+                       'Operations.control_flow', 'Operations.local_func', 'Operations.global_func'],
+        }, {
+            name: 'Modules',
+            modnames: [],
+        }];
+
+        for (const mod of ModuleList) {
+            if (mod.module[0] === '_') {continue; }
+            this.docModList[3].modnames.push('Modules.' + mod.module);
+        }
+
     }
 
     ngOnDestroy() {
@@ -212,18 +234,17 @@ export class PanelHeaderComponent implements OnDestroy {
         // this.router.navigate(['/dashboard']);
     }
 
-    openDropdownMenu(e: MouseEvent) {
-        let stl = document.getElementById('dropdownMenu').style;
+    openMobiusDropdownMenu(e: MouseEvent) {
+        e.stopPropagation();
+        const stl = document.getElementById('mobiusDropdownMenu').style;
         if (!stl.display || stl.display === 'none') {
-            stl.left = (document.getElementById('dropdownMenuButton').getBoundingClientRect().left + 34 - 100) + 'px';
+            stl.left = (document.getElementById('mobiusDropdownMenuButton').getBoundingClientRect().left + 34 - 100) + 'px';
             stl.display = 'block';
             // const bRect = (<Element>e.target).getBoundingClientRect();
             // stl.transform = `translate(` + bRect.left + `px, ` + bRect.height + `px)`;
         } else {
             stl.display = 'none';
         }
-        e.stopPropagation();
-        stl = null;
     }
 
     openNodeMenu(e: MouseEvent) {
@@ -241,7 +262,7 @@ export class PanelHeaderComponent implements OnDestroy {
         e.stopPropagation();
         this.dataService.helpView = AllFunctionDoc['menu'][path];
         this.dataService.toggleHelp(true);
-        const stl = document.getElementById('dropdownMenu').style;
+        const stl = document.getElementById('mobiusDropdownMenu').style;
         stl.display = 'none';
 
     }
@@ -259,14 +280,7 @@ export class PanelHeaderComponent implements OnDestroy {
 
     openHeaderDialog(event, dialogType: string) {
         event.stopPropagation();
-        this.dataService.dialogType = dialogType;
-        this.dataService.dialog = <HTMLDialogElement>document.getElementById('headerDialog');
-        try {
-            this.dataService.dialog.showModal();
-        } catch (ex) {}
-        if (dialogType === 'backup') {
-            this.dataService.setbackup_header();
-        }
+        this.dataService.openHeaderDialog(dialogType);
     }
 
 
@@ -552,9 +566,9 @@ export class PanelHeaderComponent implements OnDestroy {
         this.selectedBackups = [];
     }
 
-    deleteBackup(event: MouseEvent, filecode: string) {
+    deleteBackup(event: MouseEvent) {
         event.stopPropagation();
-        for (filecode of this.selectedBackups) {
+        for (const filecode of this.selectedBackups) {
             SaveFileComponent.deleteFile(filecode);
             const itemsString = localStorage.getItem('mobius_backup_list');
             if (!itemsString) { continue; }
@@ -662,9 +676,9 @@ export class PanelHeaderComponent implements OnDestroy {
         if ((<HTMLElement>event.target).id === 'addBackup' || (<HTMLElement>event.target).id === 'addBackupButton') {
             return;
         }
-        let dropdownMenu = document.getElementById('dropdownMenu');
-        if (dropdownMenu) {
-            dropdownMenu.style.display = 'none';
+        let mobiusDropdownMenu = document.getElementById('mobiusDropdownMenu');
+        if (mobiusDropdownMenu) {
+            mobiusDropdownMenu.style.display = 'none';
         }
         let nodeMenu = document.getElementById('nodeMenu');
         if (nodeMenu) {
@@ -695,7 +709,7 @@ export class PanelHeaderComponent implements OnDestroy {
                 this.dataService.dialog = null;
             }
         }
-        dropdownMenu = null;
+        mobiusDropdownMenu = null;
         nodeMenu = null;
         galleryMenu = null;
         helpMenu = null;
@@ -704,6 +718,8 @@ export class PanelHeaderComponent implements OnDestroy {
     @HostListener('window:copy', ['$event'])
     onWindowCopy(event: KeyboardEvent) {
         if (this.router.url.startsWith('/editor')) {
+            const targetName = (<HTMLElement> event.target).nodeName;
+            if ( targetName === 'TEXTAREA' || targetName === 'INPUT') { return; }
             document.getElementById('copyProdButton').click();
         }
     }
@@ -711,12 +727,16 @@ export class PanelHeaderComponent implements OnDestroy {
     @HostListener('window:cut', ['$event'])
     onWindowCut(event: KeyboardEvent) {
         if (this.router.url.startsWith('/editor')) {
+            const targetName = (<HTMLElement> event.target).nodeName;
+            if ( targetName === 'TEXTAREA' || targetName === 'INPUT') { return; }
             document.getElementById('cutProdButton').click();
         }
     }
     @HostListener('window:paste', ['$event'])
     onWindowPaste(event: KeyboardEvent) {
         if (this.router.url.startsWith('/editor')) {
+            const targetName = (<HTMLElement> event.target).nodeName;
+            if ( targetName === 'TEXTAREA' || targetName === 'INPUT') { return; }
             document.getElementById('pasteProdButton').click();
         }
     }
@@ -762,7 +782,7 @@ export class PanelHeaderComponent implements OnDestroy {
         }
         const request = new XMLHttpRequest();
 
-        let url = this.urlSet[0];
+        let url = <string> this.urlSet[0];
         if (url.indexOf('dropbox') !== -1) {
             url = url.replace('www', 'dl').replace('?dl=0', '');
         }
@@ -801,12 +821,32 @@ export class PanelHeaderComponent implements OnDestroy {
             this.urlSet[2] = '';
         }
 
-        let url = this.urlSet[0];
+        let url = <string> this.urlSet[0];
         if (url.indexOf('dropbox') !== -1) {
             url = url.replace('www', 'dl').replace('?dl=0', '');
         }
         url = url.replace(/^[\"\']|[\"\']$/g, '');
-        url = '_' + btoa(url);
+        // url = '_' + btoa(url);
+
+        let showViewerStr = '';
+        if (this.urlSet[1] === 'publish') {
+            const shownViewers = [];
+            if (this.urlSet[4][0]) { shownViewers.push('cad'); }
+            if (this.urlSet[4][1]) { shownViewers.push('geo'); }
+            if (this.urlSet[4][2]) { shownViewers.push('vr'); }
+            if (this.urlSet[4][3]) { shownViewers.push('console'); }
+            if (shownViewers.length < 4) {
+                showViewerStr = '&showViewer=%5B' + shownViewers.join(',') + '%5D';
+                if (shownViewers.indexOf((<string>this.urlSet[5]).split('=')[1]) === -1) {
+                    this.urlSet[5] = '';
+                }
+            }
+        }
+
+        let helpSection = '';
+        if (this.urlSet[5] === '&defaultViewer=docs' && this.urlSet[6] !== '') {
+            helpSection = '&docSection=' + this.urlSet[6];
+        }
 
         let txtArea = document.getElementById('generatedLink');
         let baseLink = window.location.origin;
@@ -814,7 +854,7 @@ export class PanelHeaderComponent implements OnDestroy {
             baseLink += '/mobius-parametric-modeller-dev-0-7';
         }
         txtArea.innerHTML = `${baseLink}/${this.urlSet[1]}` +
-            `?file=${url}${this.urlSet[2]}${this.urlSet[3]}${this.urlSet[4]}${this.urlSet[5]}`;
+            `?file=${url}${this.urlSet[2]}${this.urlSet[3]}${showViewerStr}${this.urlSet[5]}${helpSection}`;
         txtArea = null;
     }
 
@@ -831,16 +871,46 @@ export class PanelHeaderComponent implements OnDestroy {
             this.urlSet[2] = '';
         }
 
-        let url = this.urlSet[0];
+        let url = <string> this.urlSet[0];
         if (url.indexOf('dropbox') !== -1) {
             url = url.replace('www', 'dl').replace('?dl=0', '');
         }
         url = url.replace(/\//g, '%2F');
 
+        // let showViewerStr = '';
+        // for (let i = 0; i < this.urlSet[4].length; i++) {
+        //     showViewerStr += this.urlSet[4][i] ? '1' : '0';
+        // }
+        // if (showViewerStr === '1111') {
+        //     showViewerStr = '';
+        // } else {
+        //     showViewerStr = '&showViewer=' + showViewerStr;
+        // }
+
+        let showViewerStr = '';
+        if (this.urlSet[1] === 'publish') {
+            const shownViewers = [];
+            if (this.urlSet[4][0]) { shownViewers.push('cad'); }
+            if (this.urlSet[4][1]) { shownViewers.push('geo'); }
+            if (this.urlSet[4][2]) { shownViewers.push('vr'); }
+            if (this.urlSet[4][3]) { shownViewers.push('console'); }
+            if (shownViewers.length < 4) {
+                showViewerStr = '&showViewer=%5B' + shownViewers.join(',') + '%5D';
+                if (shownViewers.indexOf((<string>this.urlSet[5]).split('=')[1]) === -1) {
+                    this.urlSet[5] = '';
+                }
+            }
+        }
+
+        let helpSection = '';
+        if (this.urlSet[5] === '&defaultViewer=docs' && this.urlSet[6] !== '') {
+            helpSection = '&docSection=' + this.urlSet[6];
+        }
+
         let txtArea = document.getElementById('generatedLink');
         txtArea.innerHTML = `<iframe width='100%' height='600px' style='border: 1px solid black;' src="` +
             `${window.location.origin}/${this.urlSet[1]}` +
-            `?file=${url}${this.urlSet[2]}${this.urlSet[3]}${this.urlSet[4]}${this.urlSet[5]}"` +
+            `?file=${url}${this.urlSet[2]}${this.urlSet[3]}${showViewerStr}${this.urlSet[5]}${helpSection}"` +
             `></iframe>`;
         txtArea = null;
     }
@@ -1255,10 +1325,11 @@ export class PanelHeaderComponent implements OnDestroy {
         event.target.value = '';
     }
 
-    uploadHashFile() {
+    publishUpload(event) {
         document.getElementById('spinner-on').click();
         const fileStr = SaveFileComponent.fileDownloadString(this.dataService.file, true);
         const hashStr = CryptoES.SHA256(fileStr.file).toString();
+        console.log('hashedString:', hashStr)
         s3Client.putObject(
             {
                 Bucket: 'mobius-modeller-publish-bucket',
@@ -1266,16 +1337,25 @@ export class PanelHeaderComponent implements OnDestroy {
                 Body: fileStr.file,
                 ContentType: 'text/plain',
             },
-            function (err, result) {
+            (err, result) => {
                 if (err) {
                     console.log('Error placing file:', err);
                     document.getElementById('spinner-off').click();
                 } else {
+                    this.urlSet[0] = hashStr;
+                    this.urlValid = true;
                     console.log('successfully placed file');
                     document.getElementById('spinner-off').click();
+                    this.openHeaderDialog(event, 'publish_url');
                 }
             }
         );
+    }
+
+    publishUrl(event) {
+        this.openHeaderDialog(event, 'publish_url');
+        this.urlSet[0] = '';
+        this.urlValid = undefined;
     }
 
 }
