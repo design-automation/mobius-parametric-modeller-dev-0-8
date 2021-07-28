@@ -1,8 +1,7 @@
 import { GIModel } from '@libs/geo-info/GIModel';
 import { GeoSettings } from '../gi-geo-viewer.settings';
-import { EEntType, Txyz, TAttribDataTypes, LONGLAT } from '@libs/geo-info/common';
+import { TAttribDataTypes, LONGLAT } from '@libs/geo-info/common';
 import * as itowns from 'itowns/dist/itowns';
-import { DataService } from '../../gi-viewer/data/data.service';
 import * as THREE from 'three';
 import * as suncalc from 'suncalc';
 
@@ -69,13 +68,11 @@ export class DataGeo {
      *
      */
     public createGeoViewer(threejsScene) {
-
         const placement = {
             coord: new itowns.Coordinates('EPSG:4326', LONGLAT[0], LONGLAT[1]),
             range: 1000,
             tilt: 50
         };
-
         this.lightingCamera = new THREE.Camera();
 
         this.container = document.getElementById('threejs-geo-container');

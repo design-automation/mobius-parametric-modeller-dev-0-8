@@ -59,6 +59,10 @@ export class DataViewersContainerComponent implements DoCheck, OnInit, OnDestroy
         if (viewCheck.length > 0 && viewCheck[0] === '[') {
             viewCheck = viewCheck.slice(1, -1).split(',');
             for (const view of Viewers) {
+                if (view.component.name === 'HelpViewerComponent') {
+                    this.Viewers.push(view);
+                    continue;
+                }
                 for (const v of viewCheck) {
                     if (view.component.name === VIEWER_MATCHING[v.trim()]) {
                         this.Viewers.push(view);
@@ -69,10 +73,12 @@ export class DataViewersContainerComponent implements DoCheck, OnInit, OnDestroy
         } else {
             for (const view of Viewers) {
                 if (view.component.name === 'HelpViewerComponent') {
-                    if (page !== '/publish' && page !== '/minimal') {
-                        this.Viewers.push(view);
-                    }
-                    continue; }
+                    // if (page !== '/publish' && page !== '/minimal') {
+                    //     this.Viewers.push(view);
+                    // }
+                    this.Viewers.push(view);
+                    continue;
+                }
                 if (view.component.name === 'ConsoleViewerComponent') {
                     this.Viewers.push(view);
                     continue;
