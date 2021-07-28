@@ -854,7 +854,7 @@ export class PanelHeaderComponent implements OnDestroy {
         }
 
         let helpSection = '';
-        if (this.publishUrlSettings.defaultViewer === '&defaultViewer=docs' && this.publishUrlSettings.docSection !== '') {
+        if (this.publishUrlSettings.defaultViewer === '&defaultViewer=doc' && this.publishUrlSettings.docSection !== '') {
             helpSection = '&docSection=' + this.publishUrlSettings.docSection;
         }
 

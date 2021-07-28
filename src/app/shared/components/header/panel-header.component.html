@@ -212,7 +212,7 @@
                 <label for='radioDefaultDocs'>Documentation</label>
             </ng-container>
             <hr>
-            <ng-container *ngIf='publishUrlSettings.defaultViewer === "&defaultViewer=docs"'>
+            <ng-container *ngIf='publishUrlSettings.defaultViewer === "&defaultViewer=doc"'>
                 <label>Doc Section</label><br>
                 <select [(ngModel)]='publishUrlSettings.docSection'>
                     <optgroup *ngFor='let docMod of docModList' label ={{docMod.name}}>
