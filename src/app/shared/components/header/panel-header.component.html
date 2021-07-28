@@ -158,9 +158,8 @@
         <button (click)="publishUrl($event)">Use URL</button>
     </div>
     <div id='headerDialog_publish_url'>
-        <p>You can publish a Möbius script (.mob) that you previously uploaded to an online file server that allows you to share the
-        URL. (For example, you can upload your file to platforms such Github or Dropbox.) Please paste the URL for file below,
-        and click 'Validate Url'. </p>
+        <p>The user interface of the published Mobius script can be configured below. In addition, you can generate
+            two types of links: either a URL that can be shared or code that canbe embedded in a web page or blog. </p>
         <br>
         <ng-container *ngIf="urlValid === true;else validateUrlTemplate">
             <hr>
