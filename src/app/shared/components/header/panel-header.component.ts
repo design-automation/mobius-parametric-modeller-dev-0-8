@@ -48,7 +48,16 @@ export class PanelHeaderComponent implements OnDestroy {
     selectedBackups: string[] = [];
     textareaMousedown = false;
 
-    urlSet = ['', 'publish', '', '', [true, true, true, true], '', ''];
+    publishUrlSettings = {
+        mainURL: '',
+        navMode: 'publish',
+        navPage: 'dashboard',
+        showNode: '',
+        showNodeIdx: '',
+        showViewers: [true, true, true, true],
+        defaultViewer: '',
+        docSection: ''
+    };
     urlValid: boolean;
     urlNodes;
 
@@ -776,13 +785,13 @@ export class PanelHeaderComponent implements OnDestroy {
     }
 
     validateUrl() {
-        if (this.urlSet[0] === '') {
+        if (this.publishUrlSettings.mainURL === '') {
             this.urlValid = false;
             return;
         }
         const request = new XMLHttpRequest();
 
-        let url = <string> this.urlSet[0];
+        let url = <string> this.publishUrlSettings.mainURL;
         if (url.indexOf('dropbox') !== -1) {
             url = url.replace('www', 'dl').replace('?dl=0', '');
         }
@@ -808,111 +817,65 @@ export class PanelHeaderComponent implements OnDestroy {
         request.send();
     }
 
-    generateUrl() {
-        if (this.urlSet[0] === '') {
+    generatePublishUrl() {
+        if (this.publishUrlSettings.mainURL === '') {
             return;
         }
-        if (this.urlSet[1] === 'publish') {
-            this.urlSet[2] = '';
-            this.urlSet[3] = '';
-        } else if (this.urlSet[2] === '') {
-            this.urlSet[3] = '';
-        } else if (this.urlSet[3] === '') {
-            this.urlSet[2] = '';
+        const navPage = this.publishUrlSettings.navMode === 'publish' ? 'publish' : this.publishUrlSettings.navPage;
+        if (this.publishUrlSettings.navMode === 'publish') {
+            this.publishUrlSettings.showNode = '';
+            this.publishUrlSettings.showNodeIdx = '';
+        } else if (this.publishUrlSettings.showNode === '') {
+            this.publishUrlSettings.showNodeIdx = '';
+        } else if (this.publishUrlSettings.showNodeIdx === '') {
+            this.publishUrlSettings.showNode = '';
         }
 
-        let url = <string> this.urlSet[0];
+        let url = <string> this.publishUrlSettings.mainURL;
         if (url.indexOf('dropbox') !== -1) {
             url = url.replace('www', 'dl').replace('?dl=0', '');
         }
         url = url.replace(/^[\"\']|[\"\']$/g, '');
-        // url = '_' + btoa(url);
+        url = url.replace(/\//g, '%2F');
 
         let showViewerStr = '';
-        if (this.urlSet[1] === 'publish') {
+        if (this.publishUrlSettings.navMode === 'publish') {
             const shownViewers = [];
-            if (this.urlSet[4][0]) { shownViewers.push('cad'); }
-            if (this.urlSet[4][1]) { shownViewers.push('geo'); }
-            if (this.urlSet[4][2]) { shownViewers.push('vr'); }
-            if (this.urlSet[4][3]) { shownViewers.push('console'); }
+            if (this.publishUrlSettings.showViewers[0]) { shownViewers.push('cad'); }
+            if (this.publishUrlSettings.showViewers[1]) { shownViewers.push('geo'); }
+            if (this.publishUrlSettings.showViewers[2]) { shownViewers.push('vr'); }
+            if (this.publishUrlSettings.showViewers[3]) { shownViewers.push('console'); }
             if (shownViewers.length < 4) {
                 showViewerStr = '&showViewer=%5B' + shownViewers.join(',') + '%5D';
-                if (shownViewers.indexOf((<string>this.urlSet[5]).split('=')[1]) === -1) {
-                    this.urlSet[5] = '';
+                if (shownViewers.indexOf((<string>this.publishUrlSettings.defaultViewer).split('=')[1]) === -1) {
+                    this.publishUrlSettings.defaultViewer = '';
                 }
             }
         }
 
         let helpSection = '';
-        if (this.urlSet[5] === '&defaultViewer=docs' && this.urlSet[6] !== '') {
-            helpSection = '&docSection=' + this.urlSet[6];
+        if (this.publishUrlSettings.defaultViewer === '&defaultViewer=docs' && this.publishUrlSettings.docSection !== '') {
+            helpSection = '&docSection=' + this.publishUrlSettings.docSection;
         }
 
-        let txtArea = document.getElementById('generatedLink');
         let baseLink = window.location.origin;
         if (baseLink.indexOf('design-automation.github.io') !== -1) {
             baseLink += '/mobius-parametric-modeller-dev-0-7';
         }
-        txtArea.innerHTML = `${baseLink}/${this.urlSet[1]}` +
-            `?file=${url}${this.urlSet[2]}${this.urlSet[3]}${showViewerStr}${this.urlSet[5]}${helpSection}`;
-        txtArea = null;
+        return `${baseLink}/${navPage}` +
+            `?file=${url}${this.publishUrlSettings.showNode}${this.publishUrlSettings.showNodeIdx}` +
+            `${showViewerStr}${this.publishUrlSettings.defaultViewer}${helpSection}`;
+
+    }
+
+    generateUrl() {
+        const txtArea = document.getElementById('generatedLink');
+        txtArea.innerHTML = this.generatePublishUrl();
     }
 
     generateEmbed() {
-        if (this.urlSet[0] === '') {
-            return;
-        }
-        if (this.urlSet[1] === 'publish') {
-            this.urlSet[2] = '';
-            this.urlSet[3] = '';
-        } else if (this.urlSet[2] === '') {
-            this.urlSet[3] = '';
-        } else if (this.urlSet[3] === '') {
-            this.urlSet[2] = '';
-        }
-
-        let url = <string> this.urlSet[0];
-        if (url.indexOf('dropbox') !== -1) {
-            url = url.replace('www', 'dl').replace('?dl=0', '');
-        }
-        url = url.replace(/\//g, '%2F');
-
-        // let showViewerStr = '';
-        // for (let i = 0; i < this.urlSet[4].length; i++) {
-        //     showViewerStr += this.urlSet[4][i] ? '1' : '0';
-        // }
-        // if (showViewerStr === '1111') {
-        //     showViewerStr = '';
-        // } else {
-        //     showViewerStr = '&showViewer=' + showViewerStr;
-        // }
-
-        let showViewerStr = '';
-        if (this.urlSet[1] === 'publish') {
-            const shownViewers = [];
-            if (this.urlSet[4][0]) { shownViewers.push('cad'); }
-            if (this.urlSet[4][1]) { shownViewers.push('geo'); }
-            if (this.urlSet[4][2]) { shownViewers.push('vr'); }
-            if (this.urlSet[4][3]) { shownViewers.push('console'); }
-            if (shownViewers.length < 4) {
-                showViewerStr = '&showViewer=%5B' + shownViewers.join(',') + '%5D';
-                if (shownViewers.indexOf((<string>this.urlSet[5]).split('=')[1]) === -1) {
-                    this.urlSet[5] = '';
-                }
-            }
-        }
-
-        let helpSection = '';
-        if (this.urlSet[5] === '&defaultViewer=docs' && this.urlSet[6] !== '') {
-            helpSection = '&docSection=' + this.urlSet[6];
-        }
-
-        let txtArea = document.getElementById('generatedLink');
-        txtArea.innerHTML = `<iframe width='100%' height='600px' style='border: 1px solid black;' src="` +
-            `${window.location.origin}/${this.urlSet[1]}` +
-            `?file=${url}${this.urlSet[2]}${this.urlSet[3]}${showViewerStr}${this.urlSet[5]}${helpSection}"` +
-            `></iframe>`;
-        txtArea = null;
+        const txtArea = document.getElementById('generatedLink');
+        txtArea.innerHTML = `<iframe width='100%' height='600px' style='border: 1px solid black;' src="${this.generatePublishUrl()}"></iframe>`;
     }
 
     async refresh_global_func(event: MouseEvent, func) {
@@ -1342,7 +1305,7 @@ export class PanelHeaderComponent implements OnDestroy {
                     console.log('Error placing file:', err);
                     document.getElementById('spinner-off').click();
                 } else {
-                    this.urlSet[0] = hashStr;
+                    this.publishUrlSettings.mainURL = hashStr;
                     this.urlValid = true;
                     this.urlNodes = this.dataService.flowchart.nodes;
                     console.log('successfully placed file');
@@ -1355,7 +1318,7 @@ export class PanelHeaderComponent implements OnDestroy {
 
     publishUrl(event) {
         this.openHeaderDialog(event, 'publish_url');
-        this.urlSet[0] = '';
+        this.publishUrlSettings.mainURL = '';
         this.urlValid = undefined;
     }
 

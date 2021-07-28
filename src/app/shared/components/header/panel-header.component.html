@@ -164,16 +164,19 @@
             <br>
             <hr>
             <label>Select Mode</label><br>
-            <input id='showPage1' type='radio' name='showPage' value='publish' [(ngModel)]='urlSet[1]'/> <label for='showPage1'>Explorer Mode</label> <br>
-            <input id='showPage2' type='radio' name='showPage' value='dashboard' [(ngModel)]='urlSet[1]'/> <label for='showPage2'>Editor Mode</label> <br>
-            <input id='showPage3' type='radio' name='showPage' value='editor' [(ngModel)]='urlSet[1]'/> <label for='showPage3'>Editable (Mobius editor page)</label>
+            <input id='showPage1' type='radio' name='navMode' value='publish' [(ngModel)]='publishUrlSettings.navMode'/> <label for='showPage1'>Explorer Mode</label><br>
+            <input id='showPage2' type='radio' name='navMode'  value='dashboard' [(ngModel)]='publishUrlSettings.navMode'/> <label for='showPage2'>Editor Mode</label><br>
             <hr>
-            <ng-container *ngIf='urlSet[1] !== "publish"; else publish_template'>
-                <input id='displayType2' type='radio' name='displayType' value='' [(ngModel)]='urlSet[2]'/> <label for='displayType2'>Show Dashboard</label> <br>
-                <input id='displayType1' type='radio' name='displayType' value='&node=' [(ngModel)]='urlSet[2]' /> <label for='displayType1'>Select Node</label>
+            <ng-container *ngIf='publishUrlSettings.navMode !== "publish"; else publish_template'>
+                <input id='showPageNav1' type='radio' name='navPage' value='dashboard' [(ngModel)]='publishUrlSettings.navPage'/> <label for='showPageNav1'>Show Dashboard</label><br>
+                <input id='showPageNav2' type='radio' name='navPage' value='flowchart' [(ngModel)]='publishUrlSettings.navPage' /> <label for='showPageNav2'>Show Flowchart</label><br>
+                <input id='showPageNav3' type='radio' name='navPage' value='editor' [(ngModel)]='publishUrlSettings.navPage' /> <label for='showPageNav3'>Show Editor</label>
                 <hr>
-                <ng-container *ngIf='urlSet[2] == "&node="'>
-                    Selected Node: <select [(ngModel)]='urlSet[3]'>
+                <input id='displayType2' type='radio' name='showNode' value='' [(ngModel)]='publishUrlSettings.showNode'/> <label for='displayType2'>Show End Node</label><br>
+                <input id='displayType1' type='radio' name='showNode' value='&node=' [(ngModel)]='publishUrlSettings.showNode' /> <label for='displayType1'>Show Specific Node</label>
+                <hr>
+                <ng-container *ngIf='publishUrlSettings.showNode == "&node="'>
+                    Selected Node: <select [(ngModel)]='publishUrlSettings.showNodeIdx'>
                         <option *ngFor='let node of urlNodes; let i = index' value={{i}}>{{i}}. {{node.name}}</option>
                     </select>
                     <hr>
@@ -181,37 +184,37 @@
             </ng-container>
             <ng-template #publish_template>
                 <label>Show Viewers</label><br>
-                <input id='radio3D' type='checkbox' [(ngModel)]='urlSet[4][0]' /> <label for='radio3D'>CAD Viewer</label> <br>
-                <input id='radioGeo' type='checkbox' [(ngModel)]='urlSet[4][1]'/> <label for='radioGeo'>Geo Viewer</label> <br>
-                <input id='radioVR' type='checkbox' [(ngModel)]='urlSet[4][2]'/> <label for='radioVR'>VR Viewer</label> <br>
-                <input id='radioConsole' type='checkbox' [(ngModel)]='urlSet[4][3]'/> <label for='radioConsole'>Console</label> <br>
+                <input id='radio3D' type='checkbox' [(ngModel)]='publishUrlSettings.showViewers[0]' /> <label for='radio3D'>CAD Viewer</label> <br>
+                <input id='radioGeo' type='checkbox' [(ngModel)]='publishUrlSettings.showViewers[1]'/> <label for='radioGeo'>Geo Viewer</label> <br>
+                <input id='radioVR' type='checkbox' [(ngModel)]='publishUrlSettings.showViewers[2]'/> <label for='radioVR'>VR Viewer</label> <br>
+                <input id='radioConsole' type='checkbox' [(ngModel)]='publishUrlSettings.showViewers[3]'/> <label for='radioConsole'>Console</label> <br>
                 <hr>
             </ng-template>
             <label>Active Viewer</label><br>
-            <ng-container *ngIf='urlSet[1] !== "publish" || urlSet[4][0]' >
-                <input id='radioDefault3D' type='radio' name='defaultViewer' value='&defaultViewer=cad' [(ngModel)]='urlSet[5]'/>
+            <ng-container *ngIf='publishUrlSettings.navMode !== "publish" || publishUrlSettings.showViewers[0]' >
+                <input id='radioDefault3D' type='radio' name='defaultViewer' value='&defaultViewer=cad' [(ngModel)]='publishUrlSettings.defaultViewer'/>
                 <label for='radioDefault3D'>CAD Viewer</label> <br>
             </ng-container>
-            <ng-container *ngIf='urlSet[1] !== "publish" || urlSet[4][1]' >
-                <input id='radioDefaultGeo' type='radio' name='defaultViewer' value='&defaultViewer=geo' [(ngModel)]='urlSet[5]'/>
+            <ng-container *ngIf='publishUrlSettings.navMode !== "publish" || publishUrlSettings.showViewers[1]' >
+                <input id='radioDefaultGeo' type='radio' name='defaultViewer' value='&defaultViewer=geo' [(ngModel)]='publishUrlSettings.defaultViewer'/>
                 <label for='radioDefaultGeo'>Geo Viewer</label> <br>
             </ng-container>
-            <ng-container *ngIf='urlSet[1] !== "publish" || urlSet[4][2]' >
-                <input id='radioDefaultVR' type='radio' name='defaultViewer' value='&defaultViewer=vr' [(ngModel)]='urlSet[5]'/>
+            <ng-container *ngIf='publishUrlSettings.navMode !== "publish" || publishUrlSettings.showViewers[2]' >
+                <input id='radioDefaultVR' type='radio' name='defaultViewer' value='&defaultViewer=vr' [(ngModel)]='publishUrlSettings.defaultViewer'/>
                 <label for='radioDefaultVR'>VR Viewer</label> <br>
             </ng-container>
-            <ng-container *ngIf='urlSet[1] !== "publish" || urlSet[4][3]' >
-                <input id='radioDefaultConsole' type='radio' name='defaultViewer' value='&defaultViewer=console' [(ngModel)]='urlSet[5]'/>
+            <ng-container *ngIf='publishUrlSettings.navMode !== "publish" || publishUrlSettings.showViewers[3]' >
+                <input id='radioDefaultConsole' type='radio' name='defaultViewer' value='&defaultViewer=console' [(ngModel)]='publishUrlSettings.defaultViewer'/>
                 <label for='radioDefaultConsole'>Console</label> <br>
             </ng-container>
-            <ng-container *ngIf='urlSet[1] !== "publish"' >
-                <input id='radioDefaultDocs' type='radio' name='defaultViewer' value='&defaultViewer=doc' [(ngModel)]='urlSet[5]'/>
+            <ng-container *ngIf='publishUrlSettings.navMode !== "publish"' >
+                <input id='radioDefaultDocs' type='radio' name='defaultViewer' value='&defaultViewer=doc' [(ngModel)]='publishUrlSettings.defaultViewer'/>
                 <label for='radioDefaultDocs'>Documentation</label>
             </ng-container>
             <hr>
-            <ng-container *ngIf='urlSet[5] === "&defaultViewer=docs"'>
+            <ng-container *ngIf='publishUrlSettings.defaultViewer === "&defaultViewer=docs"'>
                 <label>Doc Section</label><br>
-                <select [(ngModel)]='urlSet[6]'>
+                <select [(ngModel)]='publishUrlSettings.docSection'>
                     <optgroup *ngFor='let docMod of docModList' label ={{docMod.name}}>
                         <option *ngFor='let section of docMod.modnames' value={{section}}>{{section.split('.')[1]}}</option>
                     </optgroup>
@@ -234,7 +237,7 @@
                 URL. (For example, you can upload your file to platforms such Github or Dropbox.) Please paste the URL for file below,
                 and click 'Validate Url'. </p> <br>
             MOB file URL: <br>
-            <textarea [(ngModel)]='urlSet[0]'
+            <textarea [(ngModel)]='publishUrlSettings.mainURL'
                     [class.valid]='urlValid === true' 
                     [class.invalid]='urlValid === false'
                     (keyup)='urlValid = undefined'></textarea><br>
