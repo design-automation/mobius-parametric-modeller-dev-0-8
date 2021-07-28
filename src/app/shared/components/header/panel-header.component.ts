@@ -1344,6 +1344,7 @@ export class PanelHeaderComponent implements OnDestroy {
                 } else {
                     this.urlSet[0] = hashStr;
                     this.urlValid = true;
+                    this.urlNodes = this.dataService.flowchart.nodes;
                     console.log('successfully placed file');
                     document.getElementById('spinner-off').click();
                     this.openHeaderDialog(event, 'publish_url');
