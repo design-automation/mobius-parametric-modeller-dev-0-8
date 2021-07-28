@@ -158,10 +158,11 @@
         <button (click)="publishUrl($event)">Use URL</button>
     </div>
     <div id='headerDialog_publish_url'>
-        <p>The user interface of the published Mobius script can be configured below. In addition, you can generate
-            two types of links: either a URL that can be shared or code that canbe embedded in a web page or blog. </p>
-        <br>
+    
         <ng-container *ngIf="urlValid === true;else validateUrlTemplate">
+            <p>The user interface of the published Mobius script can be configured below. In addition, you can generate
+                two types of links: either a URL that can be shared or code that canbe embedded in a web page or blog. </p>
+            <br>
             <hr>
             <input id='showPage1' type='radio' name='showPage' value='publish' [(ngModel)]='urlSet[1]'/> <label for='showPage1'>Uneditable (publish page)</label> <br>
             <input id='showPage2' type='radio' name='showPage' value='dashboard' [(ngModel)]='urlSet[1]'/> <label for='showPage2'>Editable (Mobius dashboard page)</label> <br>
@@ -230,6 +231,9 @@
             </div>
         </ng-container>
         <ng-template #validateUrlTemplate>
+            <p>You can publish a Möbius script (.mob) that you previously uploaded to an online file server that allows you to share the
+                URL. (For example, you can upload your file to platforms such Github or Dropbox.) Please paste the URL for file below,
+                and click 'Validate Url'. </p> <br>
             MOB file URL: <br>
             <textarea [(ngModel)]='urlSet[0]'
                     [class.valid]='urlValid === true' 
