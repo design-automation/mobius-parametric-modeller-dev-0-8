@@ -52,7 +52,7 @@ export class HelpViewerComponent implements DoCheck, OnDestroy {
         this.activeMod = this.mainDataService.helpViewData[1];
         if (window.location.search) {
             const helpSectionURI = decodeURI(window.location.search).split('docSection=');
-            if (helpSectionURI.length > 0) {
+            if (helpSectionURI.length > 1) {
                 const modData = helpSectionURI[1].split('&')[0].split('.');
                 for (const modGroup of this.modList) {
                     if (modGroup.name === modData[0]) {
