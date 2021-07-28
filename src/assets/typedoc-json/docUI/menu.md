@@ -119,17 +119,44 @@ When a mobius script is published, it is uploaded to the cloud. The first dialog
 * _Upload to Cloud_: This will upload the currently open script to the Mobius cloud. The file will be saved in the cloud for one year, after which it will be automatically deleted. You will not be able to manually delete the file after it has been uploaded.
 * _Use URL_: This will allow you to use a previously uploaded Mobius Script. (For example, you can upload your file to platforms such Github or Dropbox.) 
 
-![Updating global functions](assets/typedoc-json/docUI/imgs/publish_start.png)
+![Publish options](assets/typedoc-json/docUI/imgs/publish_start.png)
 
 If you choose the 'Use URL' option, then a second dialog box pops up, allowing you to enter the URL. Just paste your existing URL into the input box. The URL will then be validated, to make sure that it points directly to a Mobius script file. 
 
-![Updating global functions](assets/typedoc-json/docUI/imgs/publish_url.png)
+![Validating a URL for publishing scripts](assets/typedoc-json/docUI/imgs/publish_url.png)
 
 In the last dialog box, you generate a link for the uploaded file. For the link there are various settings that you can define. For example, maybe you want a link that, when clicked, will open Mobius Modeller and load your file, and also only show the dashboard and 3D viewer, hiding the Flowchart and Editor tabs. (This may be useful for people who want to see your model, but who do not understand any of the coding behind it.)
 
-[To be completed]
+There are a number of settings that you can define.
 
-![Updating global functions](assets/typedoc-json/docUI/imgs/publish_settings.png)
+![Publish settings](assets/typedoc-json/docUI/imgs/publish_settings.png)
+
+There are two main modes: 'Explorer' and 'Editor'. 
+
+**Explorer Mode**
+
+If you you choose 'Explorer Mode', then the person looking at the published script will see a simplified user interface. This user interface is designed for people who just want to explore your script (changing parameters, executing the script, and viewing the results). The user interface does not include the Flowchart tab or the Editor tab, so they will not see any of the code.
+
+![Publish User Interface](assets/typedoc-json/docUI/imgs/publish_settings.png)
+
+In 'Explorer Mode', you can set:
+* The viewers that are shown. For example, if you only tick the CAD Viewer and the Console, then only those two viewer tabs will be visible. The Geo and VR viewer tabs will be hidden.
+* The active viewer. For example, if you want the person viewing your script to initially see the Console viewer open, then you can select the Console viewer from the list.
+
+**Editor Mode**
+
+If you choose 'Editor Mode', then the person looking at the published script will see the normal Mobius Modeller interface. 
+
+In 'Editor Mode', you can set:
+* The active scripting tab, either the Dashboard or the Editor. For example, if you want the person viewing your script to initially see the Editor tab open, then you can select 'Editor' from the list.
+* The active viewer. For example, if you want the person viewing your script to initially see the Console viewer open, then you can select 'Console Viewer' from the list.
+* The selected node in the flowchart. By default, the selected node will be the `End` node. The dropdown menu allows you to specify a different node to be selected. 
+
+**Types of Links**
+
+Finally, when generating your link, there are two options:
+* _Create_Link_: Creates a URL link that you can share with other people, on social media or by email. People who follow the link will be able to interact with your published Mobius script.
+* _Create Embed Code_: Creates a small snippet of code that can be embedded into another webpage, for example a blog. The embed code will result in a small embedded window (called an `iframe`) to be created. The size of the embedded window can be specified by editing the dimensions in the code snippet. The default is `width='100%' height='600px'`.
 
 ## SETTINGS
 
@@ -137,7 +164,7 @@ Opens a dialog box to set various Mobius settings.
 
 * Execute on file load: If enabled, Mobius script files will be executed automatically after they are loaded.
 * Auto-save after executing: If enabled, Mobius script files will be automatically saved to Local Storage after they are executed. This means that any changes you have made since the last execution will be saved and backed up. 
-* Display Mobius Functions: Shows a list of all the categories of the functions in Mobius. For each category, if it is enabled, then the functions in that category will be visible in the left vertical menu in the Editor tab.
+* Display Mobius Functions: Shows a list of all the categories of the functions in Mobius. For each category, if it is enabled, then the functions in that category will be visible in the left vertical menu in the Editor tab.`
 
 **WebGL Hardware Acceleration**
 
