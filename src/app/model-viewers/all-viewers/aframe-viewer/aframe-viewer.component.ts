@@ -12,6 +12,7 @@ import { ProcedureTypes } from '@models/procedure';
 import { NodeUtils } from '@models/node';
 import { checkNodeValidity } from '@shared/parser';
 import { AllFunctionDoc } from '@shared/decorators';
+import { DefaultSettings as DefaultGISettings } from '../gi-viewer/gi-viewer.settings';
 declare var AFRAME;
 
 /**
@@ -81,6 +82,10 @@ export class AframeViewerComponent implements OnInit, OnDestroy{
         localStorage.setItem('aframe_default_settings', JSON.stringify(aframe_default_settings));
         if (this.vr.enabled) {
             this.selectedCamPos = this.camPosList.length - 1;
+        }
+        const threejsScene = this.threeJSDataService.getThreejsScene();
+        if (!threejsScene) {
+            this.threeJSDataService.setThreejsScene(DefaultGISettings);
         }
         this.settingsUpdateInterval = setInterval(() => {
             if (this.mainDataService.aframeViewerSettingsUpdated) {

@@ -1,14 +1,11 @@
 import { GIModel } from '@libs/geo-info/GIModel';
-import { isDevMode, ViewChild, HostListener, OnChanges, OnDestroy } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 // import @angular stuff
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 // import app services
 import { DataService as MD } from '@services';
-import { ColorPickerService } from 'ngx-color-picker';
-import { Vector3, GridHelper } from 'three';
-import { SplitComponent } from 'angular-split';
+import { Vector3 } from 'three';
 import { DataGeoService } from './data/data.geo.service';
-import { API_MAPS, API_MAPS_KEY_MAPPING, DataGeo } from './data/data.geo';
 import { GeoSettings, geo_default_settings } from './gi-geo-viewer.settings';
 import { ModalService } from './html/modal-window.service';
 import { DataService as ThreeJSDataService } from '../gi-viewer/data/data.service';

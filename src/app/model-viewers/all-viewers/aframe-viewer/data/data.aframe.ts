@@ -8,7 +8,7 @@ declare var AFRAME;
 const DEFAUT_CAMERA_POS = {
     position: new AFRAME.THREE.Vector3(0, 0, 0),
     rotation: new AFRAME.THREE.Vector3(0, 0, 0)
-}
+};
 function postloadSkyBGImg() {
     const sky = <any> document.getElementById('aframe_sky_background');
     sky.setAttribute('src', '');
@@ -50,7 +50,6 @@ export class DataAframe {
     constructor(settings) {
         this.settings = JSON.parse(JSON.stringify(settings));
         if (this.settings.vr) {
-            console.log(this.settings.vr)
             this.vr.background_url = this.settings.vr.background_url;
             this.vr.background_rotation = this.settings.vr.background_rotation;
             this.vr.foreground_url = this.settings.vr.foreground_url;
