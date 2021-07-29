@@ -13,7 +13,7 @@
     right: 0;
     bottom: 0;
     background-color: $color5;
-    z-index: 20;
+    z-index: 200;
     opacity: $disabled-opacity;
     pointer-events: none;
   }
@@ -30,7 +30,7 @@
     height: 60px;
     -webkit-animation: spin 2s linear infinite;
     animation: spin 2s linear infinite;
-    z-index: 21;
+    z-index: 201;
 
 }
   
