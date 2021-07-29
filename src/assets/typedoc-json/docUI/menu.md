@@ -143,7 +143,7 @@ In 'Explorer Mode', you can set:
 
 If you choose 'Developer Mode', then the person looking at the published script will see the normal Mobius Modeller interface. The 'Developer Mode' settings are shown below.
 
-![Explorer Mode](assets/typedoc-json/docUI/imgs/publish_settings_developer.png)
+![Developer Mode](assets/typedoc-json/docUI/imgs/publish_settings_developer.png)
 
 In 'Developer Mode', you can set:
 * _Active Tab_: The active scripting tab, either the Dashboard or the Editor. For example, if you want the person viewing your script to initially see the Editor tab open, then you can select 'Editor' from the list.
