@@ -701,6 +701,10 @@ export class PanelHeaderComponent implements OnDestroy {
         if (helpMenu) {
             helpMenu.style.display = 'none';
         }
+        let objDropdown = document.getElementById('object_dropdown');
+        if (objDropdown) {
+            objDropdown.style.display = 'none';
+        }
         if (this.dataService.dialog) {
             if (this.textareaMousedown) {
                 this.textareaMousedown = false;
@@ -722,6 +726,7 @@ export class PanelHeaderComponent implements OnDestroy {
         nodeMenu = null;
         galleryMenu = null;
         helpMenu = null;
+        objDropdown = null;
     }
 
     @HostListener('window:copy', ['$event'])

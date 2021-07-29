@@ -145,7 +145,8 @@ export class ATabsComponent implements AfterContentInit, AfterViewInit, OnDestro
         }
     }
 
-    showODropdown() {
+    showODropdown(event) {
+        event.stopPropagation();
         this.topology_text = 'Topology';
         this.topology_open = false;
         if (!this.object_dropdown) { return; }

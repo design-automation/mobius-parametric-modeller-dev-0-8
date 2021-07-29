@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { DataService } from '@shared/services';
 
 @Component({
@@ -35,5 +35,20 @@ export class PublishHeaderComponent {
     notifyMessage(event) {
         this.dataService.notifyMessage(event.target.value);
         event.target.value = '';
+    }
+
+    @HostListener('window:click', ['$event'])
+    onWindowClick(event: MouseEvent) {
+        if ((<HTMLElement>event.target).id === 'addBackup' || (<HTMLElement>event.target).id === 'addBackupButton') {
+            return;
+        }
+        const helpMenu = document.getElementById('helpMenu');
+        if (helpMenu) {
+            helpMenu.style.display = 'none';
+        }
+        const objDropdown = document.getElementById('object_dropdown');
+        if (objDropdown) {
+            objDropdown.style.display = 'none';
+        }
     }
 }

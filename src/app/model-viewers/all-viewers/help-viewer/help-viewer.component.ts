@@ -29,7 +29,7 @@ export class HelpViewerComponent implements DoCheck, OnDestroy {
         }, {
             name: 'Viewers',
             srcDir: 'assets/typedoc-json/docVW',
-            modnames: ['gi-viewer', 'geo-viewer', 'vr-viewer', 'console'],
+            modnames: ['cad-viewer', 'geo-viewer', 'vr-viewer', 'console'],
             opened: false
         }, {
             name: 'Operations',

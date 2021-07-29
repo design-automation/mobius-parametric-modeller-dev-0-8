@@ -168,7 +168,7 @@ export class GIViewerComponent implements OnInit, OnDestroy {
     }
 
     openViewerHelp() {
-        this.mainDataService.helpView = AllFunctionDoc['giviewer']['gi-viewer'];
+        this.mainDataService.helpView = AllFunctionDoc['cadviewer']['cad-viewer'];
         this.mainDataService.toggleHelp(true);
     }
 

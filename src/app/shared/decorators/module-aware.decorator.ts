@@ -15,7 +15,7 @@ const module_list = [];
 const extraMods = [ 'variable', 'comment', 'expression',
                     'control_flow', 'global_func', 'local_func',
                     'dashboard', 'editor', 'flowchart', 'gallery', 'menu',
-                    'console', 'geoviewer', 'giviewer', 'vrviewer'];
+                    'console', 'geoviewer', 'cadviewer', 'vrviewer'];
 const extraModPaths = {
     variable: 'docCF/variable',
     comment: 'docCF/comment',
@@ -32,7 +32,7 @@ const extraModPaths = {
 
     console: 'docVW/console',
     geoviewer: 'docVW/geo-viewer',
-    giviewer: 'docVW/gi-viewer',
+    cadviewer: 'docVW/cad-viewer',
     vrviewer: 'docVW/vr-viewer',
 };
 // todo: bug fix for defaults

@@ -6,7 +6,7 @@
     right: 0;
     bottom: 0;
     // left: 0;
-    z-index: 1000;
+    z-index: 4;
     overflow: auto;
     -webkit-transition: transform 1s ease;
     &.open{
@@ -43,5 +43,5 @@
     left: 0;
     background-color: transparent;
     opacity: 0.5;
-    z-index: 900;
+    z-index: 3;
 }

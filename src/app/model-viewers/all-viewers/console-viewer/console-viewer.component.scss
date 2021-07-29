@@ -53,13 +53,15 @@
     top: 5px;
     right: 10px;
     color: $color1;
-
+    &:hover {
+        color:$selected-color;
+    }
 }
 #toggleClearConsole {
     position: fixed;
     background-color: transparent;
     top: 7px;
-    right: 40px;
+    right: 20px;
     color: $color1;
     display: inline-block;
     height: 24px;
@@ -74,5 +76,18 @@
 
     input, label{
         vertical-align: middle;
+    }
+}
+#console_viewer_help_button{
+    position: absolute;
+    background-color: transparent;
+    padding: 0px;
+    border: 0px;
+    margin: 0px;
+    top: 5px;
+    right: 150px;
+    color: $color1;
+    &:hover {
+        color:$selected-color;
     }
 }

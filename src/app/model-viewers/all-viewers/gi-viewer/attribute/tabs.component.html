@@ -6,7 +6,7 @@
         [class.open]='object_open'
     >
         <div class="dropdown">
-            <button class="dropbtn" (click) = 'showODropdown()' title="Objects: Point, Polyline, Polygon">{{object_text}}</button>
+            <button class="dropbtn" (click) = 'showODropdown($event)' title="Objects: Point, Polyline, Polygon">{{object_text}}</button>
             <div class="dropdown-content" id='object_dropdown'>
                 <div *ngFor="let option of object;" (click)="selectObject(option.tab, $event);">{{option.title}}</div>
             </div>
