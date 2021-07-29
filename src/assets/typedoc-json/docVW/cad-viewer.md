@@ -46,7 +46,7 @@ The default options are as follows:
 * `pg`: Select polygon objects
 * `ps`: Select positions.
 
-For example, is you select `pg`, then left clicking on entities in the model select polygons. If you select `ps`, then left clicking will select positions. In the image below, the same polygon was clicked two times: on the left, the 'Select' dropdown was set to `pg`, on the right the dropdown was set to _ps_.
+For example, is you select `pg`, then left clicking on entities in the model select polygons. If you select `ps`, then left clicking will select positions. In the image below, the same polygon was clicked two times: on the left, the 'Select' dropdown was set to `pg`, on the right the dropdown was set to `ps`.
 
 ![Select polygons versus positions](assets/typedoc-json/docVW/imgs/viewer_cad_select_pg_ps.png)
 
