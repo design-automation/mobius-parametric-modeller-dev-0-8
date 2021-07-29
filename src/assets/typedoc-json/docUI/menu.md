@@ -52,7 +52,7 @@ The Ctrl-s keyboard shortcut will save the currently open Mobius script to Local
 
 Each time you execute a script, it is also automatically saved to Local Storage. The name of the file will be the name of the script, as defined in the `Start` node. If no name has been defined, then the filename will be `Untitled.mob`. This works as a backup that allows you to recover your script if the Mobius browser web pages closes unexpectedly or crashes and you have forgotten to save your file. Note that it will automatically overwrite any existing files in Local Storage with the same name.
 
-Note that if you have multiple Mobius Modeller tabs open at the same time in the same browser, then they will all be sharing the same Local Storage. This means that if you have multiple models that are un-named, then they will all be saving to `Untitled.mob` each time you execute.
+Note that if you have multiple Mobius Modeller tabs open at the same time in the same browser, then they will all be sharing the same Local Storage. This means that if you have multiple models that have the same name or are unnamed, then they will all be saving to `Untitled.mob` each time you execute.
 
 ## SAVE JS
 
@@ -127,30 +127,28 @@ If you choose the 'Use URL' option, then a second dialog box pops up, allowing y
 
 In the last dialog box, you generate a link for the uploaded file. For the link there are various settings that you can define. For example, maybe you want a link that, when clicked, will open Mobius Modeller and load your file, and also only show the dashboard and 3D viewer, hiding the Flowchart and Editor tabs. (This may be useful for people who want to see your model, but who do not understand any of the coding behind it.)
 
-There are a number of settings that you can define.
-
-![Publish settings](assets/typedoc-json/docUI/imgs/publish_settings.png)
-
-There are two main modes: 'Explorer' and 'Editor'. 
+There are two main modes: 'Explorer' and 'Developer'. 
 
 **Explorer Mode**
 
-If you you choose 'Explorer Mode', then the person looking at the published script will see a simplified user interface. This user interface is designed for people who just want to explore your script (changing parameters, executing the script, and viewing the results). The user interface does not include the Flowchart tab or the Editor tab, so they will not see any of the code.
+If you you choose 'Explorer Mode', then the person looking at the published script will see a simplified user interface. This user interface is designed for people who just want to explore your script (changing parameters, executing the script, and viewing the results). The user interface does not include the Flowchart tab or the Editor tab, so they will not see any of the code. The 'Explorer Mode' settings are shown below.
 
-![Publish User Interface](assets/typedoc-json/docUI/imgs/publish_settings.png)
+![Explorer Mode](assets/typedoc-json/docUI/imgs/publish_settings_explorer.png)
 
 In 'Explorer Mode', you can set:
-* The viewers that are shown. For example, if you only tick the CAD Viewer and the Console, then only those two viewer tabs will be visible. The Geo and VR viewer tabs will be hidden.
-* The active viewer. For example, if you want the person viewing your script to initially see the Console viewer open, then you can select the Console viewer from the list.
+* _Show Viewers_: The viewers that are shown in the Mobius user interface. For example, if you only tick the CAD Viewer and the Console, then only those two viewer tabs will be visible. The Geo and VR viewers will be hidden.
+* _Active Viewer_: The viewer that is active. For example, if you want the person viewing your script to initially see the Console viewer open, then you can select the Console viewer from the list.
 
-**Editor Mode**
+**Developer Mode**
 
-If you choose 'Editor Mode', then the person looking at the published script will see the normal Mobius Modeller interface. 
+If you choose 'Developer Mode', then the person looking at the published script will see the normal Mobius Modeller interface. The 'Developer Mode' settings are shown below.
 
-In 'Editor Mode', you can set:
-* The active scripting tab, either the Dashboard or the Editor. For example, if you want the person viewing your script to initially see the Editor tab open, then you can select 'Editor' from the list.
-* The active viewer. For example, if you want the person viewing your script to initially see the Console viewer open, then you can select 'Console Viewer' from the list.
-* The selected node in the flowchart. By default, the selected node will be the `End` node. The dropdown menu allows you to specify a different node to be selected. 
+![Explorer Mode](assets/typedoc-json/docUI/imgs/publish_settings_developer.png)
+
+In 'Developer Mode', you can set:
+* _Active Tab_: The active scripting tab, either the Dashboard or the Editor. For example, if you want the person viewing your script to initially see the Editor tab open, then you can select 'Editor' from the list.
+* _Select Node_: The selected node in the flowchart. By default, the selected node will be the `End` node. The dropdown menu allows you to specify a different node to be selected. 
+*_Active Viewer_: The viewer that is active. (Same as in Explorer mode.)
 
 **Types of Links**
 

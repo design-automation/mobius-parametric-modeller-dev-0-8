@@ -164,23 +164,31 @@
             <br>
             <hr>
             <label>Select Mode</label><br>
-            <input id='showPage1' type='radio' name='navMode' value='publish' [(ngModel)]='publishUrlSettings.navMode'/> <label for='showPage1'>Explorer Mode</label><br>
-            <input id='showPage2' type='radio' name='navMode'  value='dashboard' [(ngModel)]='publishUrlSettings.navMode'/> <label for='showPage2'>Editor Mode</label><br>
+            <input id='showPage1' type='radio' name='navMode' value='publish' [(ngModel)]='publishUrlSettings.navMode'/>
+            <label for='showPage1'>Explorer Mode</label><br>
+            <input id='showPage2' type='radio' name='navMode'  value='dashboard' [(ngModel)]='publishUrlSettings.navMode'/>
+            <label for='showPage2'>Developer Mode</label><br>
             <hr>
             <ng-container *ngIf='publishUrlSettings.navMode !== "publish"; else publish_template'>
-                <input id='showPageNav1' type='radio' name='navPage' value='dashboard' [(ngModel)]='publishUrlSettings.navPage'/> <label for='showPageNav1'>Show Dashboard</label><br>
-                <input id='showPageNav2' type='radio' name='navPage' value='flowchart' [(ngModel)]='publishUrlSettings.navPage' /> <label for='showPageNav2'>Show Flowchart</label><br>
-                <input id='showPageNav3' type='radio' name='navPage' value='editor' [(ngModel)]='publishUrlSettings.navPage' /> <label for='showPageNav3'>Show Editor</label>
+                <label for='showPageNav1'>Active Tab</label><br>
+                <input id='showPageNav1' type='radio' name='navPage' value='dashboard' [(ngModel)]='publishUrlSettings.navPage'/>
+                <label for='showPageNav1'>Dashboard</label><br>
+                <input id='showPageNav2' type='radio' name='navPage' value='flowchart' [(ngModel)]='publishUrlSettings.navPage' />
+                <label for='showPageNav2'>Flowchart</label><br>
+                <input id='showPageNav3' type='radio' name='navPage' value='editor' [(ngModel)]='publishUrlSettings.navPage' />
+                <label for='showPageNav3'>Editor</label>
                 <hr>
-                <input id='displayType2' type='radio' name='showNode' value='' [(ngModel)]='publishUrlSettings.showNode'/> <label for='displayType2'>Show End Node</label><br>
-                <input id='displayType1' type='radio' name='showNode' value='&node=' [(ngModel)]='publishUrlSettings.showNode' /> <label for='displayType1'>Show Specific Node</label>
-                <hr>
+                <label for='showPageNav1'>Select Node</label><br>
+                <input id='displayType2' type='radio' name='showNode' value='' [(ngModel)]='publishUrlSettings.showNode'/>
+                <label for='displayType2'>Select End Node</label><br>
+                <input id='displayType1' type='radio' name='showNode' value='&node=' [(ngModel)]='publishUrlSettings.showNode' />
+                <label for='displayType1'>Select Specific Node</label>
                 <ng-container *ngIf='publishUrlSettings.showNode == "&node="'>
                     Selected Node: <select [(ngModel)]='publishUrlSettings.showNodeIdx'>
                         <option *ngFor='let node of urlNodes; let i = index' value={{i}}>{{i}}. {{node.name}}</option>
                     </select>
-                    <hr>
                 </ng-container>
+                <hr>
             </ng-container>
             <ng-template #publish_template>
                 <label>Show Viewers</label><br>
