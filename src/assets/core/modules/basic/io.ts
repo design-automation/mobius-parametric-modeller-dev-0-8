@@ -85,7 +85,7 @@ export async function Write(__model__: GIModel, data: string, file_name: string,
  * - A file name in the local storage, e.g. "my_data.obj".
  * \n
  * To place a file in local storage, go to the Mobius menu, and select 'Local Storage' from the dropdown.
- * Note that a codescript using a file in local storage may fail when others try to open the file.
+ * Note that a script using a file in local storage may fail when others try to open the file.
  * \n
  * @param model_data The model data
  * @param data_format Enum, the file format.
