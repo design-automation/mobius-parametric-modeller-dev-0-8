@@ -141,9 +141,9 @@ export function Set(__model__: GIModel, entities: TId|TId[]|TId[][],
     let attrib_name: string;
     let attrib_idx_key: number|string;
     if (__model__.debug) {
-        if (value === undefined) {
-            throw new Error(fn_name + ': value is undefined');
-        }
+        // if (value === undefined) {
+        //     throw new Error(fn_name + ': value is undefined');
+        // }
         ents_arr = checkIDs(__model__, fn_name, 'entities', entities, [ID.isNull, ID.isID, ID.isIDL1], null) as TEntTypeIdx|TEntTypeIdx[];
         [attrib_name, attrib_idx_key] = checkAttribNameIdxKey(fn_name, attrib);
         checkAttribName(fn_name , attrib_name);
