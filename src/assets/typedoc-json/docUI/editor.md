@@ -1,14 +1,14 @@
 ## EDITOR  
 
-The _Editor_ tab is for editing the procedures for each of the nodes in your flowchart.
+The _Editor_ pane is for editing the procedures for each of the nodes in your flowchart.
 
-The name of the node being edited is displayed at the top of the Editor tab, next to the execute button. In the example below, the procedure for a node called `Second node` is bing edited.
+The name of the node being edited is displayed at the top of the Editor pane, next to the execute button. In the example below, the procedure for a node called `Second node` is bing edited.
 
 ![Node name](assets/typedoc-json/docUI/imgs/editor_node_name.png)
 
 Navigating between the procedures for the different nodes in the flowchart can be accomplished in two ways. 
 * Clicking the node name will display a drop down menu, from which you can select a different node in the flowchart. 
-* From the Flowchart tab, double clicking any node in the flowchart will take you the the procedure for that node.
+* From the Flowchart pane, double clicking any node in the flowchart will take you the the procedure for that node.
 
 The image below shows the dropdown menu. The flowchart has a `Start` node and `End` node, and two additional nodes, called `First Node` and `Second Node`.
 
@@ -122,21 +122,21 @@ When cutting or copying, Mobius keeps track of three different types of cut/copi
 
 For example, let's say you do the following:
 
-1. In the Flowchart tab, you select a node in the flowchart and Ctrl-c.
-1. You then switch over to the Editor tab, select a line of code and Ctrl-c.
+1. In the Flowchart pane, you select a node in the flowchart and Ctrl-c.
+1. You then switch over to the Editor pane, select a line of code and Ctrl-c.
 1. Then you select some text in one of the input boxes, and Ctrl-c.
 
-You will now have three pieces of copied information, saved separately. when you paste using Ctrl-v, Mobius will always paste the correct type of information, depending on the tab that is selected and the focus of the mouse. 
+You will now have three pieces of copied information, saved separately. when you paste using Ctrl-v, Mobius will always paste the correct type of information, depending on the pane that is selected and the focus of the mouse. 
 
-* If the Flowchart tab is selected, then Ctrl-v will paste the copied node. 
-* If a line of code is selected in the Editor tab, then Ctrl-v will paste the copied line of code.
-* If the mouse focus is inside an input box in the Editor tab, then Ctrl-v will paste the text expression.
+* If the Flowchart pane is selected, then Ctrl-v will paste the copied node. 
+* If a line of code is selected in the Editor pane, then Ctrl-v will paste the copied line of code.
+* If the mouse focus is inside an input box in the Editor pane, then Ctrl-v will paste the text expression.
 
 The logic is similar for the undo keyboard shortcut.
 
-* If the Flowchart tab is selected, then Ctrl-z will undo the most recent operation performed on the flowchart. 
-* If the Editor tab open (and the mouse focus is inside an input box) , then Ctrl-z will undo the most recent operation performed on the lines of code in the editor. 
-* If the mouse focus is inside an input box in the Editor tab, then Ctrl-z will undo the most recent text edit (in any of the input boxes).
+* If the Flowchart pane is selected, then Ctrl-z will undo the most recent operation performed on the flowchart. 
+* If the Editor pane open (and the mouse focus is inside an input box) , then Ctrl-z will undo the most recent operation performed on the lines of code in the editor. 
+* If the mouse focus is inside an input box in the Editor pane, then Ctrl-z will undo the most recent text edit (in any of the input boxes).
 
 **Script Parameters**
 

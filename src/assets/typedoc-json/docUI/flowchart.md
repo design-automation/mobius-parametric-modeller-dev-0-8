@@ -1,6 +1,6 @@
 ## FLOWCHART  
   
-The _Flowchart_ tab is for creating the flowchart for your script.
+The _Flowchart_ pane is for creating the flowchart for your script.
 
 A Mobius script consists of a flowchart of nodes. Each node contains a procedure that performs some kind of action, usually creating, deleting, or modifying geometric entities in the model. The nodes are connected by links, representing the flow of the model data between nodes.
 

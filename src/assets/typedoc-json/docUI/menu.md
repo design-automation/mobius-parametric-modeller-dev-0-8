@@ -125,18 +125,18 @@ If you choose the 'Use URL' option, then a second dialog box pops up, allowing y
 
 ![Validating a URL for publishing scripts](assets/typedoc-json/docUI/imgs/publish_url.png)
 
-In the last dialog box, you generate a link for the uploaded file. For the link there are various settings that you can define. For example, maybe you want a link that, when clicked, will open Mobius Modeller and load your file, and also only show the dashboard and 3D viewer, hiding the Flowchart and Editor tabs. (This may be useful for people who want to see your model, but who do not understand any of the coding behind it.)
+In the last dialog box, you generate a link for the uploaded file. For the link there are various settings that you can define. For example, maybe you want a link that, when clicked, will open Mobius Modeller and load your file, and also only show the dashboard and 3D viewer, hiding the Flowchart and Editor panes. (This may be useful for people who want to see your model, but who do not understand any of the coding behind it.)
 
 There are two main modes: 'Explorer' and 'Developer'. 
 
 **Explorer Mode**
 
-If you you choose 'Explorer Mode', then the person looking at the published script will see a simplified user interface. This user interface is designed for people who just want to explore your script (changing parameters, executing the script, and viewing the results). The user interface does not include the Flowchart tab or the Editor tab, so they will not see any of the code. The 'Explorer Mode' settings are shown below.
+If you you choose 'Explorer Mode', then the person looking at the published script will see a simplified user interface. This user interface is designed for people who just want to explore your script (changing parameters, executing the script, and viewing the results). The user interface does not include the Flowchart pane or the Editor pane, so they will not see any of the code. The 'Explorer Mode' settings are shown below.
 
 ![Explorer Mode](assets/typedoc-json/docUI/imgs/publish_settings_explorer.png)
 
 In 'Explorer Mode', you can set:
-* _Show Viewers_: The viewers that are shown in the Mobius user interface. For example, if you only tick the CAD Viewer and the Console, then only those two viewer tabs will be visible. The Geo and VR viewers will be hidden.
+* _Show Viewers_: The viewers that are shown in the Mobius user interface. For example, if you only tick the CAD Viewer and the Console, then only those two viewers will be visible. The Geo and VR viewers will be hidden.
 * _Active Viewer_: The viewer that is active. For example, if you want the person viewing your script to initially see the Console viewer open, then you can select the Console viewer from the list.
 
 **Developer Mode**
@@ -146,7 +146,7 @@ If you choose 'Developer Mode', then the person looking at the published script 
 ![Developer Mode](assets/typedoc-json/docUI/imgs/publish_settings_developer.png)
 
 In 'Developer Mode', you can set:
-* _Active Tab_: The active scripting tab, either the Dashboard or the Editor. For example, if you want the person viewing your script to initially see the Editor tab open, then you can select 'Editor' from the list.
+* _Active Tab_: The active scripting pane, either the Dashboard or the Editor. For example, if you want the person viewing your script to initially see the Editor pane open, then you can select 'Editor' from the list.
 * _Select Node_: The selected node in the flowchart. By default, the selected node will be the `End` node. The dropdown menu allows you to specify a different node to be selected. 
 *_Active Viewer_: The viewer that is active. (Same as in Explorer mode.)
 
@@ -162,7 +162,7 @@ Opens a dialog box to set various Mobius settings.
 
 * Execute on file load: If enabled, Mobius script files will be executed automatically after they are loaded.
 * Auto-save after executing: If enabled, Mobius script files will be automatically saved to Local Storage after they are executed. This means that any changes you have made since the last execution will be saved and backed up. 
-* Display Mobius Functions: Shows a list of all the categories of the functions in Mobius. For each category, if it is enabled, then the functions in that category will be visible in the left vertical menu in the Editor tab.`
+* Display Mobius Functions: Shows a list of all the categories of the functions in Mobius. For each category, if it is enabled, then the functions in that category will be visible in the left vertical menu in the Editor pane.`
 
 **WebGL Hardware Acceleration**
 

@@ -1,6 +1,6 @@
 ## DASHBOARD  
   
-The _Dashboard_ tab displays a description and a set of parameters for the currently loaded script.
+The _Dashboard_ pane displays a description and a set of parameters for the currently loaded script.
 
 The dashboard description and dashboard parameters are defined in the `Start` node of the flowchart. The dashboard user-interface is designed for users who may be non-technical and who may prefer not to see any code. Such users can view the description, adjust the parameter values, click the 'Play' button, and view the resulting model without having to look at any code.
 
@@ -10,7 +10,7 @@ The script description can be used to give an overview of the script. This descr
 
 **Script Parameters**
 
-The following parameter types will be displayed in the parameters tab.
+The following parameter types can be created.
 * `Basic Input` parameters have a simple input box where a value can be typed. If a `Basic Input` parameter has the "Input entities for global function" ticked, then the  parameter will not be shown in the dashboard. 
 * `Slider` parameters have a slider for defining numeric values. The step size, minimum value, and maximum value of the slider are defined by the parameter settings.
 * `Checkbox` parameters have a checkbox for defining boolean values (true or false).
