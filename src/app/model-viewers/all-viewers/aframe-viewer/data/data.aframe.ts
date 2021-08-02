@@ -396,13 +396,14 @@ export class DataAframe {
     }
 
     getCameraPos() {
-        const camEl = this.camera;
-        if (camEl) {
+        const rigEl = this.camera;
+        if (rigEl) {
+            const camEl = <any> document.getElementById('aframe_look_camera');
             const camera_pos = {
                 position: new AFRAME.THREE.Vector3(),
                 rotation: camEl.getAttribute('rotation')
             };
-            camEl.object3D.getWorldPosition(camera_pos.position);
+            rigEl.object3D.getWorldPosition(camera_pos.position);
             camera_pos.position.z =  - camera_pos.position.z;
             camera_pos.position.y = this.settings.camera.position.y;
             camera_pos.rotation.y = 0 - camera_pos.rotation.y;
@@ -434,7 +435,6 @@ export class DataAframe {
     }
 
     updateCamera(camera_pos = DEFAUT_CAMERA_POS) {
-        console.log(camera_pos)
         if (this.vr.enabled) {
             setTimeout(() => {
                 const rigEl = <any> document.getElementById('aframe_camera_rig');
@@ -459,30 +459,31 @@ export class DataAframe {
                 }
             }, 0);
             return;
+        } else {
+            setTimeout(() => {
+                console.log('~~~~~~~~~', camera_pos.rotation)
+                const rigEl = <any> document.getElementById('aframe_camera_rig');
+                const camEl = <any> document.getElementById('aframe_look_camera');
+                if (rigEl && camera_pos) {
+                    const trueCameraPos = new AFRAME.THREE.Vector3();
+                    trueCameraPos.copy(camera_pos.position);
+                    trueCameraPos.z = - trueCameraPos.z;
+                    rigEl.setAttribute('position', trueCameraPos);
+                    const trueCamerarot = new AFRAME.THREE.Vector3();
+                    trueCamerarot.copy(camera_pos.rotation);
+                    trueCamerarot.y = 0 - camera_pos.rotation.y;
+                    camEl.setAttribute('custom-look-controls', {enabled: false});
+                    camEl.setAttribute('rotation', trueCamerarot);
+                    const newX = camEl.object3D.rotation.x;
+                    const newY = camEl.object3D.rotation.y;
+                    try {
+                        camEl.components['custom-look-controls'].pitchObject.rotation.x = newX;
+                        camEl.components['custom-look-controls'].yawObject.rotation.y = newY;
+                    } catch (ex) {}
+                    camEl.setAttribute('custom-look-controls', {enabled: true});
+                }
+            }, 0);
         }
-        setTimeout(() => {
-            const rigEl = <any> document.getElementById('aframe_camera_rig');
-            const camEl = <any> document.getElementById('aframe_look_camera');
-            if (rigEl && camera_pos) {
-                const trueCameraPos = new AFRAME.THREE.Vector3();
-                trueCameraPos.copy(camera_pos.position);
-                trueCameraPos.z = - trueCameraPos.z;
-                rigEl.setAttribute('position', trueCameraPos);
-
-                const trueCamerarot = new AFRAME.THREE.Vector3();
-                trueCamerarot.copy(camera_pos.rotation);
-                trueCamerarot.y = 0 - camera_pos.rotation.y;
-                camEl.setAttribute('custom-look-controls', {enabled: false});
-                camEl.setAttribute('rotation', trueCamerarot);
-                const newX = camEl.object3D.rotation.x;
-                const newY = camEl.object3D.rotation.y;
-                try {
-                    camEl.components['custom-look-controls'].pitchObject.rotation.x = newX;
-                    camEl.components['custom-look-controls'].yawObject.rotation.y = newY;
-                } catch (ex) {}
-                camEl.setAttribute('custom-look-controls', {enabled: true});
-            }
-        }, 0);
     }
 
     updateCameraPos(posDetails) {

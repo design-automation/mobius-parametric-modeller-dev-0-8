@@ -528,7 +528,14 @@ export class AframeViewerComponent implements OnInit, OnDestroy{
     updatePos(event) {
         try {
             const pos = JSON.parse(event.target.value);
-            this.vr.camera_position.copy(pos);
+            pos.z =  - pos.z;
+            if (this.vr.enabled) {
+                this.vr.camera_position.copy(pos);
+            } else {
+                this.settings.camera.position.x = pos.x;
+                this.settings.camera.position.y = pos.y;
+                this.settings.camera.position.z = pos.z;
+            }
         } catch (ex) {}
     }
 
@@ -536,9 +543,18 @@ export class AframeViewerComponent implements OnInit, OnDestroy{
         event.stopPropagation();
         try {
             const rot = JSON.parse(event.target.value);
-            this.vr.camera_rotation.x = rot._x;
-            this.vr.camera_rotation.y = rot._y;
-            this.vr.camera_rotation.z = rot._z;
+            rot.y = 0 - rot.y;
+            while (rot.y < -180) { rot.y += 360; }
+            while (rot.y > 180) { rot.y -= 360; }
+            if (this.vr.enabled) {
+                this.vr.camera_rotation.x = rot.x;
+                this.vr.camera_rotation.y = rot.y;
+                this.vr.camera_rotation.z = rot.z;
+            } else {
+                this.settings.camera.rotation.x = rot.x;
+                this.settings.camera.rotation.y = rot.y;
+                this.settings.camera.rotation.z = rot.z;
+            }
         } catch (ex) {}
     }
 }

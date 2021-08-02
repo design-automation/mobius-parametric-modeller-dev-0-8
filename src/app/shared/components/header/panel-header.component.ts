@@ -732,7 +732,7 @@ export class PanelHeaderComponent implements OnDestroy {
     @HostListener('window:copy', ['$event'])
     onWindowCopy(event: KeyboardEvent) {
         if (this.router.url.startsWith('/editor')) {
-            const targetName = (<HTMLElement> event.target).nodeName;
+            const targetName = (<HTMLElement> document.activeElement).nodeName;
             if ( targetName === 'TEXTAREA' || targetName === 'INPUT') { return; }
             document.getElementById('copyProdButton').click();
         }
@@ -741,7 +741,7 @@ export class PanelHeaderComponent implements OnDestroy {
     @HostListener('window:cut', ['$event'])
     onWindowCut(event: KeyboardEvent) {
         if (this.router.url.startsWith('/editor')) {
-            const targetName = (<HTMLElement> event.target).nodeName;
+            const targetName = (<HTMLElement> document.activeElement).nodeName;
             if ( targetName === 'TEXTAREA' || targetName === 'INPUT') { return; }
             document.getElementById('cutProdButton').click();
         }
@@ -749,7 +749,7 @@ export class PanelHeaderComponent implements OnDestroy {
     @HostListener('window:paste', ['$event'])
     onWindowPaste(event: KeyboardEvent) {
         if (this.router.url.startsWith('/editor')) {
-            const targetName = (<HTMLElement> event.target).nodeName;
+            const targetName = (<HTMLElement> document.activeElement).nodeName;
             if ( targetName === 'TEXTAREA' || targetName === 'INPUT') { return; }
             document.getElementById('pasteProdButton').click();
         }

@@ -106,6 +106,7 @@ export class ProcedureItemComponent implements OnDestroy {
     // select this procedure
     emitSelect(event: MouseEvent, procedure: IProcedure) {
         event.stopPropagation();
+        (<HTMLDivElement> event.target).focus();
         this.eventAction.emit({
             'type': 'select',
             'content': {'ctrl': event.ctrlKey || event.metaKey, 'shift': event.shiftKey, 'prod': procedure}

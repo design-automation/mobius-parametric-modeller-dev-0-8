@@ -59,6 +59,7 @@ export const customWASDControl = {
         this.onKeyUp = bind(this.onKeyUp, this);
         this.onVisibilityChange = bind(this.onVisibilityChange, this);
         this.attachVisibilityEventListeners();
+        this.pos = new AFRAME_THREE.Vector3();
     },
 
     tick: function (time, delta) {
@@ -79,7 +80,8 @@ export const customWASDControl = {
         el.object3D.position.add(this.getMovementVector(delta));
         const updatePosInp = <HTMLButtonElement> document.getElementById('aframe-updatePos');
         if (updatePosInp) {
-            updatePosInp.value = JSON.stringify(el.object3D.position);
+            el.object3D.getWorldPosition(this.pos);
+            updatePosInp.value = JSON.stringify(this.pos);
             updatePosInp.click();
         }
     },
@@ -337,7 +339,7 @@ export const customLookControl = {
       this.updateOrientation();
       const updateLookInp = <HTMLButtonElement> document.getElementById('aframe-updateLook');
       if (updateLookInp) {
-        updateLookInp.value = JSON.stringify(this.el.object3D.rotation);
+        updateLookInp.value = JSON.stringify(this.el.getAttribute('rotation'));
         updateLookInp.click();
       }
     },
