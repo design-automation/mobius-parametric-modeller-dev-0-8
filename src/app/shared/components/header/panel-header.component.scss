@@ -513,13 +513,15 @@ button.mat-menu-item:hover{
             font-family: $inputTextFontFam;
             font-weight: 700;
             display: inline-block;
-            width: 180px;
+            width: 178px;
             height: calc(50vh + 30px);
             overflow-y: scroll;
+            border: 1px solid $color4;
             .searchBar{
-                width: 162px;
+                width: 164px;
                 font-size: 12px;
-                padding: 2px 0px 2px 8px;
+                padding: 0px 0px 0px 0px;
+                margin: 2px;
                 // border: 1px solid $color4;
                 height: $fsize1;
                 // border-bottom: 5px solid $color6;
@@ -531,7 +533,7 @@ button.mat-menu-item:hover{
             width: 380px;
             height: 50vh;
             overflow-y: scroll;
-            padding: 15px;
+            padding: 0px 15px 15px 15px;
             margin-left: 10px;
             color: $color8;
 
