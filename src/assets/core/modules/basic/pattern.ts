@@ -10,17 +10,19 @@
 
 import * as chk from '../../_check_types';
 
-import { Txyz, TPlane, XYPLANE, TId, EEntType } from '@libs/geo-info/common';
+import { Txyz, TPlane, XYPLANE, TId, EEntType, Txy } from '@libs/geo-info/common';
 import { idsMakeFromIdxs } from '@assets/libs/geo-info/common_id_funcs';
 import { getArrDepth } from '@assets/libs/util/arrs';
 import { vecAdd } from '@libs/geom/vectors';
 import { xfromSourceTargetMatrix, multMatrix } from '@libs/geom/matrix';
 import { Matrix4 } from 'three';
+import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 // import { __merge__ } from '../_model';
 import { GIModel } from '@libs/geo-info/GIModel';
 import * as THREE from 'three';
 import * as VERB from '@assets/libs/verb/verb';
 import { arrFill, arrMakeFlat } from '@assets/libs/util/arrs';
+import { map } from 'rxjs-compat/operator/map';
 // import * as VERB from 'verb';
 // ================================================================================================
 /**
@@ -478,11 +480,72 @@ export function Box(__model__: GIModel, origin: Txyz | TPlane,
 /**
  * Creates positions in a polyhedron pattern. Returns a list of new positions.
  * \n
+ * The five regular polyhedrons can be generated:
+ * - Tetrahedron (4 triangular faces)
+ * - Cube (4 square faces)
+ * - Octahedron (8 triangular faces)
+ * - Icosahedron (20 triangular faces)
+ * - Dodecahedron (12 pentagon faces)
+ * \n
+ * The positions can either be returned as a flat list or as nested lists.
+ * The nested lists represent the faces of the polyhedron.
+ * However, note that only the positions are returned.
+ * If you want to have polygon faces, you need to generate polygons from the positions.
+ * \n
+ * The faces of the regular polyhedron can also be futher subdivided by specifying the level of `detail`.
+ * \n
+ * For tetrahedrons, octahedrons, and icosahedrons, the `detail` subdivides as follows:
+ * - Detail = 0: No subdivision
+ * - Detail = 1: Each triange edge is subdivided into two edges.
+ * - Detail = 2: Each triangle edge is subdivided into three edges.
+ * - etc
+ * \n
+ * Cubes and dodecahedrons do not have triangular faces. So in these cases, the first level of `detail` converts
+ * each non-triangualr face into triangles by adding a position at the centre of the face.
+ * The `detail` subdivides as follows:
+ * - Detail= 0: No subdivision.
+ * - Detail = 1: Convert non-triangular faces into triangles.
+ * - Detail = 2: Each triange edge is subdivided into two edges.
+ * - Detail = 3: Each triangle edge is subdivided into three edges.
+ * - etc
+ * \n
+ * All positions that are generated are projected onto the surface of a sphere,
+ * with the specified `origin` and `radius`.
+ * \n
+ * For example, calling the function with `detail = 0` and `method = 'flat_tetra'`,
+ * will result in the following positions:
+ * ```
+ * posis = ["ps0", "ps1", "ps2", "ps3"]
+ * ```
+ * If you change the method to `method = 'face_tetra'`, then you will get the following nested lists.
+ * ```
+ * posis = [
+ *     ["ps2", "ps1", "ps0"],
+ *     ["ps0", "ps3", "ps2"],
+ *     ["ps1", "ps3", "ps0"],
+ *     ["ps2", "ps3", "ps1"]
+ * ]
+ * ```
+ * Notice that the number of positions is the same in both cases
+ * (i.e. in both cases there are 4 positions: 'ps0', 'ps1', 'ps2', 'ps3').
+ * When `face_tetra` is selected selected, the positions are organised into 4 lists,
+ * representing the 4 faces of the tetrahedron.
+ * \n
+ * The nested lists can be passed to the `make.Polygon` function in order to generated polygonal faces.
+ * Here is an example:
+ * \n
+ * ```
+ * posis = pattern.Polyhedron(XY, 10, 0, 'face_tetra')
+ * pgons = make.Polygon(posis)
+ * ```
+ * \n
+ * ![Tetrahedron with polygonal faces](assets/typedoc-json/docMDimgs/tetrahedron.png)
+ * \n
  * @param __model__
- * @param origin XYZ coordinates as a list of three numbers.
- * @param radius xxx
- * @param detail xxx
- * @param method Enum
+ * @param origin XYZ coordinates, as a list of three numbers, specifiying the origin of the polyhedron.
+ * @param radius The radius of the polyhedron.
+ * @param detail The level of detail for the polyhedron.
+ * @param method Enum: The Type of polyhedron to generate.
  * @returns Entities, a list of positions.
  */
 export function Polyhedron(__model__: GIModel, origin: Txyz | TPlane, radius: number, detail: number,
@@ -513,93 +576,319 @@ export function Polyhedron(__model__: GIModel, origin: Txyz | TPlane, radius: nu
 }
 export enum _EPolyhedronMethod {
     FLAT_TETRA = 'flat_tetra',
+    FLAT_CUBE = 'flat_cube',
     FLAT_OCTA = 'flat_octa',
     FLAT_ICOSA = 'flat_icosa',
     FLAT_DODECA = 'flat_dodeca',
     FACE_TETRA = 'face_tetra',
+    FACE_CUBE = 'face_cube',
     FACE_OCTA = 'face_octa',
     FACE_ICOSA = 'face_icosa',
     FACE_DODECA = 'face_dodeca'
 }
+// create the polyhedron
 export function _polyhedron(__model__: GIModel, matrix: Matrix4, radius: number, detail: number,
     method: _EPolyhedronMethod): number[]|number[][] {
     // create the posis
-    let hedron_tjs: THREE.TetrahedronGeometry|THREE.OctahedronGeometry|THREE.IcosahedronGeometry|THREE.DodecahedronGeometry = null;
+    let xyzs: Txyz[];
+    let faces: number[][];
     switch (method) {
         case _EPolyhedronMethod.FLAT_TETRA:
         case _EPolyhedronMethod.FACE_TETRA:
-            hedron_tjs = new THREE.TetrahedronGeometry(radius, detail);
+            [xyzs, faces] = _polyhedronCreate(_polyhedronTetra(), radius, detail);
+            break;
+        case _EPolyhedronMethod.FLAT_CUBE:
+        case _EPolyhedronMethod.FACE_CUBE:
+            [xyzs, faces] = _polyhedronCreate(_polyhedronCube(), radius, detail);
             break;
         case _EPolyhedronMethod.FLAT_OCTA:
         case _EPolyhedronMethod.FACE_OCTA:
-            hedron_tjs = new THREE.OctahedronGeometry(radius, detail);
+            [xyzs, faces] = _polyhedronCreate(_polyhedronOcta(), radius, detail);
             break;
         case _EPolyhedronMethod.FLAT_ICOSA:
         case _EPolyhedronMethod.FACE_ICOSA:
-            hedron_tjs = new THREE.IcosahedronGeometry(radius, detail);
+            [xyzs, faces] = _polyhedronCreate(_polyhedronIcosa(), radius, detail);
             break;
         case _EPolyhedronMethod.FLAT_DODECA:
         case _EPolyhedronMethod.FACE_DODECA:
-            hedron_tjs = new THREE.DodecahedronGeometry(radius, detail);
+            [xyzs, faces] = _polyhedronCreate(_polyhedronDodeca(), radius, detail);
             break;
         default:
             throw new Error('pattern.Polyhedron: method not recognised.');
     }
-    // create the posis
+    // make posis
     const posis_i: number[] = [];
-    // THREE JS UPDATE --> EDITED
-    // for (const vert_tjs of hedron_tjs.vertices) {
-    //     const xyz: Txyz = multMatrix(vert_tjs.toArray() as Txyz, matrix);
-    //     const posi_i: number = __model__.modeldata.geom.add.addPosi();
-    //     __model__.modeldata.attribs.posis.setPosiCoords(posi_i, xyz);
-    //     posis_i.push(posi_i);
-    // }
-    let coordList: number[] = [];
-    for (const coord of <Float32Array> hedron_tjs.getAttribute('position').array) {
-        coordList.push(coord);
-        if (coordList.length === 3) {
-            const vert_tjs = new THREE.Vector3(...coordList);
-            const xyz: Txyz = multMatrix(vert_tjs.toArray() as Txyz, matrix);
-            const posi_i: number = __model__.modeldata.geom.add.addPosi();
-            __model__.modeldata.attribs.posis.setPosiCoords(posi_i, xyz);
-            posis_i.push(posi_i);
-            coordList = [];
-        }
+    for (const xyz of xyzs) {
+        const posi_i: number = __model__.modeldata.geom.add.addPosi();
+        const xyz_xform: Txyz = multMatrix(xyz, matrix);
+        __model__.modeldata.attribs.posis.setPosiCoords(posi_i, xyz_xform);
+        posis_i.push(posi_i);
     }
-
     // if the method is flat, then we are done, return the posis
     switch (method) {
         case _EPolyhedronMethod.FLAT_TETRA:
+        case _EPolyhedronMethod.FLAT_CUBE:
         case _EPolyhedronMethod.FLAT_OCTA:
         case _EPolyhedronMethod.FLAT_ICOSA:
         case _EPolyhedronMethod.FLAT_DODECA:
             return posis_i;
     }
-    // get the posis into the arrays
-    const posis_arrs_i: number[][] = [];
+    // if we want faces, then make lists of posis for each face
+    const faces_posis_i: number[][] = [];
+    for (const face of faces) {
+        const face_posis_i: number[] = [];
+        for (const i of face) {
+            face_posis_i.push(posis_i[i]);
+        }
+        faces_posis_i.push(face_posis_i);
+    }
+    return faces_posis_i;
+}
+// Create a tetrahedron
+function _polyhedronTetra(): [Txyz[], number[][]] {
+    // copied from threejs
+    const xyzs: Txyz[] = [
+        [1, 1, 1],
+        [- 1, - 1, 1],
+        [- 1, 1, - 1],
+        [1, - 1, - 1]
+    ];
+    const faces: number[][] = [
+        [2, 1, 0],
+        [0, 3, 2],
+        [1, 3, 0],
+        [2, 3, 1]
+    ];
+    return [xyzs, faces];
+}
+// Create a cube
+function _polyhedronCube(): [Txyz[], number[][]] {
+    const xyzs: Txyz[] = [
+        [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
+        [-1, -1,  1], [1, -1,  1], [1, 1,  1], [-1, 1,  1],
+    ];
+    const faces: number[][] = [
+        [0, 1, 2, 3],
+        [0, 1, 5, 4],
+        [1, 2, 6, 5],
+        [2, 3, 7, 6],
+        [3, 0, 4, 7],
+        [7, 6, 5, 4]
+    ];
+    return [xyzs, faces];
+}
+// Create a Octahedron
+function _polyhedronOcta(): [Txyz[], number[][]] {
+    // copied from threejs
+    const xyzs: Txyz[] = [
+        [1, 0, 0], [- 1, 0, 0], [0, 1, 0],
+        [0, - 1, 0], [0, 0, 1], [0, 0, - 1]
+    ];
+    const faces: number[][] = [
+        [0, 2, 4], [0, 4, 3], [0, 3, 5],
+        [0, 5, 2], [1, 2, 5], [1, 5, 3],
+        [1, 3, 4], [1, 4, 2]
+    ];
+    return [xyzs, faces];
+}
+// Create a Icosahedron
+function _polyhedronIcosa(): [Txyz[], number[][]] {
+    // copied from threejs
+    const t = (1 + Math.sqrt(5)) / 2;
+    const xyzs: Txyz[] = [
+        [- 1, t, 0], [1, t, 0], [- 1, - t, 0],
+        [1, - t, 0], [0, - 1, t], [0, 1, t],
+        [0, - 1, - t], [0, 1, - t], [t, 0, - 1],
+        [t, 0, 1], [- t, 0, - 1], [- t, 0, 1]
+    ];
+    const faces: number[][] = [
+        [0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11],
+        [1, 5, 9], [5, 11, 4], [11, 10, 2], [10, 7, 6], [7, 1, 8],
+        [3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9],
+        [4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1]
+    ];
+    return [xyzs, faces];
+}
+// Create a Dodecahedron
+function _polyhedronDodeca(): [Txyz[], number[][]] {
+    // copied from threejs
+    const t: number = (1 + Math.sqrt(5)) / 2;
+    const r: number = 1 / t;
+    const xyzs: Txyz[] = [
+        // (±1, ±1, ±1)
+        [- 1, - 1, - 1], [- 1, - 1, 1],
+        [- 1, 1, - 1], [- 1, 1, 1],
+        [1, - 1, - 1], [1, - 1, 1],
+        [1, 1, - 1], [1, 1, 1],
+        // (0, ±1/φ, ±φ)
+        [0, - r, - t], [0, - r, t],
+        [0, r, - t], [0, r, t],
+        // (±1/φ, ±φ, 0)
+        [- r, - t, 0], [- r, t, 0],
+        [r, - t, 0], [r, t, 0],
+        // (±φ, 0, ±1/φ)
+        [- t, 0, - r], [t, 0, - r],
+        [- t, 0, r], [t, 0, r]
+    ];
+    const faces: number[][] = [
+        // [3, 11, 7], [3, 7, 15], [3, 15, 13],
+        // [7, 19, 17], [7, 17, 6], [7, 6, 15],
+        // [17, 4, 8], [17, 8, 10], [17, 10, 6],
+        // [8, 0, 16], [8, 16, 2], [8, 2, 10],
+        // [0, 12, 1], [0, 1, 18], [0, 18, 16],
+        // [6, 10, 2], [6, 2, 13], [6, 13, 15],
+        // [2, 16, 18], [2, 18, 3], [2, 3, 13],
+        // [18, 1, 9], [18, 9, 11], [18, 11, 3],
+        // [4, 14, 12], [4, 12, 0], [4, 0, 8],
+        // [11, 9, 5], [11, 5, 19], [11, 19, 7],
+        // [19, 5, 14], [19, 14, 4], [19, 4, 17],
+        // [1, 12, 14], [1, 14, 5], [1, 5, 9]
+        [3, 11, 7, 15, 13],
+        [7, 19, 17, 6, 15],
+        [17, 4, 8, 10, 6],
+        [8, 0, 16, 2, 10],
+        [0, 12, 1, 18, 16],
+        [6, 10, 2, 13, 15],
+        [2, 16, 18, 3, 13],
+        [18, 1, 9, 11, 3],
+        [4, 14, 12, 0, 8],
+        [11, 9, 5, 19, 7],
+        [19, 5, 14, 4, 17],
+        [1, 12, 14, 5, 9]
 
-    // THREE JS UPDATE --> EDITED
-    // for (const face_tjs of hedron_tjs.faces) {
-    //     posis_arrs_i.push([
-    //         posis_i[face_tjs.a],
-    //         posis_i[face_tjs.b],
-    //         posis_i[face_tjs.c]
-    //     ]);
-    // }
-
-    let indList: number[] = [];
-    for (const index of hedron_tjs.parameters.indices) {
-        indList.push(index);
-        if (coordList.length === 3) {
-            posis_arrs_i.push(indList);
-            indList = [];
+    ];
+    return [xyzs, faces];
+}
+// Subdivide and apply radius
+function _polyhedronCreate(xyzs_faces: [Txyz[], number[][]], radius: number, detail: number): [Txyz[], number[][]] {
+    const xyzs: Txyz[] = xyzs_faces[0];
+    const faces: number[][] = xyzs_faces[1];
+    // subdiv
+    const [new_xyzs, new_faces]: [Txyz[], number[][]]  = _polyhedronSubDdiv(xyzs, faces, detail);
+    // apply radius
+    _polyhedronApplyRadiusXyzs(new_xyzs, radius);
+    // return
+    return [new_xyzs, new_faces];
+}
+// Subdiv all faces
+function _polyhedronSubDdiv(xyzs: Txyz[], faces: number[][], detail: number): [Txyz[], number[][]] {
+    if (detail === 0) { return [xyzs, faces]; }
+    const new_faces: number[][] = [];
+    for (const face of faces) {
+        if (face.length > 3) {
+            const mid: Txyz = [0, 0, 0];
+            for (const xyz_i of face) {
+                mid[0] = mid[0] + xyzs[xyz_i][0];
+                mid[1] = mid[1] + xyzs[xyz_i][1];
+                mid[2] = mid[2] + xyzs[xyz_i][2];
+            }
+            mid[0] = mid[0] / face.length;
+            mid[1] = mid[1] / face.length;
+            mid[2] = mid[2] / face.length;
+            const mid_i: number = xyzs.push(mid) - 1;
+            for (let i = 0; i < face.length; i++) {
+                const tri_face: number[] = [mid_i, face[i], face[(i + 1) % face.length]];
+                const subdiv_faces: number[][] = _polyhedronSubDdivTriFace(xyzs, tri_face, detail - 1);
+                subdiv_faces.map(subdiv_face => new_faces.push(subdiv_face));
+            }
+        } else {
+            const subdiv_faces: number[][] = _polyhedronSubDdivTriFace(xyzs, face, detail);
+            subdiv_faces.map(subdiv_face => new_faces.push(subdiv_face));
         }
     }
-
-    // dispose the tjs polyhedron
-    hedron_tjs.dispose();
-    // return the result
-    return posis_arrs_i;
+    // merge xyzs
+    const new_xyzs: Txyz[] = _polyhedronMergeXyzs(xyzs, new_faces);
+    // return
+    return [new_xyzs, new_faces];
+}
+// Subdivide one face
+function _polyhedronSubDdivTriFace(xyzs: Txyz[], face: number[], detail: number): number[][] {
+    const a: Txyz = xyzs[face[0]];
+    const b: Txyz = xyzs[face[1]];
+    const c: Txyz = xyzs[face[2]];
+    const cols = detail + 1;
+    // we use this multidimensional array as a data structure for creating the subdivision
+    const xyzs_i: number[][] = [];
+    // construct all of the xyzs for this subdivision
+    for (let i = 0; i <= cols; i++) {
+        xyzs_i[i] = [];
+        const aj = _polyhedronLerp(a, c, i / cols);
+        const bj = _polyhedronLerp(b, c, i / cols);
+        const rows = cols - i;
+        for (let j = 0; j <= rows; j++) {
+            let xyz_i: number;
+            if (j === 0 && i === cols) {
+                xyz_i = xyzs.push(aj) - 1;
+            } else {
+                xyz_i = xyzs.push(_polyhedronLerp(aj, bj, j / rows)) - 1;
+            }
+            xyzs_i[i][j] = xyz_i;
+        }
+    }
+    // construct all of the tri faces
+    const new_faces: number[][] = [];
+    for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < 2 * (cols - i) - 1; j++) {
+            const new_face: number[] = [];
+            const k = Math.floor(j / 2);
+            if (j % 2 === 0) {
+                new_face.push(xyzs_i[i][k + 1]);
+                new_face.push(xyzs_i[i + 1][k]);
+                new_face.push(xyzs_i[i][k]);
+            } else {
+                new_face.push(xyzs_i[i][k + 1]);
+                new_face.push(xyzs_i[i + 1][k + 1]);
+                new_face.push(xyzs_i[i + 1][k]);
+            }
+            new_faces.push(new_face);
+        }
+    }
+    return new_faces;
+}
+function _polyhedronMergeXyzs(xyzs: Txyz[], faces: number[][]): Txyz[] {
+    // iterate over the xyzs
+    const xyz_i_old_new_map: Map<number, number> = new Map();
+    const new_xyzs: Txyz[] = [];
+    for (let i = 0; i < xyzs.length; i++) {
+        if (!xyz_i_old_new_map.has(i)) {
+            const new_i: number = new_xyzs.push(xyzs[i]) - 1;
+            xyz_i_old_new_map.set(i, new_i);
+            for (let j = i + 1; j < xyzs.length; j++) {
+                const dist_sq: number =
+                    Math.abs(xyzs[i][0] - xyzs[j][0]) +
+                    Math.abs(xyzs[i][1] - xyzs[j][1]) +
+                    Math.abs(xyzs[i][2] - xyzs[j][2]);
+                if (dist_sq < 1e-6) {
+                    xyz_i_old_new_map.set(j, new_i);
+                }
+            }
+        }
+    }
+    // update indexes
+    for (const face of faces) {
+        for (let i = 0; i < face.length; i++) {
+            face[i] = xyz_i_old_new_map.get(face[i]);
+        }
+    }
+    // return
+    return new_xyzs;
+}
+function _polyhedronApplyRadiusXyzs(xyzs: Txyz[], radius: number): void {
+    // iterate over the xyzs and apply the radius to each xyz
+    for (const xyz of xyzs) {
+        const scale: number = radius / Math.sqrt(xyz[0] * xyz[0] + xyz[1] * xyz[1] + xyz[2] * xyz[2]);
+        xyz[0] = xyz[0] * scale;
+        xyz[1] = xyz[1] * scale;
+        xyz[2] = xyz[2] * scale;
+    }
+}
+function _polyhedronLerp(a: Txyz, b: Txyz, alpha: number): Txyz {
+    // interpolate between two points
+    return [
+        a[0] + (b[0] - a[0]) * alpha,
+        a[1] + (b[1] - a[1]) * alpha,
+        a[2] + (b[2] - a[2]) * alpha
+    ];
 }
 // ================================================================================================
 /**
