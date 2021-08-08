@@ -518,6 +518,8 @@ button.mat-menu-item:hover{
             overflow-y: scroll;
             border: 1px solid $color4;
             .searchBar{
+                position: fixed;
+                z-index: 2;
                 width: 164px;
                 font-size: 12px;
                 padding: 0px 0px 0px 0px;
@@ -531,7 +533,7 @@ button.mat-menu-item:hover{
         .inlineFuncHelpContainer{
             display: inline-block;
             width: 380px;
-            height: 50vh;
+            height: 395px;
             overflow-y: scroll;
             padding: 0px 15px 15px 15px;
             margin-left: 10px;
