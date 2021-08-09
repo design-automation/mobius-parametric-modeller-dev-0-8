@@ -1,6 +1,6 @@
 /**
- * The `pattern` module has functions for creating patters of positions in the model.
- * All these functions all return lists of position IDs.
+ * The `pattern` module has functions for creating patters of positions.
+ * These functions all return lists of position IDs.
  * The list may be nested, depending on which function is selected.
  */
 
@@ -11,9 +11,9 @@
 import * as chk from '../../_check_types';
 
 import { Txyz, TPlane, XYPLANE, TId, EEntType, Txy } from '@libs/geo-info/common';
-import { idsMakeFromIdxs } from '@assets/libs/geo-info/common_id_funcs';
+import { idsMake, idsMakeFromIdxs } from '@assets/libs/geo-info/common_id_funcs';
 import { getArrDepth } from '@assets/libs/util/arrs';
-import { vecAdd } from '@libs/geom/vectors';
+import { vecAdd, vecDiv, vecFromTo, vecSub } from '@libs/geom/vectors';
 import { xfromSourceTargetMatrix, multMatrix } from '@libs/geom/matrix';
 import { Matrix4 } from 'three';
 import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
@@ -26,18 +26,29 @@ import { map } from 'rxjs-compat/operator/map';
 // import * as VERB from 'verb';
 // ================================================================================================
 /**
- * Creates a row of positions in a line pattern. Returns a list of new positions.
+ * Creates a set of positions in a straight line pattern.
+ * \n
+ * The `origin` parameter specifies the centre of the straight line along which positions will be
+ * generated. The origin can be specified as either a |coordinate| or a |plane|. If a coordinate
+ * is given, then a plane will be automatically generated, aligned with the global XY plane.
+ * \n
+ * The positions will be generated along an straight line aligned with the X axis of the origin 
+ * plane.
+ * \n
+ * Returns the list of new positions.
+ * \n
  * @param __model__
- * @param origin XYZ coordinates as a list of three numbers.
- * @param size Size of the line.
- * @returns Entities, a list of four positions.
+ * @param origin A |coordinate| or a |plane|.
+ * If a coordinate is given, then the plane is assumed to be aligned with the global XY plane.
+ * @param length The length of the line along which positions will be generated.
+ * @returns Entities, a list of new positions.
  */
-export function Line(__model__: GIModel, origin: Txyz|TPlane, size: number, num_positions: number): TId[] {
+export function Line(__model__: GIModel, origin: Txyz|TPlane, length: number, num_positions: number): TId[] {
     // --- Error Check ---
     if (__model__.debug) {
         const fn_name = 'pattern.Line';
         chk.checkArgs(fn_name, 'origin', origin, [chk.isXYZ, chk.isPln]);
-        chk.checkArgs(fn_name, 'size', size, [chk.isNum]);
+        chk.checkArgs(fn_name, 'length', length, [chk.isNum]);
         chk.checkArgs(fn_name, 'num_positions', num_positions, [chk.isInt]);
     }
     // --- Error Check ---
@@ -50,9 +61,9 @@ export function Line(__model__: GIModel, origin: Txyz|TPlane, size: number, num_
     // create the positions
     const posis_i: number[] = [];
     const coords: Txyz[] = [];
-    const step: number = size / (num_positions - 1);
+    const step: number = length / (num_positions - 1);
     for (let i = 0; i < num_positions; i++) {
-        coords.push([-(size / 2) + i * step, 0, 0]);
+        coords.push([-(length / 2) + i * step, 0, 0]);
     }
     for (const coord of coords) {
         let xyz: Txyz = coord;
@@ -70,10 +81,95 @@ export function Line(__model__: GIModel, origin: Txyz|TPlane, size: number, num_
 }
 // ================================================================================================
 /**
- * Creates four positions in a rectangle pattern. Returns a list of new positions.
+ * Creates a set of positions by linear interpolation between the specified |coordinates|.
+ * \n
+ * The `num_positions` parameter specifies the number of positions to be generated between
+ * each pair of coordinates.
+ * \n
+ * The `close` parameter specifies whether to close the loop of coordinates. If set to `true`,
+ * then positions are also generated between the last and first coordinates in the list.
+ * \n
+ * For the `num_positions` parameters:
+ * - `num_positions = 0`: No positions are generated.
+ * - `num_positions = 1`: No new coordinates are calculated.
+ * If `close` is true, then positions are generate at all coordinates in the input list.
+ * If `close` is false, then positions are generate at all coordinates in the input list
+ * except the last coordinate (which is ignored).
+ * - `num_positions = 2`: No new coordinates are calculated. Positions are generate at all
+ * coordinates in the input list. (The `close` parameter has no effect.)
+ * - `num_positions = 3`: For each pair of coordinates, one additional coordinate
+ * is calculated by linear interpolation.
+ * - `num_positions = 4`: For each pair of coordinates, two additional coordinates
+ * are calculated by linear interpolation.
+ * - etc
+ * \n
+ * For example, lets consider a case where you specify three coordinates, set `close` to `true`
+ * and set `num_positions` to 4. In this case, there will be 3 pairs of coordinates, `[0, 1]`,
+ * `[1, 2]` and `[2, 0]`. For each pair of coordinates, 2 new calculations are calculated.
+ * This results in a total of 9 coordinates. So 9 positions will be generated.
+ * \n
+ * Returns the list of new position IDs.
+ * \n
  * @param __model__
- * @param origin XYZ coordinates as a list of three numbers.
- * @param size Size of rectangle. If number, assume square of that length; if list of two numbers, x and y lengths respectively.
+ * @param coords A list of |coordinates|.
+ * @param close Enum, 'open' or 'close'.
+ * @param The number of positions to generate.
+ * @returns Entities, a list of new position IDs.
+ * @example posis = pattern.Linear([[0,0,0], [10,0,0]], false, 3)
+ * @example_info Generates 3 positions, located at [0,0,0], [5,0,0], and [10,0,0].
+ * @example posis = pattern.Linear([[0,0,0], [10,0,0], [10,10,0]], true, 4)
+ * @example_info Generates 9 positions. Two new coordinates are calculated between each pair of
+ * input positions.
+ */
+export function Linear(__model__: GIModel, coords: Txyz[], close: _EClose, num_positions: number): TId[] {
+    // --- Error Check ---
+    if (__model__.debug) {
+        const fn_name = 'pattern.Linear';
+        chk.checkArgs(fn_name, 'coords', coords, [chk.isXYZL]);
+        chk.checkArgs(fn_name, 'num_positions', num_positions, [chk.isInt]);
+    }
+    // --- Error Check ---
+    if (num_positions === 0) { return []; }
+    const is_closed: boolean = close === _EClose.CLOSE;
+    const num_pairs: number = is_closed ? coords.length : coords.length - 1;
+    const new_xyzs: Txyz[] = [];
+    for (let i = 0; i < num_pairs; i++) {
+        const xyz0: Txyz = coords[i];
+        const xyz1: Txyz = coords[(i + 1) % coords.length];
+        const sub_vec: Txyz = vecDiv(vecFromTo(xyz0, xyz1), num_positions - 1);
+        let xyz_next: Txyz = xyz0;
+        for (let j = 0; j < num_positions - 1; j++) {
+            new_xyzs.push(xyz_next);
+            xyz_next = vecAdd(xyz_next, sub_vec);
+        }
+    }
+    if (!is_closed) { new_xyzs.push(coords[coords.length - 1]); }
+    // make posis and return
+    return idsMake(__model__.modeldata.funcs_make.position(new_xyzs)) as TId[];
+}
+// ================================================================================================
+/**
+ * Creates four positions in a rectangle pattern.
+ * \n
+ * The `origin` parameter specifies the centre of the rectangle for which positions will be
+ * generated. The origin can be specified as either a |coordinate| or a |plane|. If a coordinate
+ * is given, then a plane will be automatically generated, aligned with the global XY plane.
+ * \n
+ * The positions will be generated for a rectangle on the origin XY plane. So if the origin plane is
+ * rotated, then the rectangle will also be rotated.
+ * \n
+ * The `size` parameter specifies the size of the rectangle. If only one number is given,
+ * then width and length are assumed to be equal. If a list of two numbers is given,
+ * then they will be interpreted as `[width, length]`.The width dimension will be in the
+ * X-direction of the origin plane, and the length will be in the Y direction of the origin plane.
+ * \n
+ * Returns a list of new positions.
+ * \n
+ * @param __model__
+ * @param origin A |coordinate| or a |plane|.
+ * If a coordinate is given, then the plane is assumed to be aligned with the global XY plane.
+ * @param size Size of rectangle. If number, assume square of that length;
+ * if list of two numbers, x and y lengths respectively.
  * @returns Entities, a list of four positions.
  * @example coordinates1 = pattern.Rectangle([0,0,0], 10)
  * @example_info Creates a list of 4 coords, being the vertices of a 10 by 10 square.
@@ -125,20 +221,102 @@ export enum _EGridMethod {
     QUADS = 'quads'
 }
 /**
-* Creates positions in a grid pattern. Returns a list (or list of lists) of new positions.
-* @param __model__
-* @param origin XYZ coordinates as a list of three numbers.
-* @param size Size of grid. If number, assume equal lengths, i.e. a square grid.
-* If list of two numbers, specifies x and y lengths respectively.
-* @param num_positions Number of positions. If a number, assume equal number of positions.
-* If a list of two numbers, specifies x and y number of positions respectivley.
-* @param method Enum, define the way the coords will be return as lists.
-* If integer, same number for x and y; if list of two numbers, number for x and y respectively.
-* @returns Entities, a list of positions, or a list of lists of positions (depending on the 'method' setting).
-* @example coordinates1 = pattern.Grid([0,0,0], 10, 3)
-* @example_info Creates a list of 9 XYZ coordinates on a 3x3 square grid of length 10.
-* @example coordinates1 = pattern.Grid([0,0,0], [10,20], [2,4])
-* @example_info Creates a list of 8 XYZ coordinates on a 2x4 grid of length 10 by 20.
+ * Creates positions in a grid pattern.
+ * \n
+ * The `origin` parameter specifies the centre of the grid for which positions will be
+ * generated. The origin can be specified as either a |coordinate| or a |plane|. If a coordinate
+ * is given, then a plane will be automatically generated, aligned with the global XY plane.
+ * \n
+ * The positions will be generated for a grid on the origin XY plane. So if the origin plane is
+ * rotated, then the grid will also be rotated.
+ * \n
+ * The `size` parameter specifies the size of the grid. 
+ * - If only one number is given, then width and length are assumed to be equal. 
+ * - If a list of two numbers is given, then they will be interpreted as `[width, length]`.
+ * \n
+ * The width dimension will be in the X-direction of the origin plane, and the length will be in 
+ * the Y direction of the origin plane.
+ * \n
+ * The `num_positions` parameter specifies the number of columns and rows of positions in the grid.
+ * - If only one number is given, then the grid is assumed to have equal number columns and rows.
+ * - If a list of two numbers is given, then they will be interpreted as `[columns, rows]`.
+ * \n
+ * The `columns` will be parallel to the Y-direction of the origin plane,
+ * and the `rows` will be parallel to the X-direction of the origin plane.
+ * \n
+ * For example, consider the following function call:
+ * `posis = pattern.Grid(XY, [10, 20], [3, 5], 'flat')`
+ * This will generate the following grid:
+ * \n
+ * ![An example of pattern.Grid](assets/typedoc-json/docMDimgs/pattern_grid.png)
+ * \n
+ * The positions can either be returned as a flat list or as nested lists.
+ * For the nested lists, three options are available:
+ * - `columns`: Each nested list represents a column of positions. 
+ * - `rows`: Each nested list represents a row of positions.
+ * - `quads`: Each nested list represents four positions, forming a quadrilateral. Neighbouring 
+ * quadrilaterals share positions.
+ * \n
+ * Below are the varying results when calling the function with the method set to
+ * `flat`, `columns`, `rows` and `quads`:
+ * \n
+ * `posis = pattern.Grid(XY, [10,20], [2,3], 'flat')`
+ * ```
+ * posis = ["ps0", "ps1", "ps2", "ps3", "ps4", "ps5"]
+ * ```
+ * \n
+ * `posis = pattern.Grid(XY, [10,20], [2,3], 'columns')`
+ * ```
+ * posis = [
+ *     ["ps0", "ps2", "ps4"],
+ *     ["ps1", "ps3", "ps5"]
+ * ]
+ * ```
+ * \n
+ * `posis = pattern.Grid(XY, [10,20], [2,3], 'rows')`
+ * ```
+ * posis = [
+ *     ["ps0", "ps1"],
+ *     ["ps2", "ps3"],
+ *     ["ps4", "ps5"]
+ * ]
+ * ```
+ * \n
+ * `posis = pattern.Grid(XY, [10,20], [2,3], 'quads')`
+ * ```
+ * posis = [
+ *     ["ps0", "ps1", "ps3", "ps2"],
+ *     ["ps2", "ps3", "ps5", "ps4"]
+ * ]
+ * ```
+ * \n
+ * When the method is set to `columns` or `rows`, polylines can be generated as follows:
+ * ```
+ * posis = pattern.Grid(XY, [10,20], [2,3], 'rows')
+ * plines = make.Polyline(posis, 'open')
+ * ```
+ * When the method is set to quads, polygons can be generated as follows:
+ * ```
+ * posis = pattern.Grid(XY, [10,20], [2,3], 'quads')
+ * pgons = make.Polygon(posis)
+ * ```
+ * \n
+ * @param __model__
+ * @param origin A |coordinate| or a |plane|.
+ * If a coordinate is given, then the plane is assumed to be aligned with the global XY plane.
+ * @param size The width and length of grid.
+ * If a single number is given, then the width and length are assumed to be equal.
+ * If a list of two numbers is given, then they will be interpreted as `[width, length]`.
+ * @param num_positions Number of columns and rows of positions in the grid.
+ * If a single number is given, then the number of columns and rows are assumed to be equal.
+ * If a list of two numbers is given, then they will be interpreted as `[columns, rows]`.
+ * @param method Enum, define the way the coords will be return as lists.
+ * @returns Entities, a list of positions, or a list of lists of positions
+ * (depending on the 'method' setting).
+ * @example posis = pattern.Grid([0,0,0], 10, 3, 'flat')
+ * @example_info Creates a list of 9 positions on a 3x3 square grid with a size of 10.
+ * @example posis = pattern.Grid([0,0,0], [10,20], [2,4], 'flat')
+ * @example_info Creates a list of 8 positions on a 2x4 grid with a width of 10 and a length of 20.
 */
 export function Grid(__model__: GIModel, origin: Txyz|TPlane, size: number|[number, number],
         num_positions: number|[number, number], method: _EGridMethod): TId[]|TId[][] {
@@ -222,19 +400,122 @@ export enum _EBoxMethod {
     ROWS = 'rows',
     COLUMNS = 'columns',
     LAYERS = 'layers',
-    // SIDES = 'sides',
     QUADS = 'quads'
 }
 /**
- * Creates positions in a box pattern. Returns a list of new positions.
+ * Creates positions in a box pattern. Positions are only generated on the outer surface of the box.
+ * No positions are generated in the interior of the box.
+ * \n
+ * The `origin` parameter specifies the centre of the box for which positions will be
+ * generated. The origin can be specified as either a |coordinate| or a |plane|. If a coordinate
+ * is given, then a plane will be automatically generated, aligned with the global XY plane.
+ * \n
+ * The positions will be generated for a box aligned with the origin XY plane.
+ * So if the origin plane is rotated, then the box will also be rotated.
+ * \n
+ * The `size` parameter specifies the size of the box.
+ * - If only one number is given, then the width, length, and height are assumed to be equal.
+ * - If a list of two numbers is given, then they will be interpreted as `[width, length]`,
+ * and the height will be the same as the length.
+ * - If a list of three numbers is given, then they will be interpreted as `[width, length, height]`.
+ * \n
+ * The width dimension will be in the X-direction of the origin plane,
+ * the length in the Y direction, and the height in the Z-direction.
+ * \n
+ * The `num_positions` parameter specifies the number of columns, rows, and layers of positions
+ * in the box.
+ * - If only one number is given, then the box is assumed to have equal number columns, rows,
+ * and layers.
+ * - If a list of two numbers is given, then they will be interpreted as `[columns, rows]`,
+ * and the number of layers will be the same as the rows.
+ * - If a list of three numbers is given, then they will be interpreted as `[columns, rows, layers]`.
+ * \n
+ * The `columns` will be parallel to the Y-direction of the origin plane,
+ * and the `rows` will be parallel to the X-direction of the origin plane.
+ * The layers are stacked up in the Z-direction of the origin plane.
+ * \n
+ * For example, consider the following function call:
+ * `posis = pattern.Box(XY, [10,20,30], [2,3,2], 'flat')`
+ * This will generate the following box:
+ * \n
+ * ![An example of pattern.Box](assets/typedoc-json/docMDimgs/pattern_box.png)
+ * \n
+ * Below are the varying results when calling the function with the method set to
+ * `flat`, `columns`, `rows` `layers` and `quads`:
+ * \n
+ * `posis = pattern.Box(XY, [10,20,30], [2,3,2], 'flat')`
+ * ```
+ * posis = ["ps0", "ps1", "ps2", "ps3", "ps4", "ps5", "ps6", "ps7", "ps8", "ps9", "ps10", "ps11"]
+ * ```
+ * \n
+ * `posis = pattern.Grid(XY, [10,20,30], [2,3,2], 'columns')`
+ * ```
+ * posis = [
+ *     ["ps0", "ps1", "ps6", "ps7"],
+ *     ["ps2", "ps3", "ps8", "ps9"],
+ *     ["ps4", "ps5", "ps10", "ps11"]
+ * ]
+ * ```
+ * \n
+ * `posis = pattern.Grid(XY, [10,20,30], [2,3,2], 'rows')`
+ * ```
+ * posis = [
+ *     ["ps0", "ps2", "ps4", "ps6", "ps8", "ps10"],
+ *     ["ps1", "ps3", "ps5", "ps7", "ps9", "ps11"]
+ * ]
+ * ```
+ * \n
+ * `posis = pattern.Grid(XY, [10,20,30], [2,3,2], 'layers')`
+ * ```
+ * posis = [
+ *     ["ps0", "ps1", "ps2", "ps3", "ps4", "ps5"],
+ *     ["ps6", "ps7", "ps8", "ps9", "ps10", "ps11"]
+ * ]
+ * ```
+ * \n
+* `posis = pattern.Grid(XY, [10,20,30], [2,3,2], 'quads')`
+ * ```
+ * posis = [
+ *     ["ps0", "ps2", "ps3", "ps1"],
+ *     ["ps2", "ps4", "ps5", "ps3"],
+ *     ["ps0", "ps1", "ps7", "ps6"],
+ *     ["ps1", "ps3", "ps9", "ps7"],
+ *     ["ps3", "ps5", "ps11", "ps9"],
+ *     ["ps5", "ps4", "ps10", "ps11"],
+ *     ["ps4", "ps2", "ps8", "ps10"],
+ *     ["ps2", "ps0", "ps6", "ps8"],
+ *     ["ps6", "ps7", "ps9", "ps8"],
+ *     ["ps8", "ps9", "ps11", "ps10"]
+ * ]
+ * ```
+ * \n
+ * When the method is set to `columns` or `rows`, polylines can be generated as follows:
+ * ```
+ * posis = pattern.Box(XY, [10,20,30], [2,3,2], 'rows')
+ * plines = make.Polyline(posis, 'open')
+ * ```
+ * When the method is set to quads, polygons on the box surface can be generated as follows:
+ * ```
+ * posis = pattern.Grid(XY, [10,20,30], [2,3,2], 'quads')
+ * pgons = make.Polygon(posis)
+ * ```
+ * \n
  * @param __model__
- * @param origin XYZ coordinates as a list of three numbers.
- * @param size Size of the box. If one number, assume equal lengths.
- * If list of two or three numbers, specifies x y z lengths respectively.
- * @param num_positions Number of positions. If number, assume equal number of positions.
- * If list of two or three numbers, specifies x y z numbers respectively.
- * @param method Enum
- * @returns Entities, a list of 6 positions.
+ * @param origin A |coordinate| or a |plane|.
+ * If a coordinate is given, then the plane is assumed to be aligned with the global XY plane.
+ * @param size The width, length, and height of the box.
+ * If a single number is given, then the width, length, and height are assumed to be equal.
+ * If a list of two numbers is given, then they will be interpreted as `[width, length]`,
+ * and the height is assumed to be equal to the length.
+ * If a list of three numbers is given, then they will be interpreted as `[width, length, height]`.
+ * @param num_positions Number of columns, rows, and layers of positions in the box.
+ * If a single number is given, then the number of columns, rows, and layers are assumed to be equal.
+ * If a list of two numbers is given, then they will be interpreted as `[columns, rows]`,
+ * and the number of layers is assumed to be equal to the number of rows.
+ * If a list of three numbers is given, then they will be interpreted as `[columns, rows, layers]`.
+ * @param method Enum, define the way the coords will be return as lists.
+ * @returns Entities, a list of positions, or a list of lists of positions
+ * (depending on the 'method' setting).
  */
 export function Box(__model__: GIModel, origin: Txyz | TPlane,
     size: number | [number, number] | [number, number, number],
@@ -478,7 +759,7 @@ export function Box(__model__: GIModel, origin: Txyz | TPlane,
 }
 // ================================================================================================
 /**
- * Creates positions in a polyhedron pattern. Returns a list of new positions.
+ * Creates positions in a polyhedron pattern.
  * \n
  * The five regular polyhedrons can be generated:
  * - Tetrahedron (4 triangular faces)
@@ -487,30 +768,39 @@ export function Box(__model__: GIModel, origin: Txyz | TPlane,
  * - Icosahedron (20 triangular faces)
  * - Dodecahedron (12 pentagon faces)
  * \n
+ * The `origin` parameter specifies the centre of the polyhedron for which positions will be
+ * generated. The origin can be specified as either a |coordinate| or a |plane|. If a coordinate
+ * is given, then a plane will be automatically generated, aligned with the global XY plane.
+ * \n
+ * The positions will be generated for a polyhedron aligned with the origin XY plane.
+ * So if the origin plane is rotated, then the polyhedron will also be rotated.
+ * \n
+ * The `radius` parameter specifies the size of the polyhedron.
+ * All positions that are generated are projected onto the surface of a sphere,
+ * with the specified `radius`.
+ * \n
+ * The faces of the regular polyhedron can be further subdivided by specifying the level of
+ * `detail`. (When subdivided, it will no longer be regular polyhedrons.)
+ * \n
+ * For tetrahedrons, octahedrons, and icosahedrons, the `detail` subdivides as follows:
+ * - Detail = 0: No subdivision
+ * - Detail = 1: Each triangle edge is subdivided into two edges.
+ * - Detail = 2: Each triangle edge is subdivided into three edges.
+ * - etc
+ * \n
+ * Cubes and dodecahedrons do not have triangular faces. So in these cases, the first level of 
+ * `detail` converts each non-triangular face into triangles by adding a position at the centre of 
+ * the face. The `detail` subdivides as follows:
+ * - Detail= 0: No subdivision.
+ * - Detail = 1: Convert non-triangular faces into triangles.
+ * - Detail = 2: Each triangle edge is subdivided into two edges.
+ * - Detail = 3: Each triangle edge is subdivided into three edges.
+ * - etc
+ * \n
  * The positions can either be returned as a flat list or as nested lists.
  * The nested lists represent the faces of the polyhedron.
  * However, note that only the positions are returned.
  * If you want to have polygon faces, you need to generate polygons from the positions.
- * \n
- * The faces of the regular polyhedron can also be futher subdivided by specifying the level of `detail`.
- * \n
- * For tetrahedrons, octahedrons, and icosahedrons, the `detail` subdivides as follows:
- * - Detail = 0: No subdivision
- * - Detail = 1: Each triange edge is subdivided into two edges.
- * - Detail = 2: Each triangle edge is subdivided into three edges.
- * - etc
- * \n
- * Cubes and dodecahedrons do not have triangular faces. So in these cases, the first level of `detail` converts
- * each non-triangualr face into triangles by adding a position at the centre of the face.
- * The `detail` subdivides as follows:
- * - Detail= 0: No subdivision.
- * - Detail = 1: Convert non-triangular faces into triangles.
- * - Detail = 2: Each triange edge is subdivided into two edges.
- * - Detail = 3: Each triangle edge is subdivided into three edges.
- * - etc
- * \n
- * All positions that are generated are projected onto the surface of a sphere,
- * with the specified `origin` and `radius`.
  * \n
  * For example, calling the function with `detail = 0` and `method = 'flat_tetra'`,
  * will result in the following positions:
@@ -542,7 +832,8 @@ export function Box(__model__: GIModel, origin: Txyz | TPlane,
  * ![Tetrahedron with polygonal faces](assets/typedoc-json/docMDimgs/tetrahedron.png)
  * \n
  * @param __model__
- * @param origin XYZ coordinates, as a list of three numbers, specifiying the origin of the polyhedron.
+ * @param origin A |coordinate| or a |plane|, specifying the origin of the polyhedron.
+ * If a coordinate is given, then the plane is assumed to be aligned with the global XY plane.
  * @param radius The radius of the polyhedron.
  * @param detail The level of detail for the polyhedron.
  * @param method Enum: The Type of polyhedron to generate.
@@ -892,12 +1183,47 @@ function _polyhedronLerp(a: Txyz, b: Txyz, alpha: number): Txyz {
 }
 // ================================================================================================
 /**
- * Creates positions in an arc pattern. Returns a list of new positions.
- * If the angle of the arc is set to null, then circular patterns will be created.
- * For circular patterns, duplicates at start and end are automatically removed.
- *
+ * Creates positions in an arc or circle pattern.
+ * \n
+ * The `origin` parameter specifies the centre of the polyhedron for which positions will be
+ * generated. The origin can be specified as either a |coordinate| or a |plane|. If a coordinate
+ * is given, then a plane will be automatically generated, aligned with the global XY plane.
+ * \n
+ * The positions will be generated for an arc aligned with the origin XY plane.
+ * So if the origin plane is rotated, then the rotated will also be rotated.
+ * \n
+ * The `radius` parameter specifies the size of the arc.
+ * \n
+ * The `num_positions` parameter specifies the total number of positions to be generated on the arc.
+ * \n
+ * The `arc_angle` specifies the angle of the arc, in radians. Angles start at thet X-axis of the
+ * origin plane and move in a counter-clockwise direction. Two angles are needed to define an arc,
+ * a `start_angle` and `end_angle`. The angles may be positive or negative, and may be
+ * greater than `2*PI` or smaller than `-2*PI`.
+ * \n
+ * Positions will always be generated in sequence, from the start angle towards the end angle.
+ * - If the start angle is smaller than the end angle, then the positions will be generated in
+ * counter-clockwise order.
+ * - If the start angle is greater than the end angle, then the positions will be generated in
+ * clockwise order.
+ * \n
+ * The angle may either be given as a single number, as a list of two numbers, or as `null`:
+ * - If the angle is given as a single number, then the arc angles will be ser to be
+ * `[0, end_angle]`. This means that the start of the arc will coincide with the X-axis
+ * of the origin plane.
+ * - If the angle is given as a list of two numbers, then they will be set to be
+ * `[start_angle, end_angle]`.
+ * - If the angle is set to `null`, then the arc angles will be set to be
+ * `[0, 2*PI]` In addition, duplicate positions at start and end of the arc are
+ * automatically removed.
+ * \n
+ * Note that setting the arc angle to null is not the same as setting it to `2*PI`
+ * When setting the arc angle to `2*PI`, you will get a duplicate positions at start and end 
+ * of the arc.
+ * \n
  * @param __model__
- * @param origin XYZ coordinates as a list of three numbers.
+ * @param origin A |coordinate| or a |plane|, specifying the centre of the arc.
+ * If a coordinate is given, then the plane is assumed to be aligned with the global XY plane.
  * @param radius Radius of circle as a number.
  * @param num_positions Number of positions to be distributed equally along the arc.
  * @param arc_angle Angle of arc (in radians).
@@ -944,24 +1270,33 @@ export function Arc(__model__: GIModel, origin: Txyz|TPlane, radius: number, num
 }
 // ================================================================================================
 /**
- * Creates positions in an Bezier curve pattern. Returns a list of new positions.
+ * Creates positions in an Bezier curve pattern, defined by a list of coordinates.
+ * \n
  * The Bezier is created as either a qadratic or cubic Bezier. It is always an open curve.
  * \n
- * The input is a list of XYZ coordinates (three coords for quadratics, four coords for cubics).
- * The first and last coordinates in the list are the start and end positions of the Bezier curve.
- * The middle coordinates act as the control points for controlling the shape of the Bezier curve.
+ * The positions are created along the curve at equal parameter values.
+ * This means that the euclidean distance between the positions will not necessarily be equal.
  * \n
- * For the quadratic Bezier, three XYZ coordinates are required.
- * For the cubic Bezier, four XYZ coordinates are required.
+ * For the quadratic Bezier, three coordinates are required.
+ * For the cubic Bezier, four coordinates are required.
  * \n
- * For more information, see the wikipedia article: <a href="https://en.wikipedia.org/wiki/B%C3%A9zier_curve">B%C3%A9zier_curve</a>.
+ * The `coords` parameter gives the list of |coordinates|
+ * (three coords for quadratics, four coords for cubics).
+ * The first and last coordinates in the list are the start and end positions of the curve.
+ * The middle coordinates act as the control points for controlling the shape of the curve.
+ * \n
+ * The `num_positions` parameter specifies the total number of positions to be generated.
+ * \n
+ * For more information, see the wikipedia article: 
+ * <a href="https://en.wikipedia.org/wiki/B%C3%A9zier_curve">B%C3%A9zier_curve</a>.
  * \n
  * @param __model__
- * @param coords A list of XYZ coordinates (three coords for quadratics, four coords for cubics).
+ * @param origin A |coordinate| or a |plane| (three coords for quadratics, four coords for cubics).
+ * If a coordinate is given, then the plane is assumed to be aligned with the global XY plane. .
  * @param num_positions Number of positions to be distributed along the Bezier.
  * @returns Entities, a list of positions.
  * @example coordinates1 = pattern.Bezier([[0,0,0], [10,0,50], [20,0,10]], 20)
- * @example_info Creates a list of 20 positions distributed along a Bezier curve pattern.
+ * @example_info Creates a list of 20 positions distributed along a Bezier curve.
  */
 export function Bezier(__model__: GIModel, coords: Txyz[], num_positions: number): TId[] {
     // --- Error Check ---
@@ -1000,24 +1335,30 @@ export enum _EClose {
     CLOSE = 'close'
 }
 /**
- * Creates positions in an NURBS curve pattern, by using the XYZ positions as control points.
- * Returns a list of new positions.
+ * Creates positions in an NURBS curve pattern, defined a list of coordinates.
  * \n
- * The positions are created along the curve at equal parameter values.
+ * The positions are created along the curve according to the parametric equation of the curve.
  * This means that the euclidean distance between the positions will not necessarily be equal.
+ * For open BSpline curves, the positions at the start and end tend to be closer together.
  * \n
- * The input is a list of XYZ coordinates that will act as control points for the curve.
- * If the curve is open, then the first and last coordinates in the list are the start and end positions of the curve.
+ * The `coords` parameter gives the list of |coordinates| for generating the curve.
+ * - If the curve is open, then the first and last coordinates in the list are the start and end
+ * positions of the curve. The middle coordinates act as the control points for controlling the
+ * shape of the curve.
+ * - If the curve is closed, then all coordinates act as the control points for controlling the
+ * shape of the curve.
  * \n
- * The number of positions should be at least one greater than the degree of the curve.
- * \n
- * The degree (between 2 and 5) of the urve defines how smooth the curve is.
+ * The degree (between 2 and 5) of the curve defines how smooth the curve is.
  * Quadratic: degree = 2
  * Cubic: degree = 3
  * Quartic: degree = 4.
  * \n
+ * The number of coordinates should be at least one greater than the degree of the curve.
+ * \n
+ * The `num_positions` parameter specifies the total number of positions to be generated.
+ * \n
  * @param __model__
- * @param coords A list of XYZ coordinates (must be at least three XYZ coords).
+ * @param coords A list of |coordinates| (must be at least three).
  * @param degree The degree of the curve, and integer between 2 and 5.
  * @param close Enum, 'close' or 'open'
  * @param num_positions Number of positions to be distributed along the Bezier.
@@ -1079,114 +1420,12 @@ export function Nurbs(__model__: GIModel, coords: Txyz[], degree: number, close:
 }
 // ================================================================================================
 /**
- * Creates positions in an NURBS curve pattern, by iterpolating between the XYZ positions.
- * Returns a list of new positions.
- * \n
- * THe positions are created along the curve at equal parameter values.
- * This means that the euclidean distance between the positions will not necessarily be equal.
- * \n
- * The input is a list of XYZ coordinates that will act as control points for the curve.
- * If the curve is open, then the first and last coordinates in the list are the start and end positions of the curve.
- * \n
- * The number of positions should be at least one greater than the degree of the curve.
- * \n
- * The degree (between 2 and 5) of the urve defines how smooth the curve is.
- * Quadratic: degree = 2
- * Cubic: degree = 3
- * Quartic: degree = 4.
- * \n
- * @param __model__
- * @param coords A list of XYZ coordinates (must be at least three XYZ coords).
- * @param degree The degree of the curve, and integer between 2 and 5.
- * @param close Enum, 'close' or 'open'
- * @param num_positions Number of positions to be distributed along the Bezier.
- * @returns Entities, a list of positions.
- * @example coordinates1 = pattern.Nurbs([[0,0,0], [10,0,50], [20,0,10]], 20)
- * @example_info Creates a list of 20 positions distributed along a Bezier curve pattern.
- */
-export function _Interpolate(__model__: GIModel, coords: Txyz[], degree: number, close: _EClose, num_positions: number): TId[] {
-    // --- Error Check ---
-    if (__model__.debug) {
-        const fn_name = 'pattern._Interpolate';
-        chk.checkArgs(fn_name, 'coords', coords, [chk.isXYZL]);
-        chk.checkArgs(fn_name, 'num_positions', num_positions, [chk.isInt]);
-        // --- Error Check ---
-        if (coords.length < 3) {
-            throw new Error (fn_name + ': "coords" should be a list of at least three XYZ coords.');
-        }
-        if (degree < 2  || degree > 5) {
-            throw new Error (fn_name + ': "degree" should be between 2 and 5.');
-        }
-        if (degree > (coords.length - 1)) {
-            throw new Error (fn_name + ': a curve of degree ' + degree + ' requires at least ' + (degree + 1) + ' coords.' );
-        }
-    }
-    const closed: boolean = close === _EClose.CLOSE;
-    // create the curve using the VERBS library
-    const offset = degree + 1;
-    const coords2: Txyz[] = coords.slice();
-    if (closed) {
-        const start: Txyz[] = coords2.slice(0, offset);
-        const end: Txyz[] = coords2.slice(coords2.length - offset, coords2.length);
-        coords2.splice(0, 0, ...end);
-        coords2.splice(coords2.length, 0, ...start);
-    }
-    const curve_verb = new VERB.geom.NurbsCurve.byPoints( coords2, degree );
-    // return the list of posis
-    const posis_i: number[] = nurbsToPosis(__model__, curve_verb, degree, closed, num_positions, coords[0]);
-    return idsMakeFromIdxs(EEntType.POSI, posis_i) as TId[];
-}
-function nurbsToPosis(__model__: GIModel, curve_verb: any, degree: number, closed: boolean,
-        num_positions: number, start: Txyz, ): number[] {
-    // create positions
-    const posis_i: number[] = [];
-    const [offset_start, offset_end] = {2: [5, 3], 3: [6, 5], 4: [8, 6], 5: [9, 8]}[degree];
-    const knots: number[] = curve_verb.knots();
-    const u_start = knots[offset_start];
-    const u_end = knots[knots.length - offset_end - 1];
-    const u_range = u_end - u_start;
-    // trying split
-    // const [c1, c2] = curve_verb.split(u_start);
-    // const [c3, c4] = c2.split(u_end);
-    // const curve_length_samples_verb: any[] = c3.divideByEqualArcLength(num_positions - 1);
-    // const u_values_verb: number[] = curve_length_samples_verb.map( cls => cls.u as number );
-    let min_dist_to_start = Infinity;
-    let closest_to_start = -1;
-    for (let i = 0; i < num_positions; i++) {
-        let u: number;
-        if (closed) {
-            u = u_start + ((i / num_positions) * u_range);
-        } else {
-            u = i / (num_positions - 1);
-        }
-        const xyz: Txyz  = curve_verb.point(u) as Txyz;
-        // xyz[2] = i / 10;
-        const posi_i: number = __model__.modeldata.geom.add.addPosi();
-        __model__.modeldata.attribs.posis.setPosiCoords(posi_i, xyz);
-        posis_i.push(posi_i);
-        const dist =    Math.abs(start[0] - xyz[0]) +
-                        Math.abs(start[1] - xyz[1]) +
-                        Math.abs(start[2] - xyz[2]);
-        if (dist < min_dist_to_start) {
-            min_dist_to_start = dist;
-            closest_to_start = i;
-        }
-    }
-    const posis_i_start: number[] = posis_i.slice(closest_to_start, posis_i.length);
-    const posis_i_end: number[] = posis_i.slice(0, closest_to_start);
-    const posis_i_sorted: number[] = posis_i_start.concat(posis_i_end);
-    // return the list of posis
-    return posis_i_sorted;
-}
-// ================================================================================================
-/**
  * Creates positions in an spline pattern. Returns a list of new positions.
- * The spline is created using the Catmull-Rom algorithm.
  * It is a type of interpolating spline (a curve that goes through its control points).
  * \n
  * The input is a list of XYZ coordinates. These act as the control points for creating the Spline curve.
  * The positions that get generated will be divided equally between the control points.
- * For example, if you define 4 control points for a cosed spline, and set 'num_positions' to be 40,
+ * For example, if you define 4 control points for a closed spline, and set 'num_positions' to be 40,
  * then you will get 8 positions between each pair of control points,
  * irrespective of the distance between the control points.
  * \n
@@ -1199,7 +1438,7 @@ function nurbsToPosis(__model__: GIModel, curve_verb: any, degree: number, close
  * alt="Curve types" width="100">
  * \n
  * @param __model__
- * @param coords A list of XYZ coordinates.
+ * @param coords A list of |coordinates|.
  * @param type Enum, the type of interpolation algorithm.
  * @param tension Curve tension, between 0 and 1. This only has an effect when the 'type' is set to 'catmullrom'.
  * @param close Enum, 'open' or 'close'.
@@ -1246,3 +1485,112 @@ export enum _ECurveCatRomType {
     CATMULLROM = 'catmullrom'
 }
 // ================================================================================================
+function nurbsToPosis(__model__: GIModel, curve_verb: any, degree: number, closed: boolean,
+    num_positions: number, start: Txyz,): number[] {
+    // create positions
+    const posis_i: number[] = [];
+    const [offset_start, offset_end] = { 2: [5, 3], 3: [6, 5], 4: [8, 6], 5: [9, 8] }[degree];
+    const knots: number[] = curve_verb.knots();
+    const u_start = knots[offset_start];
+    const u_end = knots[knots.length - offset_end - 1];
+    const u_range = u_end - u_start;
+    // trying split
+    // const [c1, c2] = curve_verb.split(u_start);
+    // const [c3, c4] = c2.split(u_end);
+    // const curve_length_samples_verb: any[] = c3.divideByEqualArcLength(num_positions - 1);
+    // const u_values_verb: number[] = curve_length_samples_verb.map( cls => cls.u as number );
+    let min_dist_to_start = Infinity;
+    let closest_to_start = -1;
+    for (let i = 0; i < num_positions; i++) {
+        let u: number;
+        if (closed) {
+            u = u_start + ((i / num_positions) * u_range);
+        } else {
+            u = i / (num_positions - 1);
+        }
+        const xyz: Txyz = curve_verb.point(u) as Txyz;
+        // xyz[2] = i / 10;
+        const posi_i: number = __model__.modeldata.geom.add.addPosi();
+        __model__.modeldata.attribs.posis.setPosiCoords(posi_i, xyz);
+        posis_i.push(posi_i);
+        const dist = Math.abs(start[0] - xyz[0]) +
+            Math.abs(start[1] - xyz[1]) +
+            Math.abs(start[2] - xyz[2]);
+        if (dist < min_dist_to_start) {
+            min_dist_to_start = dist;
+            closest_to_start = i;
+        }
+    }
+    const posis_i_start: number[] = posis_i.slice(closest_to_start, posis_i.length);
+    const posis_i_end: number[] = posis_i.slice(0, closest_to_start);
+    const posis_i_sorted: number[] = posis_i_start.concat(posis_i_end);
+    // return the list of posis
+    return posis_i_sorted;
+}
+
+
+// // ================================================================================================
+// /**
+//  * Creates positions in an NURBS curve pattern, by iterpolating between the coordinates.
+//  * \n
+//  * The positions are created along the curve according to the parametric equation of the curve.
+//  * This means that the euclidean distance between the positions will not necessarily be equal.
+//  * For open BSpline curves, the positions at the start and end tend to be closer together.
+//  * \n
+//  * The `coords` parameter gives the list of |coordinates| for generating the curve.
+//  * - If the curve is open, then the first and last coordinates in the list are the start and end
+//  * positions of the curve. The middle coordinates act as the control points for controlling the
+//  * shape of the curve.
+//  * - If the curve is closed, then all coordinates act as the control points for controlling the
+//  * shape of the curve.
+//  * \n
+//  * The degree (between 2 and 5) of the curve defines how smooth the curve is.
+//  * Quadratic: degree = 2
+//  * Cubic: degree = 3
+//  * Quartic: degree = 4.
+//  * \n
+//  * The number of coordinates should be at least one greater than the degree of the curve.
+//  * \n
+//  * The `num_positions` parameter specifies the total number of positions to be generated.
+//  * \n
+//  * @param __model__
+//  * @param coords A list of |coordinates| (must be at least three).
+//  * @param degree The degree of the curve, and integer between 2 and 5.
+//  * @param close Enum, 'close' or 'open'
+//  * @param num_positions Number of positions to be distributed along the Bezier.
+//  * @returns Entities, a list of positions.
+//  * @example coordinates1 = pattern.Nurbs([[0,0,0], [10,0,50], [20,0,10]], 20)
+//  * @example_info Creates a list of 20 positions distributed along a Bezier curve pattern.
+//  */
+// export function _Interpolate(__model__: GIModel, coords: Txyz[], degree: number, close: _EClose, num_positions: number): TId[] {
+//     // --- Error Check ---
+//     if (__model__.debug) {
+//         const fn_name = 'pattern._Interpolate';
+//         chk.checkArgs(fn_name, 'coords', coords, [chk.isXYZL]);
+//         chk.checkArgs(fn_name, 'num_positions', num_positions, [chk.isInt]);
+//         // --- Error Check ---
+//         if (coords.length < 3) {
+//             throw new Error(fn_name + ': "coords" should be a list of at least three XYZ coords.');
+//         }
+//         if (degree < 2 || degree > 5) {
+//             throw new Error(fn_name + ': "degree" should be between 2 and 5.');
+//         }
+//         if (degree > (coords.length - 1)) {
+//             throw new Error(fn_name + ': a curve of degree ' + degree + ' requires at least ' + (degree + 1) + ' coords.');
+//         }
+//     }
+//     const closed: boolean = close === _EClose.CLOSE;
+//     // create the curve using the VERBS library
+//     const offset = degree + 1;
+//     const coords2: Txyz[] = coords.slice();
+//     if (closed) {
+//         const start: Txyz[] = coords2.slice(0, offset);
+//         const end: Txyz[] = coords2.slice(coords2.length - offset, coords2.length);
+//         coords2.splice(0, 0, ...end);
+//         coords2.splice(coords2.length, 0, ...start);
+//     }
+//     const curve_verb = new VERB.geom.NurbsCurve.byPoints(coords2, degree);
+//     // return the list of posis
+//     const posis_i: number[] = nurbsToPosis(__model__, curve_verb, degree, closed, num_positions, coords[0]);
+//     return idsMakeFromIdxs(EEntType.POSI, posis_i) as TId[];
+// }
