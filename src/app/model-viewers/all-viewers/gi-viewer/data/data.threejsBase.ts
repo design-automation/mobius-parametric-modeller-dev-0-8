@@ -33,10 +33,6 @@ export class DataThreejsBase {
     public mouse: THREE.Vector2;
 
     // interaction and selection
-    public tri_select_map: Map<number, number>;
-    public edge_select_map: Map<number, number>;
-    // public white_edge_select_map: Map<number, number>;
-    public point_select_map: Map<number, number>;
     public select_maps: {
         _t: Map<number, number>;
         _e: Map<number, number>;
@@ -46,10 +42,8 @@ export class DataThreejsBase {
 
         _e_vr: Map<number, number>;
         _t_vr: Map<number, number>;
-};
+    };
     public point_label: any[];
-    public posis_map: Map<number, number>;
-    public vertex_map: Map<number, number>;
 
     public selected_geoms: Map<string, number> = new Map();
     public selected_positions: Map<string, Map<string, number>> = new Map();

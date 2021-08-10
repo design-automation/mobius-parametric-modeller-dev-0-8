@@ -120,11 +120,6 @@ export class DataThreejs extends DataThreejsLookAt {
     private _addGeom(model: GIModel): void {
         // Add geometry
         const threejs_data: IThreeJS = model.get3jsData(this.nodeIndex);
-        // this.tri_select_map = threejs_data.tri_select_map;
-        // this.edge_select_map = threejs_data.edge_select_map;
-        // this.point_select_map = threejs_data.point_select_map;
-        // this.posis_map = threejs_data.posis_map;
-        // this.vertex_map = threejs_data.verts_map;
         this.select_maps = {
             _t: threejs_data.tri_select_map,
             _e: threejs_data.edge_select_map,
@@ -699,7 +694,7 @@ export class DataThreejs extends DataThreejsLookAt {
             if (label.color  && label.color.length === 3) {
                 color = new THREE.Color(`rgb(${label.color[0]}, ${label.color[1]}, ${label.color[2]})`);
             }
-            const colors_buffer = new THREE.Float32BufferAttribute(new ArrayBuffer(geom.attributes.position.count * 3), 3);
+            const colors_buffer = new THREE.Float32BufferAttribute(new Uint8Array(geom.attributes.position.count * 3), 3);
             if (label.color && label.color.length === 3) {
                 for (let i = 0; i < colors_buffer.count; i++) {
                     colors_buffer.setXYZ(i, label.color[0], label.color[1], label.color[2]);
