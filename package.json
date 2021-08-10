@@ -69,7 +69,7 @@
     "rxjs-compat": "^6.5.1",
     "showdown": "^1.9.1",
     "suncalc": "^1.8.0",
-    "three": "^0.130.1",
+    "three": "^0.131.3",
     "three-orbit-controls": "^82.1.0",
     "three-pathfinding": "^0.14.1",
     "tslib": "^2.0.0",
