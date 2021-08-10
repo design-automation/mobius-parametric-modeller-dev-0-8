@@ -16,14 +16,10 @@ import { getArrDepth } from '@assets/libs/util/arrs';
 import { vecAdd, vecDiv, vecFromTo, vecSub } from '@libs/geom/vectors';
 import { xfromSourceTargetMatrix, multMatrix } from '@libs/geom/matrix';
 import { Matrix4 } from 'three';
-import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-// import { __merge__ } from '../_model';
 import { GIModel } from '@libs/geo-info/GIModel';
 import * as THREE from 'three';
 import * as VERB from '@assets/libs/verb/verb';
 import { arrFill, arrMakeFlat } from '@assets/libs/util/arrs';
-import { map } from 'rxjs-compat/operator/map';
-// import * as VERB from 'verb';
 // ================================================================================================
 /**
  * Creates a set of positions in a straight line pattern.
@@ -86,7 +82,7 @@ export function Line(__model__: GIModel, origin: Txyz|TPlane, length: number, nu
  * The `num_positions` parameter specifies the number of positions to be generated between
  * each pair of coordinates.
  * \n
- * The `close` parameter specifies whether to close the loop of coordinates. If set to `true`,
+ * The `method` parameter specifies whether to close the loop of coordinates. If set to `close`,
  * then positions are also generated between the last and first coordinates in the list.
  * \n
  * For the `num_positions` parameters:
@@ -103,7 +99,7 @@ export function Line(__model__: GIModel, origin: Txyz|TPlane, length: number, nu
  * are calculated by linear interpolation.
  * - etc
  * \n
- * For example, lets consider a case where you specify three coordinates, set `close` to `true`
+ * For example, lets consider a case where you specify three coordinates, set the method to `close`
  * and set `num_positions` to 4. In this case, there will be 3 pairs of coordinates, `[0, 1]`,
  * `[1, 2]` and `[2, 0]`. For each pair of coordinates, 2 new calculations are calculated.
  * This results in a total of 9 coordinates. So 9 positions will be generated.
@@ -117,11 +113,12 @@ export function Line(__model__: GIModel, origin: Txyz|TPlane, length: number, nu
  * @returns Entities, a list of new position IDs.
  * @example posis = pattern.Linear([[0,0,0], [10,0,0]], false, 3)
  * @example_info Generates 3 positions, located at [0,0,0], [5,0,0], and [10,0,0].
- * @example posis = pattern.Linear([[0,0,0], [10,0,0], [10,10,0]], true, 4)
+ * @example `posis = pattern.Linear([[0,0,0], [10,0,0], [10,10,0]], 'close', 4)`
  * @example_info Generates 9 positions. Two new coordinates are calculated between each pair of
  * input positions.
  */
-export function Linear(__model__: GIModel, coords: Txyz[], close: _EClose, num_positions: number): TId[] {
+export function Linear(__model__: GIModel, coords: Txyz[], close: _EClose,
+        num_positions: number): TId[] {
     // --- Error Check ---
     if (__model__.debug) {
         const fn_name = 'pattern.Linear';
@@ -171,12 +168,14 @@ export function Linear(__model__: GIModel, coords: Txyz[], close: _EClose, num_p
  * @param size Size of rectangle. If number, assume square of that length;
  * if list of two numbers, x and y lengths respectively.
  * @returns Entities, a list of four positions.
- * @example coordinates1 = pattern.Rectangle([0,0,0], 10)
+ * @example posis = pattern.Rectangle([0,0,0], 10)
  * @example_info Creates a list of 4 coords, being the vertices of a 10 by 10 square.
- * @example coordinates1 = pattern.Rectangle([0,0,0], [10,20])
- * @example_info Creates a list of 4 coords, being the vertices of a 10 by 20 rectangle.
+ * @example `posis = pattern.Rectangle(XY, [10,20])`
+ * @example_info Creates a list of 4 positions in a rectangle pattern. The rectangle has a width of
+ * 10 (in the X direction) and a length of 20 (in the Y direction).
  */
-export function Rectangle(__model__: GIModel, origin: Txyz|TPlane, size: number|[number, number]): TId[] {
+export function Rectangle(__model__: GIModel, origin: Txyz|TPlane,
+        size: number|[number, number]): TId[] {
     // --- Error Check ---
     if (__model__.debug) {
         const fn_name = 'pattern.Rectangle';
@@ -192,7 +191,8 @@ export function Rectangle(__model__: GIModel, origin: Txyz|TPlane, size: number|
     }
     // create the positions
     const posis_i: number[] = [];
-    const xy_size: [number, number] = (Array.isArray(size) ? size : [size, size]) as [number, number];
+    const xy_size: [number, number] =
+        (Array.isArray(size) ? size : [size, size]) as [number, number];
     const coords: Txyz[] = [
         [-(xy_size[0] / 2), -(xy_size[1] / 2), 0],
         [ (xy_size[0] / 2), -(xy_size[1] / 2), 0],
@@ -315,8 +315,9 @@ export enum _EGridMethod {
  * (depending on the 'method' setting).
  * @example posis = pattern.Grid([0,0,0], 10, 3, 'flat')
  * @example_info Creates a list of 9 positions on a 3x3 square grid with a size of 10.
- * @example posis = pattern.Grid([0,0,0], [10,20], [2,4], 'flat')
- * @example_info Creates a list of 8 positions on a 2x4 grid with a width of 10 and a length of 20.
+ * @example `posis = pattern.Grid([0,0,0], [10,20], [3,4], 'flat')`
+ * @example_info Creates a list of 12 positions on a 3x4 grid. The grid as a width of 10
+ * and a length of 20. The positions are returned as a flat list.
 */
 export function Grid(__model__: GIModel, origin: Txyz|TPlane, size: number|[number, number],
         num_positions: number|[number, number], method: _EGridMethod): TId[]|TId[][] {
@@ -336,9 +337,11 @@ export function Grid(__model__: GIModel, origin: Txyz|TPlane, size: number|[numb
     }
     // create the positions
     const posis_i: number[] = [];
-    const xy_size: [number, number] = (Array.isArray(size) ? size : [size, size]) as [number, number];
+    const xy_size: [number, number] =
+        (Array.isArray(size) ? size : [size, size]) as [number, number];
     const xy_num_positions: [number, number] =
-        (Array.isArray(num_positions) ? num_positions : [num_positions, num_positions]) as [number, number];
+        (Array.isArray(num_positions) ?
+        num_positions : [num_positions, num_positions]) as [number, number];
     const x_offset: number = xy_size[0] / (xy_num_positions[0] - 1);
     const y_offset: number = xy_size[1] / (xy_num_positions[1] - 1);
     for (let i = 0; i < xy_num_positions[1]; i++) {
@@ -516,6 +519,12 @@ export enum _EBoxMethod {
  * @param method Enum, define the way the coords will be return as lists.
  * @returns Entities, a list of positions, or a list of lists of positions
  * (depending on the 'method' setting).
+ * @example `posis = pattern.Box(XY, [10,20,30], [3,4,5], 'quads')`
+ * @example_info Returns positions in a box pattern. The size of the box is 10 wide (in X direction)
+ * 20 long (Y direction), and 30 high (Z direction). The box has 3 columns, 4 rows, and 5 layers.
+ * This results in a total of 12 (i.e. 3 x 4) positions in the top and bottom layers, and 10
+ * positions in the middle two layers. The positions are returned as nested lists, where each
+ * sub-list contains positions for one quadrilateral.
  */
 export function Box(__model__: GIModel, origin: Txyz | TPlane,
     size: number | [number, number] | [number, number, number],
@@ -536,7 +545,8 @@ export function Box(__model__: GIModel, origin: Txyz | TPlane,
     }
     // create params
     const xyz_size: Txyz = arrFill(size, 3) as [number, number, number];
-    const xyz_num_positions: [number, number, number] = arrFill(num_positions, 3) as [number, number, number];
+    const xyz_num_positions: [number, number, number] =
+        arrFill(num_positions, 3) as [number, number, number];
     // create the positions
     const layer_top_posis_i: number[] = [];
     const layer_bot_posis_i: number[] = [];
@@ -594,7 +604,10 @@ export function Box(__model__: GIModel, origin: Txyz | TPlane,
                 }
             }
         }
-        posis_i.push([layer_perim_x0_posis_i, layer_perim_y0_posis_i, layer_perim_x1_posis_i, layer_perim_y1_posis_i]);
+        posis_i.push([
+            layer_perim_x0_posis_i, layer_perim_y0_posis_i,
+            layer_perim_x1_posis_i, layer_perim_y1_posis_i
+        ]);
     }
     // structure the grid of posis, and return
     if (method === _EBoxMethod.FLAT) {
@@ -758,6 +771,18 @@ export function Box(__model__: GIModel, origin: Txyz | TPlane,
     return [];
 }
 // ================================================================================================
+export enum _EPolyhedronMethod {
+    FLAT_TETRA = 'flat_tetra',
+    FLAT_CUBE = 'flat_cube',
+    FLAT_OCTA = 'flat_octa',
+    FLAT_ICOSA = 'flat_icosa',
+    FLAT_DODECA = 'flat_dodeca',
+    FACE_TETRA = 'face_tetra',
+    FACE_CUBE = 'face_cube',
+    FACE_OCTA = 'face_octa',
+    FACE_ICOSA = 'face_icosa',
+    FACE_DODECA = 'face_dodeca'
+}
 /**
  * Creates positions in a polyhedron pattern.
  * \n
@@ -838,6 +863,9 @@ export function Box(__model__: GIModel, origin: Txyz | TPlane,
  * @param detail The level of detail for the polyhedron.
  * @param method Enum: The Type of polyhedron to generate.
  * @returns Entities, a list of positions.
+ * @example `posis = pattern.Polyhedron(XY, 20, 0, 'face_tetra')`
+ * @example_info Creates positions in a regular tetrahedron pattern, with a radius of 20. The 
+ * positions are returned as nested lists, where each list contains the positions for one face.
  */
 export function Polyhedron(__model__: GIModel, origin: Txyz | TPlane, radius: number, detail: number,
         method: _EPolyhedronMethod): TId[]|TId[][] {
@@ -864,18 +892,6 @@ export function Polyhedron(__model__: GIModel, origin: Txyz | TPlane, radius: nu
     // make polyhedron posis
     const posis_i: number[]|number[][] = _polyhedron(__model__, matrix, radius, detail, method);
     return idsMakeFromIdxs(EEntType.POSI, posis_i) as TId[][];
-}
-export enum _EPolyhedronMethod {
-    FLAT_TETRA = 'flat_tetra',
-    FLAT_CUBE = 'flat_cube',
-    FLAT_OCTA = 'flat_octa',
-    FLAT_ICOSA = 'flat_icosa',
-    FLAT_DODECA = 'flat_dodeca',
-    FACE_TETRA = 'face_tetra',
-    FACE_CUBE = 'face_cube',
-    FACE_OCTA = 'face_octa',
-    FACE_ICOSA = 'face_icosa',
-    FACE_DODECA = 'face_dodeca'
 }
 // create the polyhedron
 export function _polyhedron(__model__: GIModel, matrix: Matrix4, radius: number, detail: number,
@@ -1167,7 +1183,8 @@ function _polyhedronMergeXyzs(xyzs: Txyz[], faces: number[][]): Txyz[] {
 function _polyhedronApplyRadiusXyzs(xyzs: Txyz[], radius: number): void {
     // iterate over the xyzs and apply the radius to each xyz
     for (const xyz of xyzs) {
-        const scale: number = radius / Math.sqrt(xyz[0] * xyz[0] + xyz[1] * xyz[1] + xyz[2] * xyz[2]);
+        const scale: number =
+            radius / Math.sqrt(xyz[0] * xyz[0] + xyz[1] * xyz[1] + xyz[2] * xyz[2]);
         xyz[0] = xyz[0] * scale;
         xyz[1] = xyz[1] * scale;
         xyz[2] = xyz[2] * scale;
@@ -1233,7 +1250,8 @@ function _polyhedronLerp(a: Txyz, b: Txyz, alpha: number): Txyz {
  * @returns Entities, a list of positions.
  * @example `posis = pattern.Arc([0,0,0], 10, 12, PI)`
  * @example_info Creates a list of 12 positions distributed equally along a semicircle of radius 10
- * starting at an angle of 0 and ending at an angle of 180 degrees.
+ * starting at an angle of 0 and ending at an angle of 180 degrees, rotating in a counter-clockwise
+ * direction.
  */
 export function Arc(__model__: GIModel, origin: Txyz|TPlane, radius: number, num_positions: number, 
         arc_angle: number|[number, number]): TId[] {
@@ -1320,7 +1338,7 @@ export function Arc(__model__: GIModel, origin: Txyz|TPlane, radius: number, num
  * If a coordinate is given, then the plane is assumed to be aligned with the global XY plane. .
  * @param num_positions Number of positions to be distributed along the Bezier.
  * @returns Entities, a list of positions.
- * @example coordinates1 = pattern.Bezier([[0,0,0], [10,0,50], [20,0,10]], 20)
+ * @example `posis = pattern.Bezier([[0,0,0], [10,0,50], [20,0,0]], 20)`
  * @example_info Creates a list of 20 positions distributed along a Bezier curve.
  */
 export function Bezier(__model__: GIModel, coords: Txyz[], num_positions: number): TId[] {
@@ -1332,17 +1350,20 @@ export function Bezier(__model__: GIModel, coords: Txyz[], num_positions: number
     }
     // --- Error Check ---
     // create the curve
-    const coords_tjs: THREE.Vector3[] = coords.map(coord => new THREE.Vector3(coord[0], coord[1], coord[2]));
+    const coords_tjs: THREE.Vector3[] =
+        coords.map(coord => new THREE.Vector3(coord[0], coord[1], coord[2]));
     let points_tjs: THREE.Vector3[] = [];
     let curve_tjs: THREE.CubicBezierCurve3|THREE.QuadraticBezierCurve3 = null;
     if (coords.length === 4) {
-        curve_tjs = new THREE.CubicBezierCurve3(coords_tjs[0], coords_tjs[1], coords_tjs[2], coords_tjs[3]);
+        curve_tjs =
+            new THREE.CubicBezierCurve3(coords_tjs[0], coords_tjs[1], coords_tjs[2], coords_tjs[3]);
         points_tjs = curve_tjs.getPoints(num_positions - 1);
     } else if (coords.length === 3) {
         curve_tjs = new THREE.QuadraticBezierCurve3(coords_tjs[0], coords_tjs[1], coords_tjs[2]);
         points_tjs = curve_tjs.getPoints(num_positions - 1);
     } else {
-        throw new Error (fn_name + ': "coords" should be a list of either three or four XYZ coords.');
+        throw new Error (fn_name + 
+            ': "coords" should be a list of either three or four XYZ coords.');
     }
     // create positions
     const posis_i: number[] = [];
@@ -1388,10 +1409,11 @@ export enum _EClose {
  * @param close Enum, 'close' or 'open'
  * @param num_positions Number of positions to be distributed along the Bezier.
  * @returns Entities, a list of positions.
- * @example coordinates1 = pattern.Nurbs([[0,0,0], [10,0,50], [20,0,10]], 20)
- * @example_info Creates a list of 20 positions distributed along a Bezier curve pattern.
+ * @example `posis = pattern.Nurbs([[0,0,0], [10,0,50], [20,0,50], [30,0,0]], 3, 'open', 20)`
+ * @example_info Creates a list of 20 positions distributed along a Nurbs curve.
  */
-export function Nurbs(__model__: GIModel, coords: Txyz[], degree: number, close: _EClose, num_positions: number): TId[] {
+export function Nurbs(__model__: GIModel, coords: Txyz[], degree: number, close: _EClose,
+        num_positions: number): TId[] {
     // --- Error Check ---
     if (__model__.debug) {
         const fn_name = 'pattern.Nurbs';
@@ -1404,7 +1426,8 @@ export function Nurbs(__model__: GIModel, coords: Txyz[], degree: number, close:
             throw new Error (fn_name + ': "degree" should be between 2 and 5.');
         }
         if (degree > (coords.length - 1)) {
-            throw new Error (fn_name + ': a curve of degree ' + degree + ' requires at least ' + (degree + 1) + ' coords.' );
+            throw new Error (fn_name + ': a curve of degree ' + degree + ' requires at least ' +
+                (degree + 1) + ' coords.' );
         }
     }
     // --- Error Check ---
@@ -1431,19 +1454,28 @@ export function Nurbs(__model__: GIModel, coords: Txyz[], degree: number, close:
     for (let i = 0; i < degree; i++) {
         knots.push(1);
     }
-    const curve_verb = new VERB.geom.NurbsCurve.byKnotsControlPointsWeights(degree, knots, coords2, weights);
+    const curve_verb =
+        new VERB.geom.NurbsCurve.byKnotsControlPointsWeights(degree, knots, coords2, weights);
     // Testing VERB closed curve
     // const k: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8];
     // const c: number[][] = [[0, 0, 0], [10, 0, 0], [10, 10, 0], [0, 10, 0], [0, 0, 0], [10, 0, 0]];
     // const w: number[] = [1, 1, 1, 1, 1, 1];
     // const curve_verb2 = new VERB.geom.NurbsCurve.byKnotsControlPointsWeights(2, k, c, w);
     // This gives an error: Error:
-    // Invalid knot vector format! Should begin with degree + 1 repeats and end with degree + 1 repeats!
-    const posis_i: number[] = nurbsToPosis(__model__, curve_verb, degree, closed, num_positions, coords[0]);
+    // Invalid knot vector format!
+    // Should begin with degree + 1 repeats and end with degree + 1 repeats!
+    const posis_i: number[] =
+        nurbsToPosis(__model__, curve_verb, degree, closed, num_positions, coords[0]);
     // return the list of posis
     return idsMakeFromIdxs(EEntType.POSI, posis_i) as TId[];
 }
 // ================================================================================================
+// Enums for CurveCatRom()
+export enum _ECurveCatRomType {
+    CENTRIPETAL = 'centripetal',
+    CHORDAL = 'chordal',
+    CATMULLROM = 'catmullrom'
+}
 /**
  * Creates positions in an spline pattern. Returns a list of new positions.
  * It is a type of interpolating spline (a curve that goes through its control points).
@@ -1465,15 +1497,17 @@ export function Nurbs(__model__: GIModel, coords: Txyz[], degree: number, close:
  * @param __model__
  * @param coords A list of |coordinates|.
  * @param type Enum, the type of interpolation algorithm.
- * @param tension Curve tension, between 0 and 1. This only has an effect when the 'type' is set to 'catmullrom'.
+ * @param tension Curve tension, between 0 and 1. This only has an effect when the 'type' is set
+ * to 'catmullrom'.
  * @param close Enum, 'open' or 'close'.
  * @param num_positions Number of positions to be distributed distributed along the spline.
  * @returns Entities, a list of positions.
- * @example coordinates1 = pattern.Spline([[0,0,0], [10,0,50], [20,0,0], [30,0,20], [40,0,10]], 'chordal','close', 0.2, 50)
+ * @example `posis = pattern.Spline([[0,0,0], [10,0,50], [20,0,0], [30,0,20], [40,0,10]],
+ * 'chordal','close', 0.2, 50)`
  * @example_info Creates a list of 50 positions distributed along a spline curve pattern.
  */
-export function Interpolate(__model__: GIModel, coords: Txyz[], type: _ECurveCatRomType, tension: number, close: _EClose,
-    num_positions: number): TId[] {
+export function Interpolate(__model__: GIModel, coords: Txyz[], type: _ECurveCatRomType, 
+    tension: number, close: _EClose, num_positions: number): TId[] {
     // --- Error Check ---
     if (__model__.debug) {
         const fn_name = 'pattern.Interpolate';
@@ -1490,8 +1524,10 @@ export function Interpolate(__model__: GIModel, coords: Txyz[], type: _ECurveCat
     if (tension === 0) { tension = 1e-16; } // There seems to be a bug in threejs, so this is a fix
     // Check we have enough coords
     // create the curve
-    const coords_tjs: THREE.Vector3[] = coords.map(coord => new THREE.Vector3(coord[0], coord[1], coord[2]));
-    const curve_tjs: THREE.CatmullRomCurve3 = new THREE.CatmullRomCurve3(coords_tjs, closed_tjs, type, tension);
+    const coords_tjs: THREE.Vector3[] =
+        coords.map(coord => new THREE.Vector3(coord[0], coord[1], coord[2]));
+    const curve_tjs: THREE.CatmullRomCurve3 =
+        new THREE.CatmullRomCurve3(coords_tjs, closed_tjs, type, tension);
     const points_tjs: THREE.Vector3[] = curve_tjs.getPoints(num_positions_tjs);
     // create positions
     const posis_i: number[] = [];
@@ -1502,12 +1538,6 @@ export function Interpolate(__model__: GIModel, coords: Txyz[], type: _ECurveCat
     }
     // return the list of posis
     return idsMakeFromIdxs(EEntType.POSI, posis_i) as TId[];
-}
-// Enums for CurveCatRom()
-export enum _ECurveCatRomType {
-    CENTRIPETAL = 'centripetal',
-    CHORDAL = 'chordal',
-    CATMULLROM = 'catmullrom'
 }
 // ================================================================================================
 function nurbsToPosis(__model__: GIModel, curve_verb: any, degree: number, closed: boolean,
@@ -1584,7 +1614,7 @@ function nurbsToPosis(__model__: GIModel, curve_verb: any, degree: number, close
 //  * @param close Enum, 'close' or 'open'
 //  * @param num_positions Number of positions to be distributed along the Bezier.
 //  * @returns Entities, a list of positions.
-//  * @example coordinates1 = pattern.Nurbs([[0,0,0], [10,0,50], [20,0,10]], 20)
+//  * @example posis = pattern.Nurbs([[0,0,0], [10,0,50], [20,0,10]], 20)
 //  * @example_info Creates a list of 20 positions distributed along a Bezier curve pattern.
 //  */
 // export function _Interpolate(__model__: GIModel, coords: Txyz[], degree: number, close: _EClose, num_positions: number): TId[] {

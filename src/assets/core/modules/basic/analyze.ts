@@ -1,6 +1,6 @@
 /**
- * The `analysis` module has functions for performing various types of analysis with entities in the model.
- * These functions all return dictionaries containing the results of the analysis.
+ * The `analysis` module has functions for performing various types of analysis with entities in
+ * the model. These functions all return dictionaries containing the results of the analysis.
  */
 
 /**
@@ -11,12 +11,12 @@ import { checkIDs, ID } from '../../_check_ids';
 import * as chk from '../../_check_types';
 
 import { GIModel } from '@libs/geo-info/GIModel';
-import { TId, Txyz, EEntType, TEntTypeIdx, TRay, TPlane, Txy, EAttribDataTypeStrs } from '@libs/geo-info/common';
+import { TId, Txyz, EEntType, TEntTypeIdx, TRay, TPlane, Txy,
+    EAttribDataTypeStrs } from '@libs/geo-info/common';
 import { idsMakeFromIdxs, idsMake, idsBreak, idMake } from '@assets/libs/geo-info/common_id_funcs';
 import { distance } from '@libs/geom/distance';
 import { vecAdd, vecCross, vecMult, vecNorm, vecAng2, vecSetLen, vecRot } from '@libs/geom/vectors';
 import uscore from 'underscore';
-import { min, max } from '@assets/core/inline/_math';
 import { arrMakeFlat, getArrDepth } from '@assets/libs/util/arrs';
 import { degToRad } from '@assets/core/inline/_conversion';
 import { multMatrix } from '@libs/geom/matrix';
@@ -25,7 +25,7 @@ import cytoscape from 'cytoscape';
 import * as THREE from 'three';
 import { TypedArrayUtils } from '@libs/TypedArrayUtils.js';
 import * as Mathjs from 'mathjs';
-import { createSingleMeshTjs } from '@assets/libs/geom/mesh';
+import { createSingleMeshBufTjs } from '@assets/libs/geom/mesh';
 import { isRay, isXYZ, isPlane } from '@assets/libs/geo-info/common_func';
 
 // ================================================================================================
@@ -50,15 +50,15 @@ export enum _ERaytraceMethod {
 }
 /**
  * Shoot a set of rays into a set of obstructions, consisting of polygon faces.
- * One can imagine particles being shot from the ray origin in the ray direction, hitting the obstructions.
+ * One can imagine particles being shot from the ray origin in the ray direction, hitting the
+ * obstructions.
  * \n
  * Each ray will either hit an obstruction, or will hit no obstructions.
  * The length of the ray vector is ignored, only the ray origin and direction is taken into account.
  * Each particle shot out from a ray will travel a certain distance.
  * The minimum and maximum distance that the particle will travel is defined by the 'dist' argument.
  * \n
- * If a ray particle hits an obstruction, then the 'distance' for that ray is the distance from the ray origin
- * to the point of intersection.
+ * If a ray particle hits an obstruction, then the 'distance' for that ray is the distance from the * ray origin to the point of intersection.
  * If the ray particle does not hit an obstruction, then the 'distance' for that ray is equal to
  * the max for the 'dist' argument.
  * \n
@@ -71,13 +71,15 @@ export enum _ERaytraceMethod {
  * 4) 'min_dist': the minimum distance for all the rays.
  * 5) 'max_dist': the maximum distance for all the rays.
  * 6) 'avg_dist': the average dist for all the rays.
- * 7) 'dist_ratio': the ratio of 'total_dist' to the maximum distance if not rays hit any obstructions.
-  * \n
+ * 7) 'dist_ratio': the ratio of 'total_dist' to the maximum distance if not rays hit any
+ * obstructions.
+ * \n
  * If 'distances' is selected, the dictionary will contain the following list:
  * 1) 'distances': A list of numbers, the distance travelled for each ray.
-   * \n
+ * \n
  * If 'hit_pgons' is selected, the dictionary will contain the following list:
- * 1) 'hit_pgons': A list of polygon IDs, the polygons hit for each ray, or 'null' if no polygon was hit.
+ * 1) 'hit_pgons': A list of polygon IDs, the polygons hit for each ray, or 'null' if no polygon
+ * was hit.
  * \n
  * If 'intersections' is selected, the dictionary will contain the following list:
  * 1) 'intersections': A list of XYZ coords, the point of intersection where the ray hit a polygon,
@@ -108,17 +110,18 @@ export function Raytrace(__model__: GIModel, rays: TRay|TRay[]|TRay[][],
             [EEntType.PGON, EEntType.COLL]) as TEntTypeIdx[];
         chk.checkArgs(fn_name, 'dist', dist, [chk.isNum, chk.isNumL]);
         if (Array.isArray(dist)) {
-            if (dist.length !== 2) { throw new Error('If "dist" is a list, it must have a length of two: [min_dist, max_dist].'); }
-            if (dist[0] >= dist[1]) { throw new Error('If "dist" is a list, the "min_dist" must be less than the "max_dist": [min_dist, max_dist].'); }
+            if (dist.length !== 2) { throw new Error(
+                'If "dist" is a list, it must have a length of two: [min_dist, max_dist].'
+            ); }
+            if (dist[0] >= dist[1]) { throw new Error(
+                'If "dist" is a list, the "min_dist" must be less than the "max_dist": [min_dist, max_dist].'
+            ); }
         }
     } else {
-        // ents_arrs = splitIDs(fn_name, 'entities', entities,
-        // [IDcheckObj.isID, IDcheckObj.isIDList],
-        // [EEntType.FACE, EEntType.PGON, EEntType.COLL]) as TEntTypeIdx[];
         ents_arrs = idsBreak(entities) as TEntTypeIdx[];
     }
     // --- Error Check ---
-    const mesh: [THREE.Mesh, number[]] = createSingleMeshTjs(__model__, ents_arrs);
+    const mesh: [THREE.Mesh, number[]] = createSingleMeshBufTjs(__model__, ents_arrs);
     dist = Array.isArray(dist) ? dist : [0, dist];
     const result = _raytraceAll(__model__, rays, mesh, dist, method);
     // cleanup
@@ -127,9 +130,11 @@ export function Raytrace(__model__: GIModel, rays: TRay|TRay[]|TRay[][],
     // return the results
     return result;
 }
+// Tjs raytrace function
 function _raytraceAll(__model__: GIModel, rays: TRay|TRay[]|TRay[][],
-        mesh: [THREE.Mesh, number[]], limits: [number, number],
-        method: _ERaytraceMethod): TRaytraceResult|TRaytraceResult[] {
+        mesh: [THREE.Mesh, number[]], limits: [number, number], method: _ERaytraceMethod):
+        TRaytraceResult|TRaytraceResult[] {
+
     const depth: number = getArrDepth(rays);
     if (depth < 2) {// an empty list
         return null;
@@ -144,7 +149,10 @@ function _raytraceAll(__model__: GIModel, rays: TRay|TRay[]|TRay[][],
             __model__, a_rays, mesh, limits, method)) as TRaytraceResult[];
     }
 }
-function _raytraceOriginsDirsTjs(__model__: GIModel, rays: TRay[]): [THREE.Vector3[], THREE.Vector3[]] {
+//
+function _raytraceOriginsDirsTjs(__model__: GIModel, rays: TRay[]):
+        [THREE.Vector3[], THREE.Vector3[]] {
+
     const origins_tjs: THREE.Vector3[] = [];
     const dirs_tjs: THREE.Vector3[] = [];
     for (const ray of rays) {
@@ -154,8 +162,11 @@ function _raytraceOriginsDirsTjs(__model__: GIModel, rays: TRay[]): [THREE.Vecto
     }
     return [origins_tjs, dirs_tjs];
 }
-function _raytrace(origins_tjs: THREE.Vector3[], dirs_tjs: THREE.Vector3[], mesh: [THREE.Mesh, number[]],
+//
+function _raytrace(origins_tjs: THREE.Vector3[], dirs_tjs: THREE.Vector3[],
+        mesh: [THREE.Mesh, number[]],
         limits: [number, number], method: _ERaytraceMethod): TRaytraceResult {
+
     const result: TRaytraceResult = {};
     let hit_count = 0;
     let miss_count = 0;
@@ -167,7 +178,8 @@ function _raytrace(origins_tjs: THREE.Vector3[], dirs_tjs: THREE.Vector3[], mesh
         const origin_tjs = origins_tjs[i];
         const dir_tjs = dirs_tjs[i];
         // shoot
-        const ray_tjs: THREE.Raycaster = new THREE.Raycaster(origin_tjs, dir_tjs, limits[0], limits[1]);
+        const ray_tjs: THREE.Raycaster =
+            new THREE.Raycaster(origin_tjs, dir_tjs, limits[0], limits[1]);
         const isects: THREE.Intersection[] = ray_tjs.intersectObject(mesh[0], false);
         // get the result
         if (isects.length === 0) {
@@ -194,7 +206,10 @@ function _raytrace(origins_tjs: THREE.Vector3[], dirs_tjs: THREE.Vector3[], mesh
             }
         }
     }
-    if ((method === _ERaytraceMethod.ALL || method === _ERaytraceMethod.STATS) && result_dists.length > 0) {
+    if (
+            (method === _ERaytraceMethod.ALL || method === _ERaytraceMethod.STATS) &&
+            result_dists.length > 0
+        ) {
         result.hit_count = hit_count;
         result.miss_count = miss_count;
         result.total_dist = Mathjs.sum(result_dists);
@@ -298,7 +313,7 @@ export function Isovist(__model__: GIModel, origins: TRay[]|TPlane[],
     const max_perim = num_rays * 2 * opp;
     const max_area = num_rays * radius * Math.cos(ang / 2) * opp;
     // create mesh
-    const mesh: [THREE.Mesh, number[]] = createSingleMeshTjs(__model__, ents_arrs);
+    const mesh: [THREE.Mesh, number[]] = createSingleMeshBufTjs(__model__, ents_arrs);
     // create data structure
     const result: TIsovistResult = { };
     result.avg_dist = [];
@@ -479,7 +494,7 @@ export function Sky(__model__: GIModel, origins: Txyz[]|TRay[]|TPlane[], detail:
 
 
     const sensor_oris_dirs_tjs: [THREE.Vector3, THREE.Vector3][] = _rayOrisDirsTjs(__model__, origins, 0.01);
-    const [mesh_tjs, idx_to_face_i]: [THREE.Mesh, number[]] = createSingleMeshTjs(__model__, ents_arrs);
+    const [mesh_tjs, idx_to_face_i]: [THREE.Mesh, number[]] = createSingleMeshBufTjs(__model__, ents_arrs);
     limits = Array.isArray(limits) ? limits : [0, limits];
     // get the direction vectors
     const ray_dirs_tjs: THREE.Vector3[] = _skyRayDirsTjs(detail);
@@ -653,7 +668,7 @@ export function Sun(__model__: GIModel, origins: Txyz[]|TRay[]|TPlane[], detail:
     // TODO North direction
 
     const sensor_oris_dirs_tjs: [THREE.Vector3, THREE.Vector3][] = _rayOrisDirsTjs(__model__, origins, 0.01);
-    const [mesh_tjs, idx_to_face_i]: [THREE.Mesh, number[]] = createSingleMeshTjs(__model__, ents_arrs);
+    const [mesh_tjs, idx_to_face_i]: [THREE.Mesh, number[]] = createSingleMeshBufTjs(__model__, ents_arrs);
     limits = Array.isArray(limits) ? limits : [0, limits];
 
 
