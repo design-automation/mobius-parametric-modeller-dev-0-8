@@ -1287,10 +1287,11 @@ export function Arc(__model__: GIModel, origin: Txyz|TPlane, radius: number, num
     }
     // calc the rot angle per position
     let rot: number;
+    const div: number = arc_angle === null ? num_positions : num_positions - 1;
     if (arc_angles[0] < arc_angles[1]) {
-        rot = (arc_angles[1] - arc_angles[0]) / (num_positions - 1); // CCW
+        rot = (arc_angles[1] - arc_angles[0]) / div; // CCW
     } else {
-        rot = (arc_angles[0] - arc_angles[1]) / -(num_positions - 1); // CW
+        rot = (arc_angles[0] - arc_angles[1]) / -div; // CW
     }
     // create positions
     const posis_i: number[] = [];
