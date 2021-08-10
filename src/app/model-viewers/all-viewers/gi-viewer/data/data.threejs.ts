@@ -120,11 +120,21 @@ export class DataThreejs extends DataThreejsLookAt {
     private _addGeom(model: GIModel): void {
         // Add geometry
         const threejs_data: IThreeJS = model.get3jsData(this.nodeIndex);
-        this.tri_select_map = threejs_data.tri_select_map;
-        this.edge_select_map = threejs_data.edge_select_map;
-        this.point_select_map = threejs_data.point_select_map;
-        this.posis_map = threejs_data.posis_map;
-        this.vertex_map = threejs_data.verts_map;
+        // this.tri_select_map = threejs_data.tri_select_map;
+        // this.edge_select_map = threejs_data.edge_select_map;
+        // this.point_select_map = threejs_data.point_select_map;
+        // this.posis_map = threejs_data.posis_map;
+        // this.vertex_map = threejs_data.verts_map;
+        this.select_maps = {
+            _t: threejs_data.tri_select_map,
+            _e: threejs_data.edge_select_map,
+            _v: threejs_data.verts_map,
+            pt: threejs_data.point_select_map,
+            ps: threejs_data.posis_map,
+
+            _e_vr: threejs_data.vrmesh_edge_select_map,
+            _t_vr: threejs_data.vrmesh_tri_select_map,
+        };
         this.positions = [];
 
         // Get materials
@@ -138,8 +148,11 @@ export class DataThreejs extends DataThreejsLookAt {
         const normals_buffer = new THREE.Float32BufferAttribute(threejs_data.normals, 3);
         const colors_buffer = new THREE.Float32BufferAttribute(threejs_data.colors, 3);
         const posis_xyz_buffer = new THREE.Float32BufferAttribute(threejs_data.posis_xyz, 3);
-        this._addTris(threejs_data.tri_indices, verts_xyz_buffer, colors_buffer, normals_buffer, pgon_material_groups, pgon_materials);
-        this._addLines(threejs_data.edge_indices, verts_xyz_buffer, colors_buffer, pline_material_groups, pline_materials);
+        this._addTris(threejs_data.tri_indices, threejs_data.vrmesh_tri_indices,
+            verts_xyz_buffer, colors_buffer, normals_buffer,
+            pgon_material_groups, pgon_materials);
+        this._addLines(threejs_data.edge_indices, threejs_data.vrmesh_edge_indices,
+            verts_xyz_buffer, colors_buffer, pline_material_groups, pline_materials);
         this._addPoints(threejs_data.point_indices, verts_xyz_buffer, colors_buffer, [255, 255, 255], this.settings.positions.size + 1);
 
         // if (threejs_data.timeline) {
@@ -427,7 +440,7 @@ export class DataThreejs extends DataThreejsLookAt {
     /**
      * Add threejs triangles to the scene
      */
-    private _addTris(tris_i: number[], posis_buffer: THREE.Float32BufferAttribute,
+    private _addTris(tris_i: number[], vrmesh_tris_i: number[], posis_buffer: THREE.Float32BufferAttribute,
                      colors_buffer: THREE.Float32BufferAttribute,
                      normals_buffer: THREE.Float32BufferAttribute,
                      material_groups, materials): void {
@@ -445,6 +458,18 @@ export class DataThreejs extends DataThreejsLookAt {
             geom.addGroup(element[0], element[1], element[2]);
         });
         // this._buffer_geoms.push(geom);
+
+        const vrmesh_geom = new THREE.BufferGeometry();
+        vrmesh_geom.setIndex(vrmesh_tris_i);
+        vrmesh_geom.setAttribute('position', posis_buffer);
+        if (normals_buffer.count > 0) {
+            vrmesh_geom.setAttribute('normal', normals_buffer);
+        }
+        vrmesh_geom.setAttribute('color', colors_buffer);
+        vrmesh_geom.clearGroups();
+        material_groups.forEach(element => {
+            vrmesh_geom.addGroup(element[0], element[1], element[2]);
+        });
 
         const material_arr = [];
         let index = 0;
@@ -489,6 +514,8 @@ export class DataThreejs extends DataThreejsLookAt {
         }
         const mesh = new THREE.Mesh(geom, material_arr);
         mesh.name = 'obj_tri';
+        const vrmesh_mesh = new THREE.Mesh(vrmesh_geom, material_arr);
+        vrmesh_mesh.name = 'obj_tri_navmesh';
 
         mesh.geometry.computeBoundingSphere();
         if (normals_buffer.count === 0) {
@@ -497,21 +524,32 @@ export class DataThreejs extends DataThreejsLookAt {
         mesh.castShadow = true;
         mesh.receiveShadow = true;
 
+        vrmesh_mesh.geometry.computeBoundingSphere();
+        if (normals_buffer.count === 0) {
+            vrmesh_mesh.geometry.computeVertexNormals();
+        }
+        vrmesh_mesh.castShadow = true;
+        vrmesh_mesh.receiveShadow = true;
+
         // show vertex normals
         this.vnh = new VertexNormalsHelper(mesh, this.settings.normals.size, 0x0000ff);
         this.vnh.visible = this.settings.normals.show;
         this.scene.add(this.vnh);
+
         this.scene_objs.push(mesh);
+        this.scene_objs.push(vrmesh_mesh);
+
         // add mesh to scene
         this.scene.add(mesh);
-        this.threejs_nums[2] = tris_i.length / 3;
+        this.scene.add(vrmesh_mesh);
+        this.threejs_nums[2] = (tris_i.length + vrmesh_tris_i.length) / 3;
     }
 
     // ============================================================================
     /**
      * Add threejs lines to the scene
      */
-    private _addLines(lines_i: number[],
+    private _addLines(lines_i: number[], vrmesh_lines_i: number[],
                     posis_buffer: THREE.Float32BufferAttribute,
                     color_buffer: THREE.Float32BufferAttribute,
                     material_groups, materials): void {
@@ -521,31 +559,10 @@ export class DataThreejs extends DataThreejsLookAt {
         geom.setAttribute('color', color_buffer);
         // this._buffer_geoms.push(geom);
 
-        // const mat = new THREE.LineDashedMaterial({
-        //     color: 0x000000,
-        //     vertexColors: true,
-        //     gapSize: 0
-        // });
-        // const line = new THREE.LineSegments(geom, mat);
-        // this.scene_objs.push(line);
-        // this.scene.add(line);
-
-        // const geom_white = new THREE.BufferGeometry();
-        // geom_white.setIndex(white_line_i);
-        // geom_white.setAttribute('position', posis_buffer);
-        // geom_white.setAttribute('color', color_buffer);
-        // // this._buffer_geoms.push(geom_white);
-
-        // const mat_white = new THREE.LineDashedMaterial({
-        //     color: 0xFFFFFF,
-        //     vertexColors: true,
-        //     gapSize: 0
-        // });
-        // const line_white = new THREE.LineSegments(geom_white, mat_white);
-        // this.scene_objs.push(line_white);
-        // this.scene.add(line_white);
-
-        // this.threejs_nums[1] = lines_i.length  / 2;
+        const vrmesh_geom = new THREE.BufferGeometry();
+        vrmesh_geom.setIndex(vrmesh_lines_i);
+        vrmesh_geom.setAttribute('position', posis_buffer);
+        vrmesh_geom.setAttribute('color', color_buffer);
 
 
         const material_arr = [];
@@ -575,15 +592,24 @@ export class DataThreejs extends DataThreejsLookAt {
         }
         material_groups.forEach(element => {
             geom.addGroup(element[0], element[1], element[2]);
+            vrmesh_geom.addGroup(element[0], element[1], element[2]);
         });
         const newGeom = geom.toNonIndexed();
+        const vrmesh_newGeom = vrmesh_geom.toNonIndexed();
 
         const line = new THREE.LineSegments(newGeom, material_arr);
         line.name = 'obj_line';
         line.computeLineDistances();
         this.scene_objs.push(line);
         this.scene.add(line);
-        this.threejs_nums[1] = lines_i.length / 2;
+
+        const vrmesh_line = new THREE.LineSegments(vrmesh_newGeom, material_arr);
+        vrmesh_line.name = 'obj_line_navmesh';
+        vrmesh_line.computeLineDistances();
+        this.scene_objs.push(vrmesh_line);
+        this.scene.add(vrmesh_line);
+
+        this.threejs_nums[1] = (lines_i.length + vrmesh_lines_i.length) / 2;
 
     }
     // ============================================================================

@@ -2,7 +2,8 @@
 export interface AframeSettings {
     camera: {
         position: {x: number, y: number, z: number},
-        rotation: {x: number, y: number, z: number}
+        rotation: {x: number, y: number, z: number},
+        acceleration: number
     };
     background: {
         background_set: number,
@@ -48,7 +49,8 @@ export interface AframeSettings {
 export const aframe_default_settings: AframeSettings = {
     camera: {
         position: {x: 0, y: 5, z: 0},
-        rotation: {x: 0, y: 0, z: 0}
+        rotation: {x: 0, y: 0, z: 0},
+        acceleration: 100
     },
     background: {
         background_set: 1,

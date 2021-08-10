@@ -229,6 +229,12 @@ export class AframeViewerComponent implements OnInit, OnDestroy{
                 this.temp_camera_rot.z = cam_rot_data.rotation.z;
                 this.settings.camera.rotation = this.temp_camera_rot;
                 break;
+            case 'camera.acceleration':
+                if (isNaN(value)) {
+                    return;
+                }
+                this.settings.camera.acceleration = Math.round(value);
+                break;
             case 'background.get_background_pos':
                 const cam_pos = this.dataService.getAframeData().getCameraPos();
                 this.settings.background.background_position.x = cam_pos.position.x;
@@ -400,7 +406,8 @@ export class AframeViewerComponent implements OnInit, OnDestroy{
         if (save) {
             this.settings.camera = {
                 position: this.temp_camera_pos,
-                rotation: this.temp_camera_rot
+                rotation: this.temp_camera_rot,
+                acceleration: this.settings.camera.acceleration
             };
             this.settings.vr.background_url = this.vr.background_url;
             this.settings.vr.foreground_url = this.vr.foreground_url;

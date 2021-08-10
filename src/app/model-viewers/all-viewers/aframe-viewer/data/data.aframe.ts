@@ -2,7 +2,7 @@ import { GIModel } from '@assets/libs/geo-info/GIModel';
 import * as THREE from 'three';
 import { AframeSettings } from '../aframe-viewer.settings';
 import * as Modules from '@assets/core/modules';
-import { _EEntType } from '@assets/core/modules/basic/query';
+import { _EEntType, _EFilterOperator } from '@assets/core/modules/basic/query';
 
 declare var AFRAME;
 const DEFAUT_CAMERA_POS = {
@@ -33,6 +33,8 @@ export class DataAframe {
     public camera;
     public settings: AframeSettings;
 
+    public navMeshEnabled = false;
+
     public camPosList = [null];
     public staticCamOn = false;
     public vr = {
@@ -44,6 +46,7 @@ export class DataAframe {
         camera_position: new AFRAME.THREE.Vector3(0, 5, 0),
         camera_rotation: new AFRAME.THREE.Vector3(0, 0, 0),
     };
+
 
     // test file: https://raw.githubusercontent.com/design-automation/mobius-vr/master/assets/Street%20View%20360_1.jpg
 
@@ -113,6 +116,7 @@ export class DataAframe {
                 this.settings.camera.rotation.y = newSetting.camera.rotation.y;
                 this.settings.camera.rotation.z = newSetting.camera.rotation.z;
             }
+            this.settings.camera.acceleration = newSetting.camera.acceleration;
         }
         if (newSetting.ambient_light) {
             this.settings.ambient_light.show = newSetting.ambient_light.show;
@@ -175,6 +179,21 @@ export class DataAframe {
         this.removeMobiusObjs();
         const threeJSGroup = new AFRAME.THREE.Group();
 
+        try {
+            const allPgons = <string[]> Modules.query.Get(this.model, _EEntType.PGON, null) ;
+            const navMeshPgons = Modules.query.Filter(this.model, allPgons, 'vr_cam', _EFilterOperator.IS_EQUAL, true);
+            if (navMeshPgons.length > 0) {
+                this.navMeshEnabled = true;
+                console.log('has navmesh');
+            } else {
+                this.navMeshEnabled = false;
+                console.log('no locomotion boundary');
+            }
+        } catch (ex) {
+            this.navMeshEnabled = false;
+            console.log('no locomotion boundary');
+
+        }
         for (const i of threejsScene.scene.children) {
             if (i.name.startsWith('obj')) {
                 const materials = this.getMaterial(i.material);
@@ -184,6 +203,11 @@ export class DataAframe {
                     threeJSGroup.add(new AFRAME.THREE.LineSegments(i.geometry, materials));
                 } else if (i.name === 'obj_point') {
                     threeJSGroup.add(new AFRAME.THREE.Points(i.geometry, materials));
+                } else if (i.name === 'obj_tri_navmesh') {
+                    const navMesh = document.getElementById('mobius_nav_mesh');
+                    if (navMesh) {
+                        (<any> navMesh).setObject3D('mesh', new AFRAME.THREE.Mesh(i.geometry, materials));
+                    }
                 }
             }
         }
@@ -435,10 +459,17 @@ export class DataAframe {
     }
 
     updateCamera(camera_pos = DEFAUT_CAMERA_POS) {
+        const rigEl = <any> document.getElementById('aframe_camera_rig');
+        const camEl = <any> document.getElementById('aframe_look_camera');
+        if (this.navMeshEnabled) {
+            rigEl.setAttribute('movement-controls', {enabled: true, speed: `${this.settings.camera.acceleration / 100}`, constrainToNavMesh: true});
+            rigEl.setAttribute('custom-wasd-controls', {enabled: false});
+        } else {
+            rigEl.setAttribute('movement-controls', {enabled: false});
+            rigEl.setAttribute('custom-wasd-controls', {enabled: true, acceleration: `${this.settings.camera.acceleration}%`, fly: false});
+        }
         if (this.vr.enabled) {
             setTimeout(() => {
-                const rigEl = <any> document.getElementById('aframe_camera_rig');
-                const camEl = <any> document.getElementById('aframe_look_camera');
                 if (rigEl) {
                     const trueCameraPos = new AFRAME.THREE.Vector3();
                     trueCameraPos.copy(this.vr.camera_position);
@@ -461,9 +492,6 @@ export class DataAframe {
             return;
         } else {
             setTimeout(() => {
-                console.log('~~~~~~~~~', camera_pos.rotation)
-                const rigEl = <any> document.getElementById('aframe_camera_rig');
-                const camEl = <any> document.getElementById('aframe_look_camera');
                 if (rigEl && camera_pos) {
                     const trueCameraPos = new AFRAME.THREE.Vector3();
                     trueCameraPos.copy(camera_pos.position);
@@ -491,35 +519,31 @@ export class DataAframe {
         const camEl = <any> document.getElementById('aframe_look_camera');
         const skyBG = document.getElementById('aframe_sky_background');
         const skyFG = document.getElementById('aframe_sky_foreground');
-        const mobiusGeom = document.getElementById('mobius_geom');
         skyBG.setAttribute('rotation', '0 0 0');
         skyFG.setAttribute('rotation', '0 0 0');
-        mobiusGeom.setAttribute('scale', '1 1 1');
 
         if (!posDetails || !posDetails.pos || posDetails.pos.length < 2) {
             this.staticCamOn = false;
-            rigEl.setAttribute('custom-wasd-controls', 'enabled: true; acceleration: 100%; fly: false');
+            if (this.navMeshEnabled) {
+                rigEl.setAttribute('movement-controls', {enabled: true, speed: `${this.settings.camera.acceleration / 100}`, constrainToNavMesh: true});
+                rigEl.setAttribute('custom-wasd-controls', {enabled: false});
+            } else {
+                rigEl.setAttribute('movement-controls', {enabled: false});
+                rigEl.setAttribute('custom-wasd-controls', {enabled: true, acceleration: `${this.settings.camera.acceleration}%`, fly: false});
+            }
             this.updateSky();
             // this.updateCamera(this.settings.camera);
             return;
         }
-        let scaleVal = 1;
-        if (posDetails.scaling) {
-            scaleVal = Number(posDetails.scaling);
-            if (scaleVal) {
-                const scaleString = `${scaleVal} ${scaleVal} ${scaleVal}`;
-                mobiusGeom.setAttribute('scale', scaleString);
-                // sky.setAttribute('scale', '-' + scaleString);
-            }
-        }
         this.staticCamOn = true;
         rigEl.setAttribute('custom-wasd-controls', 'enabled: false;');
+        rigEl.setAttribute('movement-controls', 'enabled: false;');
         const camPos = new AFRAME.THREE.Vector3(0, 0, 0);
-        camPos.x = posDetails.pos[0] * scaleVal;
-        camPos.z = (0 - posDetails.pos[1]) * scaleVal;
-        camPos.y = posDetails.pos[2] * scaleVal;
+        camPos.x = posDetails.pos[0];
+        camPos.z = (0 - posDetails.pos[1]);
+        camPos.y = posDetails.pos[2];
         if (!camPos.y && camPos.y !== 0) {
-            camPos.y = 10 * scaleVal;
+            camPos.y = 10;
         }
         rigEl.setAttribute('position', camPos);
         if (posDetails.camera_rotation) {

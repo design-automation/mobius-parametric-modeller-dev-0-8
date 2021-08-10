@@ -62,6 +62,15 @@
                             (change)="settingOnChange('camera.rot_y', $event.target.value)"
                             [value]="formatNumber(settings.camera.rotation.y)" disabled>
                         </dd>
+                        <dd>
+                            <div class="label">Camera Acceleration</div>
+                            <div class="slidecontainer light">
+                                <input type="range" min="0" max="1000" step="1" [value]="settings.camera.acceleration" class="slider" (input)="settingOnChange('camera.acceleration', $event.target.value)">
+                                <input type="number"
+                                (change)="settingOnChange('camera.acceleration', $event.target.value)" 
+                                [value]="formatNumber(settings.camera.acceleration)">
+                            </div>
+                        </dd>
                     </dl>
                 </div>
             </tab>

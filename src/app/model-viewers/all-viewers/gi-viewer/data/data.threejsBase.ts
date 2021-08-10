@@ -37,6 +37,16 @@ export class DataThreejsBase {
     public edge_select_map: Map<number, number>;
     // public white_edge_select_map: Map<number, number>;
     public point_select_map: Map<number, number>;
+    public select_maps: {
+        _t: Map<number, number>;
+        _e: Map<number, number>;
+        _v: Map<number, number>;
+        pt: Map<number, number>;
+        ps: Map<number, number>;
+
+        _e_vr: Map<number, number>;
+        _t_vr: Map<number, number>;
+};
     public point_label: any[];
     public posis_map: Map<number, number>;
     public vertex_map: Map<number, number>;

@@ -45,6 +45,7 @@
     "@types/cytoscape": "^3.14.0",
     "@types/proj4": "^2.5.0",
     "aframe": "^1.2.0",
+    "aframe-extras": "^6.1.1",
     "aframe-physics-system": "^4.0.1",
     "angular-split": "^4.0.0",
     "chroma-js": "^1.4.1",
@@ -70,6 +71,7 @@
     "suncalc": "^1.8.0",
     "three": "^0.130.1",
     "three-orbit-controls": "^82.1.0",
+    "three-pathfinding": "^0.14.1",
     "tslib": "^2.0.0",
     "underscore": "^1.13.1",
     "zone.js": "~0.11.4"

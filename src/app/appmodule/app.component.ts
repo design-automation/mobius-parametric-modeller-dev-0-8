@@ -3,13 +3,19 @@ import { DataService } from '@services';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import {customWASDControl, customLookControl} from '@shared/utils/aframeComps';
+import {customLookControl, customWASDControl, keyboardControlComponent, movementControlComponent,
+    navAgentComponent, navMeshComponent, navSystem} from '@shared/utils';
 
 
 declare var AFRAME;
 function registerAframeComponents() {
+    AFRAME.registerSystem('nav', navSystem);
     AFRAME.registerComponent('custom-wasd-controls', customWASDControl);
     AFRAME.registerComponent('custom-look-controls', customLookControl);
+    AFRAME.registerComponent('nav-mesh', navMeshComponent);
+    AFRAME.registerComponent('nav-agent', navAgentComponent);
+    AFRAME.registerComponent('keyboard-controls', keyboardControlComponent);
+    AFRAME.registerComponent('movement-controls', movementControlComponent);
 }
 
 
