@@ -1226,19 +1226,30 @@ function _polyhedronLerp(a: Txyz, b: Txyz, alpha: number): Txyz {
  * If a coordinate is given, then the plane is assumed to be aligned with the global XY plane.
  * @param radius Radius of circle as a number.
  * @param num_positions Number of positions to be distributed equally along the arc.
- * @param arc_angle Angle of arc (in radians).
+ * @param arc_angle Angle of arc (in radians). If a list of two numbers is given, then the first
+ * number specifies the arc start angle, and the second number the arc end angle, i.e.
+ * `[arc_start_angle, arc_end_angle]`. If a single numer is specified, then the angles will be set
+ * to `[0, arc_end_angle]`. If `null` is given, then the angles will be set to `[0, 2 * PI]`.
  * @returns Entities, a list of positions.
- * @example coordinates1 = pattern.Arc([0,0,0], 10, 12, PI)
- * @example_info Creates a list of 12 positions distributed equally along a semicircle of radius 10.
+ * @example `posis = pattern.Arc([0,0,0], 10, 12, PI)`
+ * @example_info Creates a list of 12 positions distributed equally along a semicircle of radius 10
+ * starting at an angle of 0 and ending at an angle of 180 degrees.
  */
-export function Arc(__model__: GIModel, origin: Txyz|TPlane, radius: number, num_positions: number, arc_angle: number): TId[] {
+export function Arc(__model__: GIModel, origin: Txyz|TPlane, radius: number, num_positions: number, 
+        arc_angle: number|[number, number]): TId[] {
     // --- Error Check ---
     if (__model__.debug) {
         const fn_name = 'pattern.Arc';
         chk.checkArgs(fn_name, 'origin', origin, [chk.isXYZ, chk.isPln]);
         chk.checkArgs(fn_name, 'radius', radius, [chk.isNum]);
         chk.checkArgs(fn_name, 'num_positions', num_positions, [chk.isInt]);
-        chk.checkArgs(fn_name, 'arc_angle', arc_angle, [chk.isNum, chk.isNull]);
+        chk.checkArgs(fn_name, 'arc_angle', arc_angle, [chk.isNum, chk.isNumL, chk.isNull]);
+        if (Array.isArray(arc_angle)) {
+            if (arc_angle.length !== 2) {
+                throw new Error('pattern.Arc: If the "arc_angle" is given as a list of numbers, \
+                then the list must contain exactly two angles (in radians).');
+            }
+        }
     }
     // --- Error Check ---
     // create the matrix one time
@@ -1247,12 +1258,26 @@ export function Arc(__model__: GIModel, origin: Txyz|TPlane, radius: number, num
     if (origin_is_plane) {
         matrix = xfromSourceTargetMatrix(XYPLANE, origin as  TPlane);
     }
+    // get the two arc angles
+    let arc_angles: [number, number];
+    if (arc_angle === null) {
+        arc_angles = [0, 2 * Math.PI];
+    } else if ( Array.isArray(arc_angle)) {
+        arc_angles = arc_angle;
+    } else {
+        arc_angles = [0, arc_angle];
+    }
     // calc the rot angle per position
-    const rot: number = (arc_angle === null) ? (2 * Math.PI) / num_positions : arc_angle / (num_positions - 1);
+    let rot: number;
+    if (arc_angles[0] < arc_angles[1]) {
+        rot = (arc_angles[1] - arc_angles[0]) / (num_positions - 1); // CCW
+    } else {
+        rot = (arc_angles[0] - arc_angles[1]) / -(num_positions - 1); // CW
+    }
     // create positions
     const posis_i: number[] = [];
     for (let i = 0; i < num_positions; i++) {
-        const angle: number = rot * i; // CCW
+        const angle: number = arc_angles[0] + (rot * i);
         const x: number = (Math.cos(angle) * radius);
         const y: number = (Math.sin(angle) * radius);
         let xyz: Txyz = [x, y, 0];
@@ -1486,7 +1511,7 @@ export enum _ECurveCatRomType {
 }
 // ================================================================================================
 function nurbsToPosis(__model__: GIModel, curve_verb: any, degree: number, closed: boolean,
-    num_positions: number, start: Txyz,): number[] {
+    num_positions: number, start: Txyz): number[] {
     // create positions
     const posis_i: number[] = [];
     const [offset_start, offset_end] = { 2: [5, 3], 3: [6, 5], 4: [8, 6], 5: [9, 8] }[degree];
