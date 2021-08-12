@@ -181,7 +181,7 @@ export class DataAframe {
 
         try {
             const allPgons = <string[]> Modules.query.Get(this.model, _EEntType.PGON, null) ;
-            const navMeshPgons = Modules.query.Filter(this.model, allPgons, 'vr_cam', _EFilterOperator.IS_EQUAL, true);
+            const navMeshPgons = Modules.query.Filter(this.model, allPgons, 'vr_nav_mesh', _EFilterOperator.IS_EQUAL, true);
             if (navMeshPgons.length > 0) {
                 this.navMeshEnabled = true;
                 console.log('has navmesh');

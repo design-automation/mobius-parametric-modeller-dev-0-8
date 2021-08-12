@@ -62,7 +62,7 @@ export class GIGeomThreejs {
         const material_names:  string[] = ['default_front', 'default_back'];
         // get the material attribute from polygons
         const pgon_material_attrib: GIAttribMapBase = this.modeldata.attribs.attribs_maps.get(ssid).pg.get('material');
-        const pgon_vr_cam_attrib: GIAttribMapBase = this.modeldata.attribs.attribs_maps.get(ssid).pg.get('vr_cam');
+        const pgon_vr_cam_attrib: GIAttribMapBase = this.modeldata.attribs.attribs_maps.get(ssid).pg.get('vr_nav_mesh');
         // loop through all tris
         // get ents from snapshot
         const tris_i: number[] = this.modeldata.geom.snapshot.getEnts(ssid, EEntType.TRI);
@@ -215,7 +215,7 @@ export class GIGeomThreejs {
         }
         // get the edge material attrib
         const pline_material_attrib = this.modeldata.attribs.attribs_maps.get(ssid).pl.get('material');
-        const pgon_vr_cam_attrib: GIAttribMapBase = this.modeldata.attribs.attribs_maps.get(ssid).pg.get('vr_cam');
+        const pgon_vr_cam_attrib: GIAttribMapBase = this.modeldata.attribs.attribs_maps.get(ssid).pg.get('vr_nav_mesh');
 
         // loop through all edges
         // get ents from snapshot
@@ -342,7 +342,7 @@ export class GIGeomThreejs {
         const points_verts_i_filt: TPoint[] = [];
         const point_select_map: Map<number, number> = new Map();
 
-        const pgon_vr_cam_attrib: GIAttribMapBase = this.modeldata.attribs.attribs_maps.get(ssid).pg.get('vr_cam');
+        const pgon_vr_cam_attrib: GIAttribMapBase = this.modeldata.attribs.attribs_maps.get(ssid).pg.get('vr_nav_mesh');
         // get ents from snapshot0
         const points_i: number[] = this.modeldata.geom.snapshot.getEnts(ssid, EEntType.POINT);
         for (const point_i of points_i) {
