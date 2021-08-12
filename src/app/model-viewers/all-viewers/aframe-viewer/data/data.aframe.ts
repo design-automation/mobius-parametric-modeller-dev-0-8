@@ -443,10 +443,10 @@ export class DataAframe {
         const pos = Modules.attrib.Get(this.model, Modules.query.Get(this.model, Modules.query._EEntType.POSI, pts), 'xyz');
         const ptAttribs = Modules.attrib.Get(this.model, pts, 'vr');
         this.camPosList = [{
-            name: 'default',
+            name: 'Walk',
             value: null
         }, {
-            name: 'VR edit',
+            name: 'Edit POV',
             value: null
         }];
         for (let i = 0; i < pts.length; i++) {

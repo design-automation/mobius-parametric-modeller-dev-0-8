@@ -123,10 +123,10 @@ export class AframeViewerComponent implements OnInit, OnDestroy{
                 if (!posCheck) {
                     if (this.vr.enabled) {
                         this.selectedCamPos = this.camPosList.length - 1;
-                        this.dataService.aframeCamPos = 'VR edit';
+                        this.dataService.aframeCamPos = 'Edit POV';
                     } else {
                         this.selectedCamPos = 0;
-                        this.dataService.aframeCamPos = 'default';
+                        this.dataService.aframeCamPos = 'Walk';
                     }
                     this.changePos(this.selectedCamPos);
                 }
