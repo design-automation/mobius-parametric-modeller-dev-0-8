@@ -24,7 +24,7 @@ declare var AFRAME;
     templateUrl: './aframe-viewer.component.html',
     styleUrls: ['./aframe-viewer.component.scss'],
 })
-export class AframeViewerComponent implements OnInit, OnDestroy{
+export class AframeViewerComponent implements OnInit, OnDestroy {
     // model data passed to the viewer
     @Input() data: GIModel;
     @Input() nodeIndex: number;
@@ -123,10 +123,10 @@ export class AframeViewerComponent implements OnInit, OnDestroy{
                 if (!posCheck) {
                     if (this.vr.enabled) {
                         this.selectedCamPos = this.camPosList.length - 1;
-                        this.dataService.aframeCamPos = 'VR edit';
+                        this.dataService.aframeCamPos = 'Edit POV';
                     } else {
                         this.selectedCamPos = 0;
-                        this.dataService.aframeCamPos = 'default';
+                        this.dataService.aframeCamPos = 'Walk';
                     }
                     this.changePos(this.selectedCamPos);
                 }
@@ -533,6 +533,7 @@ export class AframeViewerComponent implements OnInit, OnDestroy{
     }
 
     updatePos(event) {
+        event.stopPropagation();
         try {
             const pos = JSON.parse(event.target.value);
             pos.z =  - pos.z;

@@ -24,7 +24,7 @@ export const navMeshComponent =  {
     const navMeshGeometry = navMesh.geometry.clone();
 
     scene.updateMatrixWorld();
-    navMeshGeometry.applyMatrix(navMesh.matrixWorld);
+    navMeshGeometry.applyMatrix4(navMesh.matrixWorld);
     this.system.setNavMeshGeometry(navMeshGeometry);
 
     this.hasLoadedNavMesh = true;

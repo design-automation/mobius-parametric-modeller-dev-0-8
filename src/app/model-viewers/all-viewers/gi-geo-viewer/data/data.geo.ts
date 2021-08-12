@@ -1,6 +1,6 @@
 import { GIModel } from '@libs/geo-info/GIModel';
 import { GeoSettings } from '../gi-geo-viewer.settings';
-import { TAttribDataTypes, LONGLAT } from '@libs/geo-info/common';
+import { TAttribDataTypes, LONGLAT, EEntType } from '@libs/geo-info/common';
 import * as itowns from 'itowns/dist/itowns';
 import * as THREE from 'three';
 import * as suncalc from 'suncalc';
@@ -343,6 +343,7 @@ export class DataGeo {
             this.lookAtObj(threejsScene);
         }
         this.updateLightPos(this.settings.time.date, lightTarget);
+        this.updateHUD();
     }
 
     public updateLightPos(time, lightTarget?) {
@@ -439,6 +440,15 @@ export class DataGeo {
         this.view.scene.add(plane);
     }
 
+    updateHUD() {
+        const hud = document.getElementById('geo_hud');
+        if (!this.model.modeldata.attribs.query.hasEntAttrib(EEntType.MOD, 'hud')) {
+            hud.innerHTML = '';
+            hud.style.visibility = 'hidden';
+            return;
+        }
+        hud.innerHTML = this.model.modeldata.attribs.get.getModelAttribVal('hud') as string;
+    }
 
     // PRIVATE METHODS
     private _getLayers() {
@@ -446,7 +456,7 @@ export class DataGeo {
         this.viewColorLayers.push(new itowns.ColorLayer('ColorLayer', {
             source: new itowns.TMSSource({
                 name: 'OpenStreetMap',
-                projection: 'EPSG:3857',
+                crs: 'EPSG:3857',
                 format: 'image/png',
                 url: 'https://a.tile.openstreetmap.org/${z}/${x}/${y}.png',
                 attribution: {
@@ -464,7 +474,7 @@ export class DataGeo {
         this.viewColorLayers.push(new itowns.ColorLayer('ColorLayer', {
             source: new itowns.TMSSource({
                 name: 'OpenTopoMap',
-                projection: 'EPSG:3857',
+                crs: 'EPSG:3857',
                 format: 'image/png',
                 url: 'https://a.tile.opentopomap.org/${z}/${x}/${y}.png',
                 attribution: {
@@ -482,7 +492,7 @@ export class DataGeo {
         this.viewColorLayers.push(new itowns.ColorLayer('ColorLayer', {
             source: new itowns.TMSSource({
                 name: 'Stamen Toner',
-                projection: 'EPSG:3857',
+                crs: 'EPSG:3857',
                 format: 'image/png',
                 url: 'https://stamen-tiles.a.ssl.fastly.net/toner/${z}/${x}/${y}.png',
                 attribution: {
@@ -495,7 +505,7 @@ export class DataGeo {
         this.viewColorLayers.push(new itowns.ColorLayer('ColorLayer', {
             source: new itowns.TMSSource({
                 name: 'Stamen Terrain',
-                projection: 'EPSG:3857',
+                crs: 'EPSG:3857',
                 format: 'image/png',
                 url: 'https://stamen-tiles.a.ssl.fastly.net/terrain/${z}/${x}/${y}.png',
                 attribution: {
@@ -512,7 +522,7 @@ export class DataGeo {
         this.viewColorLayers.push(new itowns.ColorLayer('ColorLayer', {
             source: new itowns.TMSSource({
                 name: 'Stamen Watercolor',
-                projection: 'EPSG:3857',
+                crs: 'EPSG:3857',
                 format: 'image/png',
                 url: 'https://stamen-tiles.a.ssl.fastly.net/watercolor/${z}/${x}/${y}.png',
                 attribution: {
@@ -529,7 +539,7 @@ export class DataGeo {
         this.viewColorLayers.push(new itowns.ColorLayer('ColorLayer', {
             source: new itowns.WMTSSource({
                 name: 'ArcGIS Terrain',
-                projection: 'EPSG:3857',
+                crs: 'EPSG:3857',
                 format: 'image/jpg',
                 url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/',
                 attribution: {
@@ -543,7 +553,7 @@ export class DataGeo {
         this.viewColorLayers.push(new itowns.ColorLayer('ColorLayer', {
             source: new itowns.TMSSource({
                 name: 'Google Map - Roadmap',
-                projection: 'EPSG:3857',
+                crs: 'EPSG:3857',
                 format: 'image/jpg',
                 url: 'https://mt1.google.com/vt/lyrs=m&x=${x}&y=${y}&z=${z}',
                 attribution: {
@@ -556,7 +566,7 @@ export class DataGeo {
         this.viewColorLayers.push(new itowns.ColorLayer('ColorLayer', {
             source: new itowns.TMSSource({
                 name: 'Google Map - Altered Roadmap',
-                projection: 'EPSG:3857',
+                crs: 'EPSG:3857',
                 format: 'image/jpg',
                 url: 'https://mt1.google.com/vt/lyrs=r&x=${x}&y=${y}&z=${z}',
                 attribution: {
@@ -569,7 +579,7 @@ export class DataGeo {
         this.viewColorLayers.push(new itowns.ColorLayer('ColorLayer', {
             source: new itowns.TMSSource({
                 name: 'Google Map - Satellite Only',
-                projection: 'EPSG:3857',
+                crs: 'EPSG:3857',
                 format: 'image/jpg',
                 url: 'https://mt1.google.com/vt/lyrs=s&x=${x}&y=${y}&z=${z}',
                 attribution: {
@@ -582,7 +592,7 @@ export class DataGeo {
         this.viewColorLayers.push(new itowns.ColorLayer('ColorLayer', {
             source: new itowns.TMSSource({
                 name: 'Google Map - Hybrid',
-                projection: 'EPSG:3857',
+                crs: 'EPSG:3857',
                 format: 'image/jpg',
                 url: 'https://mt1.google.com/vt/lyrs=y&x=${x}&y=${y}&z=${z}',
                 attribution: {
@@ -606,7 +616,7 @@ export class DataGeo {
         this.viewElevationLayers.push(null);
         this.viewElevationLayers.push(new itowns.ElevationLayer('ElevationLayer', {
             source: new itowns.WMTSSource({
-                projection: 'EPSG:3857',
+                crs: 'EPSG:3857',
                 url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
                 name: 'Elevation',
                 tileMatrixSet: 'WGS84G',

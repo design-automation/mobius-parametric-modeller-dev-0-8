@@ -78,9 +78,12 @@ export class ThreeGeoComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnDestroy() {
-        const geoCont = document.getElementById('geo-container');
-        if (geoCont) {
-            geoCont.id = 'geo-container-tbd';
+        const tbr_items = ['geo-container', 'geo_hud'];
+        for (const tbr_item of tbr_items) {
+            const tbr_obj = document.getElementById(tbr_item);
+            if (tbr_obj) {
+                tbr_obj.id = tbr_item + '_tbr';
+            }
         }
     }
 
