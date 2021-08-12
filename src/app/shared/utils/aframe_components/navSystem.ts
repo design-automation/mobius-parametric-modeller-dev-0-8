@@ -65,10 +65,10 @@ export const navSystem = {
    * @return {number}
    */
   getGroup: function (position) {
-    return '0';
-    // return this.navMesh
-    //   ? this.pathfinder.getGroup(ZONE, position)
-    //   : null;
+    // return '0';
+    return this.navMesh
+      ? this.pathfinder.getGroup(ZONE, position)
+      : null;
   },
 
   /**

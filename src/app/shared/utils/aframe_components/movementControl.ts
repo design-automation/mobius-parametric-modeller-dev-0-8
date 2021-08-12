@@ -54,6 +54,7 @@ export const movementControlComponent = {
     const el = this.el;
     const data = this.data;
     const nav = el.sceneEl.systems.nav;
+    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     if (el.sceneEl.hasLoaded) {
       this.injectControls();
     }
@@ -118,7 +119,9 @@ export const movementControlComponent = {
             .add(start);
 
             const nav = el.sceneEl.systems.nav;
-            this.navGroup = this.navGroup === null ? '0' : this.navGroup;
+            this.navGroup = nav.getGroup(start);
+            if (this.navGroup === null) { this.navGroup = '0'; }
+            // this.navGroup = this.navGroup === null ? nav.getGroup(start) : this.navGroup;
             this.navNode = this.navNode || nav.getNode(start, this.navGroup);
             this.navNode = nav.clampStep(start, end, this.navGroup, this.navNode, clampedEnd);
             el.object3D.position.copy(clampedEnd);

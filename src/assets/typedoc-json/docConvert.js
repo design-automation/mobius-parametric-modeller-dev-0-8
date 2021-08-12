@@ -304,3 +304,5 @@ fs.writeFile(`./src/assets/gallery/__config__.json`, JSON.stringify(config, null
     }
     console.log(`successfully saved __config__.json`);
 });
+
+// |coordinate| ==> <abbr title="A list of three numbers, [x, y, z]">coordinate</abbr>

@@ -94,14 +94,8 @@ export const customLookControl = {
     },
 
     tick: function (t) {
-      const data = this.data;
-      if (!data.enabled) { return; }
+      if (!this.data.enabled) { return; }
       this.updateOrientation();
-      const updateLookInp = <HTMLButtonElement> document.getElementById('aframe-updateLook');
-      if (updateLookInp) {
-        updateLookInp.value = JSON.stringify(this.el.getAttribute('rotation'));
-        updateLookInp.click();
-      }
     },
 
     play: function () {
@@ -240,6 +234,12 @@ export const customLookControl = {
         object3D.rotation.x = this.magicWindowDeltaEuler.x + pitchObject.rotation.x;
         object3D.rotation.y = this.magicWindowDeltaEuler.y + yawObject.rotation.y;
         object3D.rotation.z = this.magicWindowDeltaEuler.z;
+
+        const updateLookInp = <HTMLButtonElement> document.getElementById('aframe-updateLook');
+        if (updateLookInp) {
+          updateLookInp.value = JSON.stringify(this.el.getAttribute('rotation'));
+          updateLookInp.click();
+        }
       };
     })(),
 
