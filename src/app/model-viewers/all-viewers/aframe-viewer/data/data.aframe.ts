@@ -615,7 +615,11 @@ export class DataAframe {
 
     updateHUD() {
         const hud = document.getElementById('aframe_hud');
-        if (!this.model.modeldata.attribs.query.hasEntAttrib(EEntType.MOD, 'hud')) { return; }
+        if (!this.model.modeldata.attribs.query.hasEntAttrib(EEntType.MOD, 'hud')) {
+            hud.innerHTML = '';
+            hud.style.visibility = 'hidden';
+            return;
+        }
         hud.innerHTML = this.model.modeldata.attribs.get.getModelAttribVal('hud') as string;
     }
 

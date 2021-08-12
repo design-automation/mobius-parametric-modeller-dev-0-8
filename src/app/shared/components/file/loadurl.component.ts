@@ -115,7 +115,6 @@ export class LoadUrlComponent {
     }
 
     async loadURL(url: string, nodeID?: number, loadURLSettings?: any, newParams?: any): Promise<boolean> {
-        console.log(url)
         const p = new Promise((resolve) => {
             const request = new XMLHttpRequest();
             if (url.indexOf('/') === -1) {
