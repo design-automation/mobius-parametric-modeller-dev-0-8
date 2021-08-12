@@ -533,6 +533,7 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
     }
 
     updatePos(event) {
+        event.stopPropagation();
         try {
             const pos = JSON.parse(event.target.value);
             pos.z =  - pos.z;
