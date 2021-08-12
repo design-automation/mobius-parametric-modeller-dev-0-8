@@ -24,7 +24,7 @@ declare var AFRAME;
     templateUrl: './aframe-viewer.component.html',
     styleUrls: ['./aframe-viewer.component.scss'],
 })
-export class AframeViewerComponent implements OnInit, OnDestroy{
+export class AframeViewerComponent implements OnInit, OnDestroy {
     // model data passed to the viewer
     @Input() data: GIModel;
     @Input() nodeIndex: number;

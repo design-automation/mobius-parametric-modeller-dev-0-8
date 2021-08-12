@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { AframeSettings } from '../aframe-viewer.settings';
 import * as Modules from '@assets/core/modules';
 import { _EEntType, _EFilterOperator } from '@assets/core/modules/basic/query';
+import { EEntType } from '@assets/libs/geo-info/common';
 
 declare var AFRAME;
 const DEFAUT_CAMERA_POS = {
@@ -218,6 +219,7 @@ export class DataAframe {
         }
 
         this.updateGround();
+        this.updateHUD();
         resizeScene();
     }
 
@@ -611,6 +613,12 @@ export class DataAframe {
         }
     }
 
+    updateHUD() {
+        const hud = document.getElementById('aframe_hud');
+        if (!this.model.modeldata.attribs.query.hasEntAttrib(EEntType.MOD, 'hud')) { return; }
+        hud.innerHTML = this.model.modeldata.attribs.get.getModelAttribVal('hud') as string;
+    }
+
     detachAframeView() {
         const assetEnt = document.getElementById('aframe_assets');
         const allImages = document.querySelectorAll('img');
@@ -623,7 +631,8 @@ export class DataAframe {
         });
 
         const tbrElements = [   'aframe_ambientLight', 'aframe_hemisphereLight', 'aframe_directionalLight',
-                                'aframe_assets', 'aframe_camera_rig', 'aframe_sky_background', 'mobius_geom', 'aframe_ground'];
+                                'aframe_assets', 'aframe_camera_rig', 'aframe_sky_background', 'mobius_geom', 'aframe_ground',
+                                'aframe_hud'];
         for (const tbrElmName of tbrElements) {
             const tbr = document.getElementById(tbrElmName);
             if (!tbr) { continue; }

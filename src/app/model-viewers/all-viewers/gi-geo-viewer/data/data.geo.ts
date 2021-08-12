@@ -1,6 +1,6 @@
 import { GIModel } from '@libs/geo-info/GIModel';
 import { GeoSettings } from '../gi-geo-viewer.settings';
-import { TAttribDataTypes, LONGLAT } from '@libs/geo-info/common';
+import { TAttribDataTypes, LONGLAT, EEntType } from '@libs/geo-info/common';
 import * as itowns from 'itowns/dist/itowns';
 import * as THREE from 'three';
 import * as suncalc from 'suncalc';
@@ -343,6 +343,7 @@ export class DataGeo {
             this.lookAtObj(threejsScene);
         }
         this.updateLightPos(this.settings.time.date, lightTarget);
+        this.updateHUD();
     }
 
     public updateLightPos(time, lightTarget?) {
@@ -439,6 +440,11 @@ export class DataGeo {
         this.view.scene.add(plane);
     }
 
+    updateHUD() {
+        const hud = document.getElementById('geo_hud');
+        if (!this.model.modeldata.attribs.query.hasEntAttrib(EEntType.MOD, 'hud')) { return; }
+        hud.innerHTML = this.model.modeldata.attribs.get.getModelAttribVal('hud') as string;
+    }
 
     // PRIVATE METHODS
     private _getLayers() {
