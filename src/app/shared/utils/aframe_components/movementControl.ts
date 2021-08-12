@@ -54,7 +54,6 @@ export const movementControlComponent = {
     const el = this.el;
     const data = this.data;
     const nav = el.sceneEl.systems.nav;
-    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     if (el.sceneEl.hasLoaded) {
       this.injectControls();
     }
@@ -98,7 +97,6 @@ export const movementControlComponent = {
         this.updateVelocityCtrl();
         const velocityCtrl = this.velocityCtrl;
         const velocity = this.velocity;
-
         if (!velocityCtrl) { return; }
 
         // Update velocity. If FPS is too low, reset.

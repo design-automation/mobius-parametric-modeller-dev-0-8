@@ -178,22 +178,14 @@ export class DataAframe {
     refreshModel(threejsScene) {
         this.removeMobiusObjs();
         const threeJSGroup = new AFRAME.THREE.Group();
-
+        this.navMeshEnabled = false;
         try {
             const allPgons = <string[]> Modules.query.Get(this.model, _EEntType.PGON, null) ;
             const navMeshPgons = Modules.query.Filter(this.model, allPgons, 'vr_nav_mesh', _EFilterOperator.IS_EQUAL, true);
             if (navMeshPgons.length > 0) {
                 this.navMeshEnabled = true;
-                console.log('has navmesh');
-            } else {
-                this.navMeshEnabled = false;
-                console.log('no locomotion boundary');
             }
-        } catch (ex) {
-            this.navMeshEnabled = false;
-            console.log('no locomotion boundary');
-
-        }
+        } catch (ex) {}
         for (const i of threejsScene.scene.children) {
             if (i.name.startsWith('obj')) {
                 const materials = this.getMaterial(i.material);
