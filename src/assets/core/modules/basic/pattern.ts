@@ -854,7 +854,7 @@ export enum _EPolyhedronMethod {
  * pgons = make.Polygon(posis)
  * ```
  * \n
- * ![Tetrahedron with polygonal faces](assets/typedoc-json/docMDimgs/tetrahedron.png)
+ * ![Tetrahedron with triangular faces](assets/typedoc-json/docMDimgs/polyhedron_tetra.png)
  * \n
  * @param __model__
  * @param origin A |coordinate| or a |plane|, specifying the origin of the polyhedron.
