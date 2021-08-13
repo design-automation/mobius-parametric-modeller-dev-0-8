@@ -97,7 +97,6 @@ export const movementControlComponent = {
         this.updateVelocityCtrl();
         const velocityCtrl = this.velocityCtrl;
         const velocity = this.velocity;
-
         if (!velocityCtrl) { return; }
 
         // Update velocity. If FPS is too low, reset.
@@ -118,7 +117,9 @@ export const movementControlComponent = {
             .add(start);
 
             const nav = el.sceneEl.systems.nav;
-            this.navGroup = this.navGroup === null ? '0' : this.navGroup;
+            this.navGroup = nav.getGroup(start);
+            if (this.navGroup === null) { this.navGroup = '0'; }
+            // this.navGroup = this.navGroup === null ? nav.getGroup(start) : this.navGroup;
             this.navNode = this.navNode || nav.getNode(start, this.navGroup);
             this.navNode = nav.clampStep(start, end, this.navGroup, this.navNode, clampedEnd);
             el.object3D.position.copy(clampedEnd);

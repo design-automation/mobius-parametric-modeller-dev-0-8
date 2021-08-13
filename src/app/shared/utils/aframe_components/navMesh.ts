@@ -21,14 +21,10 @@ export const navMeshComponent =  {
     });
 
     if (!navMesh) { return; }
-    // const navMeshGeometry = navMesh.geometry.isBufferGeometry
-    //   ? new THREE.Geometry().fromBufferGeometry(navMesh.geometry)
-    //   : navMesh.geometry.clone();
     const navMeshGeometry = navMesh.geometry.clone();
 
     scene.updateMatrixWorld();
-    navMeshGeometry.applyMatrix(navMesh.matrixWorld);
-    console.log('navMeshGeometry', navMeshGeometry)
+    navMeshGeometry.applyMatrix4(navMesh.matrixWorld);
     this.system.setNavMeshGeometry(navMeshGeometry);
 
     this.hasLoadedNavMesh = true;

@@ -12,7 +12,8 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [
-              "util", "chroma-js", "showdown", "lodash", "mathjs", "cytoscape", "@doodle3d/clipper-js",
+              "util", "chroma-js", "showdown", "lodash", "mathjs", "seedrandom",
+              "cytoscape", "@doodle3d/clipper-js",
               "entities", "fast-xml-parser", "@aws-crypto/crc32", "@aws-crypto/sha256-browser"
             ],
             "outputPath": "dist",

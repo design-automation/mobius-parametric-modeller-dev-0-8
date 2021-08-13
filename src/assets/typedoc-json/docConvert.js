@@ -1,12 +1,27 @@
-// import * as dc from './doc.json';
-// import * as fs from 'fs';
-const dc = require('./doc.json');
+const dc = require('./__doc.json');
+const docReplace = require('./docReplace.json');
 const fs = require('fs');
 const config = require('../gallery/__config__.json');
+const { DataTextureLoader } = require('three');
 
 const urlString = 'https://mobius.design-automation.net';
 
-
+const otherModsList = [{
+    name: 'UI',
+    srcDir: 'assets/typedoc-json/docUI',
+    modnames: ['gallery', 'dashboard', 'flowchart', 'editor', 'menu'],
+    opened: false
+}, {
+    name: 'Viewers',
+    srcDir: 'assets/typedoc-json/docVW',
+    modnames: ['cad-viewer', 'geo-viewer', 'vr-viewer', 'console'],
+    opened: false
+}, {
+    name: 'Operations',
+    srcDir: 'assets/typedoc-json/docCF',
+    modnames: ['variable', 'comment', 'expression', 'control_flow', 'local_func', 'global_func'],
+    opened: false
+}];
 
 let examples;
 for (const s of config.data){
@@ -33,6 +48,19 @@ function compare(a, b) {
         return 1;
     }
     return 0;
+}
+
+function replaceText(text) {
+    const splittedText = text.split('|');
+    for (let i = 0; i < splittedText.length; i++) {
+        for (const repText in docReplace) {
+            if (splittedText[i] === repText) {
+                splittedText[i] =  `<abbr title=\`${docReplace[repText]}\`>${splittedText[i]}</abbr>`
+                break;
+            }
+        }
+    }
+    return splittedText.join('');
 }
 
 function analyzeParamType(fn, paramType) {
@@ -188,7 +216,7 @@ function genModuleDocs(docs) {
         if (countStr.length === 1) {
             countStr = '0' + countStr;
         }
-        mdString = mdString.replace(/\\n/g, '\n');
+        mdString = replaceText(mdString.replace(/\\n/g, '\n'));
         fs.writeFile(`./src/assets/typedoc-json/docMD/${mod.name}.md`, mdString, function(err) {
             if (err) {
                 return console.log(err);
@@ -196,78 +224,6 @@ function genModuleDocs(docs) {
             console.log(`successfully saved ${mod.name}.md`);
         });
     }
-}
-
-function genInlineDocs(inlineList, inlineDocs) {
-    ilString = ''
-    for (const inlineFunc of inlineList) {
-        if (!inlineFunc) { continue; }
-        const funcNames = inlineFunc[1].split('.')
-        let mod;
-        let func
-        for (let m of inlineDocs) {
-            if (m.name[2] === funcNames[1]) {
-                mod = m;
-                for (let f of mod.func) {
-                    if (f.name === funcNames[2]) {
-                        func = f;
-                        break;
-                    }
-                }
-                break;
-            }
-        }
-        if (!mod || !func) { continue; }
-        ilString += `# ## ${inlineFunc[0]}  \n`;
-        ilString += `* **Description:** ${func.description}  \n`;
-        if (func.parameters && func.parameters.length > 0) {
-            ilString += `* **Parameters:**  \n`;
-            for (const param of func.parameters) {
-                if (!param || param.name === 'debug') {continue; }
-                ilString += `  * *${param.name}:* ${param.description?param.description:''}  \n`;
-            }
-        }
-        if (func.returns) {
-            ilString += `* **Returns:** ${func.returns}  \n`;
-        }
-        if (func.example) {
-            ilString += `* **Examples:**  \n`;
-            for (const i in func.example) {
-                if (!func.example[i]) {continue; }
-                ilString += `  * ${func.example[i]}  \n`;
-                if (func.example_info) {
-                    ilString += `    ${func.example_info[i]}  \n`;
-                }
-
-            }
-        }
-        if (func.example_link) {
-            ilString += `* **Example URLs:**  \n`;
-            for (const ex of func.example_link) {
-                let check = false;
-                f = ex.trim();
-                fNoNode = f.split('.mob')[0].trim();
-                for (const exampleFile of examples.files) {
-                    if (exampleFile.indexOf(fNoNode) !== -1) {
-                        check =true;
-                    }
-                }
-                if (!check) {
-                    examples.files.push(f);
-                }
-                ilString += `  1. [${f.split('&node=')[0]}](${urlString}/flowchart?file=https://raw.githubusercontent.com/design-automation/` +
-                            `mobius-parametric-modeller/master/src/assets/gallery/function_examples/${ex})  \n`;
-
-            }
-        }
-        ilString += `  \n`;
-    }
-    fs.writeFile(`./src/assets/typedoc-json/docCF/inline.md`, ilString, function(err) {
-        if (err) {
-            return console.log(err);
-        }
-        console.log(`successfully saved inline.md`);
-    });
 }
 
 // const doc = dc.default;
@@ -304,3 +260,31 @@ fs.writeFile(`./src/assets/gallery/__config__.json`, JSON.stringify(config, null
     }
     console.log(`successfully saved __config__.json`);
 });
+
+fs.writeFile(`./src/assets/typedoc-json/doc.json`, replaceText(JSON.stringify(dc, null, 2)), function(err) {
+    if (err) {
+        return console.log(err);
+    }
+    console.log(`successfully saved doc.json`);
+});
+
+
+// for (const category of otherModsList) {
+//     for (const mod of category.modnames) {
+//         const fileDir = './src/' + category.srcDir + '/' + mod + '.md'
+//         fs.readFile(fileDir, 'utf8' , (err, data) => {
+//             if (err) {
+//               console.log('ERROR: unable to read file: ' + fileDir)
+//               return
+//             }
+//             const replacedText = replaceText(data.toString());
+//             fs.writeFile(fileDir, replacedText, function(err) {
+//                 if (err) {
+//                     return console.log(err);
+//                 }
+//                 console.log(`successfully saved ${fileDir}`);
+//             });
+//         })
+//     }
+// }
+

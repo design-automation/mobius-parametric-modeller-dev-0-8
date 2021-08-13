@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { AframeSettings } from '../aframe-viewer.settings';
 import * as Modules from '@assets/core/modules';
 import { _EEntType, _EFilterOperator } from '@assets/core/modules/basic/query';
+import { EEntType } from '@assets/libs/geo-info/common';
 
 declare var AFRAME;
 const DEFAUT_CAMERA_POS = {
@@ -178,22 +179,14 @@ export class DataAframe {
     refreshModel(threejsScene) {
         this.removeMobiusObjs();
         const threeJSGroup = new AFRAME.THREE.Group();
-
+        this.navMeshEnabled = false;
         try {
             const allPgons = <string[]> Modules.query.Get(this.model, _EEntType.PGON, null) ;
-            const navMeshPgons = Modules.query.Filter(this.model, allPgons, 'vr_cam', _EFilterOperator.IS_EQUAL, true);
+            const navMeshPgons = Modules.query.Filter(this.model, allPgons, 'vr_nav_mesh', _EFilterOperator.IS_EQUAL, true);
             if (navMeshPgons.length > 0) {
                 this.navMeshEnabled = true;
-                console.log('has navmesh');
-            } else {
-                this.navMeshEnabled = false;
-                console.log('no locomotion boundary');
             }
-        } catch (ex) {
-            this.navMeshEnabled = false;
-            console.log('no locomotion boundary');
-
-        }
+        } catch (ex) {}
         for (const i of threejsScene.scene.children) {
             if (i.name.startsWith('obj')) {
                 const materials = this.getMaterial(i.material);
@@ -226,6 +219,7 @@ export class DataAframe {
         }
 
         this.updateGround();
+        this.updateHUD();
         resizeScene();
     }
 
@@ -443,10 +437,10 @@ export class DataAframe {
         const pos = Modules.attrib.Get(this.model, Modules.query.Get(this.model, Modules.query._EEntType.POSI, pts), 'xyz');
         const ptAttribs = Modules.attrib.Get(this.model, pts, 'vr');
         this.camPosList = [{
-            name: 'default',
+            name: 'Walk',
             value: null
         }, {
-            name: 'VR edit',
+            name: 'Edit POV',
             value: null
         }];
         for (let i = 0; i < pts.length; i++) {
@@ -619,6 +613,16 @@ export class DataAframe {
         }
     }
 
+    updateHUD() {
+        const hud = document.getElementById('aframe_hud');
+        if (!this.model.modeldata.attribs.query.hasEntAttrib(EEntType.MOD, 'hud')) {
+            hud.innerHTML = '';
+            hud.style.visibility = 'hidden';
+            return;
+        }
+        hud.innerHTML = this.model.modeldata.attribs.get.getModelAttribVal('hud') as string;
+    }
+
     detachAframeView() {
         const assetEnt = document.getElementById('aframe_assets');
         const allImages = document.querySelectorAll('img');
@@ -631,7 +635,8 @@ export class DataAframe {
         });
 
         const tbrElements = [   'aframe_ambientLight', 'aframe_hemisphereLight', 'aframe_directionalLight',
-                                'aframe_assets', 'aframe_camera_rig', 'aframe_sky_background', 'mobius_geom', 'aframe_ground'];
+                                'aframe_assets', 'aframe_camera_rig', 'aframe_sky_background', 'mobius_geom', 'aframe_ground',
+                                'aframe_hud'];
         for (const tbrElmName of tbrElements) {
             const tbr = document.getElementById(tbrElmName);
             if (!tbr) { continue; }

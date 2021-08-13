@@ -5,7 +5,6 @@ import { IArgument } from '@models/code';
 import doc from '@assets/typedoc-json/doc.json';
 // const doc = require('@assets/typedoc-json/doc.json');
 import * as showdown from 'showdown';
-import * as fs from 'fs';
 
 // @ts-ignore
 import * as Modules from 'assets/core/modules';
@@ -104,7 +103,6 @@ function analyzeParamType(fn, paramType) {
         console.log('in function:', fn.module + '.' + fn.name);
         return paramType.type;
     }
-
 }
 
 function addDoc(mod, modName, docs) {
