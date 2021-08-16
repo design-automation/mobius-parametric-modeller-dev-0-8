@@ -1,9 +1,7 @@
 # mobius-parametric-modeller-dev-0-8
 
-https://design-automation.github.io/mobius-parametric-modeller-dev-0-8
-
-This is the development vrsion of Mobius. 
-This version may have bugs and unexpected behaviour.
+Version 0.8.x of Mobius Modeller:
+* https://mobius-08.design-automation.net
 
 If you are looking for the latest stable version, please go here:
-https://design-automation.github.io/mobius-parametric-modeller
+* https://mobius.design-automation.net

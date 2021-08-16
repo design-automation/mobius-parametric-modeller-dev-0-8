@@ -10,17 +10,17 @@ The .mob file will need to be a public resource stored in one of the following s
 
 ## Basic Settings
 1. Base URL:
-    https://mobius.design-automation.net/
+    https://mobius-08.design-automation.net/
 
 1. Determine whether the file should be editable to the viewer
     * editable: append `dashboard`
-    https://mobius.design-automation.net/dashboard
+    https://mobius-08.design-automation.net/dashboard
     * uneditable: append `publish`
-    https://mobius.design-automation.net/publish
+    https://mobius-08.design-automation.net/publish
 
 1. Append the file url after `?file=`
     example (editable):
-    https://mobius.design-automation.net/dashboard?file=https://raw.githubusercontent.com/design-automation-edu/AR2524-AY2021-Gallery/main/FinalProject/G1/student_00.mob
+    https://mobius-08.design-automation.net/dashboard?file=https://raw.githubusercontent.com/design-automation-edu/AR2524-AY2021-Gallery/main/FinalProject/G1/student_00.mob
 
 ## Additional Settings
 1. Available 3D viewers (Uneditable)
@@ -32,7 +32,7 @@ The .mob file will need to be a public resource stored in one of the following s
     * Dashboard: default
     * Specific Node: append `=&node=` + node number
         example:
-        https://mobius.design-automation.net/dashboard?file=https://raw.githubusercontent.com/design-automation-edu/AR2524-AY2021-Gallery/main/FinalProject/G1/student_00.mob=&node=1
+        https://mobius-08.design-automation.net/dashboard?file=https://raw.githubusercontent.com/design-automation-edu/AR2524-AY2021-Gallery/main/FinalProject/G1/student_00.mob=&node=1
 1. Default Viewer
     * 3D Viewer: default
     * Geo Viewer: append `&defaultViewer=2`
@@ -49,5 +49,5 @@ For more information: [MDN Web Docs Iframe](https://developer.mozilla.org/en-US/
         width='100%' 
         height='600px' 
         style='border: 1px solid black;' 
-        src="https://mobius.design-automation.net/dashboard?file=https:%2F%2Fraw.githubusercontent.com%2Fdesign-automation-edu%2FAR2524-AY2021-Gallery%2Fmain%2FFinalProject%2FG1%2Fstudent_00.mob&node=0">
+        src="https://mobius-08.design-automation.net/dashboard?file=https:%2F%2Fraw.githubusercontent.com%2Fdesign-automation-edu%2FAR2524-AY2021-Gallery%2Fmain%2FFinalProject%2FG1%2Fstudent_00.mob&node=0">
     </iframe>

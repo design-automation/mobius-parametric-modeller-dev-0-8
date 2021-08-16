@@ -188,25 +188,6 @@ function genModuleDocs(docs) {
     
                 }
             }
-            if (func.example_link) {
-                fnString += `**Example URLs:**  \n`;
-                for (const ex of func.example_link) {
-                    let check = false;
-                    f = ex.trim();
-                    fNoNode = f.split('.mob')[0].trim();
-                    for (const exampleFile of examples.files) {
-                        if (exampleFile.indexOf(fNoNode) !== -1) {
-                            check =true;
-                        }
-                    }
-                    if (!check) {
-                        examples.files.push(f);
-                    }
-                    fnString += `  1. [${f.split('&node=')[0]}](${urlString}/flowchart?file=https://raw.githubusercontent.com/design-automation/` +
-                                `mobius-parametric-modeller/master/src/assets/gallery/function_examples/${ex})  \n`;
-    
-                }
-            }
             fnString += `  \n  \n`;
             mdString += fnString
         }
