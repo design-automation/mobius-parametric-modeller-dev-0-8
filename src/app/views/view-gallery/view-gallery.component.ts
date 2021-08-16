@@ -1,18 +1,11 @@
 import { Component, Output, EventEmitter, OnInit, HostListener, ViewChild, AfterViewInit } from '@angular/core';
 import { LoadUrlComponent } from '@shared/components/file/loadurl.component';
 import { HttpClient } from '@angular/common/http';
-import { Constants } from './view-gallery.config';
-import { Observable } from 'rxjs';
-import { IMobius } from '@models/mobius';
-// import {Router} from '@angular/router';
-
 import { DataService } from '@services';
-import * as circularJSON from 'circular-json';
 import { Router } from '@angular/router';
-
-import galleryUrls from '@assets/gallery/__config__.json';
 import { DataOutputService } from '@shared/services/dataOutput.service';
 import { SplitComponent } from 'angular-split';
+import galleryUrls from '@assets/gallery/__config__.json';
 
 @Component({
   selector: 'view-gallery',
@@ -28,24 +21,12 @@ export class ViewGalleryComponent implements AfterViewInit {
     @Output() switch = new EventEmitter();
     @ViewChild('gallerySplit') gallerySplit: SplitComponent;
 
-    /*
-    constructor(private http: HttpClient, private dataService: DataService, private router: Router) {
-        this.allFiles = this.getFilesFromURL();
-    }
-
-    */
-
     constructor(private http: HttpClient, private dataService: DataService,
                 private dataOutputService: DataOutputService, private router: Router) {
         this.allGalleries = this.allGalleriesData.map(gallery => gallery.name);
         if (window.location.href.indexOf('design-automation.github.io') !== -1) {
             this.urlPrefix = '/' + window.location.href.split('design-automation.github.io/')[1].split('/')[0];
         }
-        /*
-        if (!this.dataService.galleryFiles) {
-            this.dataService.galleryFiles = this.getFilesFromURL();
-        }
-        */
         new LoadUrlComponent(this.dataService, this.router).loadStartUpURL(this.router.url);
    }
 
@@ -57,10 +38,6 @@ export class ViewGalleryComponent implements AfterViewInit {
 
     viewerData() {
         return this.dataOutputService.getViewerData(this.getNode(), this.dataService.flowchart.model, true);
-    }
-
-    getFilesFromURL(): Observable<any> {
-        return this.http.get(Constants.GALLERY_URL, {responseType: 'json'});
     }
 
     onGalleryScroll(e: MouseEvent) {
