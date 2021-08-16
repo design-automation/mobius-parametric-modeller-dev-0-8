@@ -2,7 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "downlevelIteration": true,
-    "outDir": "./dist/out-tsc",
+    "outDir": "./docs/out-tsc",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
