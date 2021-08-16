@@ -2,10 +2,11 @@
   "compileOnSave": false,
   "compilerOptions": {
     "downlevelIteration": true,
-    "outDir": "./docs/out-tsc",
+    "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "target": "es2015",
@@ -31,7 +32,7 @@
       "es2017",
       "dom"
     ],
-    "module": "es2020",
+    "module": "esnext",
     "baseUrl": "./",
     "allowSyntheticDefaultImports":true
   },
