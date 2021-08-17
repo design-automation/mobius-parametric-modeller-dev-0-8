@@ -16,7 +16,7 @@
               "cytoscape", "@doodle3d/clipper-js",
               "entities", "fast-xml-parser", "@aws-crypto/crc32", "@aws-crypto/sha256-browser"
             ],
-            "outputPath": "dist",
+            "outputPath": "docs",
             "index": "src/index.html",
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
