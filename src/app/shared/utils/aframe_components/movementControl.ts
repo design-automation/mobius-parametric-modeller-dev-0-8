@@ -130,12 +130,14 @@ export const movementControlComponent = {
             el.object3D.position.y += velocity.y * dt / 1000;
             el.object3D.position.z += velocity.z * dt / 1000;
         }
-        const updatePosInp = <HTMLButtonElement> document.getElementById('aframe-updatePos');
-        if (updatePosInp) {
+        const updateCamDiv = <HTMLButtonElement> document.getElementById('aframe-cameraUpdateData');
+        if (updateCamDiv) {
+            const updatePosCheck = <HTMLInputElement> updateCamDiv.children[0];
+            const updatePosInp = <HTMLInputElement> updateCamDiv.children[1];
+            updatePosCheck.value = '1';
             const pos = new THREE.Vector3();
             el.object3D.getWorldPosition(pos);
             updatePosInp.value = JSON.stringify(pos);
-            updatePosInp.click();
         }
     };
   }()),

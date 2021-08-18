@@ -95,6 +95,16 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                 aframeData.refreshModel(this.threeJSDataService.getThreejsScene());
                 this.mainDataService.aframeViewerSettingsUpdated = false;
             }
+            const cameraUpdateData = document.getElementById('aframe-cameraUpdateData');
+            if (!cameraUpdateData) { return; }
+            if ((<HTMLInputElement>cameraUpdateData.children[0]).value) {
+                this.updatePos((<HTMLInputElement>cameraUpdateData.children[1]).value);
+                (<HTMLInputElement>cameraUpdateData.children[0]).value = null;
+            }
+            if ((<HTMLInputElement>cameraUpdateData.children[2]).value) {
+                this.updateLook((<HTMLInputElement>cameraUpdateData.children[3]).value);
+                (<HTMLInputElement>cameraUpdateData.children[2]).value = null;
+            }
         }, 100);
     }
 
@@ -160,6 +170,13 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
             this.vr.background_url = this.settings.vr.background_url;
             this.vr.foreground_url = this.settings.vr.foreground_url;
         } else {
+            this.vr.enabled = false;
+            this.vr.background_url = '';
+            this.vr.foreground_url = '';
+            aframeData.updateVRSettings(this.vr);
+            // aframeData.refreshModel(this.threeJSDataService.getThreejsScene());
+            this.vr.background_url = this.settings.vr.background_url;
+            this.vr.foreground_url = this.settings.vr.foreground_url;
             aframeData.updateCameraPos(this.camPosList[selectedIndex]);
         }
         this.dataService.aframeCamPos = this.camPosList[selectedIndex].name;
@@ -532,25 +549,55 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
         this.temp_camera_rot = JSON.parse(JSON.stringify(aframe_default_settings.camera.rotation));
     }
 
-    updatePos(event) {
-        event.stopPropagation();
+    updatePos(posData) {
         try {
-            const pos = JSON.parse(event.target.value);
-            pos.z =  - pos.z;
+            const pos = JSON.parse(posData);
+            pos.z = - pos.z;
             if (this.vr.enabled) {
                 this.vr.camera_position.copy(pos);
             } else {
                 this.settings.camera.position.x = pos.x;
                 this.settings.camera.position.y = pos.y;
                 this.settings.camera.position.z = pos.z;
+
+                const camPosCoord = new AFRAME.THREE.Vector3();
+                pos.y = 0;
+                const aframeData = this.dataService.getAframeData();
+                let checkVRcam = false;
+                const viewpointsList = <any> document.getElementById('aframe_viewpoints');
+                // console.log(pos)
+                for (let i = 1; i < (this.camPosList.length - 1); i++) {
+                    const camPos = this.camPosList[i];
+                    if (viewpointsList) {
+                        viewpointsList.children[i - 1].setAttribute('visible', true);
+                    }
+                    if (checkVRcam || !camPos.pos) { continue; }
+                    camPosCoord.x = camPos.pos[0];
+                    camPosCoord.z = camPos.pos[1];
+                    const distance = camPosCoord.distanceTo(pos);
+                    // console.log('_____', distance)
+                    if (distance < 20) {
+                        aframeData.updateCameraPos(camPos, false);
+                        this.selectedCamPos = i;
+                        checkVRcam = true;
+                        if (viewpointsList) {
+                            for (const viewPoint of viewpointsList.children) {
+                                viewPoint.setAttribute('visible', false);
+                            }
+                        }
+                    }
+                }
+                if (!checkVRcam) {
+                    this.selectedCamPos = 0;
+                    aframeData.updateCameraPos(null);
+                }
             }
         } catch (ex) {}
     }
 
-    updateLook(event) {
-        event.stopPropagation();
+    updateLook(lookData) {
         try {
-            const rot = JSON.parse(event.target.value);
+            const rot = JSON.parse(lookData);
             rot.y = 0 - rot.y;
             while (rot.y < -180) { rot.y += 360; }
             while (rot.y > 180) { rot.y -= 360; }

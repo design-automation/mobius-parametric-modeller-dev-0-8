@@ -5,8 +5,12 @@
     <button id="zoomingfit" mat-icon-button (click)="zoomfit()" title='Zoom to Fit Model'>
         <mat-icon svgIcon="cZoom"></mat-icon>
     </button>
-    <button id='aframe-updatePos' class='hiddenElm' (click)="updatePos($event)"> </button>
-    <button id='aframe-updateLook' class='hiddenElm' (click)="updateLook($event)"> </button>
+    <div id='aframe-cameraUpdateData' class='hiddenElm'>
+        <input id='aframe-posUpdate'/>
+        <input id='aframe-posData'/>
+        <input id='aframe-lookUpdate'/>
+        <input id='aframe-lookData'/>
+    </div>
 
     <div class='position-picker' *ngIf='showCamPosList'>
         <select id='selCamPosEl' value={{selectedCamPos}} (change)="changePos($event.target.value)">

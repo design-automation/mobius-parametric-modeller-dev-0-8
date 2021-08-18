@@ -76,11 +76,13 @@ export const customWASDControl = {
         // Get movement vector and translate position.
         const movementVector = this.getMovementVector(delta);
         el.object3D.position.add(movementVector);
-        const updatePosInp = <HTMLButtonElement> document.getElementById('aframe-updatePos');
-        if (updatePosInp) {
+        const updateCamDiv = <HTMLButtonElement> document.getElementById('aframe-cameraUpdateData');
+        if (updateCamDiv) {
+            const updatePosCheck = <HTMLInputElement> updateCamDiv.children[0];
+            const updatePosInp = <HTMLInputElement> updateCamDiv.children[1];
+            updatePosCheck.value = '1';
             el.object3D.getWorldPosition(this.pos);
             updatePosInp.value = JSON.stringify(this.pos);
-            updatePosInp.click();
         }
     },
 
