@@ -581,9 +581,7 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                         this.selectedCamPos = i;
                         checkVRcam = true;
                         if (viewpointsList) {
-                            for (const viewPoint of viewpointsList.children) {
-                                viewPoint.setAttribute('visible', false);
-                            }
+                            viewpointsList.children[i - 1].setAttribute('visible', false);
                         }
                     }
                 }
