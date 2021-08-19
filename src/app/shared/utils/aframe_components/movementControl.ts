@@ -106,6 +106,9 @@ export const movementControlComponent = {
             this.updateVelocity(dt);
         }
 
+        const updateCamDiv = <HTMLButtonElement> document.getElementById('aframe-cameraUpdateData');
+        if (updateCamDiv && (<HTMLInputElement>updateCamDiv.children[4]).value) { return; }
+
         if (data.constrainToNavMesh
             && velocityCtrl.isNavMeshConstrained !== false) {
             if (velocity.lengthSq() < EPS) { return; }
@@ -130,7 +133,6 @@ export const movementControlComponent = {
             el.object3D.position.y += velocity.y * dt / 1000;
             el.object3D.position.z += velocity.z * dt / 1000;
         }
-        const updateCamDiv = <HTMLButtonElement> document.getElementById('aframe-cameraUpdateData');
         if (updateCamDiv) {
             const updatePosCheck = <HTMLInputElement> updateCamDiv.children[0];
             const updatePosInp = <HTMLInputElement> updateCamDiv.children[1];

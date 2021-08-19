@@ -105,6 +105,13 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                 this.updateLook((<HTMLInputElement>cameraUpdateData.children[3]).value);
                 (<HTMLInputElement>cameraUpdateData.children[2]).value = null;
             }
+            const obj = document.getElementById('aframe_viewpoint_0');
+
+            const rot = obj.getAttribute('rotation');
+            // @ts-ignore
+            rot.y += 3;
+            obj.setAttribute('rotation', rot);
+
         }, 100);
     }
 
@@ -564,25 +571,18 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                 pos.y = 0;
                 const aframeData = this.dataService.getAframeData();
                 let checkVRcam = false;
-                const viewpointsList = <any> document.getElementById('aframe_viewpoints');
                 // console.log(pos)
                 for (let i = 1; i < (this.camPosList.length - 1); i++) {
                     const camPos = this.camPosList[i];
-                    if (viewpointsList) {
-                        viewpointsList.children[i - 1].setAttribute('visible', true);
-                    }
                     if (checkVRcam || !camPos.pos) { continue; }
                     camPosCoord.x = camPos.pos[0];
                     camPosCoord.z = camPos.pos[1];
                     const distance = camPosCoord.distanceTo(pos);
                     // console.log('_____', distance)
-                    if (distance < 20) {
+                    if (distance < 10) {
                         aframeData.updateCameraPos(camPos, false);
                         this.selectedCamPos = i;
                         checkVRcam = true;
-                        if (viewpointsList) {
-                            viewpointsList.children[i - 1].setAttribute('visible', false);
-                        }
                     }
                 }
                 if (!checkVRcam) {

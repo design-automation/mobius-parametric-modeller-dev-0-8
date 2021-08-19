@@ -457,7 +457,7 @@ export class DataAframe {
             for (let j = 0; j < newPointNum; j++) {
                 const newPoint = document.createElement('a-tetrahedron');
                 newPoint.id = 'aframe_viewpoint_' + j.toString();
-                newPoint.setAttribute('color', '#999999');
+                newPoint.setAttribute('color', '#ffffff');
                 newPoint.setAttribute('rotation', '35 0 45');
                 viewpointsList.appendChild(newPoint);
             }
@@ -470,8 +470,8 @@ export class DataAframe {
             }
             const camPos = this.camPosList[k + 1];
             pointPos.setAttribute('visible', 'true');
-            pointPos.setAttribute('position', `${camPos.pos[0]} ${camPos.pos[2] + 10} ${- camPos.pos[1]}`);
-            pointPos.setAttribute('radius', '10');
+            pointPos.setAttribute('position', `${camPos.pos[0]} 1 ${- camPos.pos[1]}`);
+            pointPos.setAttribute('radius', '2');
             // pointPos.setAttribute('radius-bottom', '10');
             // pointPos.setAttribute('height', '10');
         }
@@ -533,36 +533,52 @@ export class DataAframe {
         }
     }
 
-    updateCameraPos(posDetails, teleport = true) {
+    updateCameraPos(posDetails, changeCam = true) {
         if (posDetails && posDetails.name === this._currentPos) {
             return;
         }
         const skyBG = document.getElementById('aframe_sky_background');
         const skyFG = document.getElementById('aframe_sky_foreground');
+        const viewpointsList = <any> document.getElementById('aframe_viewpoints');
         // skyBG.setAttribute('rotation', '0 0 0');
         // skyFG.setAttribute('rotation', '0 0 0');
         this.staticCamOn = false;
         if (!posDetails || !posDetails.pos || posDetails.pos.length < 2) {
-            this._currentPos = null;
-            this.updateSky();
-            skyBG.setAttribute('rotation', '0 0 0');
-            skyFG.setAttribute('rotation', '0 0 0');
-            // this.updateCamera(this.settings.camera);
+            if (this._currentPos !== null) {
+                this._currentPos = null;
+                this.updateSky();
+                skyBG.setAttribute('rotation', '0 0 0');
+                skyFG.setAttribute('rotation', '0 0 0');
+                if (viewpointsList) {
+                    for (let i = 1; i < (this.camPosList.length - 1); i++) {
+                        viewpointsList.children[i - 1].setAttribute('visible', true);
+                    }
+                }
+            }
             return;
         }
         this._currentPos = posDetails.name;
 
-        if (teleport) {
-            const rigEl = <any> document.getElementById('aframe_camera_rig');
+        if (viewpointsList) {
+            viewpointsList.children.forEach(vp => vp.setAttribute('visible', false));
+        }
+        const disablePosInput = <HTMLInputElement> document.getElementById('aframe-disablePosUpdate');
+        if (disablePosInput) {
+            disablePosInput.value = '1';
+            setTimeout(() => disablePosInput.value = null, 1000);
+        }
+
+        const rigEl = <any> document.getElementById('aframe_camera_rig');
+        const camPos = new AFRAME.THREE.Vector3(0, 0, 0);
+        camPos.x = posDetails.pos[0];
+        camPos.z = (0 - posDetails.pos[1]);
+        camPos.y = posDetails.pos[2];
+        if (!camPos.y && camPos.y !== 0) {
+            camPos.y = 10;
+        }
+        rigEl.setAttribute('position', camPos);
+        if (changeCam) {
             const camEl = <any> document.getElementById('aframe_look_camera');
-            const camPos = new AFRAME.THREE.Vector3(0, 0, 0);
-            camPos.x = posDetails.pos[0];
-            camPos.z = (0 - posDetails.pos[1]);
-            camPos.y = posDetails.pos[2];
-            if (!camPos.y && camPos.y !== 0) {
-                camPos.y = 10;
-            }
-            rigEl.setAttribute('position', camPos);
             if (posDetails.camera_rotation) {
                 camEl.setAttribute('rotation', new AFRAME.THREE.Vector3(0, 0 - posDetails.camera_rotation, 0));
                 const newX = camEl.object3D.rotation.x;

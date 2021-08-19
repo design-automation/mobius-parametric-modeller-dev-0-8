@@ -14,7 +14,7 @@ const bind = AFRAME.utils.bind;
 const shouldCaptureKeyEvent = AFRAME.utils.shouldCaptureKeyEvent;
 const AFRAME_THREE = AFRAME.THREE;
 
-const CLAMP_VELOCITY = 0.00001;
+const CLAMP_VELOCITY = 0.01;
 const MAX_DELTA = 0.2;
 const KEYS = [
     'KeyW', 'KeyA', 'KeyS', 'KeyD',
@@ -73,10 +73,11 @@ export const customWASDControl = {
 
         if (!velocity[data.adAxis] && !velocity[data.wsAxis]) { return; }
 
+        const updateCamDiv = <HTMLButtonElement> document.getElementById('aframe-cameraUpdateData');
+        if (updateCamDiv && (<HTMLInputElement>updateCamDiv.children[4]).value) { return; }
         // Get movement vector and translate position.
         const movementVector = this.getMovementVector(delta);
         el.object3D.position.add(movementVector);
-        const updateCamDiv = <HTMLButtonElement> document.getElementById('aframe-cameraUpdateData');
         if (updateCamDiv) {
             const updatePosCheck = <HTMLInputElement> updateCamDiv.children[0];
             const updatePosInp = <HTMLInputElement> updateCamDiv.children[1];
@@ -129,7 +130,6 @@ export const customWASDControl = {
         if (velocity[wsAxis] !== 0) {
             velocity[wsAxis] = velocity[wsAxis] * scaledEasing;
         }
-
         // Clamp velocity easing.
         if (Math.abs(velocity[adAxis]) < CLAMP_VELOCITY) { velocity[adAxis] = 0; }
         if (Math.abs(velocity[wsAxis]) < CLAMP_VELOCITY) { velocity[wsAxis] = 0; }

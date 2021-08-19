@@ -1,16 +1,14 @@
 <div id='save_aframe_camera' (click)='saveCamPos()'></div>
 <div id='aframe_hud'></div>
 <div id="aframe-container" (mousedown)='onmousedown($event)'>
-    <a-scene id='aframe_scene' light='defaultLightsEnabled: false'
-    webxr="requiredFeatures: hit-test,local-floor;
-    optionalFeatures: dom-overlay,unbounded;
-    overlayElement: #overlay;"
+    <a-scene id='aframe_scene' 
+    light='defaultLightsEnabled: false'
     shadow="type: pcfsoft"
     embedded>
         <a-assets id='aframe_assets'>
         </a-assets>
-        <a-entity id='aframe_ambientLight' light='type: ambient; color: #EEE; intensity: 0.15' position='0 0 0'></a-entity>
-        <a-entity id='aframe_hemisphereLight' light='type: hemisphere; color: #EEE; groundColor: #EEE; intensity: 0.15' position='0 0 0'></a-entity>
+        <a-entity id='aframe_ambientLight' light='type: ambient; color: #EEE; intensity: 0.05' position='0 0 0'></a-entity>
+        <a-entity id='aframe_hemisphereLight' light='type: hemisphere; color: #EEE; groundColor: #EEE; intensity: 0.05' position='0 0 0'></a-entity>
         <a-entity id='aframe_directionalLight' light='type: directional; color: #EEE; intensity: 1; castShadow:true;' position='1 1 1'></a-entity>
 
         <a-entity id='aframe_camera_rig' position='0 2 0' rotation='0 0 0' >
