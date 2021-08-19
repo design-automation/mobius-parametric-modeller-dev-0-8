@@ -74,7 +74,7 @@ export const customWASDControl = {
         if (!velocity[data.adAxis] && !velocity[data.wsAxis]) { return; }
 
         const updateCamDiv = <HTMLButtonElement> document.getElementById('aframe-cameraUpdateData');
-        if (updateCamDiv && (<HTMLInputElement>updateCamDiv.children[4]).value) { return; }
+        // if (updateCamDiv && (<HTMLInputElement>updateCamDiv.children[4]).value) { return; }
         // Get movement vector and translate position.
         const movementVector = this.getMovementVector(delta);
         el.object3D.position.add(movementVector);

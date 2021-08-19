@@ -562,11 +562,11 @@ export class DataAframe {
         if (viewpointsList) {
             viewpointsList.children.forEach(vp => vp.setAttribute('visible', false));
         }
-        const disablePosInput = <HTMLInputElement> document.getElementById('aframe-disablePosUpdate');
-        if (disablePosInput) {
-            disablePosInput.value = '1';
-            setTimeout(() => disablePosInput.value = null, 1000);
-        }
+        // const disablePosInput = <HTMLInputElement> document.getElementById('aframe-disablePosUpdate');
+        // if (disablePosInput) {
+        //     disablePosInput.value = '1';
+        //     setTimeout(() => disablePosInput.value = null, 1000);
+        // }
 
         const rigEl = <any> document.getElementById('aframe_camera_rig');
         const camPos = new AFRAME.THREE.Vector3(0, 0, 0);
@@ -783,7 +783,8 @@ export class DataAframe {
         });
 
         const tbrElements = [   'aframe_ambientLight', 'aframe_hemisphereLight', 'aframe_directionalLight', 'aframe_viewpoints',
-                                'aframe_assets', 'aframe_camera_rig', 'aframe_sky_background', 'mobius_geom', 'aframe_ground',
+                                'aframe_assets', 'aframe_viewpoint_assets',
+                                'aframe_camera_rig', 'aframe_sky_background', 'mobius_geom', 'aframe_ground',
                                 'aframe_hud'];
         for (const tbrElmName of tbrElements) {
             const tbr = document.getElementById(tbrElmName);
