@@ -8,7 +8,7 @@ const THREE = AFRAME.THREE;
 
 const COMPONENT_SUFFIX = '-controls',
     MAX_DELTA = 0.2, // ms
-    EPS = 10e-6;
+    EPS = 0.01;
 
 export const movementControlComponent = {
 

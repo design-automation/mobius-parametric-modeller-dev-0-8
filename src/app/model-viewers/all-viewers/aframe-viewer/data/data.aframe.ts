@@ -569,7 +569,6 @@ export class DataAframe {
         // }
 
         if (changeCam) {
-
             const rigEl = <any> document.getElementById('aframe_camera_rig');
             const camPos = new AFRAME.THREE.Vector3(0, 0, 0);
             camPos.x = posDetails.pos[0];
@@ -623,6 +622,8 @@ export class DataAframe {
                 imgEnt.addEventListener('load', postloadSkyBGImg);
                 skyBG.setAttribute('rotation', `0 ${90 + posDetails.background_rotation} 0`);
             });
+        } else {
+            this.updateSky();
         }
         if (posDetails.foreground_url) {
             skyFG.setAttribute('src', '');
@@ -655,6 +656,9 @@ export class DataAframe {
                 skyFG.setAttribute('rotation', `0 ${90 + posDetails.foreground_rotation} 0`);
                 skyFG.setAttribute('visible', 'true');
             });
+        } else {
+            skyFG.setAttribute('src', '');
+            skyFG.setAttribute('visible', 'false');
         }
     }
 
