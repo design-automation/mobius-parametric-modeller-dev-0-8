@@ -568,16 +568,19 @@ export class DataAframe {
         //     setTimeout(() => disablePosInput.value = null, 1000);
         // }
 
-        const rigEl = <any> document.getElementById('aframe_camera_rig');
-        const camPos = new AFRAME.THREE.Vector3(0, 0, 0);
-        camPos.x = posDetails.pos[0];
-        camPos.z = (0 - posDetails.pos[1]);
-        camPos.y = posDetails.pos[2];
-        if (!camPos.y && camPos.y !== 0) {
-            camPos.y = 10;
-        }
-        rigEl.setAttribute('position', camPos);
         if (changeCam) {
+
+            const rigEl = <any> document.getElementById('aframe_camera_rig');
+            const camPos = new AFRAME.THREE.Vector3(0, 0, 0);
+            camPos.x = posDetails.pos[0];
+            camPos.z = (0 - posDetails.pos[1]);
+            camPos.y = posDetails.pos[2];
+            if (!camPos.y && camPos.y !== 0) {
+                camPos.y = 10;
+            }
+            rigEl.setAttribute('position', camPos);
+
+
             const camEl = <any> document.getElementById('aframe_look_camera');
             if (posDetails.camera_rotation) {
                 camEl.setAttribute('rotation', new AFRAME.THREE.Vector3(0, 0 - posDetails.camera_rotation, 0));
