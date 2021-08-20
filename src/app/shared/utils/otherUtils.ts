@@ -86,3 +86,17 @@ function propCheck(obj1, obj2, checkChildren = true) {
         }
     }
 }
+
+export function processDownloadURL(inpURL) {
+    let url = inpURL.replace('http://', 'https://');
+    if (url.indexOf('dropbox') !== -1) {
+        url = url.replace('www', 'dl').replace('dl=0', 'dl=1');
+    }
+    if (url[0] === '"' || url[0] === '\'') {
+        url = url.substring(1);
+    }
+    if (url[url.length - 1] === '"' || url[url.length - 1] === '\'') {
+        url = url.substring(0, url.length - 1);
+    }
+    return url;
+}

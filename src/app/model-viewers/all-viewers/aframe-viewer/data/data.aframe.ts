@@ -4,6 +4,7 @@ import { AframeSettings } from '../aframe-viewer.settings';
 import * as Modules from '@assets/core/modules';
 import { _EEntType, _EFilterOperator } from '@assets/core/modules/basic/query';
 import { EEntType } from '@assets/libs/geo-info/common';
+import { processDownloadURL } from '@shared/utils/otherUtils';
 
 declare var AFRAME;
 const DEFAUT_CAMERA_POS = {
@@ -336,14 +337,15 @@ export class DataAframe {
         }
         skyURL = baseLink + '/assets/img/background/bg' + backgroundSet + '/aframe.jpg';
         if (this.vr.enabled) {
-            fetch(this.vr.background_url).then(res => {
+            const bgUrl = processDownloadURL(this.vr.background_url);
+            fetch(bgUrl).then(res => {
                 if (!res.ok) {
                     const notifyButton = <HTMLButtonElement> document.getElementById('hidden_notify_button');
                     if (!notifyButton) { return; }
                     notifyButton.value = `Unable to retrieve background image from URL<br>${this.vr.background_url}`;
                     notifyButton.click();
                     return;
-                } else if (this.vr.background_url.trim() === '') {
+                } else if (bgUrl.trim() === '') {
                     return;
                 }
                 const assetEnt = document.getElementById('aframe_assets');
@@ -359,22 +361,23 @@ export class DataAframe {
                 const imgEnt = document.createElement('img');
                 imgEnt.id = 'aframe_sky_background_img';
                     imgEnt.setAttribute('crossorigin', 'anonymous');
-                imgEnt.setAttribute('src', this.vr.background_url);
+                imgEnt.setAttribute('src', bgUrl);
                 assetEnt.appendChild(imgEnt);
                 imgEnt.addEventListener('load', postloadSkyBGImg);
 
                 skyBG.setAttribute('rotation', `0 ${90 + this.vr.background_rotation} 0`);
             });
             if (this.vr.foreground_url) {
+                const fgUrl = processDownloadURL(this.vr.foreground_url);
                 skyFG.setAttribute('visible', 'false');
-                fetch(this.vr.foreground_url).then(res => {
+                fetch(fgUrl).then(res => {
                     if (!res.ok) {
                         const notifyButton = <HTMLButtonElement> document.getElementById('hidden_notify_button');
                         if (!notifyButton) { return; }
                         notifyButton.value = `Unable to retrieve foreground image from URL<br>${this.vr.foreground_url}`;
                         notifyButton.click();
                         return;
-                    } else if (this.vr.foreground_url.trim() === '') {
+                    } else if (fgUrl.trim() === '') {
                         return;
                     }
                     const assetEnt = document.getElementById('aframe_assets');
@@ -390,7 +393,7 @@ export class DataAframe {
                     const imgEnt = document.createElement('img');
                     imgEnt.id = 'aframe_sky_foreground_img';
                         imgEnt.setAttribute('crossorigin', 'anonymous');
-                    imgEnt.setAttribute('src', this.vr.foreground_url);
+                    imgEnt.setAttribute('src', fgUrl);
                     assetEnt.appendChild(imgEnt);
                     imgEnt.addEventListener('load', postloadSkyFGImg);
 
@@ -595,8 +598,8 @@ export class DataAframe {
         if (posDetails.background_url) {
             skyBG.setAttribute('src', '');
             skyBG.setAttribute('rotation', '0 0 0');
-
-            fetch(posDetails.background_url).then(res => {
+            const bgUrl = processDownloadURL(posDetails.background_url)
+            fetch(bgUrl).then(res => {
                 if (!res.ok) {
                     const notifyButton = <HTMLButtonElement> document.getElementById('hidden_notify_button');
                     if (!notifyButton) { return; }
@@ -617,7 +620,7 @@ export class DataAframe {
                 const imgEnt = document.createElement('img');
                 imgEnt.id = 'aframe_sky_background_img';
                 imgEnt.setAttribute('crossorigin', 'anonymous');
-                imgEnt.setAttribute('src', posDetails.background_url);
+                imgEnt.setAttribute('src', bgUrl);
                 assetEnt.appendChild(imgEnt);
                 imgEnt.addEventListener('load', postloadSkyBGImg);
                 skyBG.setAttribute('rotation', `0 ${90 + posDetails.background_rotation} 0`);
@@ -629,7 +632,8 @@ export class DataAframe {
             skyFG.setAttribute('src', '');
             skyFG.setAttribute('visible', 'false');
             skyFG.setAttribute('rotation', '0 0 0');
-            fetch(posDetails.foreground_url).then(res => {
+            const fgUrl = processDownloadURL(posDetails.foreground_url)
+            fetch(fgUrl).then(res => {
                 if (!res.ok) {
                     const notifyButton = <HTMLButtonElement> document.getElementById('hidden_notify_button');
                     if (!notifyButton) { return; }
@@ -650,7 +654,7 @@ export class DataAframe {
                 const imgEnt = document.createElement('img');
                 imgEnt.id = 'aframe_sky_foreground_img';
                 imgEnt.setAttribute('crossorigin', 'anonymous');
-                imgEnt.setAttribute('src', posDetails.foreground_url);
+                imgEnt.setAttribute('src', fgUrl);
                 assetEnt.appendChild(imgEnt);
                 imgEnt.addEventListener('load', postloadSkyFGImg);
                 skyFG.setAttribute('rotation', `0 ${90 + posDetails.foreground_rotation} 0`);

@@ -306,7 +306,7 @@ export class AttributeComponent implements OnChanges {
                 }
                 tableRow.active = true;
             }
-            const indentation = baseIndent - this.indent_map[tableRow._id.slice(0, 2)];
+            const indentation = baseIndent - this.indent_map[(<string> tableRow._id).slice(0, 2)];
             tableRow._id = '    '.repeat(indentation) + tableRow._id;
             if (ent_str === 'co') {
                 tableRow._id = '    ' + tableRow._id.trim();
