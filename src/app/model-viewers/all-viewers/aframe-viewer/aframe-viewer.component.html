@@ -13,7 +13,7 @@
         <input id='aframe-disablePosUpdate'/>
     </div>
 
-    <div class='position-picker' *ngIf='showCamPosList'>
+    <div class='position-picker' *ngIf='showCamPosList' style="display: none;">
         <select id='selCamPosEl' value={{selectedCamPos}} (change)="changePos($event.target.value)">
             <option *ngFor="let item of camPosList; let i = index;" value ={{i}}>{{item.name}}</option>
         </select>
@@ -79,7 +79,7 @@
                     </dl>
                 </div>
             </tab>
-            <tab tabTitle="VR">
+            <!-- <tab tabTitle="VR" >
                 <div class="mat-elevation-z1">
                     <dl>
                         <dd>
@@ -95,7 +95,6 @@
                                 <input type="number"
                                 (change)="settingOnChange('vr.background_rotation', $event.target.value)" 
                                 [value]="formatNumber(vr.background_rotation)">
-                                <!-- <input type="text" [value]="vr.background_rotation" disabled> -->
                             </div>
                             <br/>
                         </dd>
@@ -113,7 +112,6 @@
                                 <input type="number"
                                 (change)="settingOnChange('vr.foreground_rotation', $event.target.value)" 
                                 [value]="formatNumber(vr.foreground_rotation)">
-                                <!-- <input type="text" [value]="vr.foreground_rotation" disabled> -->
                             </div>
                             <br/>
                         </dd>
@@ -145,7 +143,7 @@
                         </dd>
                     </dl>
                 </div>
-            </tab>
+            </tab> -->
             <tab tabTitle="Light & Shadow">
                 <div class="mat-elevation-z1">
                     <dl>
