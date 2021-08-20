@@ -85,7 +85,7 @@ location.
 For panorama hotspots, walking up to the hotspot will load the panorama images.
 
 For more information about creating hotspots, see the following help topic:
-* [Creating hotspots](https://mobius-08.design-automation.net/gallery?defaultViewer=doc&docSection=VW.vr-viewer-panoramas)
+* [Creating hotspots](https://mobius-08.design-automation.net/gallery?defaultViewer=doc&docSection=VW.vr-viewer-hotspots)
 
 
 **Heads Up Display (HUD)**
