@@ -26,6 +26,36 @@ To enter the HMD mode, click the goggles button in the bottom-right hand corner 
 There are many different types of HMDs on the market (e.g. HTC Vive, Oculus Rift, Oculus Quest,
 Oculus Go, Google Daydream, Samsung GearVR, Vive Focus, etc).
 
+**Navigation Mesh**
+
+By default, there is no collision detection. This means that when you walk around your model, you
+will always be on the ground plane, and you will be able to walk through any geometric objects in
+the scene. 
+
+A navigation mesh is a simple way to constrain the area where you can walk. The navigation mesh
+consists of one or more polygons that define the area within which you can walk. When you are
+walking around and reach the edge of the navigation mesh polygon, you movement will be automatically
+blocked.
+
+The navigation mesh defines the surface where teh camera will be place. As a result, in order to
+create the expereince of walking, the navigation mesh will need to be raised above the ground plane,
+by for exampel 1.5 meters.
+
+The polygons used for the navigation mesh must have an attribute call `vr_nav_mesh`, with a boolean
+value. When set to `true`, the polygon will ne treated as a navigation mesh in the VR model.
+
+In the VR Viewer, any polygons that navigation meshes are automatically hidden. 
+
+Below is screen capture of a model being viewed in teh CAD Viewer, with the navigation mesh
+selected.
+
+![A navigation mesh in the CAD viewer.](assets/typedoc-json/docVW/imgs/viewer_vr_nav_mesh_in_cadv.png)
+
+Below is an screen capture of the same model as above, but in the VR Viewer. In this case you can
+see that the navigation mesh has been hidden. 
+
+![A model with a navigation mesh, in the VR Viewer.](assets/typedoc-json/docVW/imgs/viewer_vr_nav_mesh_in_vrv.png)
+
 **VR Hotspots**
 
 Mobius Modeller allows you to create VR hotspots in the 3D model. VR hotspots are named locations in
@@ -52,57 +82,11 @@ location.
 
 ![Dropdown Hotspot Selector](assets/typedoc-json/docVW/imgs/viewer_vr_hotspot_dropdown.png)
 
-Hotspots are defined by creating point objects in your model with an attribute called `vr_hotspot`.
-The position of the point object defines the location of the VR hotspot. The `vr_hotspot` `attribute
-is a dictionary containing various settings. 
+For panorama hotspots, walking up to the hotspot will load the panorama images.
 
-For standard hotspots, only one setting is required: the rotation of teh camera. Here is an
-example of a line of code setting the `vr` attribute:
+For more information about creating hotspots, see the following help topic:
+* [Creating hotspots](https://mobius-08.design-automation.net/gallery?defaultViewer=doc&docSection=VW.vr-viewer-panoramas)
 
-```
-my_point@vr = {
-    "camera_rotation": 45
-}
-```
-
-The angle defines the direction you will be looking at when you teleport to that hotspot. 
-
-The panorama hotspot includes two panorama images: one for the foreground and another for the
-background. These images form two hemispherical domes, centered on the camera location. The 3D model
-is placed in-between these two hemispherical domes. Below is a diagram of the setup:
-
-![Two panorama images](assets/typedoc-json/docVW/imgs/viewer_vr_hemi_domes.png)
-
-For panorama hotspots, additional settings are required for the panorama images. Here is an example
-of a line of code setting the `vr` attribute:
-
-```
-my_point@vr = {
-    "background_url": "http://...",
-    "background_rotation": 53,
-    "foreground_url": "http://...",
-    "foreground_rotation": 53,
-    "camera_rotation": 0
-}
-```
-
-The settings in the dictionary are as follows:
-* `background_url`: The url of the background 360° panorama image.
-* `background_rotation`: The rotation of the background 360° panorama image.
-* `foreground_url`: The url of the foreground 360° panorama image.
-* `foreground_rotation`: The rotation of the foreground 360° panorama image.
-* `camera_rotation`: The rotation of the camera.
-
-All angles are defined in degrees, relative to the Y axis. Positive angles rotate in a clockwise
-direction when looking down at the XY plane; negative angles rotate in an anti-clockwise direction.
-
-**Navigation Mesh**
-
-By default, there is no collision detection. This means that when you walk around your model, you
-will always be on the ground plane, and you will be able to walk through any geometric objects in
-the scene. 
-
-[to be completed]
 
 **Heads Up Display (HUD)**
 
@@ -113,10 +97,10 @@ The HUD feature works in the same way as in the CAD viewer. Please see the CAD v
 The settings for the VR Viewer can be accessed by the 'gear' icon in the top right-hand corner of
 the viewer.
 
-The settings dialog box has five tabs:
-* Scene: 
-
-[to be completed]
+The settings dialog box has three tabs:
+* Scene: Set the sky background and default camera position for the scene.
+* Light & Shadow: Set up the lights and shdows for the scene.
+* Environment: Set the properties of the ground plane for the scene.
 
 **A-Frame**
 
