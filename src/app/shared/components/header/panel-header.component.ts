@@ -150,7 +150,7 @@ export class PanelHeaderComponent implements OnDestroy {
             modnames: ['UI.gallery', 'UI.dashboard', 'UI.flowchart', 'UI.editor', 'UI.menu'],
         }, {
             name: 'Viewers',
-            modnames: ['Viewers.gi-viewer', 'Viewers.geo-viewer', 'Viewers.vr-viewer', 'Viewers.console'],
+            modnames: ['Viewers.gi-viewer', 'Viewers.geo-viewer', 'Viewers.vr-viewer', 'Viewers.vr-viewer-hotspots', 'Viewers.console'],
         }, {
             name: 'Operations',
             modnames: ['Operations.variable', 'Operations.comment', 'Operations.expression',

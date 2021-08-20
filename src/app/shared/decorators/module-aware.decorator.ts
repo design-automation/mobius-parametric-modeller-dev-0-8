@@ -33,6 +33,7 @@ const extraModPaths = {
     geoviewer: 'docVW/geo-viewer',
     cadviewer: 'docVW/cad-viewer',
     vrviewer: 'docVW/vr-viewer',
+    vrviewerhotspot: 'docVW/vr-viewer-hotspots',
 };
 // todo: bug fix for defaults
 function extract_params(func: Function): [IArgument[], boolean] {
