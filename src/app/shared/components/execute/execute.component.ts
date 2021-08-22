@@ -614,7 +614,7 @@ export class ExecuteComponent {
         let snapshotID;
         try {
             if (this.terminated) {
-                this.dataService.notifyMessage(`PROCESS TERMINATED IN NODE: "${this.terminated}"`);
+                this.dataService.notifyMessage(`SCRIPT TERMINATED IN NODE: "${this.terminated}"`);
                 this.dataService.flagModifiedNode(this.dataService.flowchart.nodes[0].id);
                 node.model = null;
                 return;
@@ -624,7 +624,7 @@ export class ExecuteComponent {
             const usedFuncsSet = new Set(usedFuncs);
             // if process is terminated, return
             if (codeResult[1]) {
-                this.dataService.notifyMessage(`PROCESS TERMINATED IN NODE: "${codeResult[1]}"`);
+                this.dataService.notifyMessage(`SCRIPT TERMINATED IN NODE: "${codeResult[1]}"`);
                 this.dataService.flagModifiedNode(this.dataService.flowchart.nodes[0].id);
                 if (!codeResult[0]) {
                     node.model = null;
@@ -719,7 +719,7 @@ export class ExecuteComponent {
             node.model = snapshotID;
             if (params['terminated']) {
                 this.terminated = node.name;
-                this.dataService.notifyMessage(`PROCESS TERMINATED IN NODE: "${this.terminated}"`);
+                this.dataService.notifyMessage(`SCRIPT TERMINATED IN NODE: "${this.terminated}"`);
                 this.dataService.flagModifiedNode(this.dataService.flowchart.nodes[0].id);
             }
 
@@ -793,7 +793,7 @@ export class ExecuteComponent {
             this.dataService.log(duration_msg);
             this.dataService.log('<br>');
             if (codeResult[1]) {
-                this.dataService.log('<h4 style="padding: 2px 0px 2px 0px; color:red;">PROCESS TERMINATED</h4>');
+                this.dataService.log('<h4 style="padding: 2px 0px 2px 0px; color:red;">SCRIPT TERMINATED</h4>');
             }
             return globalVars;
         } catch (ex) {
