@@ -597,8 +597,10 @@ export class ExecuteComponent {
 
         if (node.hasError) {
             document.getElementById('Console').click();
-            this.dataService.log('<h4 style="padding: 2px 0px 2px 0px; style="color:red">Error: Invalid Argument ' +
-                                    'detected. Check marked node(s) and procedure(s)!</h5>');
+            this.dataService.log(
+                '<h4 style="padding: 2px 0px 2px 0px; style="color:red">' +
+                'Static Error: Invalid code detected. Check the highlighted lines of code!' +
+                '</h4>');
             document.getElementById('spinner-off').click();
             this.dataService.flowchart.model = this.dataService.executeModel;
             this.dataService.flagModifiedNode(this.dataService.flowchart.nodes[0].id);
