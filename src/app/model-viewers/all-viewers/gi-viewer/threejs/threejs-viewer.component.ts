@@ -753,6 +753,7 @@ export class ThreejsViewerComponent implements OnInit, DoCheck, OnChanges, OnDes
     }
 
     public onUserAction(event) {
+        console.log('~~~~~~~~~~~~~~~~~~~~~ start user action')
         // get entities for mouse event
         const intersects = this.threeJSViewerService.initRaycaster(event);
         if (event.shiftKey || event.ctrlKey || event.metaKey) {
@@ -812,6 +813,7 @@ export class ThreejsViewerComponent implements OnInit, DoCheck, OnChanges, OnDes
         this.shiftKeyPressed = false;
 
         this.refreshTable(); // TO BE REVISED
+        console.log('~~~~~~~~~~~~~~~~~~~~~ end user action')
     }
 
     private refreshTable() {

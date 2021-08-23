@@ -28,7 +28,11 @@ export class GIGeomThreejs {
      * 3) the material groups array, which is an array of [ start, count, mat_index ]
      */
     public get3jsTris(ssid: number, vertex_map: Map<number, number>):
-        [number[], Map<number, number>, number[], Map<number, number>, object[], [number, number, number][]] {
+        [number[], Map<number, number>,
+        number[], Map<number, number>,
+        number[],
+        // Map<number, number>,
+        object[], [number, number, number][]] {
 
         // TODO this should not be parsed each time
         let settings = JSON.parse(localStorage.getItem('mpm_settings'));
@@ -42,7 +46,7 @@ export class GIGeomThreejs {
 
         // arrays to store threejs data
         const tri_data_arrs: [number[], TTri, number][] = []; // tri_mat_indices, new_tri_verts_i, tri_i
-        const vrmesh_tri_data_arrs: [number[], TTri, number][] = [];
+        const vrmesh_tri_data_arrs: [number[], TTri, number, boolean][] = [];
         // materials
         const mat_front: object = {
             specular: 0x000000,
@@ -96,10 +100,14 @@ export class GIGeomThreejs {
                 }
             }
             let vrmesh_check = false;
+            let vrmesh_hidden = false;
             if (pgon_vr_cam_attrib) {
-                const mat_attrib_val: string|string[] = pgon_vr_cam_attrib.getEntVal(tri_pgon_i) as string|string[];
+                const mat_attrib_val: any = pgon_vr_cam_attrib.getEntVal(tri_pgon_i) as string|string[];
                 if (mat_attrib_val) {
                     vrmesh_check = true;
+                    if (!mat_attrib_val.visible === false || mat_attrib_val.visible === 'false') {
+                        vrmesh_hidden = true;
+                    }
                 }
             }
             if (tri_mat_indices.length === 0) {
@@ -108,7 +116,7 @@ export class GIGeomThreejs {
             }
             // add the data to the data_array
             if (vrmesh_check) {
-                vrmesh_tri_data_arrs.push( [ tri_mat_indices, new_tri_verts_i, tri_i ] );
+                vrmesh_tri_data_arrs.push( [ tri_mat_indices, new_tri_verts_i, tri_i, vrmesh_hidden ] );
             } else {
                 tri_data_arrs.push( [ tri_mat_indices, new_tri_verts_i, tri_i ] );
             }
@@ -124,6 +132,8 @@ export class GIGeomThreejs {
         const tri_select_map: Map<number, number> = new Map();
         const vrmesh_tri_verts_i: TTri[] = [];
         const vrmesh_tri_select_map: Map<number, number> = new Map();
+        const vrmesh_hidden_tri_verts_i: TTri[] = [];
+        // const vrmesh_hidden_tri_select_map: Map<number, number> = new Map();
         const mat_groups_map: Map<number, [number, number][]> = new Map(); // mat_index -> [start, end][]
         for (const tri_data_arr of tri_data_arrs) {
             // save the tri data
@@ -147,8 +157,14 @@ export class GIGeomThreejs {
         }
         for (const tri_data_arr of vrmesh_tri_data_arrs) {
             // save the tri data
-            const tjs_i = vrmesh_tri_verts_i.push(tri_data_arr[1]) - 1;
-            vrmesh_tri_select_map.set(tjs_i, tri_data_arr[2]);
+            let tjs_i;
+            if (tri_data_arr[3]) {
+                tjs_i = vrmesh_hidden_tri_verts_i.push(tri_data_arr[1]) - 1;
+                // vrmesh_hidden_tri_select_map.set(tjs_i, tri_data_arr[2]);
+            } else {
+                tjs_i = vrmesh_tri_verts_i.push(tri_data_arr[1]) - 1;
+                vrmesh_tri_select_map.set(tjs_i, tri_data_arr[2]);
+            }
             // go through all materials for this tri and add save the mat groups data
             for (const mat_index of tri_data_arr[0]) {
                 let start_end_arrs: [number, number][] = mat_groups_map.get(mat_index);
@@ -174,6 +190,8 @@ export class GIGeomThreejs {
         const tri_verts_i_flat: number[] = tri_verts_i.flat(1);
         // @ts-ignore
         const vrmesh_tri_verts_i_flat: number[] = vrmesh_tri_verts_i.flat(1);
+        // @ts-ignore
+        const vrmesh_hidden_tri_verts_i_flat: number[] = vrmesh_hidden_tri_verts_i.flat(1);
         // return the data
         // there are four sets of data that are returns
         return [
@@ -181,6 +199,8 @@ export class GIGeomThreejs {
             tri_select_map,    // 1) the select map, that maps from the threejs tri indices to the gi model tri indices
             vrmesh_tri_verts_i_flat, // 2) the vertices for vr nav mesh
             vrmesh_tri_select_map,    // 3) the select map for vr nav mesh
+            vrmesh_hidden_tri_verts_i_flat, // 2) the vertices for vr nav mesh
+            // vrmesh_hidden_tri_select_map,    // 3) the select map for vr nav mesh
             materials,         // 4) the materials array, which is an array of objects
             material_groups    // 5) the material groups array, which is an array of [ start, count, mat_index ]
         ];
@@ -192,10 +212,14 @@ export class GIGeomThreejs {
      * 2) the materials array, which is an array of objects
      * 3) the material groups array, which is an array of [ start, count, mat_index ]
      */
-    public get3jsEdges(ssid: number, vertex_map: Map<number, number>): [number[], Map<number, number>, number[], Map<number, number>, object[], [number, number, number][]] {
+    public get3jsEdges(ssid: number, vertex_map: Map<number, number>): 
+    [number[], Map<number, number>,
+    number[], Map<number, number>,
+    number[],
+    object[], [number, number, number][]] {
         // arrays to store threejs data
         const edge_data_arrs: [number, TEdge, number][] = []; // edge_mat_indices, new_edge_verts_i, edge_i
-        const vrmesh_edge_data_arrs: [number, TEdge, number][] = []; // edge_mat_indices, new_edge_verts_i, edge_i
+        const vrmesh_edge_data_arrs: [number, TEdge, number, boolean][] = []; // edge_mat_indices, new_edge_verts_i, edge_i
         // materials
         const line_mat_black: object = {
             color: 0x000000,
@@ -249,16 +273,20 @@ export class GIGeomThreejs {
                     }
                 }
                 let vrmesh_check = false;
+                let vrmesh_hidden = false;
                 if (pgon_vr_cam_attrib) {
                     const edge_pgon_i =  this._geom_maps.up_wires_pgons.get(this._geom_maps.up_edges_wires.get(edge_i));
-                    const mat_attrib_val: string|string[] = pgon_vr_cam_attrib.getEntVal(edge_pgon_i) as string|string[];
+                    const mat_attrib_val: any = pgon_vr_cam_attrib.getEntVal(edge_pgon_i) as string|string[];
                     if (mat_attrib_val) {
                         vrmesh_check = true;
+                        if (!mat_attrib_val.visible === false || mat_attrib_val.visible === 'false') {
+                            vrmesh_hidden = true;
+                        }
                     }
                 }
                 // add the data to the data_array
                 if (vrmesh_check) {
-                    vrmesh_edge_data_arrs.push( [ pline_mat_index, new_edge_verts_i, edge_i ] );
+                    vrmesh_edge_data_arrs.push( [ pline_mat_index, new_edge_verts_i, edge_i, vrmesh_hidden] );
                 } else {
                     edge_data_arrs.push( [ pline_mat_index, new_edge_verts_i, edge_i ] );
                 }
@@ -275,9 +303,10 @@ export class GIGeomThreejs {
         const edge_select_map: Map<number, number> = new Map();
         const vrmesh_edges_verts_i: TEdge[] = [];
         const vrmesh_edge_select_map: Map<number, number> = new Map();
+        const vrmesh_hidden_edges_verts_i: TEdge[] = [];
         const mat_groups_map: Map<number, [number, number][]> = new Map(); // mat_index -> [start, end][]
         for (const edge_data_arr of edge_data_arrs) {
-            // save the tri data
+            // save the edge data
             const tjs_i = edges_verts_i.push(edge_data_arr[1]) - 1;
             edge_select_map.set(tjs_i, edge_data_arr[2]);
             // get the edge material and add save the mat groups data
@@ -297,8 +326,14 @@ export class GIGeomThreejs {
         }
         for (const edge_data_arr of vrmesh_edge_data_arrs) {
             // save the tri data
-            const tjs_i = vrmesh_edges_verts_i.push(edge_data_arr[1]) - 1;
-            vrmesh_edge_select_map.set(tjs_i, edge_data_arr[2]);
+            let tjs_i;
+            if (edge_data_arr[3]) {
+                tjs_i = vrmesh_hidden_edges_verts_i.push(edge_data_arr[1]) - 1;
+                // vrmesh_hidden_tri_select_map.set(tjs_i, tri_data_arr[2]);
+            } else {
+                tjs_i = vrmesh_edges_verts_i.push(edge_data_arr[1]) - 1;
+                vrmesh_edge_select_map.set(tjs_i, edge_data_arr[2]);
+                }
             // get the edge material and add save the mat groups data
             const mat_index = edge_data_arr[0];
             let start_end_arrs: [number, number][] = mat_groups_map.get(mat_index);
@@ -323,6 +358,7 @@ export class GIGeomThreejs {
         const edges_verts_i_flat: number[] = edges_verts_i.flat(1);
         // @ts-ignore
         const vrmesh_edges_verts_i_flat: number[] = vrmesh_edges_verts_i.flat(1);
+        const vrmesh_hidden_edges_verts_i_flat: number[] = vrmesh_hidden_edges_verts_i.flat(1);
         // return the data
         // there are four sets of data that are returns
         return [
@@ -330,6 +366,7 @@ export class GIGeomThreejs {
             edge_select_map,    // 1) the select map, that maps from the threejs tri indices to the gi model tri indices
             vrmesh_edges_verts_i_flat, // 2) the vertices, as a flat array
             vrmesh_edge_select_map,    // 3) the select map, that maps from the threejs tri indices to the gi model tri indices
+            vrmesh_hidden_edges_verts_i_flat, // 2) the vertices, as a flat array
             materials,          // 4) the materials array, which is an array of objects
             material_groups     // 5) the material groups array, which is an array of [ start, count, mat_index ]
         ];

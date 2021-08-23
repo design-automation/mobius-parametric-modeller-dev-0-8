@@ -40,12 +40,24 @@ export class GIModelThreejs {
         // get posi indices
         const posis_indices: number[] = Array.from(posis_map.values());
         // get the data for triangles
-        const [tri_verts_i, tri_select_map, vrmesh_tri_verts_i, vrmesh_tri_select_map, pgon_materials, pgon_material_groups]:
-            [number[], Map<number, number>, number[], Map<number, number>, object[], [number, number, number][]]
+        const [tri_verts_i, tri_select_map,
+            vrmesh_tri_verts_i, vrmesh_tri_select_map,
+            vrmesh_hidden_tri_verts_i,
+            pgon_materials, pgon_material_groups]:
+            [number[], Map<number, number>,
+            number[], Map<number, number>,
+            number[],
+            object[], [number, number, number][]]
             = this.modeldata.geom.threejs.get3jsTris(ssid, vertex_map);
         // get the data for edges
-        const [edge_verts_i, edge_select_map, vrmesh_edge_verts_i, vrmesh_edge_select_map, pline_materials, pline_material_groups]:
-            [number[], Map<number, number>, number[], Map<number, number>, object[], [number, number, number][]]
+        const [edge_verts_i, edge_select_map,
+            vrmesh_edge_verts_i, vrmesh_edge_select_map,
+            vrmesh_hidden_edge_verts_i,
+            pline_materials, pline_material_groups]:
+            [number[], Map<number, number>,
+            number[], Map<number, number>,
+            number[],
+            object[], [number, number, number][]]
             = this.modeldata.geom.threejs.get3jsEdges(ssid, vertex_map);
         // get the datas for points
         const [point_verts_i, point_select_map]:
@@ -75,6 +87,9 @@ export class GIModelThreejs {
 
             vrmesh_tri_indices: vrmesh_tri_verts_i,
             vrmesh_tri_select_map: vrmesh_tri_select_map,
+
+            vrmesh_hidden_tri_indices: vrmesh_hidden_tri_verts_i,
+            vrmesh_hidden_edge_indices: vrmesh_hidden_edge_verts_i,
 
             pline_materials: pline_materials,
             pline_material_groups: pline_material_groups,

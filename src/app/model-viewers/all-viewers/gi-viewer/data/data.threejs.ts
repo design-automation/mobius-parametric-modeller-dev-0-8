@@ -143,10 +143,10 @@ export class DataThreejs extends DataThreejsLookAt {
         const normals_buffer = new THREE.Float32BufferAttribute(threejs_data.normals, 3);
         const colors_buffer = new THREE.Float32BufferAttribute(threejs_data.colors, 3);
         const posis_xyz_buffer = new THREE.Float32BufferAttribute(threejs_data.posis_xyz, 3);
-        this._addTris(threejs_data.tri_indices, threejs_data.vrmesh_tri_indices,
+        this._addTris(threejs_data.tri_indices, threejs_data.vrmesh_tri_indices, threejs_data.vrmesh_hidden_tri_indices,
             verts_xyz_buffer, colors_buffer, normals_buffer,
             pgon_material_groups, pgon_materials);
-        this._addLines(threejs_data.edge_indices, threejs_data.vrmesh_edge_indices,
+        this._addLines(threejs_data.edge_indices, threejs_data.vrmesh_edge_indices, threejs_data.vrmesh_hidden_edge_indices,
             verts_xyz_buffer, colors_buffer, pline_material_groups, pline_materials);
         this._addPoints(threejs_data.point_indices, verts_xyz_buffer, colors_buffer, [255, 255, 255], this.settings.positions.size + 1);
 
@@ -435,7 +435,8 @@ export class DataThreejs extends DataThreejsLookAt {
     /**
      * Add threejs triangles to the scene
      */
-    private _addTris(tris_i: number[], vrmesh_tris_i: number[], posis_buffer: THREE.Float32BufferAttribute,
+    private _addTris(tris_i: number[], vrmesh_tris_i: number[], vrmesh_hidden_tris_i: number[],
+                     posis_buffer: THREE.Float32BufferAttribute,
                      colors_buffer: THREE.Float32BufferAttribute,
                      normals_buffer: THREE.Float32BufferAttribute,
                      material_groups, materials): void {
@@ -544,7 +545,7 @@ export class DataThreejs extends DataThreejsLookAt {
     /**
      * Add threejs lines to the scene
      */
-    private _addLines(lines_i: number[], vrmesh_lines_i: number[],
+    private _addLines(lines_i: number[], vrmesh_lines_i: number[], vrmesh_hidden_lines_i: number[],
                     posis_buffer: THREE.Float32BufferAttribute,
                     color_buffer: THREE.Float32BufferAttribute,
                     material_groups, materials): void {
