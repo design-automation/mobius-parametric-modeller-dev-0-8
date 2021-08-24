@@ -185,8 +185,8 @@ export class DataAframe {
         this.navMeshEnabled = false;
         try {
             const allPgons = <string[]> Modules.query.Get(this.model, _EEntType.PGON, null) ;
-            const navMeshPgons = Modules.query.Filter(this.model, allPgons, 'vr_nav_mesh', _EFilterOperator.IS_EQUAL, true);
-            if (navMeshPgons.length > 0) {
+            const attrib = Modules.attrib.Get(this.model, allPgons, 'vr_nav_mesh');
+            if (attrib) {
                 this.navMeshEnabled = true;
             }
         } catch (ex) {}
@@ -199,7 +199,7 @@ export class DataAframe {
                     threeJSGroup.add(new AFRAME.THREE.LineSegments(i.geometry, materials));
                 } else if (i.name === 'obj_point') {
                     threeJSGroup.add(new AFRAME.THREE.Points(i.geometry, materials));
-                } else if (i.name === 'obj_tri_navmesh') {
+                } else if (i.name === 'obj_tri_hidden_navmesh') {
                     const navMesh = document.getElementById('mobius_nav_mesh');
                     if (navMesh) {
                         (<any> navMesh).setObject3D('mesh', new AFRAME.THREE.Mesh(i.geometry, materials));

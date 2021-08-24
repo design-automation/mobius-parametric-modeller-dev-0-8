@@ -753,13 +753,14 @@ export class ThreejsViewerComponent implements OnInit, DoCheck, OnChanges, OnDes
     }
 
     public onUserAction(event) {
-        console.log('~~~~~~~~~~~~~~~~~~~~~ start user action')
         // get entities for mouse event
         const intersects = this.threeJSViewerService.initRaycaster(event);
         if (event.shiftKey || event.ctrlKey || event.metaKey) {
             this.shiftKeyPressed = true;
         }
-
+        while (intersects[0] && intersects[0].object.name && intersects[0].object.name.indexOf('hidden') !== -1) {
+            intersects.splice(0, 1);
+        }
         // check intersect exist
         if (intersects.length > 0) {
             if (event.which === 1) {
@@ -794,6 +795,7 @@ export class ThreejsViewerComponent implements OnInit, DoCheck, OnChanges, OnDes
                         break;
                     }
                 }
+                console.log('intsObj', intsObj)
                 this.selectObj(intsObj);
                 // setTimeout(() => {
                 //     this.activateRender();

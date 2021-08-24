@@ -263,7 +263,6 @@ export class AttributeComponent implements OnChanges {
             }
             this.dataSource.paginator = this.paginator.toArray()[tabIndex];
             this.dataSource.sort = this.sort.toArray()[tabIndex];
-            console.log('~~~~~~~~!!!!!!!!!!!!')
             if (this.table_scroll) {
                 setTimeout(() => {
                     document.getElementsByClassName('table--container')[this.getCurrentTab()].scrollTop = this.table_scroll;

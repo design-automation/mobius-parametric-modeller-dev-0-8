@@ -467,6 +467,18 @@ export class DataThreejs extends DataThreejsLookAt {
             vrmesh_geom.addGroup(element[0], element[1], element[2]);
         });
 
+        const vrmesh_hidden_geom = new THREE.BufferGeometry();
+        vrmesh_hidden_geom.setIndex(vrmesh_hidden_tris_i);
+        vrmesh_hidden_geom.setAttribute('position', posis_buffer);
+        if (normals_buffer.count > 0) {
+            vrmesh_hidden_geom.setAttribute('normal', normals_buffer);
+        }
+        vrmesh_hidden_geom.setAttribute('color', colors_buffer);
+        vrmesh_hidden_geom.clearGroups();
+        material_groups.forEach(element => {
+            vrmesh_hidden_geom.addGroup(element[0], element[1], element[2]);
+        });
+
         const material_arr = [];
         let index = 0;
         const l = materials.length;
@@ -512,6 +524,8 @@ export class DataThreejs extends DataThreejsLookAt {
         mesh.name = 'obj_tri';
         const vrmesh_mesh = new THREE.Mesh(vrmesh_geom, material_arr);
         vrmesh_mesh.name = 'obj_tri_navmesh';
+        const vrmesh_hidden_mesh = new THREE.Mesh(vrmesh_hidden_geom, material_arr);
+        vrmesh_hidden_mesh.name = 'obj_tri_hidden_navmesh';
 
         mesh.geometry.computeBoundingSphere();
         if (normals_buffer.count === 0) {
@@ -527,6 +541,12 @@ export class DataThreejs extends DataThreejsLookAt {
         vrmesh_mesh.castShadow = true;
         vrmesh_mesh.receiveShadow = true;
 
+        vrmesh_hidden_mesh.geometry.computeBoundingSphere();
+        if (normals_buffer.count === 0) {
+            vrmesh_hidden_mesh.geometry.computeVertexNormals();
+        }
+        vrmesh_hidden_mesh.visible = false;
+
         // show vertex normals
         this.vnh = new VertexNormalsHelper(mesh, this.settings.normals.size, 0x0000ff);
         this.vnh.visible = this.settings.normals.show;
@@ -534,10 +554,12 @@ export class DataThreejs extends DataThreejsLookAt {
 
         this.scene_objs.push(mesh);
         this.scene_objs.push(vrmesh_mesh);
+        this.scene_objs.push(vrmesh_hidden_mesh);
 
         // add mesh to scene
         this.scene.add(mesh);
         this.scene.add(vrmesh_mesh);
+        this.scene.add(vrmesh_hidden_mesh);
         this.threejs_nums[2] = (tris_i.length + vrmesh_tris_i.length) / 3;
     }
 

@@ -157,28 +157,13 @@ export class GIGeomThreejs {
         }
         for (const tri_data_arr of vrmesh_tri_data_arrs) {
             // save the tri data
-            let tjs_i;
             if (tri_data_arr[3]) {
-                tjs_i = vrmesh_hidden_tri_verts_i.push(tri_data_arr[1]) - 1;
+                vrmesh_hidden_tri_verts_i.push(tri_data_arr[1]);
                 // vrmesh_hidden_tri_select_map.set(tjs_i, tri_data_arr[2]);
             } else {
-                tjs_i = vrmesh_tri_verts_i.push(tri_data_arr[1]) - 1;
+                vrmesh_hidden_tri_verts_i.push(tri_data_arr[1]);
+                const tjs_i = vrmesh_tri_verts_i.push(tri_data_arr[1]) - 1;
                 vrmesh_tri_select_map.set(tjs_i, tri_data_arr[2]);
-            }
-            // go through all materials for this tri and add save the mat groups data
-            for (const mat_index of tri_data_arr[0]) {
-                let start_end_arrs: [number, number][] = mat_groups_map.get(mat_index);
-                if (start_end_arrs === undefined) {
-                    start_end_arrs = [[tjs_i, tjs_i]];
-                    mat_groups_map.set(mat_index, start_end_arrs);
-                } else {
-                    const start_end: [number, number] = start_end_arrs[start_end_arrs.length - 1];
-                    if (tjs_i === start_end[1] + 1) {
-                        start_end[1] = tjs_i;
-                    } else {
-                        start_end_arrs.push([tjs_i, tjs_i]);
-                    }
-                }
             }
         }
         // convert the mat_groups_map into the format required for threejs
@@ -328,25 +313,9 @@ export class GIGeomThreejs {
             // save the tri data
             let tjs_i;
             if (edge_data_arr[3]) {
-                tjs_i = vrmesh_hidden_edges_verts_i.push(edge_data_arr[1]) - 1;
-                // vrmesh_hidden_tri_select_map.set(tjs_i, tri_data_arr[2]);
             } else {
                 tjs_i = vrmesh_edges_verts_i.push(edge_data_arr[1]) - 1;
                 vrmesh_edge_select_map.set(tjs_i, edge_data_arr[2]);
-                }
-            // get the edge material and add save the mat groups data
-            const mat_index = edge_data_arr[0];
-            let start_end_arrs: [number, number][] = mat_groups_map.get(mat_index);
-            if (start_end_arrs === undefined) {
-                start_end_arrs = [[tjs_i, tjs_i]];
-                mat_groups_map.set(mat_index, start_end_arrs);
-            } else {
-                const start_end: [number, number] = start_end_arrs[start_end_arrs.length - 1];
-                if (tjs_i === start_end[1] + 1) {
-                    start_end[1] = tjs_i;
-                } else {
-                    start_end_arrs.push([tjs_i, tjs_i]);
-                }
             }
         }
         // convert the mat_groups_map into the format required for threejs
