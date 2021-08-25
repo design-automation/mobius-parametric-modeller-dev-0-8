@@ -327,6 +327,7 @@ export class GIGeomThreejs {
         const edges_verts_i_flat: number[] = edges_verts_i.flat(1);
         // @ts-ignore
         const vrmesh_edges_verts_i_flat: number[] = vrmesh_edges_verts_i.flat(1);
+        // @ts-ignore
         const vrmesh_hidden_edges_verts_i_flat: number[] = vrmesh_hidden_edges_verts_i.flat(1);
         // return the data
         // there are four sets of data that are returns

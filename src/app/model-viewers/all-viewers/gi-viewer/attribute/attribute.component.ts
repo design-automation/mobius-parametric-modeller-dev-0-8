@@ -320,6 +320,7 @@ export class AttributeComponent implements OnChanges {
         topoHeader.push(' ');
 
         this.displayedTopoColumns = topoHeader;
+        console.log('~~~~~~~~~~~~', this.paginator.toArray()[9]);
         this.dataSourceTopo.data = topoDataSource;
         this.dataSourceTopo.paginator = this.paginator.toArray()[9];
         this.topoSelectedType = selected_type;
