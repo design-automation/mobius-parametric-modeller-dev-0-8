@@ -66,6 +66,7 @@ export const navSystem = {
    */
   getGroup: function (position) {
     // return '0';
+    console.log(this.pathfinder)
     return this.navMesh
       ? this.pathfinder.getGroup(ZONE, position)
       : null;

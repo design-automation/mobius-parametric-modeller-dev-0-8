@@ -11,6 +11,8 @@ const DEFAUT_CAMERA_POS = {
     position: new AFRAME.THREE.Vector3(0, 0, 0),
     rotation: new AFRAME.THREE.Vector3(0, 0, 0)
 };
+const CAMERA_SNAP_DELAY = 1500;
+
 function postloadSkyBGImg() {
     const sky = <any> document.getElementById('aframe_sky_background');
     sky.setAttribute('src', '');
@@ -565,24 +567,23 @@ export class DataAframe {
         if (viewpointsList) {
             viewpointsList.children.forEach(vp => vp.setAttribute('visible', false));
         }
-        // const disablePosInput = <HTMLInputElement> document.getElementById('aframe-disablePosUpdate');
-        // if (disablePosInput) {
-        //     disablePosInput.value = '1';
-        //     setTimeout(() => disablePosInput.value = null, 1000);
-        // }
+        const disablePosInput = <HTMLInputElement> document.getElementById('aframe-disablePosUpdate');
+        if (disablePosInput) {
+            disablePosInput.value = '1';
+            setTimeout(() => disablePosInput.value = null, CAMERA_SNAP_DELAY);
+        }
+
+        const rigEl = <any> document.getElementById('aframe_camera_rig');
+        const camPos = new AFRAME.THREE.Vector3(0, 0, 0);
+        camPos.x = posDetails.pos[0];
+        camPos.z = (0 - posDetails.pos[1]);
+        camPos.y = posDetails.pos[2];
+        if (!camPos.y && camPos.y !== 0) {
+            camPos.y = 10;
+        }
+        rigEl.setAttribute('position', camPos);
 
         if (changeCam) {
-            const rigEl = <any> document.getElementById('aframe_camera_rig');
-            const camPos = new AFRAME.THREE.Vector3(0, 0, 0);
-            camPos.x = posDetails.pos[0];
-            camPos.z = (0 - posDetails.pos[1]);
-            camPos.y = posDetails.pos[2];
-            if (!camPos.y && camPos.y !== 0) {
-                camPos.y = 10;
-            }
-            rigEl.setAttribute('position', camPos);
-
-
             const camEl = <any> document.getElementById('aframe_look_camera');
             if (posDetails.camera_rotation) {
                 camEl.setAttribute('rotation', new AFRAME.THREE.Vector3(0, 0 - posDetails.camera_rotation, 0));

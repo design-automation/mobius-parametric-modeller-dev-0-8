@@ -579,7 +579,7 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                     camPosCoord.z = camPos.pos[1];
                     const distance = camPosCoord.distanceTo(pos);
                     // console.log('_____', distance)
-                    if (distance < 10) {
+                    if (distance < 1) {
                         aframeData.updateCameraPos(camPos, false);
                         this.selectedCamPos = i;
                         checkVRcam = true;

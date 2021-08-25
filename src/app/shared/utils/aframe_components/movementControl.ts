@@ -107,7 +107,7 @@ export const movementControlComponent = {
         }
 
         const updateCamDiv = <HTMLButtonElement> document.getElementById('aframe-cameraUpdateData');
-        // if (updateCamDiv && (<HTMLInputElement>updateCamDiv.children[4]).value) { return; }
+        if (updateCamDiv && (<HTMLInputElement>updateCamDiv.children[4]).value) { return; }
 
         if (data.constrainToNavMesh
             && velocityCtrl.isNavMeshConstrained !== false) {
