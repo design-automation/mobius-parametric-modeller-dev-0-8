@@ -266,7 +266,7 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
         camera_rot: number
     ): void {
     const [ent_type, ent_i]: TEntTypeIdx = idBreak(point);
-    const hs_dict = {"camera_url": camera_rot};
+    const hs_dict = {"camera_rotation": camera_rot};
     __model__.modeldata.attribs.set.setEntAttribVal(EEntType.POINT, ent_i, "vr", hs_dict);
 }
 // ================================================================================================
@@ -303,9 +303,9 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
     if (fore_url !== null) {
         phs_dict["foreground_url"] = fore_url;
         if (fore_rot === null) {
-            phs_dict["foreground_rot"] = back_rot;
+            phs_dict["foreground_rotation"] = back_rot;
         } else {
-            phs_dict["foreground_rot"] = fore_rot;
+            phs_dict["foreground_rotation"] = fore_rot;
         }
     }
     __model__.modeldata.attribs.set.setEntAttribVal(EEntType.POINT, ent_i, "vr", phs_dict);
