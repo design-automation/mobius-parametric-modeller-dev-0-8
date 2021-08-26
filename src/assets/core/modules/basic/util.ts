@@ -9,12 +9,13 @@ import { checkIDs, ID } from '../../_check_ids';
 import { GIModel } from '@libs/geo-info/GIModel';
 import { EEntType, TId, TEntTypeIdx, EAttribNames, EAttribDataTypeStrs, IModelJSONData, Txyz, Txy, TAttribDataTypes } from '@libs/geo-info/common';
 import { arrMakeFlat, getArrDepth } from '@assets/libs/util/arrs';
-import { idsBreak, idsMake } from '@assets/libs/geo-info/common_id_funcs';
+import { idBreak, idsBreak, idsMake } from '@assets/libs/geo-info/common_id_funcs';
 import { _getFile } from './io';
 import { vecAng2, vecFromTo, vecRot } from '@assets/libs/geom/vectors';
 import { multMatrix, rotateMatrix } from '@assets/libs/geom/matrix';
 import { Matrix4 } from 'three';
 import proj4 from 'proj4';
+import { XAXIS } from '@assets/libs/geom/constants';
 
 // longitude latitude in Singapore, NUS
 const LONGLAT = [103.778329, 1.298759];
@@ -209,10 +210,10 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
     let xyz_x: Txyz = _xformFromLongLatToXYZ(lat_long_x, proj_obj, 0) as Txyz;
     // x axis vector
     const x_vec: Txyz = vecFromTo(xyz_o, xyz_x);
-    const rot: number = vecAng2(x_vec, [1, 0, 0],  [0, 0, 1]);
+    const rot: number = vecAng2([1, 0, 0], x_vec, [0, 0, 1]);
     console.log("rot = ", rot, "x_vec = ", x_vec, xyz_o, xyz_x)
     // north vector
-    const n_vec: Txyz = vecRot([0,1,0], [0,0,1], -rot);
+    const n_vec: Txyz = vecRot([0,1,0], [0,0,1], rot);
     __model__.modeldata.attribs.set.setModelAttribVal("north", [n_vec[0], n_vec[1]]);
 }
 // ================================================================================================
@@ -248,6 +249,66 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
     }
     return xyz;
 
+}
+// ================================================================================================
+/**
+ * Creta a VR hotspot. In the VR Viewer, you can teleport to such hotspots.
+ * \n
+ * @param __model__
+ * @param point The point object to be used for creating a hotspot.
+ * @param camera_rot The rotation of the camera direction when you teleport yo the hotspot. The
+ * rotation is specified in degrees, in the counter-clockwise direction, starting from the Y axis.
+ * @returns void
+ */
+ export function vrHotspot(
+        __model__: GIModel, 
+        point: string,
+        camera_rot: number
+    ): void {
+    const [ent_type, ent_i]: TEntTypeIdx = idBreak(point);
+    const hs_dict = {"camera_url": camera_rot};
+    __model__.modeldata.attribs.set.setEntAttribVal(EEntType.POINT, ent_i, "vr", hs_dict);
+}
+// ================================================================================================
+/**
+ * Create a VR panorama hotspot..
+ *
+ * @param __model__
+ * @param point The point object to be used for creating a panorama. If this point is already
+ * defined as a VR hotspot, then teh panorama hotspot will inherit the camera angle.
+ * @param back_url The URL of the 360 degree panorama image to be used for the background.
+ * @param Back_rot The rotation of the background panorama image, in degrees, in the
+ * counter-clockwise direction.
+ * @param fore_url The URL of the 360 degree panorama image to be used for the foreground.
+ * @param fore_rot The rotation of the forground panorama image, in degrees, in the
+ * counter-clockwise direction.
+ * @returns void
+ */
+ export function vrPanorama(
+        __model__: GIModel, 
+        point: string,
+        back_url: number, back_rot: number,
+        fore_url: number, fore_rot: number
+    ): void {
+    const [ent_type, ent_i]: TEntTypeIdx = idBreak(point);
+    if (!__model__.modeldata.attribs.query.hasEntAttrib(EEntType.POINT, "vr")) {
+        __model__.modeldata.attribs.add.addEntAttrib(EEntType.POINT, "vr", EAttribDataTypeStrs.DICT);
+    }
+    let phs_dict = __model__.modeldata.attribs.get.getEntAttribVal(EEntType.POINT, ent_i, "vr");
+    if (phs_dict === undefined) {
+        phs_dict = {}
+    }
+    phs_dict["background_url"] = back_url;
+    phs_dict["background_rotation"] = back_rot;
+    if (fore_url !== null) {
+        phs_dict["foreground_url"] = fore_url;
+        if (fore_rot === null) {
+            phs_dict["foreground_rot"] = back_rot;
+        } else {
+            phs_dict["foreground_rot"] = fore_rot;
+        }
+    }
+    __model__.modeldata.attribs.set.setEntAttribVal(EEntType.POINT, ent_i, "vr", phs_dict);
 }
 // ================================================================================================
 /**
