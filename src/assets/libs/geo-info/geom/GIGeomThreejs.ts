@@ -105,7 +105,7 @@ export class GIGeomThreejs {
                 const mat_attrib_val: any = pgon_vr_cam_attrib.getEntVal(tri_pgon_i) as string|string[];
                 if (mat_attrib_val) {
                     vrmesh_check = true;
-                    if (!mat_attrib_val.visible === false || mat_attrib_val.visible === 'false') {
+                    if (mat_attrib_val.visible === false || mat_attrib_val.visible === 'false') {
                         vrmesh_hidden = true;
                     }
                 }
@@ -264,7 +264,7 @@ export class GIGeomThreejs {
                     const mat_attrib_val: any = pgon_vr_cam_attrib.getEntVal(edge_pgon_i) as string|string[];
                     if (mat_attrib_val) {
                         vrmesh_check = true;
-                        if (!mat_attrib_val.visible === false || mat_attrib_val.visible === 'false') {
+                        if (mat_attrib_val.visible === false || mat_attrib_val.visible === 'false') {
                             vrmesh_hidden = true;
                         }
                     }

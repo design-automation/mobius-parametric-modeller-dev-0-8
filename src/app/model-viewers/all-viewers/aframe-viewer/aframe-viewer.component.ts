@@ -105,13 +105,6 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                 this.updateLook((<HTMLInputElement>cameraUpdateData.children[3]).value);
                 (<HTMLInputElement>cameraUpdateData.children[2]).value = null;
             }
-            // const obj = document.getElementById('aframe_viewpoint_0');
-
-            // const rot = obj.getAttribute('rotation');
-            // // @ts-ignore
-            // rot.y += 3;
-            // obj.setAttribute('rotation', rot);
-
         }, 100);
     }
 
@@ -579,7 +572,7 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                     camPosCoord.z = camPos.pos[1];
                     const distance = camPosCoord.distanceTo(pos);
                     // console.log('_____', distance)
-                    if (distance < 1) {
+                    if (distance < 2) {
                         aframeData.updateCameraPos(camPos, false);
                         this.selectedCamPos = i;
                         checkVRcam = true;

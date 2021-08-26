@@ -457,28 +457,36 @@ export class DataAframe {
             this.camPosList.splice(this.camPosList.length - 1, 0, cam);
         }
         const viewpointsList = document.getElementById('aframe_viewpoints');
-        const newPointNum = this.camPosList.length - 2 - viewpointsList.children.length;
+        const newPointNum = this.camPosList.length - 2 - (viewpointsList.children.length / 2);
         if (newPointNum > 0) {
             for (let j = 0; j < newPointNum; j++) {
-                const newPoint = document.createElement('a-tetrahedron');
-                newPoint.id = 'aframe_viewpoint_' + j.toString();
-                newPoint.setAttribute('color', '#ffffff');
-                newPoint.setAttribute('rotation', '35 0 45');
-                viewpointsList.appendChild(newPoint);
+                const newPoint_tetra = document.createElement('a-tetrahedron');
+                newPoint_tetra.id = 'aframe_viewpoint_tetra' + j.toString();
+                newPoint_tetra.setAttribute('color', '#ffc24d');
+                newPoint_tetra.setAttribute('roughness', '0');
+                newPoint_tetra.setAttribute('rotation', '35 0 45');
+                newPoint_tetra.setAttribute('radius', '3');
+                viewpointsList.appendChild(newPoint_tetra);
+
+                const newPoint_octa = document.createElement('a-octahedron');
+                newPoint_octa.id = 'aframe_viewpoint_octa' + j.toString();
+                newPoint_octa.setAttribute('color', '#ffc24d');
+                newPoint_octa.setAttribute('roughness', '0');
+                newPoint_tetra.setAttribute('radius', '3');
+                viewpointsList.appendChild(newPoint_octa);
             }
         }
         for (let k = 0; k < viewpointsList.children.length; k++) {
             const pointPos = viewpointsList.children[k];
-            if (k + 2 >= this.camPosList.length) {
-                pointPos.setAttribute('visible', 'false');
+            pointPos.setAttribute('visible', 'false');
+            const camPos = this.camPosList[Math.trunc(k / 2) + 1];
+            if (Math.trunc(k / 2) + 2 >= this.camPosList.length) {
                 continue;
-            }
-            const camPos = this.camPosList[k + 1];
+            } else if (camPos.background_url) {
+                if (k % 2 === 0) { continue; }
+            } else if (k % 2 === 1) { continue; }
             pointPos.setAttribute('visible', 'true');
-            pointPos.setAttribute('position', `${camPos.pos[0]} 1 ${- camPos.pos[1]}`);
-            pointPos.setAttribute('radius', '2');
-            // pointPos.setAttribute('radius-bottom', '10');
-            // pointPos.setAttribute('height', '10');
+            pointPos.setAttribute('position', `${camPos.pos[0]} ${camPos.pos[2]} ${- camPos.pos[1]}`);
         }
     }
 
@@ -552,11 +560,12 @@ export class DataAframe {
             if (this._currentPos !== null) {
                 this._currentPos = null;
                 this.updateSky();
-                skyBG.setAttribute('rotation', '0 0 0');
-                skyFG.setAttribute('rotation', '0 0 0');
+                // skyBG.setAttribute('rotation', '0 0 0');
+                // skyFG.setAttribute('rotation', '0 0 0');
                 if (viewpointsList) {
                     for (let i = 1; i < (this.camPosList.length - 1); i++) {
-                        viewpointsList.children[i - 1].setAttribute('visible', true);
+                        const extra = this.camPosList[i].background_url ? 1 : 0;
+                        viewpointsList.children[(i - 1) * 2 + extra].setAttribute('visible', true);
                     }
                 }
             }

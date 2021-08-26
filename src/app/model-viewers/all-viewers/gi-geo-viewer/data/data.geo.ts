@@ -315,8 +315,6 @@ export class DataGeo {
             }
         }
 
-        console.log(threeJSGroup)
-
         threeJSGroup.updateMatrixWorld(true);
         this.view.scene.add(threeJSGroup);
 
@@ -416,7 +414,6 @@ export class DataGeo {
 
     }
     private _addGround(threejsScene, groundPos) {
-        console.log(threejsScene._all_objs_sphere)
         const geometry = new THREE.PlaneBufferGeometry( threejsScene._all_objs_sphere.radius * 5, threejsScene._all_objs_sphere.radius * 5, 32, 32);
 
         const material = new THREE.ShadowMaterial({
