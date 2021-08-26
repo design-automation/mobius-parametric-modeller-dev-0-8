@@ -13,7 +13,7 @@
         <input id='aframe-disablePosUpdate'/>
     </div>
 
-    <div class='position-picker' *ngIf='showCamPosList' style="display: none;">
+    <div class='position-picker' *ngIf='showCamPosList'>
         <select id='selCamPosEl' value={{selectedCamPos}} (change)="changePos($event.target.value)">
             <option *ngFor="let item of camPosList; let i = index;" value ={{i}}>{{item.name}}</option>
         </select>
