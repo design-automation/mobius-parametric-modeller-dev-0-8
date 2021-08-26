@@ -53,7 +53,7 @@
     "d3-delaunay": "^5.2.1",
     "d3-polygon": "^1.0.6",
     "d3-voronoi": "^1.1.4",
-    "itowns": "^2.33.0",
+    "itowns": "^2.34.0",
     "jszip": "^3.4.0",
     "mathjs": "^9.4.4",
     "ngx-color-picker": "^10.0.1",

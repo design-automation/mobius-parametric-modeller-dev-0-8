@@ -2,7 +2,7 @@
   <my-tabs id="attribTab" (selectedTab) = "_setDataSource($event)" (selectedTopology) = "_setDataSource($event)" [hidden]="dataSource === undefined">
     <my-tab *ngFor="let tab of tabs; let i = index" tabTitle="{{tab.title}}" index="{{i}}">
       <div class="mat-elevation-z1" >
-        <ng-container  *ngIf="i < 9; else topoTemplate">
+        <ng-container  *ngIf="i < 6; else topoTemplate">
             <div class = "table--container">
                 <!-- <dl id='attribLabel'>
                     <dd *ngFor="let label of displayedColumns;">
@@ -48,14 +48,14 @@
             </div>
         </ng-template>
         <div class = 'btm--container'>
-            <div id="displaySelected" *ngIf="i < 9">
+            <div id="displaySelected" *ngIf="i < 6">
                 <label class="container">Show Selected
                     <input type="checkbox" id="switch" (click)="showSelectedSwitch();" [checked]="showSelected"/>
                     <span class="checkmark"></span>
                 </label>
             </div>
             <div class = 'paginator--container'>
-                <mat-paginator id="matPaginator" [pageSizeOptions]="[20, 50, 100]" showFirstLastButtons></mat-paginator>
+                <mat-paginator id=matPaginator{{i}} class="matPaginator" [pageSizeOptions]="[20, 50, 100]" showFirstLastButtons></mat-paginator>
             </div>
         </div>
       </div>

@@ -42,9 +42,9 @@ export class AttributeComponent implements OnChanges {
 
     tabs: { type?: number, title: string }[] = [
         { type: EEntType.POSI, title: 'Positions' },
-        { type: EEntType.VERT, title: 'Vertices' },
-        { type: EEntType.EDGE, title: 'Edges' },
-        { type: EEntType.WIRE, title: 'Wires' },
+        // { type: EEntType.VERT, title: 'Vertices' },
+        // { type: EEntType.EDGE, title: 'Edges' },
+        // { type: EEntType.WIRE, title: 'Wires' },
         { type: EEntType.POINT, title: 'Points' },
         { type: EEntType.PLINE, title: 'Polylines' },
         { type: EEntType.PGON, title: 'Polygons' },
@@ -81,27 +81,24 @@ export class AttributeComponent implements OnChanges {
 
     tab_map = {
         0: EEntType.POSI,
-        1: EEntType.VERT,
-        2: EEntType.EDGE,
-        3: EEntType.WIRE,
-        4: EEntType.POINT,
-        5: EEntType.PLINE,
-        6: EEntType.PGON,
-        7: EEntType.COLL,
-        8: EEntType.MOD
+        1: EEntType.POINT,
+        2: EEntType.PLINE,
+        3: EEntType.PGON,
+        4: EEntType.COLL,
+        5: EEntType.MOD
     };
 
     tab_rev_map = {
         0: 0,
-        2: 1,
-        3: 2,
-        4: 3,
-        5: 4,
-        6: 5, // point
-        7: 6, // plines
-        8: 7, // pgons
-        9: 8,
-        10: 9
+        // 1: 0,
+        // 2: 0,
+        // 3: 0,
+        // 4: 0,
+        5: 1, // point
+        6: 2, // plines
+        7: 3, // pgons
+        8: 4,
+        9: 5
     };
 
     indent_map = {
@@ -178,24 +175,6 @@ export class AttributeComponent implements OnChanges {
     }
 
     generateTable(tabIndex: number) {
-        // if (tabIndex > 8) {
-        //     const entityTypes = ['pg', 'pl', 'pt'];
-        //     let entity = null;
-        //     let entType = null;
-        //     for ( const entityType of entityTypes ) {
-        //         const selectedEnts = this.dataService.selected_ents.get(entityType);
-        //         if (selectedEnts && selectedEnts.size > 0) {
-        //             for (const entSet of selectedEnts) {
-        //                 entity = entSet;
-        //                 entType = entityType;
-        //             }
-        //             break;
-        //         }
-        //     }
-        //     if (!entity) { return; }
-        //     this.generateTopoTable(entity[0], this.tab_rev_map[this.string_map[entType]], 'ps');
-        //     return;
-        // }
         if (this.model && this.nodeIndex) {
             const entityTypes = ['pg', 'pl', 'pt'];
             for ( const entityType of entityTypes ) {
@@ -212,10 +191,10 @@ export class AttributeComponent implements OnChanges {
                     break;
                 }
             }
-            if (tabIndex > 8) { return; }
+            if (tabIndex > 5) { return; }
 
             const ThreeJSData = this.model.modeldata.attribs.threejs;
-            if (Number(tabIndex) === 8) {
+            if (Number(tabIndex) === 5) {
                 this.displayData = ThreeJSData.getModelAttribsForTable(this.nodeIndex);
             } else {
                 const ready = this.model.modeldata.attribs.threejs instanceof GIAttribsThreejs;
@@ -243,7 +222,7 @@ export class AttributeComponent implements OnChanges {
             if (this.displayData.length > 0) {
                 const columns = Object.keys(this.displayData[0]).filter(e => e !== 'selected');
                 let new_columns;
-                if (Number(tabIndex) === 8) {
+                if (Number(tabIndex) === 5) {
                     new_columns = columns;
                 } else {
                     const first = columns.shift();
@@ -320,9 +299,8 @@ export class AttributeComponent implements OnChanges {
         topoHeader.push(' ');
 
         this.displayedTopoColumns = topoHeader;
-        console.log('~~~~~~~~~~~~', this.paginator.toArray()[9]);
         this.dataSourceTopo.data = topoDataSource;
-        this.dataSourceTopo.paginator = this.paginator.toArray()[9];
+        this.dataSourceTopo.paginator = this.paginator.toArray()[6];
         this.topoSelectedType = selected_type;
         if (this.topoTabIndex === tabIndex && this.topoID === ent_id) {
             setTimeout(() => {
@@ -371,8 +349,8 @@ export class AttributeComponent implements OnChanges {
                 // this.dataSource = new MatTableDataSource<object>();
                 this.dataSource.data = [];
                 // this.dataSource.sortingDataAccessor = this._sortingDataAccessor;
-            } else if (tabIndex === 9) {
-            } else if (tabIndex === 10) {
+            } else if (tabIndex === 6) {
+            } else if (tabIndex === 7) {
             } else {
                 this.generateTable(tabIndex);
             }

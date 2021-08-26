@@ -398,7 +398,7 @@ table{
     flex-flow: row nowrap;
     justify-content: flex-end;
   }
-  #matPaginator{
+  .matPaginator{
     &.hide{
       display: none;
     }
@@ -448,55 +448,4 @@ table{
     }
     
   }
-  #matPaginator_topo{
-    &.hide{
-      display: none;
-    }
-    position: absolute;
-    top: -20px;
-    background-color: transparent;
-    width: 100%;
-    // paginator
-    .mat-paginator-outer-container{
-      .mat-paginator-container{
-        width: inherit;
-        min-height: $fsize3 !important;
-        position: absolute;
-        bottom: 8px;
-        height: 20px;
-        display: flex;
-        flex-flow: row nowrap;
-        flex-shrink: 0;
-        font-family: sans-serif;
-
-        .mat-paginator-page-size, .mat-paginator-range-actions{
-          height: inherit;  
-          align-items: baseline;
-          padding-right: $small-padding;
-        }
-        .mat-paginator-page-size-label, .mat-paginator-range-label{
-          white-space: nowrap;
-        }
-
-        // items/page selector
-        .mat-paginator-page-size-select{
-          margin: 0;
-          .mat-form-field-wrapper{
-            padding-bottom: 0.95em;
-            .mat-form-field-flex .mat-form-field-infix .mat-select .mat-select-trigger .mat-select-value{
-              font-family: sans-serif;
-              color: $color1;
-            }
-          }
-        }
-
-        // page change icons
-        .mat-icon-button:hover .mat-paginator-icon{
-          fill: $selected-color;
-        }
-      }
-    }
-    
-  }
-
 }

@@ -815,7 +815,6 @@ export class ThreejsViewerComponent implements OnInit, DoCheck, OnChanges, OnDes
         this.shiftKeyPressed = false;
 
         this.refreshTable(); // TO BE REVISED
-        console.log('~~~~~~~~~~~~~~~~~~~~~ end user action')
     }
 
     private refreshTable() {
