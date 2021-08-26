@@ -15,7 +15,7 @@ import { vecAng2, vecFromTo, vecRot } from '@assets/libs/geom/vectors';
 import { multMatrix, rotateMatrix } from '@assets/libs/geom/matrix';
 import { Matrix4 } from 'three';
 import proj4 from 'proj4';
-import { XAXIS } from '@assets/libs/geom/constants';
+import { checkArgs, isNull, isNum, isStr } from '@assets/core/_check_types';
 
 // longitude latitude in Singapore, NUS
 const LONGLAT = [103.778329, 1.298759];
@@ -255,33 +255,62 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
  * Creta a VR hotspot. In the VR Viewer, you can teleport to such hotspots.
  * \n
  * @param __model__
- * @param point The point object to be used for creating a hotspot.
+ * @param point A point object to be used for creating hotspots.
+ * @param name A name for the VR hotspots. If `null`, a default name will be created.
  * @param camera_rot The rotation of the camera direction when you teleport yo the hotspot. The
  * rotation is specified in degrees, in the counter-clockwise direction, starting from the Y axis.
+ * If `null`, the camera rotation will default to 0.
  * @returns void
  */
  export function vrHotspot(
         __model__: GIModel, 
         point: string,
+        name: string,
         camera_rot: number
     ): void {
-    const [ent_type, ent_i]: TEntTypeIdx = idBreak(point);
-    const hs_dict = {"camera_rotation": camera_rot};
+    // --- Error Check ---
+    const fn_name = 'util.vrHotspot';
+    let ent_arr: TEntTypeIdx;
+    if (__model__.debug) {
+        ent_arr = checkIDs(__model__, fn_name, 'points', point,
+            [ID.isID],
+            [EEntType.POINT]) as TEntTypeIdx;
+        checkArgs(fn_name, 'name', name, [isStr, isNull]);
+        checkArgs(fn_name, 'camera_rot', camera_rot, [isNum, isNull]);
+    } else {
+        ent_arr = idsBreak(point) as TEntTypeIdx;
+    }
+    // --- Error Check ---
+    const ent_i: number = ent_arr[1];
+    if (!__model__.modeldata.attribs.query.hasEntAttrib(EEntType.POINT, "vr")) {
+        __model__.modeldata.attribs.add.addEntAttrib(EEntType.POINT, "vr", EAttribDataTypeStrs.DICT);
+    }
+    let hs_dict = __model__.modeldata.attribs.get.getEntAttribVal(EEntType.POINT, ent_i, "vr");
+    if (hs_dict === undefined) {
+        hs_dict = {}
+    }
+    if (name !== null) {
+        hs_dict["name"] = name;
+    }
+    if (camera_rot !== null) {
+        hs_dict["camera_rotation"] = camera_rot;
+    }
     __model__.modeldata.attribs.set.setEntAttribVal(EEntType.POINT, ent_i, "vr", hs_dict);
 }
 // ================================================================================================
 /**
- * Create a VR panorama hotspot..
- *
+ * Create a VR panorama hotspot. In the VR Viewer, you can teleport to such hotspots.When you enter
+ * the hotspot, the panorama images will be loaded into the view. \n
  * @param __model__
  * @param point The point object to be used for creating a panorama. If this point is already
- * defined as a VR hotspot, then teh panorama hotspot will inherit the camera angle.
+ * defined as a VR hotspot, then the panorama hotspot will inherit the name and camera angle.
  * @param back_url The URL of the 360 degree panorama image to be used for the background.
  * @param Back_rot The rotation of the background panorama image, in degrees, in the
- * counter-clockwise direction.
- * @param fore_url The URL of the 360 degree panorama image to be used for the foreground.
+ * counter-clockwise direction. If `null`, then rotation will be 0.
+ * @param fore_url The URL of the 360 degree panorama image to be used for the foreground. If `null`
+ * then no foreground image will be used.
  * @param fore_rot The rotation of the forground panorama image, in degrees, in the
- * counter-clockwise direction.
+ * counter-clockwise direction. If `null`, then the foreground rotation will be equal to the background rotation.
  * @returns void
  */
  export function vrPanorama(
@@ -290,7 +319,22 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
         back_url: number, back_rot: number,
         fore_url: number, fore_rot: number
     ): void {
-    const [ent_type, ent_i]: TEntTypeIdx = idBreak(point);
+    // --- Error Check ---
+    const fn_name = 'util.vrPanorama';
+    let ent_arr: TEntTypeIdx;
+    if (__model__.debug) {
+        ent_arr = checkIDs(__model__, fn_name, 'point', point,
+            [ID.isID],
+            [EEntType.POINT]) as TEntTypeIdx;
+        checkArgs(fn_name, 'back_url', back_url, [isStr]);
+        checkArgs(fn_name, 'back_rot', back_rot, [isNum, isNull]);
+        checkArgs(fn_name, 'fore_url', fore_url, [isStr, isNull]);
+        checkArgs(fn_name, 'fore_rot', fore_rot, [isNum, isNull]);
+    } else {
+        ent_arr = idsBreak(point) as TEntTypeIdx;
+    }
+    // --- Error Check ---
+    const ent_i: number = ent_arr[1];
     if (!__model__.modeldata.attribs.query.hasEntAttrib(EEntType.POINT, "vr")) {
         __model__.modeldata.attribs.add.addEntAttrib(EEntType.POINT, "vr", EAttribDataTypeStrs.DICT);
     }
@@ -299,11 +343,15 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
         phs_dict = {}
     }
     phs_dict["background_url"] = back_url;
-    phs_dict["background_rotation"] = back_rot;
+    if (back_rot === null) {
+        phs_dict["background_rotation"] = 0;
+    } else {
+        phs_dict["background_rotation"] = back_rot;
+    }
     if (fore_url !== null) {
         phs_dict["foreground_url"] = fore_url;
         if (fore_rot === null) {
-            phs_dict["foreground_rotation"] = back_rot;
+            phs_dict["foreground_rotation"] = phs_dict["background_rotation"];
         } else {
             phs_dict["foreground_rotation"] = fore_rot;
         }
@@ -334,16 +382,13 @@ export function ParamInfo(__model__: GIModel, __constList__: {}): string {
 export function EntityInfo(__model__: GIModel, entities: TId|TId[]): string {
     entities = arrMakeFlat(entities) as TId[];
     // --- Error Check ---
-    const fn_name = 'collection.Info';
+    const fn_name = 'util.EntityInfo';
     let ents_arr: TEntTypeIdx[];
     if (__model__.debug) {
         ents_arr = checkIDs(__model__, fn_name, 'coll', entities,
             [ID.isID, ID.isIDL1],
             [EEntType.COLL, EEntType.PGON, EEntType.PLINE, EEntType.POINT]) as TEntTypeIdx[];
     } else {
-        // ents_arr = splitIDs(fn_name, 'coll', entities,
-        //     [IDcheckObj.isID, IDcheckObj.isIDList],
-        //     [EEntType.COLL, EEntType.PGON, EEntType.PLINE, EEntType.POINT]) as TEntTypeIdx[];
         ents_arr = idsBreak(entities) as TEntTypeIdx[];
     }
     // --- Error Check ---
