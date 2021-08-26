@@ -46,10 +46,10 @@
                             <input type="number"
                             (change)="settingOnChange('camera.rot_x', $event.target.value)" 
                             [value]="formatNumber(settings.camera.rot.x)" disabled>
-                            <input type="number" 
+                            <input type="number"
                             (change)="settingOnChange('camera.rot_y', $event.target.value)"
                             [value]="formatNumber(settings.camera.rot.y)" disabled>
-                            <input type="number" 
+                            <input type="number"
                             (change)="settingOnChange('camera.rot_z', $event.target.value)"
                             [value]="formatNumber(settings.camera.rot.z)" disabled>
                             <button (click)="settingOnChange('camera.get_camera_rot')" class="filebtn getbtn">Get</button>

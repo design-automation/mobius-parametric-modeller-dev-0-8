@@ -251,7 +251,7 @@ export class DataGeo {
 
 
         for (const i of threejsScene.scene.children) {
-            if (i.name.startsWith('obj_')) {
+            if (i.name.startsWith('obj_') && i.name.indexOf('hidden') === -1) {
                 threeJSGroup.add(i.clone());
             }
         }
@@ -315,6 +315,7 @@ export class DataGeo {
             }
         }
 
+        console.log(threeJSGroup)
 
         threeJSGroup.updateMatrixWorld(true);
         this.view.scene.add(threeJSGroup);
@@ -442,12 +443,14 @@ export class DataGeo {
 
     updateHUD() {
         const hud = document.getElementById('geo_hud');
-        if (!this.model.modeldata.attribs.query.hasEntAttrib(EEntType.MOD, 'hud')) {
-            hud.innerHTML = '';
-            hud.style.visibility = 'hidden';
-            return;
+        if (hud) {
+            if (!this.model.modeldata.attribs.query.hasEntAttrib(EEntType.MOD, 'hud')) {
+                hud.innerHTML = '';
+                hud.style.visibility = 'hidden';
+                return;
+            }
+            hud.innerHTML = this.model.modeldata.attribs.get.getModelAttribVal('hud') as string;
         }
-        hud.innerHTML = this.model.modeldata.attribs.get.getModelAttribVal('hud') as string;
     }
 
     // PRIVATE METHODS

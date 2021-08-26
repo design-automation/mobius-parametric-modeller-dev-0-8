@@ -510,6 +510,7 @@ export class DataThreejs extends DataThreejsLookAt {
                         element.envMap = this.scene.background;
                     }
                     mat = new THREE.MeshPhysicalMaterial(element);
+                    mat.attenuationColor = mat.attenuationTint;
                 } else if (element.type === MaterialType.MeshLambertMaterial) {
                     delete element.type;
                     mat = new THREE.MeshLambertMaterial(element);
