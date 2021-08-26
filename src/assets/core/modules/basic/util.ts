@@ -15,7 +15,7 @@ import { vecAng2, vecFromTo, vecRot } from '@assets/libs/geom/vectors';
 import { multMatrix, rotateMatrix } from '@assets/libs/geom/matrix';
 import { Matrix4 } from 'three';
 import proj4 from 'proj4';
-import { checkArgs, isNull, isNum, isNumL, isStr } from '@assets/core/_check_types';
+import { checkArgs, isNull, isNum, isNumL, isStr, isXY } from '@assets/core/_check_types';
 
 // longitude latitude in Singapore, NUS
 const LONGLAT = [103.778329, 1.298759];
@@ -51,6 +51,7 @@ const LONGLAT = [103.778329, 1.298759];
             throw new Error('Latitude attribute must be between 0 and 90.');
         }
     }
+    console.log("lat long", latitude, longitude);
     // try to figure out what the projection is of the source file
     // let proj_from_str = 'WGS84';
     // if (geojson_obj.hasOwnProperty('crs')) {
@@ -170,6 +171,14 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
         rot: number,
         elev: number
     ): void {
+    // --- Error Check ---
+    const fn_name = 'util.Geoalign';
+    if (__model__.debug) {
+        checkArgs(fn_name, 'lat_long_o', lat_long, [isXY, isNull]);
+        checkArgs(fn_name, 'rot', elev, [isNum, isNull]);
+        checkArgs(fn_name, 'elev', elev, [isNum, isNull]);
+    }
+    // --- Error Check ---
     const gl_dict = {"latitude": lat_long[0], "longitude": lat_long[1]};
     if (elev !== null) {
         gl_dict["elevation"] = elev;
@@ -184,10 +193,16 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
 // ================================================================================================
 /**
  * Set the geolocation of the Cartesian coordinate system.
- *
+ * \n 
+ * The Cartesian coordinate system is geolocated by defining two points:
+ * - The latitude-longitude of the Cartesian origin.
+ * - The latitude-longitude of a point on the positive Cartesian X-axis.
+ * \n
  * @param __model__
- * @param lat_long_o Set the latitude and longitude of the origin of the Cartesian coordinate system. 
- * @param lat_long_x Set the latitude and longitude of a point on the x-axis of the Cartesian coordinate system. 
+ * @param lat_long_o Set the latitude and longitude of the origin of the Cartesian coordinate
+ * system. 
+ * @param lat_long_x Set the latitude and longitude of a point on the x-axis of the Cartesian
+ * coordinate system. 
  * @param elev Set the elevation of the Cartesian coordinate system above the ground plane.
  * @returns void
  */
@@ -197,6 +212,14 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
         lat_long_x: Txy,
         elev: number
     ): void {
+    // --- Error Check ---
+    const fn_name = 'util.Geoalign';
+    if (__model__.debug) {
+        checkArgs(fn_name, 'lat_long_o', lat_long_o, [isXY, isNull]);
+        checkArgs(fn_name, 'lat_long_x', lat_long_x, [isXY, isNull]);
+        checkArgs(fn_name, 'elev', elev, [isNum, isNull]);
+    }
+    // --- Error Check ---
     const gl_dict = {"latitude": lat_long_o[0], "longitude": lat_long_o[1]};
     if (elev !== null) {
         gl_dict["elevation"] = elev;
@@ -205,21 +228,22 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
     // calc
     const proj_obj: proj4.Converter = _createProjection(__model__);
     // origin
-    let xyz_o: Txyz = _xformFromLongLatToXYZ(lat_long_o, proj_obj, 0) as Txyz;
+    let xyz_o: Txyz = _xformFromLongLatToXYZ([lat_long_o[1],lat_long_o[0]], proj_obj, 0) as Txyz;
     // point on x axis
-    let xyz_x: Txyz = _xformFromLongLatToXYZ(lat_long_x, proj_obj, 0) as Txyz;
+    let xyz_x: Txyz = _xformFromLongLatToXYZ([lat_long_x[1],lat_long_x[0]], proj_obj, 0) as Txyz;
     // x axis vector
-    const x_vec: Txyz = vecFromTo(xyz_o, xyz_x);
-    const rot: number = vecAng2([1, 0, 0], x_vec, [0, 0, 1]);
-    console.log("rot = ", rot, "x_vec = ", x_vec, xyz_o, xyz_x)
+    const old_x_vec: Txyz = [1, 0, 0];
+    const new_x_vec: Txyz = vecFromTo(xyz_o, xyz_x);
+    const rot: number = vecAng2(old_x_vec, new_x_vec, [0, 0, 1]);
+    // console.log("rot = ", rot, "x_vec = ", x_vec, xyz_o, xyz_x)
     // north vector
-    const n_vec: Txyz = vecRot([0,1,0], [0,0,1], rot);
+    const n_vec: Txyz = vecRot([0,1,0], [0,0,1], -rot);
     __model__.modeldata.attribs.set.setModelAttribVal("north", [n_vec[0], n_vec[1]]);
 }
 // ================================================================================================
 /**
- * Transform a coordinate from latitude-longitude location XYZ, based on the geolocation of the
- * model.
+ * Transform a coordinate from latitude-longitude Geodesic coordinate to a Cartesian XYZ coordinate,
+ * based on the geolocation of the model.
  *
  * @param __model__
  * @param lat_long Latitude and longitude coordinates. 
@@ -234,7 +258,7 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
     // --- Error Check ---
     const fn_name = 'util.LatLong2XYZ';
     if (__model__.debug) {
-        checkArgs(fn_name, 'lat_long', lat_long, [isNumL, isNull]);
+        checkArgs(fn_name, 'lat_long', lat_long, [isXY, isNull]);
         checkArgs(fn_name, 'elev', elev, [isNum, isNull]);
     }
     // --- Error Check ---
@@ -249,7 +273,7 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
         }
     }
     // add feature
-    let xyz: Txyz = _xformFromLongLatToXYZ(lat_long, proj_obj, elev) as Txyz;
+    let xyz: Txyz = _xformFromLongLatToXYZ([lat_long[1],lat_long[0]], proj_obj, elev) as Txyz;
     // rotate to north
     if (rot_matrix !== null) {
         xyz = multMatrix(xyz, rot_matrix);
