@@ -15,7 +15,7 @@ import { vecAng2, vecFromTo, vecRot } from '@assets/libs/geom/vectors';
 import { multMatrix, rotateMatrix } from '@assets/libs/geom/matrix';
 import { Matrix4 } from 'three';
 import proj4 from 'proj4';
-import { checkArgs, isNull, isNum, isStr } from '@assets/core/_check_types';
+import { checkArgs, isNull, isNum, isNumL, isStr } from '@assets/core/_check_types';
 
 // longitude latitude in Singapore, NUS
 const LONGLAT = [103.778329, 1.298759];
@@ -231,6 +231,13 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
         lat_long: Txy,
         elev: number
     ): Txyz {
+    // --- Error Check ---
+    const fn_name = 'util.LatLong2XYZ';
+    if (__model__.debug) {
+        checkArgs(fn_name, 'lat_long', lat_long, [isNumL, isNull]);
+        checkArgs(fn_name, 'elev', elev, [isNum, isNull]);
+    }
+    // --- Error Check ---
     const proj_obj: proj4.Converter = _createProjection(__model__);
     // calculate angle of rotation
     let rot_matrix: Matrix4 = null;
@@ -262,7 +269,7 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
  * If `null`, the camera rotation will default to 0.
  * @returns void
  */
- export function vrHotspot(
+ export function VrHotspot(
         __model__: GIModel, 
         point: string,
         name: string,
@@ -313,7 +320,7 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
  * counter-clockwise direction. If `null`, then the foreground rotation will be equal to the background rotation.
  * @returns void
  */
- export function vrPanorama(
+ export function VrPanorama(
         __model__: GIModel, 
         point: string,
         back_url: number, back_rot: number,
