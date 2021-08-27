@@ -465,6 +465,7 @@ export class DataAframe {
                 newPoint_tetra.setAttribute('color', '#ffc24d');
                 newPoint_tetra.setAttribute('roughness', '0');
                 newPoint_tetra.setAttribute('rotation', '35 0 45');
+                newPoint_tetra.setAttribute('fog', 'false');
                 newPoint_tetra.setAttribute('radius', '3');
                 viewpointsList.appendChild(newPoint_tetra);
 
@@ -472,7 +473,8 @@ export class DataAframe {
                 newPoint_octa.id = 'aframe_viewpoint_octa' + j.toString();
                 newPoint_octa.setAttribute('color', '#ffc24d');
                 newPoint_octa.setAttribute('roughness', '0');
-                newPoint_tetra.setAttribute('radius', '3');
+                newPoint_octa.setAttribute('radius', '3');
+                newPoint_octa.setAttribute('fog', 'false');
                 viewpointsList.appendChild(newPoint_octa);
             }
         }
