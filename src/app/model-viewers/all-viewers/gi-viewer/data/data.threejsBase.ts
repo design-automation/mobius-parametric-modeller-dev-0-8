@@ -117,7 +117,12 @@ export class DataThreejsBase {
         // scene
         this.scene = new THREE.Scene();
         // renderer
-        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, logarithmicDepthBuffer: true });
+        this.renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: true,
+            logarithmicDepthBuffer: true,
+            powerPreference: 'high-performance'
+        });
         this.renderer.autoClear = false;
         // this._renderer.setClearColor(0xcccccc, 0);
         this.renderer.setPixelRatio(window.devicePixelRatio);
