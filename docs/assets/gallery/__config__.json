@@ -38,7 +38,8 @@
         {
             "name": "VR Examples",
             "files": [
-                "podium_tower_vr.mob&defaultViewer=vr"
+                "winding_streets.mob&defaultViewer=vr",
+                "podium_tower.mob&defaultViewer=vr"
             ],
             "link": "/assets/gallery/vr_examples/"
         },
