@@ -36,6 +36,13 @@
             "link": "/assets/gallery/analysis_examples/"
         },
         {
+            "name": "VR Examples",
+            "files": [
+                "podium_tower_vr.mob&defaultViewer=vr"
+            ],
+            "link": "/assets/gallery/vr_examples/"
+        },
+        {
             "name": "Global Function Examples",
             "files": [
                 "pyramids_from_pgons_example.mob&node=1",

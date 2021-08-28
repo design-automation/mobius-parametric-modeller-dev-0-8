@@ -7,11 +7,107 @@
  */
 import { checkIDs, ID } from '../../_check_ids';
 import { GIModel } from '@libs/geo-info/GIModel';
-import { EEntType, TId, TEntTypeIdx, EAttribNames, EAttribDataTypeStrs, IModelJSONData } from '@libs/geo-info/common';
-import { arrMakeFlat } from '@assets/libs/util/arrs';
-import { idsBreak, idsMake } from '@assets/libs/geo-info/common_id_funcs';
+import { EEntType, TId, TEntTypeIdx, EAttribNames, EAttribDataTypeStrs, IModelJSONData, Txyz, Txy, TAttribDataTypes } from '@libs/geo-info/common';
+import { arrMakeFlat, getArrDepth } from '@assets/libs/util/arrs';
+import { idBreak, idsBreak, idsMake } from '@assets/libs/geo-info/common_id_funcs';
 import { _getFile } from './io';
+import { vecAng2, vecFromTo, vecRot } from '@assets/libs/geom/vectors';
+import { multMatrix, rotateMatrix } from '@assets/libs/geom/matrix';
+import { Matrix4 } from 'three';
+import proj4 from 'proj4';
+import { checkArgs, isNull, isNum, isNumL, isStr, isXY } from '@assets/core/_check_types';
 
+// longitude latitude in Singapore, NUS
+const LONGLAT = [103.778329, 1.298759];
+/**
+ * TODO MEgre with io_geojson.ts
+ * Get long lat, Detect CRS, create projection function
+ * @param model The model.
+ * @param point The features to add.
+ */
+ function _createProjection(model: GIModel): proj4.Converter {
+    // create the function for transformation
+    const proj_str_a = '+proj=tmerc +lat_0=';
+    const proj_str_b = ' +lon_0=';
+    const proj_str_c = '+k=1 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs';
+    let longitude = LONGLAT[0];
+    let latitude = LONGLAT[1];
+    if (model.modeldata.attribs.query.hasModelAttrib('geolocation')) {
+        const geolocation = model.modeldata.attribs.get.getModelAttribVal('geolocation');
+        const long_value: TAttribDataTypes = geolocation['longitude'];
+        if (typeof long_value !== 'number') {
+            throw new Error('Longitude attribute must be a number.');
+        }
+        longitude = long_value as number;
+        if (longitude < -180 || longitude > 180) {
+            throw new Error('Longitude attribute must be between -180 and 180.');
+        }
+        const lat_value: TAttribDataTypes = geolocation['latitude'];
+        if (typeof lat_value !== 'number') {
+            throw new Error('Latitude attribute must be a number');
+        }
+        latitude = lat_value as number;
+        if (latitude < 0 || latitude > 90) {
+            throw new Error('Latitude attribute must be between 0 and 90.');
+        }
+    }
+    console.log("lat long", latitude, longitude);
+    // try to figure out what the projection is of the source file
+    // let proj_from_str = 'WGS84';
+    // if (geojson_obj.hasOwnProperty('crs')) {
+    //     if (geojson_obj.crs.hasOwnProperty('properties')) {
+    //         if (geojson_obj.crs.properties.hasOwnProperty('name')) {
+    //             const name: string = geojson_obj.crs.properties.name;
+    //             const epsg_index = name.indexOf('EPSG');
+    //             if (epsg_index !== -1) {
+    //                 let epsg = name.slice(epsg_index);
+    //                 epsg = epsg.replace(/\s/g, '+');
+    //                 if (epsg === 'EPSG:4326') {
+    //                     // do nothing, 'WGS84' is fine
+    //                 } else if (['EPSG:4269', 'EPSG:3857', 'EPSG:3785', 'EPSG:900913', 'EPSG:102113'].indexOf(epsg) !== -1) {
+    //                     // these are the epsg codes that proj4 knows
+    //                     proj_from_str = epsg;
+    //                 } else if (epsg === 'EPSG:3414') {
+    //                     // singapore
+    //                     proj_from_str =
+    //                         '+proj=tmerc +lat_0=1.366666666666667 +lon_0=103.8333333333333 +k=1 +x_0=28001.642 +y_0=38744.572 ' +
+    //                         '+ellps=WGS84 +units=m +no_defs';
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+    // console.log('CRS of geojson data', proj_from_str);
+
+    const proj_from_str = 'WGS84';
+    const proj_to_str = proj_str_a + latitude + proj_str_b + longitude + proj_str_c;
+    const proj_obj: proj4.Converter = proj4(proj_from_str, proj_to_str);
+    return proj_obj;
+}
+/**
+ * TODO MEgre with io_geojson.ts
+ * Converts geojson long lat to cartesian coords
+ * @param long_lat_arr
+ * @param elevation
+ */
+function _xformFromLongLatToXYZ(
+        long_lat_arr: [number, number]|[number, number][], proj_obj: proj4.Converter, elevation: number): Txyz|Txyz[] {
+    if (getArrDepth(long_lat_arr) === 1) {
+        const long_lat: [number, number] = long_lat_arr as [number, number];
+        const xy: [number, number] = proj_obj.forward(long_lat);
+        return [xy[0], xy[1], elevation];
+    } else {
+        long_lat_arr = long_lat_arr as [number, number][];
+        const xyzs_xformed: Txyz[] = [];
+        for (const long_lat of long_lat_arr) {
+            if (long_lat.length >= 2) {
+                const xyz: Txyz = _xformFromLongLatToXYZ(long_lat, proj_obj, elevation) as Txyz;
+                xyzs_xformed.push(xyz);
+            }
+        }
+        return xyzs_xformed as Txyz[];
+    }
+}
 // ================================================================================================
 /**
  * Select entities in the model.
@@ -61,6 +157,240 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
 }
 // ================================================================================================
 /**
+ * Set the geolocation of the Cartesian coordinate system.
+ *
+ * @param __model__
+ * @param lat_long Set the latitude and longitude of the origin of the Cartesian coordinate system. 
+ * @param rot Set the counter-clockwise rotation of the Cartesian coordinate system, in radians.
+ * @param elev Set the elevation of the Cartesian coordinate system above the ground plane.
+ * @returns void
+ */
+ export function Geolocate(
+        __model__: GIModel, 
+        lat_long: Txy, 
+        rot: number,
+        elev: number
+    ): void {
+    // --- Error Check ---
+    const fn_name = 'util.Geoalign';
+    if (__model__.debug) {
+        checkArgs(fn_name, 'lat_long_o', lat_long, [isXY, isNull]);
+        checkArgs(fn_name, 'rot', elev, [isNum, isNull]);
+        checkArgs(fn_name, 'elev', elev, [isNum, isNull]);
+    }
+    // --- Error Check ---
+    const gl_dict = {"latitude": lat_long[0], "longitude": lat_long[1]};
+    if (elev !== null) {
+        gl_dict["elevation"] = elev;
+    }
+    __model__.modeldata.attribs.set.setModelAttribVal("geolocation", gl_dict);
+    let n_vec: Txyz = [0,1,0];
+    if (rot !== null) {
+        n_vec = vecRot(n_vec, [0,0,1], -rot)
+    }
+    __model__.modeldata.attribs.set.setModelAttribVal("north", [n_vec[0], n_vec[1]]);
+}
+// ================================================================================================
+/**
+ * Set the geolocation of the Cartesian coordinate system.
+ * \n 
+ * The Cartesian coordinate system is geolocated by defining two points:
+ * - The latitude-longitude of the Cartesian origin.
+ * - The latitude-longitude of a point on the positive Cartesian X-axis.
+ * \n
+ * @param __model__
+ * @param lat_long_o Set the latitude and longitude of the origin of the Cartesian coordinate
+ * system. 
+ * @param lat_long_x Set the latitude and longitude of a point on the x-axis of the Cartesian
+ * coordinate system. 
+ * @param elev Set the elevation of the Cartesian coordinate system above the ground plane.
+ * @returns void
+ */
+ export function Geoalign(
+        __model__: GIModel, 
+        lat_long_o: Txy,
+        lat_long_x: Txy,
+        elev: number
+    ): void {
+    // --- Error Check ---
+    const fn_name = 'util.Geoalign';
+    if (__model__.debug) {
+        checkArgs(fn_name, 'lat_long_o', lat_long_o, [isXY, isNull]);
+        checkArgs(fn_name, 'lat_long_x', lat_long_x, [isXY, isNull]);
+        checkArgs(fn_name, 'elev', elev, [isNum, isNull]);
+    }
+    // --- Error Check ---
+    const gl_dict = {"latitude": lat_long_o[0], "longitude": lat_long_o[1]};
+    if (elev !== null) {
+        gl_dict["elevation"] = elev;
+    }
+    __model__.modeldata.attribs.set.setModelAttribVal("geolocation", gl_dict);
+    // calc
+    const proj_obj: proj4.Converter = _createProjection(__model__);
+    // origin
+    let xyz_o: Txyz = _xformFromLongLatToXYZ([lat_long_o[1],lat_long_o[0]], proj_obj, 0) as Txyz;
+    // point on x axis
+    let xyz_x: Txyz = _xformFromLongLatToXYZ([lat_long_x[1],lat_long_x[0]], proj_obj, 0) as Txyz;
+    // x axis vector
+    const old_x_vec: Txyz = [1, 0, 0];
+    const new_x_vec: Txyz = vecFromTo(xyz_o, xyz_x);
+    const rot: number = vecAng2(old_x_vec, new_x_vec, [0, 0, 1]);
+    // console.log("rot = ", rot, "x_vec = ", x_vec, xyz_o, xyz_x)
+    // north vector
+    const n_vec: Txyz = vecRot([0,1,0], [0,0,1], -rot);
+    __model__.modeldata.attribs.set.setModelAttribVal("north", [n_vec[0], n_vec[1]]);
+}
+// ================================================================================================
+/**
+ * Transform a coordinate from latitude-longitude Geodesic coordinate to a Cartesian XYZ coordinate,
+ * based on the geolocation of the model.
+ *
+ * @param __model__
+ * @param lat_long Latitude and longitude coordinates. 
+ * @param elev Set the elevation of the Cartesian coordinate system above the ground plane.
+ * @returns XYZ coordinates
+ */
+ export function LatLong2XYZ(
+        __model__: GIModel, 
+        lat_long: Txy,
+        elev: number
+    ): Txyz {
+    // --- Error Check ---
+    const fn_name = 'util.LatLong2XYZ';
+    if (__model__.debug) {
+        checkArgs(fn_name, 'lat_long', lat_long, [isXY, isNull]);
+        checkArgs(fn_name, 'elev', elev, [isNum, isNull]);
+    }
+    // --- Error Check ---
+    const proj_obj: proj4.Converter = _createProjection(__model__);
+    // calculate angle of rotation
+    let rot_matrix: Matrix4 = null;
+    if (__model__.modeldata.attribs.query.hasModelAttrib('north')) {
+        const north: Txy = __model__.modeldata.attribs.get.getModelAttribVal('north') as Txy;
+        if (Array.isArray(north)) {
+            const rot_ang: number = vecAng2([0, 1, 0], [north[0], north[1], 0], [0, 0, 1]);
+            rot_matrix = rotateMatrix([[0, 0, 0], [0, 0, 1]], rot_ang);
+        }
+    }
+    // add feature
+    let xyz: Txyz = _xformFromLongLatToXYZ([lat_long[1],lat_long[0]], proj_obj, elev) as Txyz;
+    // rotate to north
+    if (rot_matrix !== null) {
+        xyz = multMatrix(xyz, rot_matrix);
+    }
+    return xyz;
+
+}
+// ================================================================================================
+/**
+ * Creta a VR hotspot. In the VR Viewer, you can teleport to such hotspots.
+ * \n
+ * @param __model__
+ * @param point A point object to be used for creating hotspots.
+ * @param name A name for the VR hotspots. If `null`, a default name will be created.
+ * @param camera_rot The rotation of the camera direction when you teleport yo the hotspot. The
+ * rotation is specified in degrees, in the counter-clockwise direction, starting from the Y axis.
+ * If `null`, the camera rotation will default to 0.
+ * @returns void
+ */
+ export function VrHotspot(
+        __model__: GIModel, 
+        point: string,
+        name: string,
+        camera_rot: number
+    ): void {
+    // --- Error Check ---
+    const fn_name = 'util.vrHotspot';
+    let ent_arr: TEntTypeIdx;
+    if (__model__.debug) {
+        ent_arr = checkIDs(__model__, fn_name, 'points', point,
+            [ID.isID],
+            [EEntType.POINT]) as TEntTypeIdx;
+        checkArgs(fn_name, 'name', name, [isStr, isNull]);
+        checkArgs(fn_name, 'camera_rot', camera_rot, [isNum, isNull]);
+    } else {
+        ent_arr = idsBreak(point) as TEntTypeIdx;
+    }
+    // --- Error Check ---
+    const ent_i: number = ent_arr[1];
+    if (!__model__.modeldata.attribs.query.hasEntAttrib(EEntType.POINT, "vr")) {
+        __model__.modeldata.attribs.add.addEntAttrib(EEntType.POINT, "vr", EAttribDataTypeStrs.DICT);
+    }
+    let hs_dict = __model__.modeldata.attribs.get.getEntAttribVal(EEntType.POINT, ent_i, "vr");
+    if (hs_dict === undefined) {
+        hs_dict = {}
+    }
+    if (name !== null) {
+        hs_dict["name"] = name;
+    }
+    if (camera_rot !== null) {
+        hs_dict["camera_rotation"] = camera_rot;
+    }
+    __model__.modeldata.attribs.set.setEntAttribVal(EEntType.POINT, ent_i, "vr", hs_dict);
+}
+// ================================================================================================
+/**
+ * Create a VR panorama hotspot. In the VR Viewer, you can teleport to such hotspots.When you enter
+ * the hotspot, the panorama images will be loaded into the view. \n
+ * @param __model__
+ * @param point The point object to be used for creating a panorama. If this point is already
+ * defined as a VR hotspot, then the panorama hotspot will inherit the name and camera angle.
+ * @param back_url The URL of the 360 degree panorama image to be used for the background.
+ * @param Back_rot The rotation of the background panorama image, in degrees, in the
+ * counter-clockwise direction. If `null`, then rotation will be 0.
+ * @param fore_url The URL of the 360 degree panorama image to be used for the foreground. If `null`
+ * then no foreground image will be used.
+ * @param fore_rot The rotation of the forground panorama image, in degrees, in the
+ * counter-clockwise direction. If `null`, then the foreground rotation will be equal to the background rotation.
+ * @returns void
+ */
+ export function VrPanorama(
+        __model__: GIModel, 
+        point: string,
+        back_url: number, back_rot: number,
+        fore_url: number, fore_rot: number
+    ): void {
+    // --- Error Check ---
+    const fn_name = 'util.vrPanorama';
+    let ent_arr: TEntTypeIdx;
+    if (__model__.debug) {
+        ent_arr = checkIDs(__model__, fn_name, 'point', point,
+            [ID.isID],
+            [EEntType.POINT]) as TEntTypeIdx;
+        checkArgs(fn_name, 'back_url', back_url, [isStr]);
+        checkArgs(fn_name, 'back_rot', back_rot, [isNum, isNull]);
+        checkArgs(fn_name, 'fore_url', fore_url, [isStr, isNull]);
+        checkArgs(fn_name, 'fore_rot', fore_rot, [isNum, isNull]);
+    } else {
+        ent_arr = idsBreak(point) as TEntTypeIdx;
+    }
+    // --- Error Check ---
+    const ent_i: number = ent_arr[1];
+    if (!__model__.modeldata.attribs.query.hasEntAttrib(EEntType.POINT, "vr")) {
+        __model__.modeldata.attribs.add.addEntAttrib(EEntType.POINT, "vr", EAttribDataTypeStrs.DICT);
+    }
+    let phs_dict = __model__.modeldata.attribs.get.getEntAttribVal(EEntType.POINT, ent_i, "vr");
+    if (phs_dict === undefined) {
+        phs_dict = {}
+    }
+    phs_dict["background_url"] = back_url;
+    if (back_rot === null) {
+        phs_dict["background_rotation"] = 0;
+    } else {
+        phs_dict["background_rotation"] = back_rot;
+    }
+    if (fore_url !== null) {
+        phs_dict["foreground_url"] = fore_url;
+        if (fore_rot === null) {
+            phs_dict["foreground_rotation"] = phs_dict["background_rotation"];
+        } else {
+            phs_dict["foreground_rotation"] = fore_rot;
+        }
+    }
+    __model__.modeldata.attribs.set.setEntAttribVal(EEntType.POINT, ent_i, "vr", phs_dict);
+}
+// ================================================================================================
+/**
  * Returns am html string representation of the parameters in this model.
  * The string can be printed to the console for viewing.
  *
@@ -83,16 +413,13 @@ export function ParamInfo(__model__: GIModel, __constList__: {}): string {
 export function EntityInfo(__model__: GIModel, entities: TId|TId[]): string {
     entities = arrMakeFlat(entities) as TId[];
     // --- Error Check ---
-    const fn_name = 'collection.Info';
+    const fn_name = 'util.EntityInfo';
     let ents_arr: TEntTypeIdx[];
     if (__model__.debug) {
         ents_arr = checkIDs(__model__, fn_name, 'coll', entities,
             [ID.isID, ID.isIDL1],
             [EEntType.COLL, EEntType.PGON, EEntType.PLINE, EEntType.POINT]) as TEntTypeIdx[];
     } else {
-        // ents_arr = splitIDs(fn_name, 'coll', entities,
-        //     [IDcheckObj.isID, IDcheckObj.isIDList],
-        //     [EEntType.COLL, EEntType.PGON, EEntType.PLINE, EEntType.POINT]) as TEntTypeIdx[];
         ents_arr = idsBreak(entities) as TEntTypeIdx[];
     }
     // --- Error Check ---

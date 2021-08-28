@@ -11,6 +11,91 @@
 **Returns:** void  
   
   
+## Geolocate  
+  
+  
+**Description:** Set the geolocation of the Cartesian coordinate system.  
+  
+**Parameters:**  
+  * *lat_long:* Set the latitude and longitude of the origin of the Cartesian coordinate system.  
+  * *rot:* Set the counter-clockwise rotation of the Cartesian coordinate system, in radians.  
+  * *elev:* Set the elevation of the Cartesian coordinate system above the ground plane.  
+  
+**Returns:** void  
+  
+  
+## Geoalign  
+  
+  
+**Description:** Set the geolocation of the Cartesian coordinate system.
+
+
+The Cartesian coordinate system is geolocated by defining two points:
+- The latitude-longitude of the Cartesian origin.
+- The latitude-longitude of a point on the positive Cartesian X-axis.
+
+  
+  
+**Parameters:**  
+  * *lat_long_o:* Set the latitude and longitude of the origin of the Cartesian coordinate
+system.  
+  * *lat_long_x:* Set the latitude and longitude of a point on the x-axis of the Cartesian
+coordinate system.  
+  * *elev:* Set the elevation of the Cartesian coordinate system above the ground plane.  
+  
+**Returns:** void  
+  
+  
+## LatLong2XYZ  
+  
+  
+**Description:** Transform a coordinate from latitude-longitude Geodesic coordinate to a Cartesian XYZ coordinate,
+based on the geolocation of the model.  
+  
+**Parameters:**  
+  * *lat_long:* Latitude and longitude coordinates.  
+  * *elev:* Set the elevation of the Cartesian coordinate system above the ground plane.  
+  
+**Returns:** XYZ coordinates  
+  
+  
+## VrHotspot  
+  
+  
+**Description:** Creta a VR hotspot. In the VR Viewer, you can teleport to such hotspots.
+
+  
+  
+**Parameters:**  
+  * *point:* A point object to be used for creating hotspots.  
+  * *name:* A name for the VR hotspots. If `null`, a default name will be created.  
+  * *camera_rot:* The rotation of the camera direction when you teleport yo the hotspot. The
+rotation is specified in degrees, in the counter-clockwise direction, starting from the Y axis.
+If `null`, the camera rotation will default to 0.  
+  
+**Returns:** void  
+  
+  
+## VrPanorama  
+  
+  
+**Description:** Create a VR panorama hotspot. In the VR Viewer, you can teleport to such hotspots.When you enter
+the hotspot, the panorama images will be loaded into the view. 
+  
+  
+**Parameters:**  
+  * *point:* The point object to be used for creating a panorama. If this point is already
+defined as a VR hotspot, then the panorama hotspot will inherit the name and camera angle.  
+  * *back_url:* The URL of the 360 degree panorama image to be used for the background.  
+  * *back_rot:* undefined  
+  * *fore_url:* The URL of the 360 degree panorama image to be used for the foreground. If `null`
+then no foreground image will be used.  
+  * *fore_rot:* The rotation of the forground panorama image, in degrees, in the
+counter-clockwise direction. If `null`, then the foreground rotation will be equal to the background rotation.  
+  
+**Returns:** void  
+  
+  
 ## ParamInfo  
   
   
