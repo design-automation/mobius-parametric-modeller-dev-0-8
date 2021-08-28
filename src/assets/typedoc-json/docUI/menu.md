@@ -221,7 +221,7 @@ Mobius Modeller interface. The 'Developer Mode' settings are shown below.
 ![Developer Mode](assets/typedoc-json/docUI/imgs/publish_settings_developer.png)
 
 In 'Developer Mode', you can set:
-* _Active Tab_: The active scripting pane, either the Dashboard or the Editor. For example, if you
+* _Active Pane_: The active scripting pane, either the Dashboard or the Editor. For example, if you
   want the person viewing your script to initially see the Editor pane open, then you can select
   'Editor' from the list.
 * _Select Node_: The selected node in the flowchart. By default, the selected node will be the `End`

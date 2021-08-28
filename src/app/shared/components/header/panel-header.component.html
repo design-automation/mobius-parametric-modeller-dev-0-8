@@ -170,7 +170,7 @@
             <label for='showPage2'>Developer Mode</label><br>
             <hr>
             <ng-container *ngIf='publishUrlSettings.navMode !== "publish"; else publish_template'>
-                <label for='showPageNav1'>Active Tab</label><br>
+                <label for='showPageNav1'>Active Pane</label><br>
                 <input id='showPageNav1' type='radio' name='navPage' value='dashboard' [(ngModel)]='publishUrlSettings.navPage'/>
                 <label for='showPageNav1'>Dashboard</label><br>
                 <input id='showPageNav2' type='radio' name='navPage' value='flowchart' [(ngModel)]='publishUrlSettings.navPage' />
