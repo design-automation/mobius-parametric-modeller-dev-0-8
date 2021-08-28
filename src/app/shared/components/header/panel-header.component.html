@@ -59,7 +59,7 @@
         <div class='dropdownContainer'>
             <div id="mobiusDropdownMenu">
                 <button onclick="document.getElementById('newfile').click();"
-                title="Create New Script"> 
+                title="Create a new Möbius script file"> 
                     <mat-icon>rotate_left</mat-icon> 
                     New File
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "new file")'>
@@ -68,7 +68,7 @@
                 </button>
                 <br>
                 <button (click)="loadFile()"
-                title="Load Script File from Computer">
+                title="Load Möbius script file from computer">
                     <mat-icon>launch</mat-icon>
                     Load File 
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "load file")'>
@@ -77,7 +77,7 @@
                 </button>
                 <br>
                 <button onclick="document.getElementById('savefile').click();"
-                title="Save Script File to Computer">
+                title="Save Möbius script file to computer">
                     <mat-icon>save_alt</mat-icon>
                     Save File
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "save file")'>
@@ -86,7 +86,7 @@
                 </button>
                 <br>
                 <button (click)="openHeaderDialog($event, 'savels')"
-                title="Save Script File to The local Storage">
+                title="Save Möbius script file to Local Storage">
                     <mat-icon>input</mat-icon>
                     Save to LS
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "save to ls")'>
@@ -95,7 +95,7 @@
                 </button>
                 <br>
                 <button onclick="document.getElementById('savejavascript').click();"
-                title="Save Javascript Code to Computer">
+                title="Save Javascript code to computer">
                     <mat-icon>save</mat-icon>
                     Save JS
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "save js")'>
@@ -104,7 +104,7 @@
                 </button>
                 <br>
                 <button onclick="document.getElementById('savedata').click();"
-                title="Save Static Model to Computer">
+                title="Save a static model to computer">
                     <mat-icon>play_for_work</mat-icon>
                     Save Model
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "save model")'>
@@ -113,7 +113,7 @@
                 </button>
                 <br>
                 <button (click)="openHeaderDialog($event, 'backup')"
-                title="Manage Files in Local Storage">
+                title="Manage files in Local Storage">
                     <mat-icon>autorenew</mat-icon>
                     Local Storage 
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "local storage")'>
@@ -122,7 +122,7 @@
                 </button>
                 <br>
                 <button (click)="openHeaderDialog($event, 'publish')"
-                title="Generate Möbius view url from url of .mob file">
+                title="Publish a Möbius script">
                     <mat-icon>link</mat-icon>
                     Publish
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "publish")'>
@@ -131,7 +131,7 @@
                 </button>
                 <br>
                 <button (click)="openHeaderDialog($event, 'settings')"
-                title="Generate Möbius view url from url of .mob file">
+                title="Möbius Settings">
                     <mat-icon class='mat-icon-svg' svgIcon="settings"></mat-icon>
                     Settings
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "settings")'>
