@@ -441,14 +441,17 @@ export class DataAframe {
     updateCamPos() {
         const pts = <string[]> Modules.query.Get(this.model, Modules.query._EEntType.POINT, null);
         const pos = Modules.attrib.Get(this.model, Modules.query.Get(this.model, Modules.query._EEntType.POSI, pts), 'xyz');
-        const ptAttribs = Modules.attrib.Get(this.model, pts, 'vr');
-        this.camPosList = [{
-            name: 'Walk',
+        const ptAttribs = Modules.attrib.Get(this.model, pts, 'vr_hotspot');
+        this.camPosList = [
+            {
+            name: 'Default',
             value: null
-        }, {
-            name: 'Edit POV',
-            value: null
-        }];
+            }, 
+            // {
+            //     name: 'Edit POV',
+            //     value: null
+            // }
+        ];
         for (let i = 0; i < pts.length; i++) {
             if (!ptAttribs[i]) { continue; }
             const cam = JSON.parse(JSON.stringify(ptAttribs[i]));

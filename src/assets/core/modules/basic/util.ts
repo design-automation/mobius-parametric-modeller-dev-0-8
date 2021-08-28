@@ -92,10 +92,10 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
     }
     // --- Error Check ---
     const ent_i: number = ent_arr[1];
-    if (!__model__.modeldata.attribs.query.hasEntAttrib(EEntType.POINT, "vr")) {
-        __model__.modeldata.attribs.add.addEntAttrib(EEntType.POINT, "vr", EAttribDataTypeStrs.DICT);
+    if (!__model__.modeldata.attribs.query.hasEntAttrib(EEntType.POINT, "vr_hotspot")) {
+        __model__.modeldata.attribs.add.addEntAttrib(EEntType.POINT, "vr_hotspot", EAttribDataTypeStrs.DICT);
     }
-    let hs_dict = __model__.modeldata.attribs.get.getEntAttribVal(EEntType.POINT, ent_i, "vr");
+    let hs_dict = __model__.modeldata.attribs.get.getEntAttribVal(EEntType.POINT, ent_i, "vr_hotspot");
     if (hs_dict === undefined) {
         hs_dict = {}
     }
@@ -105,7 +105,7 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
     if (camera_rot !== null) {
         hs_dict["camera_rotation"] = camera_rot;
     }
-    __model__.modeldata.attribs.set.setEntAttribVal(EEntType.POINT, ent_i, "vr", hs_dict);
+    __model__.modeldata.attribs.set.setEntAttribVal(EEntType.POINT, ent_i, "vr_hotspot", hs_dict);
 }
 // ================================================================================================
 /**
@@ -145,10 +145,10 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
     }
     // --- Error Check ---
     const ent_i: number = ent_arr[1];
-    if (!__model__.modeldata.attribs.query.hasEntAttrib(EEntType.POINT, "vr")) {
-        __model__.modeldata.attribs.add.addEntAttrib(EEntType.POINT, "vr", EAttribDataTypeStrs.DICT);
+    if (!__model__.modeldata.attribs.query.hasEntAttrib(EEntType.POINT, "vr_hotspot")) {
+        __model__.modeldata.attribs.add.addEntAttrib(EEntType.POINT, "vr_hotspot", EAttribDataTypeStrs.DICT);
     }
-    let phs_dict = __model__.modeldata.attribs.get.getEntAttribVal(EEntType.POINT, ent_i, "vr");
+    let phs_dict = __model__.modeldata.attribs.get.getEntAttribVal(EEntType.POINT, ent_i, "vr_hotspot");
     if (phs_dict === undefined) {
         phs_dict = {}
     }
@@ -166,7 +166,7 @@ function _flatten(arrs: string|string[]|string[][]): [string[], number[][]] {
             phs_dict["foreground_rotation"] = fore_rot;
         }
     }
-    __model__.modeldata.attribs.set.setEntAttribVal(EEntType.POINT, ent_i, "vr", phs_dict);
+    __model__.modeldata.attribs.set.setEntAttribVal(EEntType.POINT, ent_i, "vr_hotspot", phs_dict);
 }
 // ================================================================================================
 /**
