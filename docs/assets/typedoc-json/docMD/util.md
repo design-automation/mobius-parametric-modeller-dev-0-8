@@ -11,54 +11,6 @@
 **Returns:** void  
   
   
-## Geolocate  
-  
-  
-**Description:** Set the geolocation of the Cartesian coordinate system.  
-  
-**Parameters:**  
-  * *lat_long:* Set the latitude and longitude of the origin of the Cartesian coordinate system.  
-  * *rot:* Set the counter-clockwise rotation of the Cartesian coordinate system, in radians.  
-  * *elev:* Set the elevation of the Cartesian coordinate system above the ground plane.  
-  
-**Returns:** void  
-  
-  
-## Geoalign  
-  
-  
-**Description:** Set the geolocation of the Cartesian coordinate system.
-
-
-The Cartesian coordinate system is geolocated by defining two points:
-- The latitude-longitude of the Cartesian origin.
-- The latitude-longitude of a point on the positive Cartesian X-axis.
-
-  
-  
-**Parameters:**  
-  * *lat_long_o:* Set the latitude and longitude of the origin of the Cartesian coordinate
-system.  
-  * *lat_long_x:* Set the latitude and longitude of a point on the x-axis of the Cartesian
-coordinate system.  
-  * *elev:* Set the elevation of the Cartesian coordinate system above the ground plane.  
-  
-**Returns:** void  
-  
-  
-## LatLong2XYZ  
-  
-  
-**Description:** Transform a coordinate from latitude-longitude Geodesic coordinate to a Cartesian XYZ coordinate,
-based on the geolocation of the model.  
-  
-**Parameters:**  
-  * *lat_long:* Latitude and longitude coordinates.  
-  * *elev:* Set the elevation of the Cartesian coordinate system above the ground plane.  
-  
-**Returns:** XYZ coordinates  
-  
-  
 ## VrHotspot  
   
   
