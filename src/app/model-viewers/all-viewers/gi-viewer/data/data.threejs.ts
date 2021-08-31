@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GIModel } from '@libs/geo-info/GIModel';
 import { IThreeJS } from '@libs/geo-info/ThreejsJSON';
-import { EEntTypeStr, EEntType } from '@libs/geo-info/common';
+import { EEntTypeStr, EEntType, EFilterOperatorTypes, EAttribNames } from '@libs/geo-info/common';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import { DataService } from '@services';
 import { Vector } from '@assets/core/modules/basic/calc';
@@ -181,7 +181,7 @@ export class DataThreejs extends DataThreejsLookAt {
 
         this._addPosis(threejs_data.posis_indices, posis_xyz_buffer, this.settings.colors.position, this.settings.positions.size);
 
-        this._addPointLabels(model);
+        this._addPlaneLabels(model);
 
     }
 
@@ -664,7 +664,101 @@ export class DataThreejs extends DataThreejsLookAt {
     /**
      * Add threejs points to the scene
      */
-    private _addPointLabels(model: GIModel): void {
+     private _addPlaneLabels(model: GIModel): void {
+        let pgon, pgon_label, coords_attrib;
+        try {
+            pgon = model.modeldata.geom.query.getEnts(EEntType.PGON);
+            pgon_label = <any> model.modeldata.attribs.get.getEntAttribVal(EEntType.PGON, pgon, 'text')
+            coords_attrib = model.modeldata.attribs.attribs_maps.get(model.modeldata.active_ssid).ps.get(EAttribNames.COORDS);
+        } catch (ex) {
+            return;
+        }
+        const pgonTextShapes = [];
+        for (let i = 0; i < pgon_label.length; i ++) {
+            if (!pgon_label[i]) { continue; }
+            const posi = model.modeldata.geom.nav.navAnyToPosi(EEntType.PGON, pgon[i]);
+            if (posi.length > 3 || !pgon_label[i].text) { continue; }
+
+            const labelText = pgon_label[i].text;
+            const labelSize = pgon_label[i].size || 20;
+
+            const shape = this._text_font.generateShapes( labelText, labelSize);
+            const geom = new THREE.ShapeBufferGeometry(shape);
+
+            const lengthCheck = [];
+            // @ts-ignore
+            const coords = <any> posi.map(p => new THREE.Vector3(...coords_attrib.getEntVal(p)));
+            for (let j = 0; j < coords.length; j++) {
+                const p0 = coords[j];
+                const p1 = (j === posi.length - 1) ? coords[0] : coords[j + 1];
+                lengthCheck.push(p0.distanceToSquared(p1));
+            }
+            if (lengthCheck[1] > lengthCheck[2]) {
+                [lengthCheck[1], lengthCheck[2]] = [lengthCheck[2], lengthCheck[1]];
+                [coords[0], coords[1]] = [coords[1], coords[0]];
+            }
+            if (lengthCheck[0] > lengthCheck[1]) {
+                [lengthCheck[0], lengthCheck[1]] = [lengthCheck[1], lengthCheck[0]];
+                [coords[0], coords[2]] = [coords[2], coords[0]];
+            }
+            if (lengthCheck[1] > lengthCheck[2]) {
+                [lengthCheck[1], lengthCheck[2]] = [lengthCheck[2], lengthCheck[1]];
+                [coords[0], coords[1]] = [coords[1], coords[0]];
+            }
+            const pgonFromVec = new THREE.Vector3(0, 0, 1);
+            const pgonCheckVecFrom = new THREE.Vector3(1, 0, 0);
+            const labelPos = coords[1];
+            const pVec1 = new THREE.Vector3().copy(coords[2]).sub(coords[1]);
+            const pVec2 = new THREE.Vector3().copy(coords[0]).sub(coords[1]);
+            const toVec = new THREE.Vector3().copy(pVec1).cross(pVec2).normalize();
+
+            if (pVec1.x !== 0 || pVec1.y !== 0) {
+                const checkVecTo = new THREE.Vector3(pVec1.x, pVec1.y, 0).normalize();
+                const rotateQuat = new THREE.Quaternion();
+                rotateQuat.setFromUnitVectors(pgonCheckVecFrom, checkVecTo);
+                const rotateMat = new THREE.Matrix4(); // create one and reuse it
+                rotateMat.makeRotationFromQuaternion(rotateQuat);
+                geom.applyMatrix4(rotateMat);
+            }
+
+            const quaternion = new THREE.Quaternion();
+            quaternion.setFromUnitVectors(pgonFromVec, toVec);
+            const matrix = new THREE.Matrix4(); // create one and reuse it
+            matrix.makeRotationFromQuaternion(quaternion);
+            geom.applyMatrix4(matrix);
+
+            geom.translate(labelPos.x, labelPos.y, labelPos.z);
+
+            let color = new THREE.Color(0);
+            if (pgon_label[i].color  && pgon_label[i].color.length === 3) {
+                color = new THREE.Color(`rgb(${pgon_label[i].color[0]}, ${pgon_label[i].color[1]}, ${pgon_label[i].color[2]})`);
+            }
+            const colors_buffer = new THREE.Float32BufferAttribute(new Uint8Array(geom.attributes.position.count * 3), 3);
+            if (pgon_label[i].color && pgon_label[i].color.length === 3) {
+                for (let k = 0; k < colors_buffer.count; k++) {
+                    colors_buffer.setXYZ(k, pgon_label[i].color[0], pgon_label[i].color[1], pgon_label[i].color[2]);
+                }
+            }
+            geom.setAttribute('color', colors_buffer);
+            pgonTextShapes.push(geom);
+        }
+        if (pgonTextShapes.length === 0) { return; }
+        const pgonMergedGeom = BufferGeometryUtils.mergeBufferGeometries(pgonTextShapes);
+        const pgonText = new THREE.Mesh(pgonMergedGeom , new THREE.MeshBasicMaterial( {
+            transparent: false,
+            side: THREE.DoubleSide,
+            vertexColors: true
+        }));
+        this.scene.add(pgonText);
+        // this.renderer.render(this.scene, this.camera);
+        this.renderer.render(this.scene, this.camera);
+    }
+
+    // ============================================================================
+    /**
+     * Add threejs points to the scene
+     */
+     private _addPointLabels(model: GIModel): void {
         const labels = model.modeldata.attribs.get.getModelAttribVal('labels');
         if (!labels || !Array.isArray(labels) || labels.length === 0) {
             return;
