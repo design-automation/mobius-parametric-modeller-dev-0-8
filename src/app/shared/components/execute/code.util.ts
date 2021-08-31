@@ -1,8 +1,6 @@
 import { INode } from '@models/node';
 import { IProcedure, ProcedureTypes, IFunction } from '@models/procedure';
 import { IPortInput, InputType } from '@models/port';
-import { Observable } from 'rxjs';
-import * as circularJSON from 'circular-json';
 import { _parameterTypes } from '@assets/core/_parameterTypes';
 
 let _terminateCheck: string;
@@ -594,31 +592,31 @@ export class CodeUtils {
         return result;
     }
 
-    static loadFile(f) {
-        const stream = Observable.create(observer => {
-          const request = new XMLHttpRequest();
+    // static loadFile(f) {
+    //     const stream = Observable.create(observer => {
+    //       const request = new XMLHttpRequest();
 
-          request.open('GET', f.download_url);
-          request.onload = () => {
-              if (request.status === 200) {
-                  const fl = circularJSON.parse(request.responseText);
-                  observer.next(fl);
-                  observer.complete();
-              } else {
-                  observer.error('File Retrieval Error');
-              }
-          };
+    //       request.open('GET', f.download_url);
+    //       request.onload = () => {
+    //           if (request.status === 200) {
+    //               const fl = circularJSON.parse(request.responseText);
+    //               observer.next(fl);
+    //               observer.complete();
+    //           } else {
+    //               observer.error('File Retrieval Error');
+    //           }
+    //       };
 
-          request.onerror = () => {
-          observer.error('File Retrieval Error');
-          };
-          request.send();
-        });
+    //       request.onerror = () => {
+    //       observer.error('File Retrieval Error');
+    //       };
+    //       request.send();
+    //     });
 
-        stream.subscribe(loadeddata => {
-          return loadeddata;
-        });
-    }
+    //     stream.subscribe(loadeddata => {
+    //       return loadeddata;
+    //     });
+    // }
 
     // static mergeInputs(models): any {
     //     const result = _parameterTypes.newFn();

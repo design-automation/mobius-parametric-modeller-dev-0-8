@@ -1,5 +1,5 @@
 import { GIModel } from '@libs/geo-info/GIModel';
-import { isDevMode, ViewChild, HostListener, OnChanges, OnDestroy } from '@angular/core';
+import { OnChanges, OnDestroy, DoCheck } from '@angular/core';
 // import @angular stuff
 import { Component, Input, OnInit } from '@angular/core';
 // import app services
@@ -19,11 +19,14 @@ import { DefaultSettings } from '../../gi-viewer/gi-viewer.settings';
     templateUrl: './three-geo-viewer.component.html',
     styleUrls: ['./three-geo-viewer.component.scss'],
 })
-export class ThreeGeoComponent implements OnInit, OnChanges, OnDestroy {
+export class ThreeGeoComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
     // model data passed to the viewer
     @Input() model: GIModel;
     @Input() nodeIndex: number;
 
+    private container;
+    private _width;
+    private _height;
     public backup_settings: GeoSettings;
     public colorLayerList: string[];
     public elevLayerList: string[];
@@ -114,6 +117,46 @@ export class ThreeGeoComponent implements OnInit, OnChanges, OnDestroy {
             }
         }
     }
+
+    /**
+     * Called when anything changes
+     */
+     ngDoCheck() {
+        if (!this.container) {
+            this.container = <HTMLDivElement> document.getElementById('geo-container');
+            if (!this.container) {
+                console.error('No container in Three Viewer');
+                return;
+            }
+        }
+        const width: number = this.container.offsetWidth;
+        const height: number = this.container.offsetHeight;
+
+        // this is when dimensions change
+        if (width !== this._width || height !== this._height) {
+            this._width = width;
+            this._height = height;
+            const data = this.dataService.getGeoScene();
+            // threejsScene.camera.aspect = this._width / this._height;
+            // threejsScene.camera.updateProjectionMatrix();
+            // threejsScene.renderer.setSize(this._width, this._height);
+            data.view.resize(width, height);
+            data.view.notifyChange();
+
+            // setTimeout(() => {
+            //     const aspect = this._width / this._height;
+            //     this._data_threejs.perspCam.aspect = this._width / this._height;
+            //     this._data_threejs.perspCam.updateProjectionMatrix();
+            //     this._data_threejs.renderer.setSize(this._width, this._height);
+
+            //     this._data_threejs.orthoCam.left = -this._data_threejs.orthoCam.top * aspect;
+            //     this._data_threejs.orthoCam.right = this._data_threejs.orthoCam.top * aspect;
+            //     this._data_threejs.orthoCam.updateProjectionMatrix();
+            // }, 10);
+        }
+    }
+
+
 
     /**
      * Check whether the current settings has same structure with

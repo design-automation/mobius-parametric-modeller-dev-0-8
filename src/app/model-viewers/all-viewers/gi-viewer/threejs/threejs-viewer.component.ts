@@ -795,11 +795,7 @@ export class ThreejsViewerComponent implements OnInit, DoCheck, OnChanges, OnDes
                         break;
                     }
                 }
-                console.log('intsObj', intsObj)
                 this.selectObj(intsObj);
-                // setTimeout(() => {
-                //     this.activateRender();
-                // }, 50);
             }
         } else {
             if (event.target.tagName === 'CANVAS') {
@@ -1221,8 +1217,6 @@ export class ThreejsViewerComponent implements OnInit, DoCheck, OnChanges, OnDes
                 this.showMessages('Please choose an Entity type.', 'custom');
                 break;
         }
-        // this.activateRender();
-        // this.render();
     }
 
     private showMessages(msg: string, mode: string = 'notice') {
