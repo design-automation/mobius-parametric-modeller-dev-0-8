@@ -55,7 +55,8 @@ function replaceText(text) {
     for (let i = 0; i < splittedText.length; i++) {
         for (const repText in docReplace) {
             if (splittedText[i] === repText) {
-                splittedText[i] =  `<abbr title=\`${docReplace[repText]}\`>${splittedText[i]}</abbr>`
+                splittedText[i] =  `<abbr title=\'${docReplace[repText]}\'>${splittedText[i]}</abbr>`
+                console.log('~~~~~~~~~~~', splittedText[i])
                 break;
             }
         }

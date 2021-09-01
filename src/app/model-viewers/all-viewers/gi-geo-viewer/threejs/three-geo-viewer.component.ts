@@ -137,22 +137,8 @@ export class ThreeGeoComponent implements OnInit, OnChanges, OnDestroy, DoCheck 
             this._width = width;
             this._height = height;
             const data = this.dataService.getGeoScene();
-            // threejsScene.camera.aspect = this._width / this._height;
-            // threejsScene.camera.updateProjectionMatrix();
-            // threejsScene.renderer.setSize(this._width, this._height);
             data.view.resize(width, height);
             data.view.notifyChange();
-
-            // setTimeout(() => {
-            //     const aspect = this._width / this._height;
-            //     this._data_threejs.perspCam.aspect = this._width / this._height;
-            //     this._data_threejs.perspCam.updateProjectionMatrix();
-            //     this._data_threejs.renderer.setSize(this._width, this._height);
-
-            //     this._data_threejs.orthoCam.left = -this._data_threejs.orthoCam.top * aspect;
-            //     this._data_threejs.orthoCam.right = this._data_threejs.orthoCam.top * aspect;
-            //     this._data_threejs.orthoCam.updateProjectionMatrix();
-            // }, 10);
         }
     }
 

@@ -23,10 +23,6 @@ function postloadSkyFGImg() {
     sky.setAttribute('src', '');
     sky.setAttribute('src', '#aframe_sky_foreground_img');
 }
-function resizeScene() {
-    const scene = document.getElementById('aframe_scene');
-    if (!scene) { return; }
-}
 /**
  * Aframe data
  */
@@ -224,7 +220,6 @@ export class DataAframe {
 
         this.updateGround();
         this.updateHUD();
-        resizeScene();
     }
 
     updateLight(threeJSGroup) {
