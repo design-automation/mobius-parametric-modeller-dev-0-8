@@ -37792,7 +37792,7 @@
               "kindString": "Call signature",
               "flags": {},
               "comment": {
-                "shortText": "Removes items in a list.\n\\n\nIf @param method is set to 'index', then @param item should be the index of the item to be replaced.\nNegative indexes are allowed.\nIf @param method is not set to 'index', then @param item should be the value.",
+                "shortText": "Removes items in a list.\n\\n\nIf method is set to 'index', then item should be the index of the item to be replaced.\nNegative indexes are allowed.\nIf method is not set to 'index', then item should be the value.",
                 "returns": "void\n"
               },
               "parameters": [
@@ -37873,7 +37873,7 @@
               "kindString": "Call signature",
               "flags": {},
               "comment": {
-                "shortText": "Replaces items in a list.\n\\n\nIf @param method is set to 'index', then @param old_item should be the index of the item to be replaced. Negative indexes are allowed.\nIf @param method is not set to 'index', then @param old_item should be the value.",
+                "shortText": "Replaces items in a list.\n\\n\nIf method is set to 'index', then old_item should be the index of the item to be replaced. Negative indexes are allowed.\nIf method is not set to 'index', then old_item should be the value.",
                 "returns": "void\n"
               },
               "parameters": [
@@ -47348,7 +47348,7 @@
               "kindString": "Call signature",
               "flags": {},
               "comment": {
-                "shortText": "Adds vertices to polyline and polygons at all locations where egdes intersect one another.\nThe vertices are welded.\nThis can be useful for creating networks that can be used for shortest path calculations.\n~\nThe input polyline and polygons are copied.\n~",
+                "shortText": "Adds vertices to polyline and polygons at all locations where egdes intersect one another.\nThe vertices are welded.\nThis can be useful for creating networks that can be used for shortest path calculations.\n\\n\nThe input polyline and polygons are copied.\n\\n",
                 "returns": "Copies of the input polyline and polygons, stiched.\n"
               },
               "parameters": [
@@ -50996,7 +50996,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 598,
+                  "line": 597,
                   "character": 10
                 }
               ],
@@ -51013,7 +51013,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 617,
+                  "line": 616,
                   "character": 13
                 }
               ],
@@ -51030,7 +51030,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 618,
+                  "line": 617,
                   "character": 16
                 }
               ],
@@ -51047,7 +51047,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 615,
+                  "line": 614,
                   "character": 13
                 }
               ],
@@ -51064,7 +51064,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 608,
+                  "line": 607,
                   "character": 11
                 }
               ],
@@ -51081,7 +51081,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 603,
+                  "line": 602,
                   "character": 11
                 }
               ],
@@ -51098,7 +51098,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 616,
+                  "line": 615,
                   "character": 11
                 }
               ],
@@ -51115,7 +51115,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 609,
+                  "line": 608,
                   "character": 10
                 }
               ],
@@ -51132,7 +51132,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 614,
+                  "line": 613,
                   "character": 11
                 }
               ],
@@ -51149,7 +51149,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 607,
+                  "line": 606,
                   "character": 11
                 }
               ],
@@ -51166,7 +51166,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 613,
+                  "line": 612,
                   "character": 16
                 }
               ],
@@ -51183,7 +51183,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 606,
+                  "line": 605,
                   "character": 12
                 }
               ],
@@ -51200,7 +51200,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 612,
+                  "line": 611,
                   "character": 17
                 }
               ],
@@ -51217,7 +51217,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 605,
+                  "line": 604,
                   "character": 12
                 }
               ],
@@ -51234,7 +51234,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 611,
+                  "line": 610,
                   "character": 17
                 }
               ],
@@ -51251,7 +51251,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 599,
+                  "line": 598,
                   "character": 11
                 }
               ],
@@ -51268,7 +51268,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 610,
+                  "line": 609,
                   "character": 11
                 }
               ],
@@ -51285,7 +51285,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 601,
+                  "line": 600,
                   "character": 18
                 }
               ],
@@ -51302,7 +51302,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 600,
+                  "line": 599,
                   "character": 16
                 }
               ],
@@ -51319,7 +51319,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 602,
+                  "line": 601,
                   "character": 11
                 }
               ],
@@ -51336,7 +51336,7 @@
               "sources": [
                 {
                   "fileName": "core/modules/basic/query.ts",
-                  "line": 604,
+                  "line": 603,
                   "character": 11
                 }
               ],
@@ -51375,7 +51375,7 @@
           "sources": [
             {
               "fileName": "core/modules/basic/query.ts",
-              "line": 597,
+              "line": 596,
               "character": 27
             }
           ]
@@ -52240,12 +52240,12 @@
               "kindString": "Call signature",
               "flags": {},
               "comment": {
-                "shortText": "Checks the type of an entity.\n\\n\nFor is_used_posi, returns true if the entity is a posi, and it is used by at least one vertex.\nFor is_unused_posi, it returns the opposite of is_used_posi.\nFor is_object, returns true if the entity is a point, a polyline, or a polygon.\nFor is_topology, returns true if the entity is a vertex, an edge, a wire, or a face.\nFor is_point_topology, is_polyline_topology, and is_polygon_topology, returns true\nif the entity is a topological entity, and it is part of an object of the specified type.\n\\n\nFor is_open, returns true if the entity is a wire or polyline and is open. For is_closed, it returns the opposite of is_open.\nFor is_hole, returns ture if the entity is a wire, and it defines a hole in a face.\nFor has_holes, returns true if the entity is a face or polygon, and it has holes.\nFor has_no_holes, it returns the opposite of has_holes.",
+                "shortText": "Checks the type of an entity.\n\\n\n- For is\\_used\\_posi, returns true if the entity is a posi, and it is used by at least one vertex.\n- For is\\_unused\\_posi, it returns the opposite of is\\_used\\_posi.\n- For is\\_object, returns true if the entity is a point, a polyline, or a polygon.\n- For is\\_topology, returns true if the entity is a vertex, an edge, a wire, or a face.\n- For is\\_point\\_topology, is\\_polyline\\_topology, and is\\_polygon\\_topology, returns true.\nif the entity is a topological entity, and it is part of an object of the specified type.\n- For is\\_open, returns true if the entity is a wire or polyline and is open. For is\\_closed, it returns the opposite of is\\_open.\n- For is\\_hole, returns true if the entity is a wire, and it defines a hole in a face.\n- For has\\_holes, returns true if the entity is a face or polygon, and it has holes.\n- For has\\_no\\_holes, it returns the opposite of has\\_holes.",
                 "returns": "Boolean or list of boolean in input sequence.",
                 "tags": [
                   {
                     "tag": "example",
-                    "text": "query.Type([polyline1, polyline2, polygon1], is_polyline )"
+                    "text": "query.Type([polyline1, polyline2, polygon1], is\\_polyline )"
                   },
                   {
                     "tag": "example_info",
@@ -52332,7 +52332,7 @@
           "sources": [
             {
               "fileName": "core/modules/basic/query.ts",
-              "line": 584,
+              "line": 583,
               "character": 20
             }
           ]
@@ -52438,7 +52438,7 @@
           "sources": [
             {
               "fileName": "core/modules/basic/query.ts",
-              "line": 620,
+              "line": 619,
               "character": 16
             }
           ]
@@ -53209,7 +53209,7 @@
           "sources": [
             {
               "fileName": "core/modules/basic/query.ts",
-              "line": 701,
+              "line": 700,
               "character": 20
             }
           ]
@@ -53334,7 +53334,7 @@
           "sources": [
             {
               "fileName": "core/modules/basic/query.ts",
-              "line": 676,
+              "line": 675,
               "character": 19
             }
           ]
@@ -53387,7 +53387,7 @@
           "sources": [
             {
               "fileName": "core/modules/basic/query.ts",
-              "line": 689,
+              "line": 688,
               "character": 16
             }
           ]
@@ -53440,7 +53440,7 @@
           "sources": [
             {
               "fileName": "core/modules/basic/query.ts",
-              "line": 638,
+              "line": 637,
               "character": 15
             }
           ]
@@ -53493,7 +53493,7 @@
           "sources": [
             {
               "fileName": "core/modules/basic/query.ts",
-              "line": 668,
+              "line": 667,
               "character": 20
             }
           ]
@@ -53546,7 +53546,7 @@
           "sources": [
             {
               "fileName": "core/modules/basic/query.ts",
-              "line": 660,
+              "line": 659,
               "character": 21
             }
           ]
@@ -53599,7 +53599,7 @@
           "sources": [
             {
               "fileName": "core/modules/basic/query.ts",
-              "line": 652,
+              "line": 651,
               "character": 21
             }
           ]
@@ -53652,7 +53652,7 @@
           "sources": [
             {
               "fileName": "core/modules/basic/query.ts",
-              "line": 645,
+              "line": 644,
               "character": 16
             }
           ]
@@ -53705,7 +53705,7 @@
           "sources": [
             {
               "fileName": "core/modules/basic/query.ts",
-              "line": 625,
+              "line": 624,
               "character": 20
             }
           ]
@@ -54046,7 +54046,7 @@
           "sources": [
             {
               "fileName": "core/modules/basic/query.ts",
-              "line": 709,
+              "line": 708,
               "character": 14
             }
           ]
@@ -59812,7 +59812,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Compares two models.\nChecks that every entity in this model also exists in the other model.\n~\nAdditional entitis in the other model will not affect the score.\nAttributes at the model level are ignored.\n~\nFor grading, this model is assumed to be the answer model, and the other model is assumed to be\nthe model submitted by the student.\n~\nBoth models will be modified in the process of cpmparing.\n~"
+                    "shortText": "Compares two models.\nChecks that every entity in this model also exists in the other model.\n\\n\nAdditional entitis in the other model will not affect the score.\nAttributes at the model level are ignored.\n\\n\nFor grading, this model is assumed to be the answer model, and the other model is assumed to be\nthe model submitted by the student.\n\\n\nBoth models will be modified in the process of cpmparing.\n\\n"
                   },
                   "parameters": [
                     {
@@ -61010,7 +61010,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Compares two models.\nChecks that every entity in this model also exists in the other model.\n~\nAdditional entitis in the other model will not affect the score.\nAttributes at the model level are ignored except for the `material` attributes.\n~\nFor grading, this model is assumed to be the answer model, and the other model is assumed to be\nthe model submitted by the student.\n~\nBoth models will be modified in the process of cpmparing.\n~"
+                    "shortText": "Compares two models.\nChecks that every entity in this model also exists in the other model.\n\\n\nAdditional entitis in the other model will not affect the score.\nAttributes at the model level are ignored except for the `material` attributes.\n\\n\nFor grading, this model is assumed to be the answer model, and the other model is assumed to be\nthe model submitted by the student.\n\\n\nBoth models will be modified in the process of cpmparing.\n\\n"
                   },
                   "parameters": [
                     {
@@ -61559,7 +61559,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Compare the objects.\nCheck that every object in this model also exists in the other model.\n~\nThis will also check the following attributes:\nFor posis, it will check the xyz attribute.\nFor vertices, it will check the rgb attribute, if such an attribute exists in the answer model.\nFor polygons, it will check the material attribute, if such an attribute exists in the answer model."
+                    "shortText": "Compare the objects.\nCheck that every object in this model also exists in the other model.\n\\n\nThis will also check the following attributes:\nFor posis, it will check the xyz attribute.\nFor vertices, it will check the rgb attribute, if such an attribute exists in the answer model.\nFor polygons, it will check the material attribute, if such an attribute exists in the answer model."
                   },
                   "parameters": [
                     {
@@ -62439,7 +62439,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Round the xyz values, rounded to the precision level\n~"
+                    "shortText": "Round the xyz values, rounded to the precision level\n\\n"
                   },
                   "parameters": [
                     {
@@ -62522,7 +62522,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "For any entity, greate a string that concatenates all the xyz values of its positions.\n~\nThese strings will be used for sorting entities into a predictable order,\nindependent of the order in which the geometry was actually created.\n~\nIf there are multiple entities in exactly the same position, then the ordering may be unpredictable.\n~"
+                    "shortText": "For any entity, greate a string that concatenates all the xyz values of its positions.\n\\n\nThese strings will be used for sorting entities into a predictable order,\nindependent of the order in which the geometry was actually created.\n\\n\nIf there are multiple entities in exactly the same position, then the ordering may be unpredictable.\n\\n"
                   },
                   "parameters": [
                     {
@@ -63058,7 +63058,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Compares two models.\nChecks that every entity in this model also exists in the other model.\n~\nThis is the answer model.\nThe other model is the submitted model.\n~\nBoth models will be modified in the process.\n~"
+                    "shortText": "Compares two models.\nChecks that every entity in this model also exists in the other model.\n\\n\nThis is the answer model.\nThe other model is the submitted model.\n\\n\nBoth models will be modified in the process.\n\\n"
                   },
                   "parameters": [
                     {
@@ -65039,7 +65039,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Compare two values with a comparison operator, ==, !=, >, >=, <, <=\n~\nIf the values are of different types, then false is returned.\n~\nFor arrays, true is returned only if a pairwise comparison between the items in the two arrays all return true.\nThe two arrays must also be of equal length.\n~\nValues may be null.\nValues that are undefined will be treated as null.\n~"
+                    "shortText": "Compare two values with a comparison operator, ==, !=, >, >=, <, <=\n\\n\nIf the values are of different types, then false is returned.\n\\n\nFor arrays, true is returned only if a pairwise comparison between the items in the two arrays all return true.\nThe two arrays must also be of equal length.\n\\n\nValues may be null.\nValues that are undefined will be treated as null.\n\\n"
                   },
                   "parameters": [
                     {
@@ -65162,7 +65162,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Gets the value for a given index.\n~\nIf the value does not exist, it throws an error.\n~\nIf value is a list or dict, it is passed by reference."
+                    "shortText": "Gets the value for a given index.\n\\n\nIf the value does not exist, it throws an error.\n\\n\nIf value is a list or dict, it is passed by reference."
                   },
                   "parameters": [
                     {
@@ -65615,7 +65615,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Returns the length of the data.\n~\nIf _data_type is NUMBER, STRING, BOOLEAN, then length = 1\n~\nIf _data_type is LIST, length is the list of the longest length, can be 0\n~\nIf _data_type is OBJECT, length is the obect with the longest Object.keys, can be 0"
+                    "shortText": "Returns the length of the data.\n\\n\nIf _data_type is NUMBER, STRING, BOOLEAN, then length = 1\n\\n\nIf _data_type is LIST, length is the list of the longest length, can be 0\n\\n\nIf _data_type is OBJECT, length is the obect with the longest Object.keys, can be 0"
                   },
                   "type": {
                     "type": "intrinsic",
@@ -65684,7 +65684,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Gets the value for a given entity, or an array of values given an array of entities.\n~\nReturns undefined if the entity does not exist in this map.\n~\nIf value is a list or dict, it is passed by reference.\n~\nWARNING: The returned dict or list should not be modified, it should be treated as immutable.\n~"
+                    "shortText": "Gets the value for a given entity, or an array of values given an array of entities.\n\\n\nReturns undefined if the entity does not exist in this map.\n\\n\nIf value is a list or dict, it is passed by reference.\n\\n\nWARNING: The returned dict or list should not be modified, it should be treated as immutable.\n\\n"
                   },
                   "parameters": [
                     {
@@ -66399,7 +66399,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Executes a query.\n~\nThe value can be NUMBER, STRING, BOOLEAN, LIST or DICT\n~"
+                    "shortText": "Executes a query.\n\\n\nThe value can be NUMBER, STRING, BOOLEAN, LIST or DICT\n\\n"
                   },
                   "parameters": [
                     {
@@ -67165,7 +67165,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Compare two values with a comparison operator, ==, !=, >, >=, <, <=\n~\nIf the values are of different types, then false is returned.\n~\nFor arrays, true is returned only if a pairwise comparison between the items in the two arrays all return true.\nThe two arrays must also be of equal length.\n~\nValues may be null.\nValues that are undefined will be treated as null.\n~"
+                    "shortText": "Compare two values with a comparison operator, ==, !=, >, >=, <, <=\n\\n\nIf the values are of different types, then false is returned.\n\\n\nFor arrays, true is returned only if a pairwise comparison between the items in the two arrays all return true.\nThe two arrays must also be of equal length.\n\\n\nValues may be null.\nValues that are undefined will be treated as null.\n\\n"
                   },
                   "parameters": [
                     {
@@ -67972,7 +67972,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Returns the length of the data.\n~\nIf _data_type is NUMBER, STRING, BOOLEAN, then length = 1\n~\nIf _data_type is LIST, length is the list of the longest length, can be 0\n~\nIf _data_type is OBJECT, length is the obect with the longest Object.keys, can be 0"
+                    "shortText": "Returns the length of the data.\n\\n\nIf _data_type is NUMBER, STRING, BOOLEAN, then length = 1\n\\n\nIf _data_type is LIST, length is the list of the longest length, can be 0\n\\n\nIf _data_type is OBJECT, length is the obect with the longest Object.keys, can be 0"
                   },
                   "type": {
                     "type": "intrinsic",
@@ -68061,7 +68061,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Gets the value for a given entity, or an array of values given an array of entities.\n~\nReturns undefined if the entity does not exist in this map.\n~\nIf value is a list or dict, it is passed by reference.\n~\nWARNING: The returned dict or list should not be modified, it should be treated as immutable.\n~"
+                    "shortText": "Gets the value for a given entity, or an array of values given an array of entities.\n\\n\nReturns undefined if the entity does not exist in this map.\n\\n\nIf value is a list or dict, it is passed by reference.\n\\n\nWARNING: The returned dict or list should not be modified, it should be treated as immutable.\n\\n"
                   },
                   "parameters": [
                     {
@@ -68906,7 +68906,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Executes a query.\n~\nThe value can be NUMBER, STRING, BOOLEAN, LIST or DICT\n~"
+                    "shortText": "Executes a query.\n\\n\nThe value can be NUMBER, STRING, BOOLEAN, LIST or DICT\n\\n"
                   },
                   "parameters": [
                     {
@@ -69694,7 +69694,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Compare two values with a comparison operator, ==, !=, >, >=, <, <=\n~\nIf the values are of different types, then false is returned.\n~\nFor arrays, true is returned only if a pairwise comparison between the items in the two arrays all return true.\nThe two arrays must also be of equal length.\n~\nValues may be null.\nValues that are undefined will be treated as null.\n~"
+                    "shortText": "Compare two values with a comparison operator, ==, !=, >, >=, <, <=\n\\n\nIf the values are of different types, then false is returned.\n\\n\nFor arrays, true is returned only if a pairwise comparison between the items in the two arrays all return true.\nThe two arrays must also be of equal length.\n\\n\nValues may be null.\nValues that are undefined will be treated as null.\n\\n"
                   },
                   "parameters": [
                     {
@@ -70427,7 +70427,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Returns the length of the data.\n~\nIf _data_type is NUMBER, STRING, BOOLEAN, then length = 1\n~\nIf _data_type is LIST, length is the list of the longest length, can be 0\n~\nIf _data_type is OBJECT, length is the obect with the longest Object.keys, can be 0"
+                    "shortText": "Returns the length of the data.\n\\n\nIf _data_type is NUMBER, STRING, BOOLEAN, then length = 1\n\\n\nIf _data_type is LIST, length is the list of the longest length, can be 0\n\\n\nIf _data_type is OBJECT, length is the obect with the longest Object.keys, can be 0"
                   },
                   "type": {
                     "type": "intrinsic",
@@ -70516,7 +70516,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Gets the value for a given entity, or an array of values given an array of entities.\n~\nReturns undefined if the entity does not exist in this map.\n~\nIf value is a list or dict, it is passed by reference.\n~\nWARNING: The returned dict or list should not be modified, it should be treated as immutable.\n~"
+                    "shortText": "Gets the value for a given entity, or an array of values given an array of entities.\n\\n\nReturns undefined if the entity does not exist in this map.\n\\n\nIf value is a list or dict, it is passed by reference.\n\\n\nWARNING: The returned dict or list should not be modified, it should be treated as immutable.\n\\n"
                   },
                   "parameters": [
                     {
@@ -71361,7 +71361,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Executes a query.\n~\nThe value can be NUMBER, STRING, BOOLEAN, LIST or DICT\n~"
+                    "shortText": "Executes a query.\n\\n\nThe value can be NUMBER, STRING, BOOLEAN, LIST or DICT\n\\n"
                   },
                   "parameters": [
                     {
@@ -72148,7 +72148,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Compare two values with a comparison operator, ==, !=, >, >=, <, <=\n~\nIf the values are of different types, then false is returned.\n~\nFor arrays, true is returned only if a pairwise comparison between the items in the two arrays all return true.\nThe two arrays must also be of equal length.\n~\nValues may be null.\nValues that are undefined will be treated as null.\n~"
+                    "shortText": "Compare two values with a comparison operator, ==, !=, >, >=, <, <=\n\\n\nIf the values are of different types, then false is returned.\n\\n\nFor arrays, true is returned only if a pairwise comparison between the items in the two arrays all return true.\nThe two arrays must also be of equal length.\n\\n\nValues may be null.\nValues that are undefined will be treated as null.\n\\n"
                   },
                   "parameters": [
                     {
@@ -72881,7 +72881,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Returns the length of the data.\n~\nIf _data_type is NUMBER, STRING, BOOLEAN, then length = 1\n~\nIf _data_type is LIST, length is the list of the longest length, can be 0\n~\nIf _data_type is OBJECT, length is the obect with the longest Object.keys, can be 0"
+                    "shortText": "Returns the length of the data.\n\\n\nIf _data_type is NUMBER, STRING, BOOLEAN, then length = 1\n\\n\nIf _data_type is LIST, length is the list of the longest length, can be 0\n\\n\nIf _data_type is OBJECT, length is the obect with the longest Object.keys, can be 0"
                   },
                   "type": {
                     "type": "intrinsic",
@@ -72970,7 +72970,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Gets the value for a given entity, or an array of values given an array of entities.\n~\nReturns undefined if the entity does not exist in this map.\n~\nIf value is a list or dict, it is passed by reference.\n~\nWARNING: The returned dict or list should not be modified, it should be treated as immutable.\n~"
+                    "shortText": "Gets the value for a given entity, or an array of values given an array of entities.\n\\n\nReturns undefined if the entity does not exist in this map.\n\\n\nIf value is a list or dict, it is passed by reference.\n\\n\nWARNING: The returned dict or list should not be modified, it should be treated as immutable.\n\\n"
                   },
                   "parameters": [
                     {
@@ -73815,7 +73815,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Executes a query.\n~\nThe value can be NUMBER, STRING, BOOLEAN, LIST or DICT\n~"
+                    "shortText": "Executes a query.\n\\n\nThe value can be NUMBER, STRING, BOOLEAN, LIST or DICT\n\\n"
                   },
                   "parameters": [
                     {
@@ -74602,7 +74602,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Compare two values with a comparison operator, ==, !=, >, >=, <, <=\n~\nIf the values are of different types, then false is returned.\n~\nFor arrays, true is returned only if a pairwise comparison between the items in the two arrays all return true.\nThe two arrays must also be of equal length.\n~\nValues may be null.\nValues that are undefined will be treated as null.\n~"
+                    "shortText": "Compare two values with a comparison operator, ==, !=, >, >=, <, <=\n\\n\nIf the values are of different types, then false is returned.\n\\n\nFor arrays, true is returned only if a pairwise comparison between the items in the two arrays all return true.\nThe two arrays must also be of equal length.\n\\n\nValues may be null.\nValues that are undefined will be treated as null.\n\\n"
                   },
                   "parameters": [
                     {
@@ -75335,7 +75335,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Returns the length of the data.\n~\nIf _data_type is NUMBER, STRING, BOOLEAN, then length = 1\n~\nIf _data_type is LIST, length is the list of the longest length, can be 0\n~\nIf _data_type is OBJECT, length is the obect with the longest Object.keys, can be 0"
+                    "shortText": "Returns the length of the data.\n\\n\nIf _data_type is NUMBER, STRING, BOOLEAN, then length = 1\n\\n\nIf _data_type is LIST, length is the list of the longest length, can be 0\n\\n\nIf _data_type is OBJECT, length is the obect with the longest Object.keys, can be 0"
                   },
                   "type": {
                     "type": "intrinsic",
@@ -75424,7 +75424,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Gets the value for a given entity, or an array of values given an array of entities.\n~\nReturns undefined if the entity does not exist in this map.\n~\nIf value is a list or dict, it is passed by reference.\n~\nWARNING: The returned dict or list should not be modified, it should be treated as immutable.\n~"
+                    "shortText": "Gets the value for a given entity, or an array of values given an array of entities.\n\\n\nReturns undefined if the entity does not exist in this map.\n\\n\nIf value is a list or dict, it is passed by reference.\n\\n\nWARNING: The returned dict or list should not be modified, it should be treated as immutable.\n\\n"
                   },
                   "parameters": [
                     {
@@ -76269,7 +76269,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Executes a query.\n~\nThe value can be NUMBER, STRING, BOOLEAN, LIST or DICT\n~"
+                    "shortText": "Executes a query.\n\\n\nThe value can be NUMBER, STRING, BOOLEAN, LIST or DICT\n\\n"
                   },
                   "parameters": [
                     {
@@ -77056,7 +77056,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Compare two values with a comparison operator, ==, !=, >, >=, <, <=\n~\nIf the values are of different types, then false is returned.\n~\nFor arrays, true is returned only if a pairwise comparison between the items in the two arrays all return true.\nThe two arrays must also be of equal length.\n~\nValues may be null.\nValues that are undefined will be treated as null.\n~"
+                    "shortText": "Compare two values with a comparison operator, ==, !=, >, >=, <, <=\n\\n\nIf the values are of different types, then false is returned.\n\\n\nFor arrays, true is returned only if a pairwise comparison between the items in the two arrays all return true.\nThe two arrays must also be of equal length.\n\\n\nValues may be null.\nValues that are undefined will be treated as null.\n\\n"
                   },
                   "parameters": [
                     {
@@ -77865,7 +77865,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Returns the length of the data.\n~\nIf _data_type is NUMBER, STRING, BOOLEAN, then length = 1\n~\nIf _data_type is LIST, length is the list of the longest length, can be 0\n~\nIf _data_type is OBJECT, length is the obect with the longest Object.keys, can be 0"
+                    "shortText": "Returns the length of the data.\n\\n\nIf _data_type is NUMBER, STRING, BOOLEAN, then length = 1\n\\n\nIf _data_type is LIST, length is the list of the longest length, can be 0\n\\n\nIf _data_type is OBJECT, length is the obect with the longest Object.keys, can be 0"
                   },
                   "type": {
                     "type": "intrinsic",
@@ -77954,7 +77954,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Gets the value for a given entity, or an array of values given an array of entities.\n~\nReturns undefined if the entity does not exist in this map.\n~\nIf value is a list or dict, it is passed by reference.\n~\nWARNING: The returned dict or list should not be modified, it should be treated as immutable.\n~"
+                    "shortText": "Gets the value for a given entity, or an array of values given an array of entities.\n\\n\nReturns undefined if the entity does not exist in this map.\n\\n\nIf value is a list or dict, it is passed by reference.\n\\n\nWARNING: The returned dict or list should not be modified, it should be treated as immutable.\n\\n"
                   },
                   "parameters": [
                     {
@@ -78799,7 +78799,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Executes a query.\n~\nThe value can be NUMBER, STRING, BOOLEAN, LIST or DICT\n~"
+                    "shortText": "Executes a query.\n\\n\nThe value can be NUMBER, STRING, BOOLEAN, LIST or DICT\n\\n"
                   },
                   "parameters": [
                     {
@@ -80427,7 +80427,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Compares this model and another model.\n~\nIf check_equality=false, the max total score will be equal to the number of attributes in this model.\nIt checks that each attribute in this model exists in the other model. If it exists, 1 mark is assigned.\n~\nIf check_equality=true, the max score will be increased by 10, equal to the number of entity levels.\nFor each entity level, if the other model contains no additional attributes, then one mark is assigned.\n~"
+                    "shortText": "Compares this model and another model.\n\\n\nIf check_equality=false, the max total score will be equal to the number of attributes in this model.\nIt checks that each attribute in this model exists in the other model. If it exists, 1 mark is assigned.\n\\n\nIf check_equality=true, the max score will be increased by 10, equal to the number of entity levels.\nFor each entity level, if the other model contains no additional attributes, then one mark is assigned.\n\\n"
                   },
                   "parameters": [
                     {
@@ -81086,7 +81086,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Get an entity attrib value in a dictionary.\n~\nIf the attribute does not exist, throw error\n~\nIf the key does not exist, return undefined.\n~"
+                    "shortText": "Get an entity attrib value in a dictionary.\n\\n\nIf the attribute does not exist, throw error\n\\n\nIf the key does not exist, return undefined.\n\\n"
                   },
                   "parameters": [
                     {
@@ -81183,7 +81183,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Get an entity attrib value in a list.\n~\nIf the attribute does not exist, throw error\n~\nIf the index is out of range, return undefined.\n~"
+                    "shortText": "Get an entity attrib value in a list.\n\\n\nIf the attribute does not exist, throw error\n\\n\nIf the index is out of range, return undefined.\n\\n"
                   },
                   "parameters": [
                     {
@@ -81280,7 +81280,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Get an entity attrib value, or an array of values given an array of entities.\n~\nIf the attribute does not exist, throw an error\n~"
+                    "shortText": "Get an entity attrib value, or an array of values given an array of entities.\n\\n\nIf the attribute does not exist, throw an error\n\\n"
                   },
                   "parameters": [
                     {
@@ -81380,7 +81380,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Get an entity attrib value, or an array of values given an array of entities.\n~\nIf idx_or_key is null, then this must be a simple attrib.\nIf idx_or_key is a number, then this must be indexing a list attrib.\nif idx_or_key is a string, then this must be indexing a dict attrib.\n~\nIf the attribute does not exist, throw an error\n~"
+                    "shortText": "Get an entity attrib value, or an array of values given an array of entities.\n\\n\nIf idx_or_key is null, then this must be a simple attrib.\nIf idx_or_key is a number, then this must be indexing a list attrib.\nif idx_or_key is a string, then this must be indexing a dict attrib.\n\\n\nIf the attribute does not exist, throw an error\n\\n"
                   },
                   "parameters": [
                     {
@@ -81486,7 +81486,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Get a model attrib dict value given a key\n~\nIf this attribute is not a dict, throw error\n~\nIf key does not exist, throw error\n~"
+                    "shortText": "Get a model attrib dict value given a key\n\\n\nIf this attribute is not a dict, throw error\n\\n\nIf key does not exist, throw error\n\\n"
                   },
                   "parameters": [
                     {
@@ -81556,7 +81556,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Get a model attrib list value given an index\n~\nIf this attribute is not a list, throw error\n~\nIf idx is creater than the length of the list, undefined is returned.\n~"
+                    "shortText": "Get a model attrib list value given an index\n\\n\nIf this attribute is not a list, throw error\n\\n\nIf idx is creater than the length of the list, undefined is returned.\n\\n"
                   },
                   "parameters": [
                     {
@@ -81677,7 +81677,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Get an model attrib value, or an array of values.\n~\nIf idx_or_key is null, then this must be a simple attrib.\nIf idx_or_key is a number, then this must be indexing a list attrib.\nif idx_or_key is a string, then this must be indexing a dict attrib.\n~\nIf the attribute does not exist, throw an error\n~"
+                    "shortText": "Get an model attrib value, or an array of values.\n\\n\nIf idx_or_key is null, then this must be a simple attrib.\nIf idx_or_key is a number, then this must be indexing a list attrib.\nif idx_or_key is a string, then this must be indexing a dict attrib.\n\\n\nIf the attribute does not exist, throw an error\n\\n"
                   },
                   "parameters": [
                     {
@@ -104393,7 +104393,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Compares this model and another model.\n~\nThe max total score for this method is equal to 5.\nIt assigns 1 mark for for each entity type:\npoints, pline, pgons, and colelctions.\nIn each case, if the number of entities is equal, 1 mark is given.\n~"
+                    "shortText": "Compares this model and another model.\n\\n\nThe max total score for this method is equal to 5.\nIt assigns 1 mark for for each entity type:\npoints, pline, pgons, and colelctions.\nIn each case, if the number of entities is equal, 1 mark is given.\n\\n"
                   },
                   "parameters": [
                     {
@@ -104544,7 +104544,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Set the holes in a pgon by specifying a list of wires.\n~\nThis is a low level method used by the compare function to normalize hole order.\nFor making holes in faces, it is safer to use the cutFaceHoles method."
+                    "shortText": "Set the holes in a pgon by specifying a list of wires.\n\\n\nThis is a low level method used by the compare function to normalize hole order.\nFor making holes in faces, it is safer to use the cutFaceHoles method."
                   },
                   "parameters": [
                     {
@@ -105643,7 +105643,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Creates one or more holes in a polygon.\nUpdates time stamp for the polygon.\n~"
+                    "shortText": "Creates one or more holes in a polygon.\nUpdates time stamp for the polygon.\n\\n"
                   },
                   "parameters": [
                     {
@@ -105710,7 +105710,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Retriangulate the polygons.\nUpdates time stamp for the polygons.\n~"
+                    "shortText": "Retriangulate the polygons.\nUpdates time stamp for the polygons.\n\\n"
                   },
                   "parameters": [
                     {
@@ -106028,7 +106028,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Close a polyline.\n~\nIf the pline is already closed, do nothing.\n~"
+                    "shortText": "Close a polyline.\n\\n\nIf the pline is already closed, do nothing.\n\\n"
                   },
                   "parameters": [
                     {
@@ -106075,7 +106075,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Open a wire, by deleting the last edge.\n~\nIf the wire is already open, do nothing.\n~\nIf the wire does not belong to a pline, then do nothing."
+                    "shortText": "Open a wire, by deleting the last edge.\n\\n\nIf the wire is already open, do nothing.\n\\n\nIf the wire does not belong to a pline, then do nothing."
                   },
                   "parameters": [
                     {
@@ -106308,7 +106308,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Unweld all vertices by cloning the positions that are shared.\n~\nAttributes on the positions are copied.\n~"
+                    "shortText": "Unweld all vertices by cloning the positions that are shared.\n\\n\nAttributes on the positions are copied.\n\\n"
                   },
                   "parameters": [
                     {
@@ -106364,7 +106364,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Insert a vertex into an edge and updates the wire with the new edge\n~\nApplies to both plines and pgons.\n~\nPlines can be open or closed.\n~"
+                    "shortText": "Insert a vertex into an edge and updates the wire with the new edge\n\\n\nApplies to both plines and pgons.\n\\n\nPlines can be open or closed.\n\\n"
                   },
                   "parameters": [
                     {
@@ -106422,7 +106422,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Insert multiple vertices into an edge and updates the wire with the new edges\n~\nApplies to both plines and pgons.\n~\nPlines can be open or closed.\n~"
+                    "shortText": "Insert multiple vertices into an edge and updates the wire with the new edges\n\\n\nApplies to both plines and pgons.\n\\n\nPlines can be open or closed.\n\\n"
                   },
                   "parameters": [
                     {
@@ -106486,7 +106486,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Weld all vertices by merging the positions that are equal, so that they become shared.\n~\nThe old positions are deleted if unused. Attributes on those positions are discarded.\n~"
+                    "shortText": "Weld all vertices by merging the positions that are equal, so that they become shared.\n\\n\nThe old positions are deleted if unused. Attributes on those positions are discarded.\n\\n"
                   },
                   "parameters": [
                     {
@@ -106539,7 +106539,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Replace all positions in an entity with a new set of positions.\n~"
+                    "shortText": "Replace all positions in an entity with a new set of positions.\n\\n"
                   },
                   "parameters": [
                     {
@@ -106612,7 +106612,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Replace the position of a vertex with a new position.\n~\nIf the result is an edge with two same posis, then the vertex will be deleted if del_if_invalid = true.\nIf del_if_invalid = false, no action will be taken.\n~\nCalled by modify.Fuse() and poly2d.Stitch()."
+                    "shortText": "Replace the position of a vertex with a new position.\n\\n\nIf the result is an edge with two same posis, then the vertex will be deleted if del_if_invalid = true.\nIf del_if_invalid = false, no action will be taken.\n\\n\nCalled by modify.Fuse() and poly2d.Stitch()."
                   },
                   "parameters": [
                     {
@@ -106682,7 +106682,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Reverse the edges of a wire.\nThis lists the edges in reverse order, and flips each edge.\n~\nThe attributes will not be affected. So the order of edge attribtes will also become reversed.",
+                    "shortText": "Reverse the edges of a wire.\nThis lists the edges in reverse order, and flips each edge.\n\\n\nThe attributes will not be affected. So the order of edge attribtes will also become reversed.",
                     "text": "TODO\nThis does not reverse the order of the edges.\nThe method, getWireVertices() in GeomQuery returns the correct vertices.\nHowever, you need to be careful with edge order.\nThe next edge after edge 0 may not be edge 1.\nIf reversed it will instead be the last edge.\n"
                   },
                   "parameters": [
@@ -106730,7 +106730,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Shifts the edges of a wire.\n~\nThe attributes will not be affected. For example, lets say a polygon has three edges\ne1, e2, e3, with attribute values 5, 6, 7\nIf teh edges are shifted by 1, the edges will now be\ne2, e3, e1, withh attribute values 6, 7, 5"
+                    "shortText": "Shifts the edges of a wire.\n\\n\nThe attributes will not be affected. For example, lets say a polygon has three edges\ne1, e2, e3, with attribute values 5, 6, 7\nIf teh edges are shifted by 1, the edges will now be\ne2, e3, e1, withh attribute values 6, 7, 5"
                   },
                   "parameters": [
                     {
@@ -106788,7 +106788,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Unweld the vertices on naked edges.\n~"
+                    "shortText": "Unweld the vertices on naked edges.\n\\n"
                   },
                   "parameters": [
                     {
@@ -115471,7 +115471,7 @@
                   "kindString": "Call signature",
                   "flags": {},
                   "comment": {
-                    "shortText": "Returns sets of unique entity indexes, given an array of TEntTypeIdx.\n~\nUsed for deleting all entities and for adding global function entities to a snapshot."
+                    "shortText": "Returns sets of unique entity indexes, given an array of TEntTypeIdx.\n\\n\nUsed for deleting all entities and for adding global function entities to a snapshot."
                   },
                   "parameters": [
                     {
@@ -126559,7 +126559,7 @@
               "kindString": "Call signature",
               "flags": {},
               "comment": {
-                "shortText": "Converts a value to an array of specified length.\n~"
+                "shortText": "Converts a value to an array of specified length.\n\\n"
               },
               "parameters": [
                 {
@@ -126783,7 +126783,7 @@
               "kindString": "Call signature",
               "flags": {},
               "comment": {
-                "shortText": "Make flat array (depth = 1) from anything.\n~\nIf it is not an array, then make it an array\n~\nIf it is an array, then make it flat\n~"
+                "shortText": "Make flat array (depth = 1) from anything.\n\\n\nIf it is not an array, then make it an array\n\\n\nIf it is an array, then make it flat\n\\n"
               },
               "parameters": [
                 {

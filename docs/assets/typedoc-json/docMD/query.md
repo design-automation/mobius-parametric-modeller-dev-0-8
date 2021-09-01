@@ -16,7 +16,7 @@ The resulting list of entities will not contain duplicate entities.
   
   
 **Parameters:**  
-  * *ent_type_enum:* Enum, the type of entity to get.  
+  * *ent\_type\_enum:* Enum, the type of entity to get.  
   * *entities:* Optional, list of entities to get entities from, or null to get all entities in the model.  
   
 **Returns:** Entities, a list of entities.  
@@ -40,7 +40,7 @@ In a case where you want only one entity, remember to get the first item in the 
 **Parameters:**  
   * *entities:* List of entities to filter. The entities must all be of the same type  
   * *attrib:* The attribute to use for filtering. Can be `name`, `[name, index]`, or `[name, key]`.  
-  * *operator_enum:* Enum, the operator to use for filtering  
+  * *operator\_enum:* Enum, the operator to use for filtering  
   * *value:* The attribute value to use for filtering.  
   
 **Returns:** Entities, a list of entities that match the conditions specified in 'expr'.  
@@ -60,7 +60,7 @@ this function gets the entities that are not part of the list of entities.
   
   
 **Parameters:**  
-  * *ent_type_enum:* Enum, specifies what type of entities will be returned.  
+  * *ent\_type\_enum:* Enum, specifies what type of entities will be returned.  
   * *entities:* List of entities to be excluded.  
   
 **Returns:** Entities, a list of entities that match the type specified in 'ent_type_enum', and that are not in entities.  
@@ -83,7 +83,7 @@ If the attribute is a list, and index can also be specified as follows: #@name1[
 **Parameters:**  
   * *entities:* List of two or more entities to be sorted, all of the same entity type.  
   * *attrib:* Attribute name to use for sorting. Can be `name`, `[name, index]`, or `[name, key]`.  
-  * *method_enum:* Enum, sort descending or ascending.  
+  * *method\_enum:* Enum, sort descending or ascending.  
   
 **Returns:** Entities, a list of sorted entities.  
 **Examples:**  
@@ -101,7 +101,7 @@ entities must be part of the set of input entities and must have naked edges.
   
   
 **Parameters:**  
-  * *ent_type:* Enum, select the type of perimeter entities to return  
+  * *ent\_type:* Enum, select the type of perimeter entities to return  
   * *entities:* List of entities.  
   
 **Returns:** Entities, a list of perimeter entities.  
@@ -120,7 +120,7 @@ entities must not be part of the set of input entities, but must be welded to on
   
   
 **Parameters:**  
-  * *ent_type_enum:* Enum, select the types of neighbors to return  
+  * *ent\_type\_enum:* Enum, select the types of neighbors to return  
   * *entities:* List of entities.  
   
 **Returns:** Entities, a list of welded neighbors  
@@ -141,7 +141,7 @@ entities must not be part of the set of input entities, but must be welded to on
   
 **Parameters:**  
   * *entities:* An edge or list of edges.  
-  * *edge_query_enum:* Enum, select the types of edges to return.  
+  * *edge\_query\_enum:* Enum, select the types of edges to return.  
   
 **Returns:** Entities, an edge or list of edges  
   
@@ -152,26 +152,24 @@ entities must not be part of the set of input entities, but must be welded to on
 **Description:** Checks the type of an entity.
 
 
-For is_used_posi, returns true if the entity is a posi, and it is used by at least one vertex.
-For is_unused_posi, it returns the opposite of is_used_posi.
-For is_object, returns true if the entity is a point, a polyline, or a polygon.
-For is_topology, returns true if the entity is a vertex, an edge, a wire, or a face.
-For is_point_topology, is_polyline_topology, and is_polygon_topology, returns true
+- For is\_used\_posi, returns true if the entity is a posi, and it is used by at least one vertex.
+- For is\_unused\_posi, it returns the opposite of is\_used\_posi.
+- For is\_object, returns true if the entity is a point, a polyline, or a polygon.
+- For is\_topology, returns true if the entity is a vertex, an edge, a wire, or a face.
+- For is\_point\_topology, is\_polyline\_topology, and is\_polygon\_topology, returns true.
 if the entity is a topological entity, and it is part of an object of the specified type.
-
-
-For is_open, returns true if the entity is a wire or polyline and is open. For is_closed, it returns the opposite of is_open.
-For is_hole, returns ture if the entity is a wire, and it defines a hole in a face.
-For has_holes, returns true if the entity is a face or polygon, and it has holes.
-For has_no_holes, it returns the opposite of has_holes.  
+- For is\_open, returns true if the entity is a wire or polyline and is open. For is\_closed, it returns the opposite of is\_open.
+- For is\_hole, returns true if the entity is a wire, and it defines a hole in a face.
+- For has\_holes, returns true if the entity is a face or polygon, and it has holes.
+- For has\_no\_holes, it returns the opposite of has\_holes.  
   
 **Parameters:**  
   * *entities:* An entity, or a list of entities.  
-  * *type_query_enum:* Enum, select the conditions to test agains.  
+  * *type\_query\_enum:* Enum, select the conditions to test agains.  
   
 **Returns:** Boolean or list of boolean in input sequence.  
 **Examples:**  
-  * query.Type([polyline1, polyline2, polygon1], is_polyline )  
+  * query.Type([polyline1, polyline2, polygon1], is\_polyline )  
     Returns a list [true, true, false] if polyline1 and polyline2 are polylines but polygon1 is not a polyline.
   
   

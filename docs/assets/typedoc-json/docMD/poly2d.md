@@ -84,8 +84,8 @@ If B is an empty list, then the A list is returned.
   
   
 **Parameters:**  
-  * *a_entities:* A list of polyline or polygons, or entities from which polyline or polygons can be extracted.  
-  * *b_entities:* A list of polygons, or entities from which polygons can be extracted.  
+  * *a\_entities:* A list of polyline or polygons, or entities from which polyline or polygons can be extracted.  
+  * *b\_entities:* A list of polygons, or entities from which polygons can be extracted.  
   * *method:* Enum, the boolean operator to apply.  
   
 **Returns:** A list of new polylines and polygons.  
@@ -100,7 +100,7 @@ If B is an empty list, then the A list is returned.
   * *entities:* A list of pollines or polygons, or entities from which polylines or polygons can be extracted.  
   * *dist:* Offset distance  
   * *limit:* Mitre limit  
-  * *end_type:* Enum, the type of end shape for open polylines'.  
+  * *end\_type:* Enum, the type of end shape for open polylines'.  
   
 **Returns:** A list of new polygons.  
   
@@ -113,7 +113,7 @@ If B is an empty list, then the A list is returned.
 **Parameters:**  
   * *entities:* A list of pollines or polygons, or entities from which polylines or polygons can be extracted.  
   * *dist:* Offset distance  
-  * *end_type:* Enum, the type of end shape for open polylines'.  
+  * *end\_type:* Enum, the type of end shape for open polylines'.  
   
 **Returns:** A list of new polygons.  
   
@@ -127,7 +127,7 @@ If B is an empty list, then the A list is returned.
   * *entities:* A list of pollines or polygons, or entities from which polylines or polygons can be extracted.  
   * *dist:* Offset distance  
   * *tolerance:* The tolerance for the rounded corners.  
-  * *end_type:* Enum, the type of end shape for open polylines'.  
+  * *end\_type:* Enum, the type of end shape for open polylines'.  
   
 **Returns:** A list of new polygons.  
   
@@ -138,9 +138,11 @@ If B is an empty list, then the A list is returned.
 **Description:** Adds vertices to polyline and polygons at all locations where egdes intersect one another.
 The vertices are welded.
 This can be useful for creating networks that can be used for shortest path calculations.
-~
+
+
 The input polyline and polygons are copied.
-~  
+
+  
   
 **Parameters:**  
   * *entities:* A list polylines or polygons, or entities from which polylines or polygons can be extracted.  

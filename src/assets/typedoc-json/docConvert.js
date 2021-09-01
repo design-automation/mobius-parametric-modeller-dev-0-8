@@ -56,7 +56,6 @@ function replaceText(text) {
         for (const repText in docReplace) {
             if (splittedText[i] === repText) {
                 splittedText[i] =  `<abbr title=\'${docReplace[repText]}\'>${splittedText[i]}</abbr>`
-                console.log('~~~~~~~~~~~', splittedText[i])
                 break;
             }
         }
@@ -172,7 +171,8 @@ function genModuleDocs(docs) {
                 fnString += `**Parameters:**  \n`;
                 for (const param of func.parameters) {
                     if (!param) {continue; }
-                    fnString += `  * *${param.name}:* ${param.description}  \n`;
+                    const paramName = param.name.replace(/_/g, '\\_')
+                    fnString += `  * *${paramName}:* ${param.description}  \n`;
                 }
             }
             if (func.returns) {

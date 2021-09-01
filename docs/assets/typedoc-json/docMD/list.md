@@ -29,9 +29,9 @@
 **Description:** Removes items in a list.
 
 
-If @param method is set to 'index', then @param item should be the index of the item to be replaced.
+If method is set to 'index', then item should be the index of the item to be replaced.
 Negative indexes are allowed.
-If @param method is not set to 'index', then @param item should be the value.  
+If method is not set to 'index', then item should be the value.  
   
 **Parameters:**  
   * *list:* The list in which to remove items  
@@ -47,13 +47,13 @@ If @param method is not set to 'index', then @param item should be the value.
 **Description:** Replaces items in a list.
 
 
-If @param method is set to 'index', then @param old_item should be the index of the item to be replaced. Negative indexes are allowed.
-If @param method is not set to 'index', then @param old_item should be the value.  
+If method is set to 'index', then old_item should be the index of the item to be replaced. Negative indexes are allowed.
+If method is not set to 'index', then old_item should be the value.  
   
 **Parameters:**  
   * *list:* The list in which to replace items  
-  * *old_item:* The old item to replace.  
-  * *new_item:* The new item.  
+  * *old\_item:* The old item to replace.  
+  * *new\_item:* The new item.  
   * *method:* Enum, select the method for replacing items in the list.  
   
 **Returns:** void  
@@ -95,8 +95,8 @@ If num_to_remove is 0, then values are only inserted.
 **Parameters:**  
   * *list:* List to splice.  
   * *index:* Zero-based index after which to starting removing or inserting items.  
-  * *num_to_remove:* Number of items to remove.  
-  * *items_to_insert:* Optional, list of items to add, or null.  
+  * *num\_to\_remove:* Number of items to remove.  
+  * *items\_to\_insert:* Optional, list of items to add, or null.  
   
 **Returns:** void  
 **Examples:**  

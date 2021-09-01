@@ -117,7 +117,7 @@ In this case, the 'quads' setting is ignored.
   
 **Parameters:**  
   * *entities:* Wires, or entities from which wires can be extracted.  
-  * *x_section:* undefined  
+  * *x\_section:* undefined  
   * *divisions:* Segment length or number of segments.  
   * *method:* Enum, select the method for sweeping.  
   

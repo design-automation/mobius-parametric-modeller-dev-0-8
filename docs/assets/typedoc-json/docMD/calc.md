@@ -96,7 +96,7 @@ by the specified scale factor.
   
 **Parameters:**  
   * *entities:* Single or list of edges, wires, polylines, or faces, polygons, or collections.  
-  * *t_param:* A value between 0 to 1.  
+  * *t\_param:* A value between 0 to 1.  
   
 **Returns:** The coordinates [x, y, z], or a list of coordinates.  
 **Examples:**  
