@@ -826,8 +826,8 @@ export class PanelHeaderComponent implements OnDestroy {
         if (this.publishUrlSettings.mainURL === '') {
             return;
         }
-        const navPage = this.publishUrlSettings.navMode === 'publish' ? 'publish' : this.publishUrlSettings.navPage;
-        if (this.publishUrlSettings.navMode === 'publish') {
+        const navPage = this.publishUrlSettings.navMode !== 'dashboard' ? this.publishUrlSettings.navMode : this.publishUrlSettings.navPage;
+        if (this.publishUrlSettings.navMode !== 'dashboard') {
             this.publishUrlSettings.showNode = '';
             this.publishUrlSettings.showNodeIdx = '';
         } else if (this.publishUrlSettings.showNode === '') {
@@ -844,7 +844,7 @@ export class PanelHeaderComponent implements OnDestroy {
         url = url.replace(/\//g, '%2F');
 
         let showViewerStr = '';
-        if (this.publishUrlSettings.navMode === 'publish') {
+        if (this.publishUrlSettings.navMode !== 'dashboard') {
             const shownViewers = [];
             if (this.publishUrlSettings.showViewers[0]) { shownViewers.push('cad'); }
             if (this.publishUrlSettings.showViewers[1]) { shownViewers.push('geo'); }

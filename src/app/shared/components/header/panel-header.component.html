@@ -164,12 +164,14 @@
             <br>
             <hr>
             <label>Select Mode</label><br>
-            <input id='showPage1' type='radio' name='navMode' value='publish' [(ngModel)]='publishUrlSettings.navMode'/>
-            <label for='showPage1'>Explorer Mode</label><br>
-            <input id='showPage2' type='radio' name='navMode'  value='dashboard' [(ngModel)]='publishUrlSettings.navMode'/>
-            <label for='showPage2'>Developer Mode</label><br>
+            <input id='showPage1' type='radio' name='navMode' value='minimal' [(ngModel)]='publishUrlSettings.navMode'/>
+            <label for='showPage1'>Visitor Mode</label><br>
+            <input id='showPage2' type='radio' name='navMode' value='publish' [(ngModel)]='publishUrlSettings.navMode'/>
+            <label for='showPage2'>Explorer Mode</label><br>
+            <input id='showPage3' type='radio' name='navMode'  value='dashboard' [(ngModel)]='publishUrlSettings.navMode'/>
+            <label for='showPage3'>Developer Mode</label><br>
             <hr>
-            <ng-container *ngIf='publishUrlSettings.navMode !== "publish"; else publish_template'>
+            <ng-container *ngIf='publishUrlSettings.navMode === "dashboard"; else publish_template'>
                 <label for='showPageNav1'>Active Pane</label><br>
                 <input id='showPageNav1' type='radio' name='navPage' value='dashboard' [(ngModel)]='publishUrlSettings.navPage'/>
                 <label for='showPageNav1'>Dashboard</label><br>
@@ -199,23 +201,23 @@
                 <hr>
             </ng-template>
             <label>Active Viewer</label><br>
-            <ng-container *ngIf='publishUrlSettings.navMode !== "publish" || publishUrlSettings.showViewers[0]' >
+            <ng-container *ngIf='publishUrlSettings.navMode === "dashboard" || publishUrlSettings.showViewers[0]' >
                 <input id='radioDefault3D' type='radio' name='defaultViewer' value='&defaultViewer=cad' [(ngModel)]='publishUrlSettings.defaultViewer'/>
                 <label for='radioDefault3D'>CAD Viewer</label> <br>
             </ng-container>
-            <ng-container *ngIf='publishUrlSettings.navMode !== "publish" || publishUrlSettings.showViewers[1]' >
+            <ng-container *ngIf='publishUrlSettings.navMode === "dashboard" || publishUrlSettings.showViewers[1]' >
                 <input id='radioDefaultGeo' type='radio' name='defaultViewer' value='&defaultViewer=geo' [(ngModel)]='publishUrlSettings.defaultViewer'/>
                 <label for='radioDefaultGeo'>Geo Viewer</label> <br>
             </ng-container>
-            <ng-container *ngIf='publishUrlSettings.navMode !== "publish" || publishUrlSettings.showViewers[2]' >
+            <ng-container *ngIf='publishUrlSettings.navMode === "dashboard" || publishUrlSettings.showViewers[2]' >
                 <input id='radioDefaultVR' type='radio' name='defaultViewer' value='&defaultViewer=vr' [(ngModel)]='publishUrlSettings.defaultViewer'/>
                 <label for='radioDefaultVR'>VR Viewer</label> <br>
             </ng-container>
-            <ng-container *ngIf='publishUrlSettings.navMode !== "publish" || publishUrlSettings.showViewers[3]' >
+            <ng-container *ngIf='publishUrlSettings.navMode === "dashboard" || publishUrlSettings.showViewers[3]' >
                 <input id='radioDefaultConsole' type='radio' name='defaultViewer' value='&defaultViewer=console' [(ngModel)]='publishUrlSettings.defaultViewer'/>
                 <label for='radioDefaultConsole'>Console</label> <br>
             </ng-container>
-            <ng-container *ngIf='publishUrlSettings.navMode !== "publish"' >
+            <ng-container *ngIf='publishUrlSettings.navMode === "dashboard"' >
                 <input id='radioDefaultDocs' type='radio' name='defaultViewer' value='&defaultViewer=doc' [(ngModel)]='publishUrlSettings.defaultViewer'/>
                 <label for='radioDefaultDocs'>Documentation</label>
             </ng-container>
