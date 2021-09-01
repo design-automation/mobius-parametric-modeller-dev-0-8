@@ -21,7 +21,7 @@
 **Parameters:**  
   * *point:* A point object to be used for creating hotspots.  
   * *name:* A name for the VR hotspots. If `null`, a default name will be created.  
-  * *camera_rot:* The rotation of the camera direction when you teleport yo the hotspot. The
+  * *camera\_rot:* The rotation of the camera direction when you teleport yo the hotspot. The
 rotation is specified in degrees, in the counter-clockwise direction, starting from the Y axis.
 If `null`, the camera rotation will default to 0.  
   
@@ -38,11 +38,11 @@ the hotspot, the panorama images will be loaded into the view.
 **Parameters:**  
   * *point:* The point object to be used for creating a panorama. If this point is already
 defined as a VR hotspot, then the panorama hotspot will inherit the name and camera angle.  
-  * *back_url:* The URL of the 360 degree panorama image to be used for the background.  
-  * *back_rot:* undefined  
-  * *fore_url:* The URL of the 360 degree panorama image to be used for the foreground. If `null`
+  * *back\_url:* The URL of the 360 degree panorama image to be used for the background.  
+  * *back\_rot:* undefined  
+  * *fore\_url:* The URL of the 360 degree panorama image to be used for the foreground. If `null`
 then no foreground image will be used.  
-  * *fore_rot:* The rotation of the forground panorama image, in degrees, in the
+  * *fore\_rot:* The rotation of the forground panorama image, in degrees, in the
 counter-clockwise direction. If `null`, then the foreground rotation will be equal to the background rotation.  
   
 **Returns:** void  
@@ -98,7 +98,7 @@ The string can be printed to the console for viewing.
 **Description:** Compares two models. Used for grading models.  
   
 **Parameters:**  
-  * *input_data:* The location of the GI Model to compare this model to.  
+  * *input\_data:* The location of the GI Model to compare this model to.  
   
 **Returns:** Text that summarises the comparison between the two models.  
   
@@ -110,7 +110,7 @@ The string can be printed to the console for viewing.
 This is the same as importing the model, except that no collection is created.  
   
 **Parameters:**  
-  * *input_data:* The location of the GI Model to import into this model to.  
+  * *input\_data:* The location of the GI Model to import into this model to.  
   
 **Returns:** Text that summarises the comparison between the two models.  
   

@@ -101,7 +101,7 @@ isovist to the radius of an idealized circle with the actual perimeter of the ci
   * *origins:* A list of Rays or a list of Planes, to be used as the origins for calculating the isovists.  
   * *entities:* The obstructions: faces, polygons, or collections.  
   * *radius:* The maximum radius of the isovist.  
-  * *num_rays:* The number of rays to generate when calculating isovists.
+  * *num\_rays:* The number of rays to generate when calculating isovists.
   
   
   
@@ -242,7 +242,7 @@ If 'num_neighbors' is greater than 1, the dictionary will contain two lists:
   * *target:* A list of positions, or entities from which positions can be extracted.
 If null, the positions in source will be used.  
   * *radius:* The maximum distance for neighbors. If null, Infinity will be used.  
-  * *max_neighbors:* The maximum number of neighbors to return.
+  * *max\_neighbors:* The maximum number of neighbors to return.
 If null, the number of positions in target is used.  
   
 **Returns:** A dictionary containing the results.  
@@ -477,7 +477,7 @@ Returns a dictionary containing the results.
 These positions should be part of the network.  
   * *entities:* The network, edges, or entities from which edges can be extracted.  
   * *method:* Enum, the method to use, directed or undirected.  
-  * *cen_type:* Enum, the data to return, positions, edges, or both.  
+  * *cen\_type:* Enum, the data to return, positions, edges, or both.  
   
 **Returns:** A list of centrality values, between 0 and 1.  
   

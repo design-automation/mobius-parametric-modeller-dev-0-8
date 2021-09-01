@@ -60,8 +60,11 @@ export enum _EIODataTarget {
  * @param data The data to be read (from URL or from Local Storage).
  * @returns the data.
  */
-export async function Read(__model__: GIModel, data: string): Promise<string|{}> {
+ export async function Read(__model__: GIModel, data: string): Promise<string|{}> {
     return _getFile(data);
+}
+ export function _Async_Param_Read(__model__: GIModel, data: string): Promise<string|{}> {
+    return null;
 }
 // ================================================================================================
 /**
@@ -82,6 +85,10 @@ export async function Write(__model__: GIModel, data: string, file_name: string,
         return false;
     }
 }
+export function _Async_Param_Write(__model__: GIModel, data: string, file_name: string, data_target: _EIODataTarget): Promise<Boolean> {
+    return null;
+}
+
 // ================================================================================================
 /**
  * Imports data into the model.
@@ -116,6 +123,9 @@ export async function Import(__model__: GIModel, input_data: string, data_format
     }
     // single file
     return _import(__model__, model_data, data_format);
+}
+export function _Async_Param_Import(__model__: GIModel, input_data: string, data_format: _EIODataFormat): Promise<TId|TId[]|{}> {
+    return null;
 }
 export function _import(__model__: GIModel, model_data: string, data_format: _EIODataFormat): TId {
     switch (data_format) {
@@ -283,6 +293,9 @@ export async function Export(__model__: GIModel, entities: TId|TId[]|TId[][],
     }
     // --- Error Check ---
     await _export(__model__, ents_arr, file_name, data_format, data_target);
+}
+export function _Async_Param_Export(__model__: GIModel, entities: TId|TId[]|TId[][],
+    file_name: string, data_format: _EIOExportDataFormat, data_target: _EIODataTarget){
 }
 async function _export(__model__: GIModel, ents_arr: TEntTypeIdx[],
     file_name: string, data_format: _EIOExportDataFormat, data_target: _EIODataTarget): Promise<boolean> {
@@ -774,4 +787,6 @@ export async function _getFile(source: string) {
             }
         }
     }
+}
+export function _Async_Param__getFile(source: string) {
 }

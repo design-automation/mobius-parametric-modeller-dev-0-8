@@ -18,8 +18,8 @@
   
 **Parameters:**  
   * *data:* The data to be saved (can be the url to the file).  
-  * *file_name:* The name to be saved in the file system (file extension should be included).  
-  * *data_target:* Enum, where the data is to be exported to.  
+  * *file\_name:* The name to be saved in the file system (file extension should be included).  
+  * *data\_target:* Enum, where the data is to be exported to.  
   
 **Returns:** whether the data is successfully saved.  
   
@@ -41,8 +41,8 @@ Note that a script using a file in local storage may fail when others try to ope
   
   
 **Parameters:**  
-  * *input_data:* undefined  
-  * *data_format:* Enum, the file format.  
+  * *input\_data:* undefined  
+  * *data\_format:* Enum, the file format.  
   
 **Returns:** A list of the positions, points, polylines, polygons and collections added to the model.  
 **Examples:**  
@@ -67,9 +67,9 @@ If you export to Local Storage, there will be no popup.
   
 **Parameters:**  
   * *entities:* Optional. Entities to be exported. If null, the whole model will be exported.  
-  * *file_name:* Name of the file as a string.  
-  * *data_format:* Enum, the file format.  
-  * *data_target:* Enum, where the data is to be exported to.  
+  * *file\_name:* Name of the file as a string.  
+  * *data\_format:* Enum, the file format.  
+  * *data\_target:* Enum, where the data is to be exported to.  
   
 **Returns:** void.  
 **Examples:**  
@@ -84,7 +84,7 @@ If you export to Local Storage, there will be no popup.
 **Description:** Set the geolocation of the Cartesian coordinate system.  
   
 **Parameters:**  
-  * *lat_long:* Set the latitude and longitude of the origin of the Cartesian coordinate system.  
+  * *lat\_long:* Set the latitude and longitude of the origin of the Cartesian coordinate system.  
   * *rot:* Set the counter-clockwise rotation of the Cartesian coordinate system, in radians.  
   * *elev:* Set the elevation of the Cartesian coordinate system above the ground plane.  
   
@@ -104,9 +104,9 @@ The Cartesian coordinate system is geolocated by defining two points:
   
   
 **Parameters:**  
-  * *lat_long_o:* Set the latitude and longitude of the origin of the Cartesian coordinate
+  * *lat\_long\_o:* Set the latitude and longitude of the origin of the Cartesian coordinate
 system.  
-  * *lat_long_x:* Set the latitude and longitude of a point on the x-axis of the Cartesian
+  * *lat\_long\_x:* Set the latitude and longitude of a point on the x-axis of the Cartesian
 coordinate system.  
   * *elev:* Set the elevation of the Cartesian coordinate system above the ground plane.  
   
@@ -120,7 +120,7 @@ coordinate system.
 based on the geolocation of the model.  
   
 **Parameters:**  
-  * *lat_long:* Latitude and longitude coordinates.  
+  * *lat\_long:* Latitude and longitude coordinates.  
   * *elev:* Set the elevation of the Cartesian coordinate system above the ground plane.  
   
 **Returns:** XYZ coordinates  

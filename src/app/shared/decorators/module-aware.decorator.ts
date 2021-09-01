@@ -35,6 +35,9 @@ const extraModPaths = {
     vrviewer: 'docVW/vr-viewer',
     vrviewerhotspot: 'docVW/vr-viewer-hotspots',
 };
+const asyncFuncList = ['io.Read', 'io.Write', 'io.Import', 'io.Export', 'io._getFile',
+                       'util.ModelCompare', 'util.ModelMerge'];
+
 // todo: bug fix for defaults
 function extract_params(func: Function): [IArgument[], boolean] {
     const fnStr = func.toString().replace( /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg, '');
@@ -62,7 +65,7 @@ function extract_params(func: Function): [IArgument[], boolean] {
 }
 
 for ( const m_name in Modules ) {
-    if (!Modules[m_name]) { continue; }
+    if (!Modules[m_name] || (typeof Modules[m_name] !== 'object')) { continue; }
     // if (m_name[0] === '_') { continue; }
 
     const modObj = <IModule>{};
@@ -77,11 +80,20 @@ for ( const m_name in Modules ) {
         const fnObj = <IFunction>{};
         fnObj.module = m_name;
         fnObj.name = fn_name;
-        fnObj.argCount = func.length;
-        const args = extract_params(func);
-        fnObj.args = args[0];
-        fnObj.hasReturn = args[1];
-        modObj.functions.push(fnObj);
+        if (asyncFuncList.indexOf(`${m_name}.${fn_name}`) !== -1) {
+            const paramFunc = Modules[m_name]['_Async_Param_' + fn_name]
+            fnObj.argCount = paramFunc.length;
+            const args = extract_params(paramFunc);
+            fnObj.args = args[0];
+            fnObj.hasReturn = args[1];
+            modObj.functions.push(fnObj);
+        } else {
+            fnObj.argCount = func.length;
+            const args = extract_params(func);
+            fnObj.args = args[0];
+            fnObj.hasReturn = args[1];
+            modObj.functions.push(fnObj);
+        }
     }
     module_list.push(modObj);
 }

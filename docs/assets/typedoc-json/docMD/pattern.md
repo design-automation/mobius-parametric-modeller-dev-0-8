@@ -23,7 +23,7 @@ Returns the list of new positions.
   * *origin:* A <abbr title='A list of three numbers, [x, y, z]'>coordinate</abbr> or a <abbr title='Three lists of three numbers, [origin, x-axis, y-axis]'>plane</abbr>.
 If a coordinate is given, then the plane is assumed to be aligned with the global XY plane.  
   * *length:* The length of the line along which positions will be generated.  
-  * *num_positions:* undefined  
+  * *num\_positions:* undefined  
   
 **Returns:** Entities, a list of new positions.  
   
@@ -70,7 +70,7 @@ Returns the list of new position IDs.
 **Parameters:**  
   * *coords:* A list of coordinates.  
   * *close:* Enum, 'open' or 'close'.  
-  * *num_positions:* undefined  
+  * *num\_positions:* undefined  
   
 **Returns:** Entities, a list of new position IDs.  
 **Examples:**  
@@ -229,7 +229,7 @@ If a coordinate is given, then the plane is assumed to be aligned with the globa
   * *size:* The width and length of grid.
 If a single number is given, then the width and length are assumed to be equal.
 If a list of two numbers is given, then they will be interpreted as `[width, length]`.  
-  * *num_positions:* Number of columns and rows of positions in the grid.
+  * *num\_positions:* Number of columns and rows of positions in the grid.
 If a single number is given, then the number of columns and rows are assumed to be equal.
 If a list of two numbers is given, then they will be interpreted as `[columns, rows]`.  
   * *method:* Enum, define the way the coords will be return as lists.  
@@ -370,7 +370,7 @@ If a single number is given, then the width, length, and height are assumed to b
 If a list of two numbers is given, then they will be interpreted as `[width, length]`,
 and the height is assumed to be equal to the length.
 If a list of three numbers is given, then they will be interpreted as `[width, length, height]`.  
-  * *num_positions:* Number of columns, rows, and layers of positions in the box.
+  * *num\_positions:* Number of columns, rows, and layers of positions in the box.
 If a single number is given, then the number of columns, rows, and layers are assumed to be equal.
 If a list of two numbers is given, then they will be interpreted as `[columns, rows]`,
 and the number of layers is assumed to be equal to the number of rows.
@@ -548,8 +548,8 @@ of the arc.
   * *origin:* A <abbr title='A list of three numbers, [x, y, z]'>coordinate</abbr> or a <abbr title='Three lists of three numbers, [origin, x-axis, y-axis]'>plane</abbr>, specifying the centre of the arc.
 If a coordinate is given, then the plane is assumed to be aligned with the global XY plane.  
   * *radius:* Radius of circle as a number.  
-  * *num_positions:* Number of positions to be distributed equally along the arc.  
-  * *arc_angle:* Angle of arc (in radians). If a list of two numbers is given, then the first
+  * *num\_positions:* Number of positions to be distributed equally along the arc.  
+  * *arc\_angle:* Angle of arc (in radians). If a list of two numbers is given, then the first
 number specifies the arc start angle, and the second number the arc end angle, i.e.
 `[arc_start_angle, arc_end_angle]`. If a single numer is specified, then the angles will be set
 to `[0, arc_end_angle]`. If `null` is given, then the angles will be set to `[0, 2 * PI]`.  
@@ -596,7 +596,7 @@ For more information, see the wikipedia article:
   
 **Parameters:**  
   * *coords:* undefined  
-  * *num_positions:* Number of positions to be distributed along the Bezier.  
+  * *num\_positions:* Number of positions to be distributed along the Bezier.  
   
 **Returns:** Entities, a list of positions.  
 **Examples:**  
@@ -641,7 +641,7 @@ The `num_positions` parameter specifies the total number of positions to be gene
   * *coords:* A list of coordinates (must be at least three).  
   * *degree:* The degree of the curve, and integer between 2 and 5.  
   * *close:* Enum, 'close' or 'open'  
-  * *num_positions:* Number of positions to be distributed along the Bezier.  
+  * *num\_positions:* Number of positions to be distributed along the Bezier.  
   
 **Returns:** Entities, a list of positions.  
 **Examples:**  
@@ -682,7 +682,7 @@ alt="Curve types" width="100">
   * *tension:* Curve tension, between 0 and 1. This only has an effect when the 'type' is set
 to 'catmullrom'.  
   * *close:* Enum, 'open' or 'close'.  
-  * *num_positions:* Number of positions to be distributed distributed along the spline.  
+  * *num\_positions:* Number of positions to be distributed distributed along the spline.  
   
 **Returns:** Entities, a list of positions.  
 **Examples:**  
@@ -698,10 +698,10 @@ to 'catmullrom'.
 **Description:** undefined  
   
 **Parameters:**  
-  * *curve_verb:* undefined  
+  * *curve\_verb:* undefined  
   * *degree:* undefined  
   * *closed:* undefined  
-  * *num_positions:* undefined  
+  * *num\_positions:* undefined  
   * *start:* undefined  
   
   

@@ -487,6 +487,9 @@ export async function ModelCompare(__model__: GIModel, input_data: string): Prom
     const result: {score: number, total: number, comment: string} = __model__.compare(input_model, true, false, false);
     return result.comment;
 }
+export function _Async_Param_ModelCompare(__model__: GIModel, input_data: string): Promise<string> {
+    return null;
+}
 // ================================================================================================
 /**
  * Merges data from another model into this model.
@@ -506,6 +509,9 @@ export async function ModelMerge(__model__: GIModel, input_data: string): Promis
     }
     const ents_arr: TEntTypeIdx[] = __model__.importGI(input_data_str);
     return idsMake(ents_arr) as TId[];
+}
+export function _Async_Param_ModelMerge(__model__: GIModel, input_data: string): Promise<TId[]> {
+    return null;
 }
 // ================================================================================================
 /**
