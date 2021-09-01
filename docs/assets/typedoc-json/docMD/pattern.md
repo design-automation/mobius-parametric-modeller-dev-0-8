@@ -7,7 +7,7 @@
 
 
 The `origin` parameter specifies the centre of the straight line along which positions will be
-generated. The origin can be specified as either a <abbr title=`A list of three numbers, [x, y, z]`>coordinate</abbr> or a <abbr title=`Three lists of three numbers, [origin, x-axis, y-axis]`>plane</abbr>. If a coordinate
+generated. The origin can be specified as either a <abbr title='A list of three numbers, [x, y, z]'>coordinate</abbr> or a <abbr title='Three lists of three numbers, [origin, x-axis, y-axis]'>plane</abbr>. If a coordinate
 is given, then a plane will be automatically generated, aligned with the global XY plane.
 
 
@@ -20,7 +20,7 @@ Returns the list of new positions.
   
   
 **Parameters:**  
-  * *origin:* A <abbr title=`A list of three numbers, [x, y, z]`>coordinate</abbr> or a <abbr title=`Three lists of three numbers, [origin, x-axis, y-axis]`>plane</abbr>.
+  * *origin:* A <abbr title='A list of three numbers, [x, y, z]'>coordinate</abbr> or a <abbr title='Three lists of three numbers, [origin, x-axis, y-axis]'>plane</abbr>.
 If a coordinate is given, then the plane is assumed to be aligned with the global XY plane.  
   * *length:* The length of the line along which positions will be generated.  
   * *num_positions:* undefined  
@@ -89,7 +89,7 @@ input positions.
 
 
 The `origin` parameter specifies the centre of the rectangle for which positions will be
-generated. The origin can be specified as either a <abbr title=`A list of three numbers, [x, y, z]`>coordinate</abbr> or a <abbr title=`Three lists of three numbers, [origin, x-axis, y-axis]`>plane</abbr>. If a coordinate
+generated. The origin can be specified as either a <abbr title='A list of three numbers, [x, y, z]'>coordinate</abbr> or a <abbr title='Three lists of three numbers, [origin, x-axis, y-axis]'>plane</abbr>. If a coordinate
 is given, then a plane will be automatically generated, aligned with the global XY plane.
 
 
@@ -108,7 +108,7 @@ Returns a list of new positions.
   
   
 **Parameters:**  
-  * *origin:* A <abbr title=`A list of three numbers, [x, y, z]`>coordinate</abbr> or a <abbr title=`Three lists of three numbers, [origin, x-axis, y-axis]`>plane</abbr>.
+  * *origin:* A <abbr title='A list of three numbers, [x, y, z]'>coordinate</abbr> or a <abbr title='Three lists of three numbers, [origin, x-axis, y-axis]'>plane</abbr>.
 If a coordinate is given, then the plane is assumed to be aligned with the global XY plane.  
   * *size:* Size of rectangle. If number, assume square of that length;
 if list of two numbers, x and y lengths respectively.  
@@ -130,7 +130,7 @@ if list of two numbers, x and y lengths respectively.
 
 
 The `origin` parameter specifies the centre of the grid for which positions will be
-generated. The origin can be specified as either a <abbr title=`A list of three numbers, [x, y, z]`>coordinate</abbr> or a <abbr title=`Three lists of three numbers, [origin, x-axis, y-axis]`>plane</abbr>. If a coordinate
+generated. The origin can be specified as either a <abbr title='A list of three numbers, [x, y, z]'>coordinate</abbr> or a <abbr title='Three lists of three numbers, [origin, x-axis, y-axis]'>plane</abbr>. If a coordinate
 is given, then a plane will be automatically generated, aligned with the global XY plane.
 
 
@@ -224,7 +224,7 @@ pgons = make.Polygon(posis)
   
   
 **Parameters:**  
-  * *origin:* A <abbr title=`A list of three numbers, [x, y, z]`>coordinate</abbr> or a <abbr title=`Three lists of three numbers, [origin, x-axis, y-axis]`>plane</abbr>.
+  * *origin:* A <abbr title='A list of three numbers, [x, y, z]'>coordinate</abbr> or a <abbr title='Three lists of three numbers, [origin, x-axis, y-axis]'>plane</abbr>.
 If a coordinate is given, then the plane is assumed to be aligned with the global XY plane.  
   * *size:* The width and length of grid.
 If a single number is given, then the width and length are assumed to be equal.
@@ -253,7 +253,7 @@ No positions are generated in the interior of the box.
 
 
 The `origin` parameter specifies the centre of the box for which positions will be
-generated. The origin can be specified as either a <abbr title=`A list of three numbers, [x, y, z]`>coordinate</abbr> or a <abbr title=`Three lists of three numbers, [origin, x-axis, y-axis]`>plane</abbr>. If a coordinate
+generated. The origin can be specified as either a <abbr title='A list of three numbers, [x, y, z]'>coordinate</abbr> or a <abbr title='Three lists of three numbers, [origin, x-axis, y-axis]'>plane</abbr>. If a coordinate
 is given, then a plane will be automatically generated, aligned with the global XY plane.
 
 
@@ -363,7 +363,7 @@ pgons = make.Polygon(posis)
   
   
 **Parameters:**  
-  * *origin:* A <abbr title=`A list of three numbers, [x, y, z]`>coordinate</abbr> or a <abbr title=`Three lists of three numbers, [origin, x-axis, y-axis]`>plane</abbr>.
+  * *origin:* A <abbr title='A list of three numbers, [x, y, z]'>coordinate</abbr> or a <abbr title='Three lists of three numbers, [origin, x-axis, y-axis]'>plane</abbr>.
 If a coordinate is given, then the plane is assumed to be aligned with the global XY plane.  
   * *size:* The width, length, and height of the box.
 If a single number is given, then the width, length, and height are assumed to be equal.
@@ -404,7 +404,7 @@ The five regular polyhedrons can be generated:
 
 
 The `origin` parameter specifies the centre of the polyhedron for which positions will be
-generated. The origin can be specified as either a <abbr title=`A list of three numbers, [x, y, z]`>coordinate</abbr> or a <abbr title=`Three lists of three numbers, [origin, x-axis, y-axis]`>plane</abbr>. If a coordinate
+generated. The origin can be specified as either a <abbr title='A list of three numbers, [x, y, z]'>coordinate</abbr> or a <abbr title='Three lists of three numbers, [origin, x-axis, y-axis]'>plane</abbr>. If a coordinate
 is given, then a plane will be automatically generated, aligned with the global XY plane.
 
 
@@ -479,7 +479,7 @@ pgons = make.Polygon(posis)
   
   
 **Parameters:**  
-  * *origin:* A <abbr title=`A list of three numbers, [x, y, z]`>coordinate</abbr> or a <abbr title=`Three lists of three numbers, [origin, x-axis, y-axis]`>plane</abbr>, specifying the origin of the polyhedron.
+  * *origin:* A <abbr title='A list of three numbers, [x, y, z]'>coordinate</abbr> or a <abbr title='Three lists of three numbers, [origin, x-axis, y-axis]'>plane</abbr>, specifying the origin of the polyhedron.
 If a coordinate is given, then the plane is assumed to be aligned with the global XY plane.  
   * *radius:* The radius of the polyhedron.  
   * *detail:* The level of detail for the polyhedron.  
@@ -500,7 +500,7 @@ positions are returned as nested lists, where each list contains the positions f
 
 
 The `origin` parameter specifies the centre of the polyhedron for which positions will be
-generated. The origin can be specified as either a <abbr title=`A list of three numbers, [x, y, z]`>coordinate</abbr> or a <abbr title=`Three lists of three numbers, [origin, x-axis, y-axis]`>plane</abbr>. If a coordinate
+generated. The origin can be specified as either a <abbr title='A list of three numbers, [x, y, z]'>coordinate</abbr> or a <abbr title='Three lists of three numbers, [origin, x-axis, y-axis]'>plane</abbr>. If a coordinate
 is given, then a plane will be automatically generated, aligned with the global XY plane.
 
 
@@ -545,7 +545,7 @@ of the arc.
   
   
 **Parameters:**  
-  * *origin:* A <abbr title=`A list of three numbers, [x, y, z]`>coordinate</abbr> or a <abbr title=`Three lists of three numbers, [origin, x-axis, y-axis]`>plane</abbr>, specifying the centre of the arc.
+  * *origin:* A <abbr title='A list of three numbers, [x, y, z]'>coordinate</abbr> or a <abbr title='Three lists of three numbers, [origin, x-axis, y-axis]'>plane</abbr>, specifying the centre of the arc.
 If a coordinate is given, then the plane is assumed to be aligned with the global XY plane.  
   * *radius:* Radius of circle as a number.  
   * *num_positions:* Number of positions to be distributed equally along the arc.  

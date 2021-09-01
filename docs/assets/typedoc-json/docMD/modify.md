@@ -173,7 +173,11 @@ and a plane will be generated with an origin at the centroid, and with axes para
 
 
 When a face or polygon is deformed, the triangles that make up that face will sometimes become incorrect.
+
+
 Remeshing will regenerate the triangulated mesh for the face.
+
+
 Remeshing is not performed automatically as it would degrade performance.
 Instead, it is left up to the user to remesh only when it is actually required.
 

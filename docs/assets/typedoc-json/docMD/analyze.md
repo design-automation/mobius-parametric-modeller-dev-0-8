@@ -23,27 +23,27 @@ Returns a dictionary containing the following data.
 
 
 If 'stats' is selected, the dictionary will contain the following numbers:
-1) 'hit_count': the total number of rays that hit an obstruction.
-2) 'miss_count': the total number of rays that did not hit any obstruction.
-3) 'total_dist': the total of all the ray distances.
-4) 'min_dist': the minimum distance for all the rays.
-5) 'max_dist': the maximum distance for all the rays.
-6) 'avg_dist': the average dist for all the rays.
-7) 'dist_ratio': the ratio of 'total_dist' to the maximum distance if not rays hit any
+1. 'hit_count': the total number of rays that hit an obstruction.
+2. 'miss_count': the total number of rays that did not hit any obstruction.
+3. 'total_dist': the total of all the ray distances.
+4. 'min_dist': the minimum distance for all the rays.
+5. 'max_dist': the maximum distance for all the rays.
+6. 'avg_dist': the average dist for all the rays.
+7. 'dist_ratio': the ratio of 'total_dist' to the maximum distance if not rays hit any
 obstructions.
 
 
 If 'distances' is selected, the dictionary will contain the following list:
-1) 'distances': A list of numbers, the distance travelled for each ray.
+1. 'distances': A list of numbers, the distance travelled for each ray.
 
 
 If 'hit_pgons' is selected, the dictionary will contain the following list:
-1) 'hit_pgons': A list of polygon IDs, the polygons hit for each ray, or 'null' if no polygon
+1. 'hit_pgons': A list of polygon IDs, the polygons hit for each ray, or 'null' if no polygon
 was hit.
 
 
 If 'intersections' is selected, the dictionary will contain the following list:
-1) 'intersections': A list of XYZ coords, the point of intersection where the ray hit a polygon,
+1. 'intersections': A list of XYZ coords, the point of intersection where the ray hit a polygon,
 or 'null' if no polygon was hit.
 
 
@@ -81,16 +81,16 @@ More rays will result in more accurate result, but will also be slower to execut
 Returns a dictionary containing different isovist metrics.
 
 
-1) 'avg_dist': The average distance from origin to the perimeter.
-2) 'min_dist': The minimum distance from the origin to the perimeter.
-3) 'max_dist': The minimum distance from the origin to the perimeter.
-4) 'area': The area of the isovist.
-5) 'perimeter': The perimeter of the isovist.
-4) 'area_ratio': The ratio of the area of the isovist to the maximum area.
-5) 'perimeter_ratio': The ratio of the perimeter of the isovist to the maximum perimeter.
-6) 'circularity': The ratio of the square of the perimeter to area (Davis and Benedikt, 1979).
-7) 'compactness': The ratio of average distance to the maximum distance (Michael Batty, 2001).
-8) 'cluster': The ratio of the radius of an idealized circle with the actual area of the
+1. 'avg_dist': The average distance from origin to the perimeter.
+2. 'min_dist': The minimum distance from the origin to the perimeter.
+3. 'max_dist': The minimum distance from the origin to the perimeter.
+4. 'area': The area of the isovist.
+5. 'perimeter': The perimeter of the isovist.
+4. 'area_ratio': The ratio of the area of the isovist to the maximum area.
+5. 'perimeter_ratio': The ratio of the perimeter of the isovist to the maximum perimeter.
+6. 'circularity': The ratio of the square of the perimeter to area (Davis and Benedikt, 1979).
+7. 'compactness': The ratio of average distance to the maximum distance (Michael Batty, 2001).
+8. 'cluster': The ratio of the radius of an idealized circle with the actual area of the
 isovist to the radius of an idealized circle with the actual perimeter of the circle (Michael Batty, 2001).
 
 
@@ -125,11 +125,11 @@ If the ray hits no obstructions, then the sky dome is not obstructed.
 
 
 The exposure factor at each sensor point is calculated as follows:
-1) Shoot rays to all sky dome points.
-2) If the ray hits an obstruction, assign a weight of 0 to that ray.
-3) If a ray does not hit any obstructions, assign a weight between 0 and 1, depending on the incidence angle.
-4) Calculate the total solar expouse by adding up the weights for all rays.
-5) Divide by the maximum possible exposure for an unobstructed sensor with a direction pointing straight up.
+1. Shoot rays to all sky dome points.
+2. If the ray hits an obstruction, assign a weight of 0 to that ray.
+3. If a ray does not hit any obstructions, assign a weight between 0 and 1, depending on the incidence angle.
+4. Calculate the total solar expouse by adding up the weights for all rays.
+5. Divide by the maximum possible exposure for an unobstructed sensor with a direction pointing straight up.
 
 
 If 'weighted' is selected, then
@@ -156,7 +156,7 @@ The number of rays are as follows:
 Returns a dictionary containing exposure results.
 
 
-1) 'exposure': A list of numbers, the exposure factors.
+1. 'exposure': A list of numbers, the exposure factors.
 
 
 
@@ -217,9 +217,9 @@ Geolocation is specified by a model attributes as follows:
 
 
 The neighbors to each source position is calculated as follows:
-1) Calculate the distance to all target positions.
-2) Creat the neighbors set by filtering out target positions that are further than the maximum radius.
-3) If the number of neighbors is greater than 'max_neighbors',
+1. Calculate the distance to all target positions.
+2. Creat the neighbors set by filtering out target positions that are further than the maximum radius.
+3. If the number of neighbors is greater than 'max_neighbors',
 then select the 'max_neighbors' closest target positions.
 
 
@@ -227,13 +227,13 @@ Returns a dictionary containing the nearest positions.
 
 
 If 'num_neighbors' is 1, the dictionary will contain two lists:
-1) 'posis': a list of positions, a subset of positions from the source.
-2) 'neighbors': a list of neighbouring positions, a subset of positions from target.
+1. 'posis': a list of positions, a subset of positions from the source.
+2. 'neighbors': a list of neighbouring positions, a subset of positions from target.
 
 
 If 'num_neighbors' is greater than 1, the dictionary will contain two lists:
-1) 'posis': a list of positions, a subset of positions from the source.
-2) 'neighbors': a list of lists of neighbouring positions, a subset of positions from target.
+1. 'posis': a list of positions, a subset of positions from the source.
+2. 'neighbors': a list of lists of neighbouring positions, a subset of positions from target.
 
   
   
@@ -275,20 +275,20 @@ Returns a dictionary containing the shortest paths.
 
 
 If 'distances' is selected, the dictionary will contain two list:
-1) 'source_posis': a list of start positions for eah path,
-2) 'distances': a list of distances, one list for each path starting at each source position.
+1. 'source_posis': a list of start positions for eah path,
+2. 'distances': a list of distances, one list for each path starting at each source position.
 
 
 If 'counts' is selected, the dictionary will contain four lists:
-1) 'posis': a list of positions traversed by the paths,
-2) 'posis_count': a list of numbers that count how often each position was traversed,
-3) 'edges': a list of edges traversed by the paths,
-4) 'edges_count': a list of numbers that count how often each edge was traversed.
+1. 'posis': a list of positions traversed by the paths,
+2. 'posis_count': a list of numbers that count how often each position was traversed,
+3. 'edges': a list of edges traversed by the paths,
+4. 'edges_count': a list of numbers that count how often each edge was traversed.
 
 
 If 'paths' is selected, the dictionary will contain two lists of lists:
-1) 'posi_paths': a list of lists of positions, one list for each path,
-2) 'edge_paths': a list of lists of edges, one list for each path.
+1. 'posi_paths': a list of lists of positions, one list for each path,
+2. 'edge_paths': a list of lists of edges, one list for each path.
 
 
 If 'all' is selected, the dictionary will contain all lists just described.
@@ -340,19 +340,19 @@ Returns a dictionary containing the shortes paths.
 
 
 If 'distances' is selected, the dictionary will contain one list:
-1) 'distances': a list of distances.
+1. 'distances': a list of distances.
 
 
 If 'counts' is selected, the dictionary will contain four lists:
-1) 'posis': a list of positions traversed by the paths,
-2) 'posis_count': a list of numbers that count how often each position was traversed.
-3) 'edges': a list of edges traversed by the paths,
-4) 'edges_count': a list of numbers that count how often each edge was traversed.
+1. 'posis': a list of positions traversed by the paths,
+2. 'posis_count': a list of numbers that count how often each position was traversed.
+3. 'edges': a list of edges traversed by the paths,
+4. 'edges_count': a list of numbers that count how often each edge was traversed.
 
 
 If 'paths' is selected, the dictionary will contain two lists of lists:
-1) 'posi_paths': a list of lists of positions, one list for each path.
-2) 'edge_paths': a list of lists of edges, one list for each path.
+1. 'posi_paths': a list of lists of positions, one list for each path.
+2. 'edge_paths': a list of lists of edges, one list for each path.
 
 
 If 'all' is selected, the dictionary will contain all lists just described.
@@ -399,14 +399,14 @@ Returns a dictionary containing the results.
 
 
 If 'undirected' is selected, the dictionary will contain  the following:
-1) 'posis': a list of position IDs.
-2) 'degree': a list of numbers, the values for degree centrality.
+1. 'posis': a list of position IDs.
+2. 'degree': a list of numbers, the values for degree centrality.
 
 
 If 'directed' is selected, the dictionary will contain  the following:
-1) 'posis': a list of position IDs.
-2) 'indegree': a list of numbers, the values for incoming degree centrality.
-3) 'outdegree': a list of numbers, the values for outgoing degree centrality.
+1. 'posis': a list of position IDs.
+2. 'indegree': a list of numbers, the values for incoming degree centrality.
+3. 'outdegree': a list of numbers, the values for outgoing degree centrality.
 
   
   
@@ -467,8 +467,8 @@ This is due to the inversion operation: 1 / weight.
 Returns a dictionary containing the results.
 
 
-1) 'posis': a list of position IDs.
-2) 'centrality': a list of numbers, the values for centrality, either betweenness, closeness, or harmonic.
+1. 'posis': a list of position IDs.
+2. 'centrality': a list of numbers, the values for centrality, either betweenness, closeness, or harmonic.
 
   
   

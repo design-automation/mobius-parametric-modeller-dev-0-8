@@ -112,13 +112,13 @@ longitude and latitude for the image. creates a hotspot point object.
 Here is a snippet of code for the above steps:
 ```
 @geolocation = {"latitude": 1.277, "longitude": 103.843, "elevation": 1}
-panorama1_xyz = util.latLong2xyz(panorama1_lat, panorama1_long)
+panorama1_xyz = io.latLong2xyz(panorama1_lat, panorama1_long)
 panorama1_posi = make.Position(panorama1_xyz)
 panoram1_point = make.Point(panorama1_posi)
 vr_hotspot_data = {}
 vr_hotspot_data["background_url"] = panorama1_back_url,
 vr_hotspot_data["background_rotation"] = panorama1_rot,
 vr_hotspot_data["camera_rotation"] = 45
-panoram1_point@vr_hotspot_data
+panoram1_point@vr_hotspot = vr_hotspot_data
 ```
 
