@@ -171,8 +171,8 @@ function genModuleDocs(docs) {
                 fnString += `**Parameters:**  \n`;
                 for (const param of func.parameters) {
                     if (!param) {continue; }
-                    const paramName = param.name.replace(/_/g, '\\_')
-                    fnString += `  * *${paramName}:* ${param.description}  \n`;
+                    // const paramName = param.name.replace(/_/g, '\\_')
+                    fnString += `  * *${param.name}:* ${param.description}  \n`;
                 }
             }
             if (func.returns) {

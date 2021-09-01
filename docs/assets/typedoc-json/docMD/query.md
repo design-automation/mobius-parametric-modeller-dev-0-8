@@ -16,7 +16,7 @@ The resulting list of entities will not contain duplicate entities.
   
   
 **Parameters:**  
-  * *ent\_type\_enum:* Enum, the type of entity to get.  
+  * *ent_type_enum:* Enum, the type of entity to get.  
   * *entities:* Optional, list of entities to get entities from, or null to get all entities in the model.  
   
 **Returns:** Entities, a list of entities.  
@@ -40,7 +40,7 @@ In a case where you want only one entity, remember to get the first item in the 
 **Parameters:**  
   * *entities:* List of entities to filter. The entities must all be of the same type  
   * *attrib:* The attribute to use for filtering. Can be `name`, `[name, index]`, or `[name, key]`.  
-  * *operator\_enum:* Enum, the operator to use for filtering  
+  * *operator_enum:* Enum, the operator to use for filtering  
   * *value:* The attribute value to use for filtering.  
   
 **Returns:** Entities, a list of entities that match the conditions specified in 'expr'.  
@@ -60,7 +60,7 @@ this function gets the entities that are not part of the list of entities.
   
   
 **Parameters:**  
-  * *ent\_type\_enum:* Enum, specifies what type of entities will be returned.  
+  * *ent_type_enum:* Enum, specifies what type of entities will be returned.  
   * *entities:* List of entities to be excluded.  
   
 **Returns:** Entities, a list of entities that match the type specified in 'ent_type_enum', and that are not in entities.  
@@ -83,7 +83,7 @@ If the attribute is a list, and index can also be specified as follows: #@name1[
 **Parameters:**  
   * *entities:* List of two or more entities to be sorted, all of the same entity type.  
   * *attrib:* Attribute name to use for sorting. Can be `name`, `[name, index]`, or `[name, key]`.  
-  * *method\_enum:* Enum, sort descending or ascending.  
+  * *method_enum:* Enum, sort descending or ascending.  
   
 **Returns:** Entities, a list of sorted entities.  
 **Examples:**  
@@ -101,7 +101,7 @@ entities must be part of the set of input entities and must have naked edges.
   
   
 **Parameters:**  
-  * *ent\_type:* Enum, select the type of perimeter entities to return  
+  * *ent_type:* Enum, select the type of perimeter entities to return  
   * *entities:* List of entities.  
   
 **Returns:** Entities, a list of perimeter entities.  
@@ -120,7 +120,7 @@ entities must not be part of the set of input entities, but must be welded to on
   
   
 **Parameters:**  
-  * *ent\_type\_enum:* Enum, select the types of neighbors to return  
+  * *ent_type_enum:* Enum, select the types of neighbors to return  
   * *entities:* List of entities.  
   
 **Returns:** Entities, a list of welded neighbors  
@@ -141,7 +141,7 @@ entities must not be part of the set of input entities, but must be welded to on
   
 **Parameters:**  
   * *entities:* An edge or list of edges.  
-  * *edge\_query\_enum:* Enum, select the types of edges to return.  
+  * *edge_query_enum:* Enum, select the types of edges to return.  
   
 **Returns:** Entities, an edge or list of edges  
   
@@ -165,7 +165,7 @@ if the entity is a topological entity, and it is part of an object of the specif
   
 **Parameters:**  
   * *entities:* An entity, or a list of entities.  
-  * *type\_query\_enum:* Enum, select the conditions to test agains.  
+  * *type_query_enum:* Enum, select the conditions to test agains.  
   
 **Returns:** Boolean or list of boolean in input sequence.  
 **Examples:**  

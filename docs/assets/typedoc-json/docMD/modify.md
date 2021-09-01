@@ -122,7 +122,7 @@ and a plane will be generated with an origin at the centroid, and with axes para
   
 **Parameters:**  
   * *entities:* Vertex, edge, wire, face, position, point, polyline, polygon, collection.  
-  * *from\_plane:* Plane defining source plane for the transformation. 
+  * *from_plane:* Plane defining source plane for the transformation. 
 
 Given a ray, a plane will be generated that is perpendicular to the ray. 
 
@@ -131,7 +131,7 @@ Given an `xyz` location, a plane will be generated with an origin at that locati
 Given any entities, the centroid will be extracted, 
 
 and a plane will be generated with an origin at the centroid, and with axes parallel to the global axes.  
-  * *to\_plane:* Plane defining target plane for the transformation. 
+  * *to_plane:* Plane defining target plane for the transformation. 
 
 Given a ray, a plane will be generated that is perpendicular to the ray. 
 

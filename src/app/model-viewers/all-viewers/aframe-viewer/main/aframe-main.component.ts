@@ -62,6 +62,11 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy 
         const threejsScene = this.threeJSDataService.getThreejsScene();
         if (!threejsScene || !data) { return; }
         data.scene = <any> document.getElementById('aframe_scene');
+        // console.log('~~~~~~~~~~~~~~~')
+        // console.log(data.scene)
+        // console.log(data.scene.object3D)
+        // console.log('!!!!!!!!!!!!!!!')
+        // console.log(String(data.scene.detachedCallback))
         data.camera = <any> document.getElementById('aframe_camera_rig');
         data.model = this.model;
         data.refreshModel(threejsScene);

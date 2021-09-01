@@ -52,8 +52,8 @@ line widths cannot be rendered. As a result, lines width will always be set to 1
 **Parameters:**  
   * *name:* The name of the material.  
   * *color:* The diffuse color, as [r, g, b] values between 0 and 1. White is [1, 1, 1].  
-  * *dash\_gap\_scale:* Size of the dash and gap, and a scale factor. (The gap and scale are optional.)  
-  * *select\_vert\_colors:* Enum, select whether to use vertex colors if they exist.  
+  * *dash_gap_scale:* Size of the dash and gap, and a scale factor. (The gap and scale are optional.)  
+  * *select_vert_colors:* Enum, select whether to use vertex colors if they exist.  
   
 **Returns:** void  
   
@@ -88,8 +88,8 @@ needs to be created. The value for each polygon must either be null, or must be 
   * *name:* The name of the material.  
   * *color:* The diffuse color, as [r, g, b] values between 0 and 1. White is [1, 1, 1].  
   * *opacity:* The opacity of the glass, between 0 (totally transparent) and 1 (totally opaque).  
-  * *select\_side:* Enum, select front, back, or both.  
-  * *select\_vert\_colors:* Enum, select whether to use vertex colors if they exist.  
+  * *select_side:* Enum, select front, back, or both.  
+  * *select_vert_colors:* Enum, select whether to use vertex colors if they exist.  
   
 **Returns:** void  
   

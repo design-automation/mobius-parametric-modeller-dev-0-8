@@ -46,8 +46,8 @@ All attribute values will be set to null.
   
   
 **Parameters:**  
-  * *ent\_type\_sel:* Enum, the attribute entity type.  
-  * *data\_type\_sel:* Enum, the data type for this attribute  
+  * *ent_type_sel:* Enum, the attribute entity type.  
+  * *data_type_sel:* Enum, the data type for this attribute  
   * *attribs:* A single attribute name, or a list of attribute names.
   
   
@@ -62,7 +62,7 @@ All values will also be deleted.
   
   
 **Parameters:**  
-  * *ent\_type\_sel:* Enum, the attribute entity type.  
+  * *ent_type_sel:* Enum, the attribute entity type.  
   * *attribs:* A single attribute name, or a list of attribute names. In 'null' all attributes will be deleted.
   
   
@@ -77,9 +77,9 @@ All values will remain the same.
   
   
 **Parameters:**  
-  * *ent\_type\_sel:* Enum, the attribute entity type.  
-  * *old\_attrib:* The old attribute name.  
-  * *new\_attrib:* The old attribute name.
+  * *ent_type_sel:* Enum, the attribute entity type.  
+  * *old_attrib:* The old attribute name.  
+  * *new_attrib:* The old attribute name.
   
   
   
@@ -94,8 +94,8 @@ All values will remain the same.
   * *entities:* Entities, the entities to push the attribute values for.  
   * *attrib:* The attribute. Can be `name`, `[name, index_or_key]`,
 `[source_name, source_index_or_key, target_name]` or `[source_name, source_index_or_key, target_name, target_index_or_key]`.  
-  * *ent\_type\_sel:* Enum, the target entity type where the attribute values should be pushed to.  
-  * *method\_sel:* Enum, the method for aggregating attribute values in cases where aggregation is necessary.
+  * *ent_type_sel:* Enum, the target entity type where the attribute values should be pushed to.  
+  * *method_sel:* Enum, the method for aggregating attribute values in cases where aggregation is necessary.
   
   
   
