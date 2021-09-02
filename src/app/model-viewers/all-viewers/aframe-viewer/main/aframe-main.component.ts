@@ -1,4 +1,4 @@
-import { OnChanges, Component, Input, AfterViewInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { OnChanges, Component, Input, AfterViewInit, OnDestroy, Output, EventEmitter, DoCheck } from '@angular/core';
 // import @angular stuff
 import {  } from '@angular/core';
 // import app services
@@ -19,7 +19,7 @@ let prevCamPos = new AFRAME.THREE.Vector3();
     templateUrl: './aframe-main.component.html',
     styleUrls: ['./aframe-main.component.scss'],
 })
-export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy, DoCheck {
     // model data passed to the viewer
     @Input() model: GIModel;
     @Input() nodeIndex: number;
@@ -27,6 +27,9 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy 
 
     camPosSaved = false;
     interval: NodeJS.Timer;
+    container;
+    private _width;
+    private _height;
 
 
 
@@ -62,11 +65,6 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy 
         const threejsScene = this.threeJSDataService.getThreejsScene();
         if (!threejsScene || !data) { return; }
         data.scene = <any> document.getElementById('aframe_scene');
-        // console.log('~~~~~~~~~~~~~~~')
-        // console.log(data.scene)
-        // console.log(data.scene.object3D)
-        // console.log('!!!!!!!!!!!!!!!')
-        // console.log(String(data.scene.detachedCallback))
         data.camera = <any> document.getElementById('aframe_camera_rig');
         data.model = this.model;
         data.refreshModel(threejsScene);
@@ -74,8 +72,6 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy 
             data.updateCamera(this.dataService.aframe_cam);
             this.dataService.aframe_cam = null;
         }
-        // console.log(data.scene.object3D)
-        // console.log(data.camera.object3D)
         setTimeout(() => {
             this.updateCamList(data);
         }, 0);
@@ -105,6 +101,28 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy 
                 }
                 // ###############################
                 this.updateCamList(data);
+            }
+        }
+    }
+
+    ngDoCheck() {
+        if (!this.container) {
+            this.container = <HTMLDivElement> document.getElementById('aframe-container');
+            if (!this.container) {
+                console.error('No container in Three Viewer');
+                return;
+            }
+        }
+        const width: number = this.container.offsetWidth;
+        const height: number = this.container.offsetHeight;
+
+        // this is when dimensions change
+        if (width !== this._width || height !== this._height) {
+            this._width = width;
+            this._height = height;
+            const scene = <any> document.getElementById('aframe_scene');
+            if (scene.renderer) {
+                scene.resize(width, height);
             }
         }
     }

@@ -815,7 +815,7 @@ export class DataAframe {
         if (!this.scene || !this.scene.renderer) { return; }
         this.scene.renderer.forceContextLoss();
         this.scene.renderer.dispose();
-        this.scene.renderer = null;
+        // this.scene.renderer = null;
         for (const childObj of this.scene.children) {
             childObj.id = childObj.id + '_';
             childObj.remove();

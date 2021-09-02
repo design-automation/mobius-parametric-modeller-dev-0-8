@@ -769,21 +769,6 @@ export class ViewEditorComponent implements AfterViewInit, OnDestroy {
         this.dataService.node.state.show_func = !this.dataService.node.state.show_func;
     }
 
-    // setTestModel() {
-    //     this.dataService.testModel = !this.dataService.testModel;
-    //     this.dataService.modelOutputView = this.dataService.testModel;
-    // }
-
-    // viewerData(): any {
-    //     const node = this.dataService.flowchart.nodes[this.dataService.flowchart.meta.selected_nodes[0]];
-    //     if (!node || !node.enabled) { return ''; }
-    //     // if (node.type === 'output') { return node.input.value; }
-    //     if (this.getViewOutput()) {
-    //         return node.model;
-    //     }
-    //     return node.input.value;
-    // }
-
     setSplit(event) {
         this.dataService.splitUpdate = true;
         this.dataService.splitVal = event.sizes[1];
