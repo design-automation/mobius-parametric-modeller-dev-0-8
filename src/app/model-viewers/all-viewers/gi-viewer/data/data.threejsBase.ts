@@ -112,7 +112,7 @@ export class DataThreejsBase {
             localStorage.setItem('mpm_settings', JSON.stringify(this.settings));
         }
         const textFontLoader = new THREE.FontLoader();
-        textFontLoader.load( 'assets/fonts/helvetiker_regular.typeface.json', font => { this._text_font = font; });
+        textFontLoader.load( 'assets/fonts/Roboto_Regular.json', font => { this._text_font = font; });
 
         // scene
         this.scene = new THREE.Scene();
