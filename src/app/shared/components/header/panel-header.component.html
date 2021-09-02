@@ -198,6 +198,7 @@
                 <input id='radioGeo' type='checkbox' [(ngModel)]='publishUrlSettings.showViewers[1]'/> <label for='radioGeo'>Geo Viewer</label> <br>
                 <input id='radioVR' type='checkbox' [(ngModel)]='publishUrlSettings.showViewers[2]'/> <label for='radioVR'>VR Viewer</label> <br>
                 <input id='radioConsole' type='checkbox' [(ngModel)]='publishUrlSettings.showViewers[3]'/> <label for='radioConsole'>Console</label> <br>
+                <input id='radioDoc' type='checkbox' [(ngModel)]='publishUrlSettings.showViewers[4]'/> <label for='radioDoc'>Documentation</label> <br>
                 <hr>
             </ng-template>
             <label>Active Viewer</label><br>
@@ -217,7 +218,7 @@
                 <input id='radioDefaultConsole' type='radio' name='defaultViewer' value='&defaultViewer=console' [(ngModel)]='publishUrlSettings.defaultViewer'/>
                 <label for='radioDefaultConsole'>Console</label> <br>
             </ng-container>
-            <ng-container *ngIf='publishUrlSettings.navMode === "dashboard"' >
+            <ng-container *ngIf='publishUrlSettings.navMode === "dashboard" || publishUrlSettings.showViewers[4]'>
                 <input id='radioDefaultDocs' type='radio' name='defaultViewer' value='&defaultViewer=doc' [(ngModel)]='publishUrlSettings.defaultViewer'/>
                 <label for='radioDefaultDocs'>Documentation</label>
             </ng-container>
