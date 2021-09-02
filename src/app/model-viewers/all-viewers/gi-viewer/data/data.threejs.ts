@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GIModel } from '@libs/geo-info/GIModel';
 import { IThreeJS } from '@libs/geo-info/ThreejsJSON';
-import { EEntTypeStr, EEntType, EFilterOperatorTypes, EAttribNames } from '@libs/geo-info/common';
+import { EEntTypeStr, EEntType, EFilterOperatorTypes, EAttribNames, TPlane } from '@libs/geo-info/common';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import { DataService } from '@services';
 import { Vector } from '@assets/core/modules/basic/calc';
@@ -10,6 +10,7 @@ import { ISettings } from './data.threejsSettings';
 import { DataThreejsLookAt } from './data.threejsLookAt';
 import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { VertexNormalsHelper } from 'three/examples/jsm/helpers/VertexNormalsHelper';
+import { xfromSourceTargetMatrix } from '@assets/libs/geom/matrix';
 
 enum MaterialType {
     MeshBasicMaterial = 'MeshBasicMaterial',
@@ -686,12 +687,11 @@ export class DataThreejs extends DataThreejsLookAt {
             const geom = new THREE.ShapeBufferGeometry(shape);
 
             const lengthCheck = [];
-            // @ts-ignore
             const coords = <any> posi.map(p => new THREE.Vector3(...coords_attrib.getEntVal(p)));
             for (let j = 0; j < coords.length; j++) {
                 const p0 = coords[j];
                 const p1 = (j === posi.length - 1) ? coords[0] : coords[j + 1];
-                lengthCheck.push(p0.distanceToSquared(p1));
+                lengthCheck.push(p0.distanceTo(p1));
             }
             if (lengthCheck[1] > lengthCheck[2]) {
                 [lengthCheck[1], lengthCheck[2]] = [lengthCheck[2], lengthCheck[1]];
@@ -705,29 +705,15 @@ export class DataThreejs extends DataThreejsLookAt {
                 [lengthCheck[1], lengthCheck[2]] = [lengthCheck[2], lengthCheck[1]];
                 [coords[0], coords[1]] = [coords[1], coords[0]];
             }
-            const pgonFromVec = new THREE.Vector3(0, 0, 1);
-            const pgonCheckVecFrom = new THREE.Vector3(1, 0, 0);
-            const labelPos = coords[1];
-            const pVec1 = new THREE.Vector3().copy(coords[2]).sub(coords[1]);
-            const pVec2 = new THREE.Vector3().copy(coords[0]).sub(coords[1]);
-            const toVec = new THREE.Vector3().copy(pVec1).cross(pVec2).normalize();
-
-            if (pVec1.x !== 0 || pVec1.y !== 0) {
-                const checkVecTo = new THREE.Vector3(pVec1.x, pVec1.y, 0).normalize();
-                const rotateQuat = new THREE.Quaternion();
-                rotateQuat.setFromUnitVectors(pgonCheckVecFrom, checkVecTo);
-                const rotateMat = new THREE.Matrix4(); // create one and reuse it
-                rotateMat.makeRotationFromQuaternion(rotateQuat);
-                geom.applyMatrix4(rotateMat);
-            }
-
-            const quaternion = new THREE.Quaternion();
-            quaternion.setFromUnitVectors(pgonFromVec, toVec);
-            const matrix = new THREE.Matrix4(); // create one and reuse it
-            matrix.makeRotationFromQuaternion(quaternion);
+            const xAxis = new THREE.Vector3().copy(coords[2]).sub(coords[1]);
+            const yAxis = new THREE.Vector3().copy(coords[0]).sub(coords[1]);
+            const fromPlane = <TPlane> [[0, 0, 0], [lengthCheck[1], 0, 0], [0, lengthCheck[0], 0]];
+            const toPlane = <TPlane> [
+                            [coords[1].x, coords[1].y, coords[1].z],
+                            [xAxis.x, xAxis.y, xAxis.z],
+                            [yAxis.x, yAxis.y, yAxis.z]];
+            const matrix = xfromSourceTargetMatrix(fromPlane, toPlane);
             geom.applyMatrix4(matrix);
-
-            geom.translate(labelPos.x, labelPos.y, labelPos.z);
 
             let color = new THREE.Color(0);
             if (pgon_label[i].color  && pgon_label[i].color.length === 3) {

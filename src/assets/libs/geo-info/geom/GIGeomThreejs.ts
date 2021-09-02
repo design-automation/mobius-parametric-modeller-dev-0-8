@@ -67,6 +67,7 @@ export class GIGeomThreejs {
         // get the material attribute from polygons
         const pgon_material_attrib: GIAttribMapBase = this.modeldata.attribs.attribs_maps.get(ssid).pg.get('material');
         const pgon_vr_cam_attrib: GIAttribMapBase = this.modeldata.attribs.attribs_maps.get(ssid).pg.get('vr_nav_mesh');
+        const pgon_text_attrib: GIAttribMapBase = this.modeldata.attribs.attribs_maps.get(ssid).pg.get('text');
         // loop through all tris
         // get ents from snapshot
         const tris_i: number[] = this.modeldata.geom.snapshot.getEnts(ssid, EEntType.TRI);
@@ -77,6 +78,12 @@ export class GIGeomThreejs {
             // get the materials for this tri from the polygon
             const tri_pgon_i: number = this._geom_maps.up_tris_pgons.get(tri_i);
             const tri_mat_indices: number[] = [];
+            if (pgon_text_attrib !== undefined) {
+                const text_attrib_val: string|string[] = pgon_text_attrib.getEntVal(tri_pgon_i) as string|string[];
+                if (text_attrib_val !== undefined) {
+                    continue;
+                }
+            }
             if (pgon_material_attrib !== undefined) {
                 const mat_attrib_val: string|string[] = pgon_material_attrib.getEntVal(tri_pgon_i) as string|string[];
                 if (mat_attrib_val !== undefined) {
@@ -225,12 +232,20 @@ export class GIGeomThreejs {
         // get the edge material attrib
         const pline_material_attrib = this.modeldata.attribs.attribs_maps.get(ssid).pl.get('material');
         const pgon_vr_cam_attrib: GIAttribMapBase = this.modeldata.attribs.attribs_maps.get(ssid).pg.get('vr_nav_mesh');
+        const pgon_text_attrib: GIAttribMapBase = this.modeldata.attribs.attribs_maps.get(ssid).pg.get('text');
 
         // loop through all edges
         // get ents from snapshot
         const edges_i: number[] = this.modeldata.geom.snapshot.getEnts(ssid, EEntType.EDGE);
         for (const edge_i of edges_i) {
             const edge_verts_i: TEdge = this._geom_maps.dn_edges_verts.get(edge_i);
+            if (pgon_text_attrib) {
+                const edge_pgon_i =  this._geom_maps.up_wires_pgons.get(this._geom_maps.up_edges_wires.get(edge_i));
+                const text_attrib_val: any = pgon_text_attrib.getEntVal(edge_pgon_i) as string|string[];
+                if (text_attrib_val) {
+                    continue;
+                }
+            }
             // check hidden
             const hidden: boolean = visibility_attrib && hidden_edges_set.has(edge_i);
             if (!hidden) {
