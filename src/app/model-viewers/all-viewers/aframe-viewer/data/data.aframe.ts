@@ -251,7 +251,6 @@ export class DataAframe {
         }
 
         if (this.settings.directional_light.show) {
-            console.log('~~~~~~~~~~~~~~~~ update directional light')
             const boundingSphere = this._getAllObjsSphere(threeJSGroup);
             dirLight.visible = true;
             dirLight.intensity = this.settings.directional_light.intensity;
@@ -266,28 +265,9 @@ export class DataAframe {
             dirLight.shadow.mapSize.height = this.settings.directional_light.shadowSize; // default
             const dirLightPos = this.getDLPosition(boundingSphere.radius, this.settings.directional_light.azimuth, this.settings.directional_light.altitude, boundingSphere.center);
             dirLight.position.set(...dirLightPos);
-            // dirLightElement.setAttribute('visible', 'true');
-
-            // dirLightElement.setAttribute('shadowCameraBottom', -boundingSphere.radius);
-            // dirLightElement.setAttribute('shadowCameraLeft', -boundingSphere.radius);
-            // dirLightElement.setAttribute('shadowCameraRight', boundingSphere.radius);
-            // dirLightElement.setAttribute('shadowCameraTop', boundingSphere.radius);
-            // dirLightElement.setAttribute('shadowCameraFar', boundingSphere.radius * 10);
-            // dirLightElement.setAttribute('shadowBias', -0.0001);
-            // dirLightElement.setAttribute('shadowMapHeight', this.settings.directional_light.shadowSize);
-            // dirLightElement.setAttribute('shadowMapWidth', this.settings.directional_light.shadowSize);
-
-            // let lightData = 'type: directional; castShadow:true; ';
-            // lightData += `color: ${this.settings.directional_light.color}; `;
-            // lightData += `intensity: ${this.settings.directional_light.intensity}; `;
-            // dirLightElement.setAttribute('light', lightData);
-            // const dirLightPos = this.getDLPosition(boundingSphere.radius, this.settings.directional_light.azimuth, this.settings.directional_light.altitude, boundingSphere.center);
-            // dirLightElement.setAttribute('position', dirLightPos.toString().replace(/,/g, ' '));
         } else {
             dirLightElement.setAttribute('visible', 'false');
-            // dirLight.visible = false;
         }
-
     }
 
     /**

@@ -683,7 +683,15 @@ export class DataThreejs extends DataThreejsLookAt {
             const labelText = pgon_label[i].text;
             const labelSize = pgon_label[i].size || 20;
 
-            const shape = this._text_font.generateShapes( labelText, labelSize);
+            const fontType = pgon_label[i].font ? pgon_label[i].font : 'roboto';
+            let fontWeight = 'medium';
+            let fontStyle = 'regular';
+            if (pgon_label[i].font_style) {
+                if (pgon_label[i].font_style.indexOf('light') !== -1) { fontWeight = 'light'; }
+                if (pgon_label[i].font_style.indexOf('bold') !== -1) { fontWeight = 'bold'; }
+                if (pgon_label[i].font_style.indexOf('italic') !== -1) { fontStyle = 'italic'; }
+            }
+            const shape = this._text_font[`${fontType}_${fontWeight}_${fontStyle}`].generateShapes( labelText, labelSize);
             const geom = new THREE.ShapeBufferGeometry(shape);
 
             const lengthCheck = [];
@@ -766,7 +774,11 @@ export class DataThreejs extends DataThreejsLookAt {
             if (!labelText || !labelOrient || !Array.isArray(labelOrient)) { continue; }
             const labelSize = label.size || 20;
 
-            const shape = this._text_font.generateShapes( labelText, labelSize);
+            const fontType = label.type ? label.type : 'roboto';
+            const fontWeight = label.weight ? label.weight : 'medium';
+            const fontStyle = label.style ? label.style : 'regular';
+
+            const shape = this._text_font[`${fontType}_${fontWeight}_${fontStyle}`].generateShapes( labelText, labelSize);
             const geom = new THREE.ShapeBufferGeometry(shape);
 
             let labelPos = labelOrient[0];
