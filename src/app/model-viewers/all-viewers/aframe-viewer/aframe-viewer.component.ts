@@ -396,6 +396,20 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                 break;
         }
     }
+
+    public resetDefault(setting: string) {
+        // const scene = this.dataService.getThreejsScene();
+        switch (setting) {
+            case 'camera.pos':
+                this.temp_camera_pos.x = 0;
+                this.temp_camera_pos.z = 0;
+                break;
+            case 'camera.rot':
+                this.temp_camera_rot.x = 0;
+                this.temp_camera_rot.y = 0;
+                break;
+        }
+    }
     /**
      *
      * @param id

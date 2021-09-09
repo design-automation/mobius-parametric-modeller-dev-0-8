@@ -57,6 +57,7 @@
                             <input type="number"
                             (change)="settingOnChange('camera.pos_y', $event.target.value)" 
                             [value]="formatNumber(settings.camera.position.y)">
+                            <button (click)="resetDefault('camera.pos');" class='filebtn getbtn'>Reset</button>
                         </dd>
                         <dd class='vector_input_div'>
                             <div class="label">Camera Rotation</div>
@@ -66,6 +67,7 @@
                             <input type="number" 
                             (change)="settingOnChange('camera.rot_y', $event.target.value)"
                             [value]="formatNumber(settings.camera.rotation.y)" disabled>
+                            <button (click)="resetDefault('camera.rot');" class='filebtn getbtn'>Reset</button>
                         </dd>
                         <dd>
                             <div class="label">Camera Acceleration</div>

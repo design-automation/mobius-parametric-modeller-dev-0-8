@@ -38,7 +38,7 @@
             "optimization": false,
             "namedChunks": false,
             "aot": true
-        },
+          },
           "configurations": {
             "production": {
               "optimization": false,
@@ -59,8 +59,19 @@
                   "with": "src/app/appmodule/app-routing.module.prod.ts"
                 }
               ]
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": false,
+              "vendorChunk": false,
+              "buildOptimizer": false,
+              "budgets": []
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -70,6 +81,9 @@
           "configurations": {
             "production": {
               "browserTarget": "mobius-parametric-modeller:build:production"
+            },
+            "development": {
+                "browserTarget": "mobius-parametric-modeller:build:development"
             }
           }
         },

@@ -261,10 +261,11 @@ export class DataAframe {
             dirLight.shadow.camera.bottom = -boundingSphere.radius;
             dirLight.shadow.camera.far = boundingSphere.radius * 20;
             dirLight.shadow.bias = -0.0001;
-            dirLight.shadow.mapSize.width = this.settings.directional_light.shadowSize;  // default
-            dirLight.shadow.mapSize.height = this.settings.directional_light.shadowSize; // default
             const dirLightPos = this.getDLPosition(boundingSphere.radius, this.settings.directional_light.azimuth, this.settings.directional_light.altitude, boundingSphere.center);
             dirLight.position.set(...dirLightPos);
+            if (dirLight.shadow.mapSize.width !== this.settings.directional_light.shadowSize) {
+                dirLight.shadow.mapSize.set(this.settings.directional_light.shadowSize, this.settings.directional_light.shadowSize);
+            }
         } else {
             dirLightElement.setAttribute('visible', 'false');
         }
