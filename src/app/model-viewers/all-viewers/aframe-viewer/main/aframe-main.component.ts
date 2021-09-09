@@ -69,8 +69,10 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy,
         data.model = this.model;
         data.refreshModel(threejsScene);
         if (this.dataService.aframe_cam) {
-            data.updateCamera(this.dataService.aframe_cam);
-            this.dataService.aframe_cam = null;
+            setTimeout(() => {
+                data.updateCamera(this.dataService.aframe_cam);
+                this.dataService.aframe_cam = null;
+            }, 0);
         }
         setTimeout(() => {
             this.updateCamList(data);

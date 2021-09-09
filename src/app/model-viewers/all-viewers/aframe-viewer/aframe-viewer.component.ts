@@ -144,7 +144,7 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
             this.showCamPosList = true;
             setTimeout(() => {
                 const selCamPosEl = <HTMLSelectElement> document.getElementById('selCamPosEl');
-                selCamPosEl.value = this.selectedCamPos.toString();
+                if (selCamPosEl) { selCamPosEl.value = this.selectedCamPos.toString(); }
             }, 0);
         }
     }
@@ -184,6 +184,12 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
     }
 
     zoomfit() {
+        this.resetDefault('camera.pos');
+        this.resetDefault('camera.rot');
+        this.settings.camera.position = this.temp_camera_pos;
+        this.settings.camera.rotation = this.temp_camera_rot;
+        this.dataService.getAframeData().updateSettings(this.settings);
+        this.dataService.getAframeData().refreshModel(this.threeJSDataService.getThreejsScene());
     }
 
     /**

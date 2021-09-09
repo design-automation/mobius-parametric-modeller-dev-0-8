@@ -226,6 +226,7 @@ export class DataAframe {
         const ambLightElement = <any> document.getElementById('aframe_ambientLight');
         const hemLightElement = <any> document.getElementById('aframe_hemisphereLight');
         const dirLightElement = <any> document.getElementById('aframe_directionalLight');
+        if (!ambLightElement || !hemLightElement || !dirLightElement) { return; }
         const ambLight = ambLightElement.object3D.children[0];
         const hemLight = hemLightElement.object3D.children[0];
         const dirLight = dirLightElement.object3D.children[0];

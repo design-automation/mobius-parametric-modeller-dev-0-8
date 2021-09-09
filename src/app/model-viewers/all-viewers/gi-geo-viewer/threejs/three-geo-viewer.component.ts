@@ -63,14 +63,16 @@ export class ThreeGeoComponent implements OnInit, OnChanges, OnDestroy, DoCheck 
         } else {
             const data = this.dataService.getGeoScene();
             data.model = this.model;
-            const threejsScene = this.threeJSDataService.getThreejsScene();
-            if (!threejsScene.model || threejsScene.model !== this.model || threejsScene.nodeIndex !== this.nodeIndex) {
-                threejsScene.model = this.model;
-                threejsScene.nodeIndex = this.nodeIndex;
-                threejsScene.populateScene(this.model, null);
+            if (this.model) {
+                const threejsScene = this.threeJSDataService.getThreejsScene();
+                if (!threejsScene.model || threejsScene.model !== this.model || threejsScene.nodeIndex !== this.nodeIndex) {
+                    threejsScene.model = this.model;
+                    threejsScene.nodeIndex = this.nodeIndex;
+                    threejsScene.populateScene(this.model, null);
+                }
+                data.refreshModel(threejsScene);
+                data.view.notifyChange();
             }
-            data.refreshModel(threejsScene);
-            data.view.notifyChange();
             setTimeout(() => {
                 const geoCont = <HTMLDivElement> document.getElementById('geo-container');
                 const childCont = <HTMLDivElement> document.getElementById('threejs-geo-container');
