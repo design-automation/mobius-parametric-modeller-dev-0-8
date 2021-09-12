@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GIModel } from '@libs/geo-info/GIModel';
 import { IThreeJS } from '@libs/geo-info/ThreejsJSON';
-import { EEntTypeStr, EEntType, EFilterOperatorTypes, EAttribNames, TPlane } from '@libs/geo-info/common';
+import { EEntType, EAttribNames, TPlane, TColor } from '@libs/geo-info/common';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import { DataService } from '@services';
 import { Vector } from '@assets/core/modules/basic/calc';
@@ -117,7 +117,17 @@ export class DataThreejs extends DataThreejsLookAt {
             old = null;
         }, 0);
     }
-
+    // replaces rgb values with THREE.Color objects
+    private _replaceColors(materials: object[], keys: string[]): void {
+        for (const mat of materials) {
+            for (const color_key of keys) {
+                const rgb: TColor = mat[color_key];
+                if (rgb === undefined) { continue; }
+                if (!Array.isArray(rgb)) { continue; }
+                mat[color_key] = new THREE.Color(rgb[0], rgb[1], rgb[2]);
+            }
+        }
+    }
     private _addGeom(model: GIModel): void {
         // Add geometry
         const threejs_data: IThreeJS = model.get3jsData(this.nodeIndex);
@@ -136,8 +146,10 @@ export class DataThreejs extends DataThreejsLookAt {
         // Get materials
         const pline_material_groups = threejs_data.pline_material_groups;
         const pline_materials = threejs_data.pline_materials;
+        this._replaceColors(pline_materials, ["color"]);
         const pgon_material_groups = threejs_data.pgon_material_groups;
         const pgon_materials = threejs_data.pgon_materials;
+        this._replaceColors(pgon_materials, ["color", "specular", "emissive"]);
 
         // Create buffers that will be used by all geometry
         const verts_xyz_buffer = new THREE.Float32BufferAttribute(threejs_data.verts_xyz, 3);
@@ -639,7 +651,7 @@ export class DataThreejs extends DataThreejsLookAt {
     private _addPoints(points_i: number[],
                         posis_buffer: THREE.Float32BufferAttribute,
                         colors_buffer: THREE.Float32BufferAttribute,
-                        color: [number, number, number],
+                        color: TColor,
                         size: number = 1): void {
         const geom = new THREE.BufferGeometry();
         geom.setIndex(points_i);
