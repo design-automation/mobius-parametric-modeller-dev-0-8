@@ -186,8 +186,16 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
     zoomfit() {
         this.resetDefault('camera.pos');
         this.resetDefault('camera.rot');
-        this.settings.camera.position = this.temp_camera_pos;
-        this.settings.camera.rotation = this.temp_camera_rot;
+        this.settings.camera.position = {
+            x: this.temp_camera_pos.x,
+            y: this.settings.camera.position.y,
+            z: this.temp_camera_pos.z,
+        };
+        this.settings.camera.rotation = {
+            x: this.temp_camera_rot.x,
+            y: this.temp_camera_rot.y,
+            z: this.settings.camera.rotation.z,
+        };
         this.dataService.getAframeData().updateSettings(this.settings);
         this.dataService.getAframeData().refreshModel(this.threeJSDataService.getThreejsScene());
     }

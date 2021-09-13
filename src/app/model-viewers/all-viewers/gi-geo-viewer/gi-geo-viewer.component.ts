@@ -56,8 +56,8 @@ export class GIGeoViewerComponent implements OnDestroy {
 
                 const loadedSettings = JSON.parse(localStorage.getItem('geo_settings'));
                 this.updateSettings(this.settings, loadedSettings);
-                geoScene.settings = JSON.parse(localStorage.getItem('geo_settings'));
-                geoScene.refreshModel(this.threeJSDataService.getThreejsScene());
+                geoScene.settings = JSON.parse(JSON.stringify(loadedSettings));
+                geoScene.refreshModel(this.threeJSDataService.getThreejsScene(), true);
                 this.mainDataService.geoViewerSettingsUpdated = false;
             }
         }, 100);
