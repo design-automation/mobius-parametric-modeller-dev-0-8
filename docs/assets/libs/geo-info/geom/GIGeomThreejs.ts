@@ -67,6 +67,7 @@ export class GIGeomThreejs {
         // get the material attribute from polygons
         const pgon_material_attrib: GIAttribMapBase = this.modeldata.attribs.attribs_maps.get(ssid).pg.get('material');
         const pgon_vr_cam_attrib: GIAttribMapBase = this.modeldata.attribs.attribs_maps.get(ssid).pg.get('vr_nav_mesh');
+        const pgon_text_attrib: GIAttribMapBase = this.modeldata.attribs.attribs_maps.get(ssid).pg.get('text');
         // loop through all tris
         // get ents from snapshot
         const tris_i: number[] = this.modeldata.geom.snapshot.getEnts(ssid, EEntType.TRI);
@@ -77,6 +78,12 @@ export class GIGeomThreejs {
             // get the materials for this tri from the polygon
             const tri_pgon_i: number = this._geom_maps.up_tris_pgons.get(tri_i);
             const tri_mat_indices: number[] = [];
+            if (pgon_text_attrib !== undefined) {
+                const text_attrib_val: string|string[] = pgon_text_attrib.getEntVal(tri_pgon_i) as string|string[];
+                if (text_attrib_val !== undefined) {
+                    continue;
+                }
+            }
             if (pgon_material_attrib !== undefined) {
                 const mat_attrib_val: string|string[] = pgon_material_attrib.getEntVal(tri_pgon_i) as string|string[];
                 if (mat_attrib_val !== undefined) {
@@ -207,14 +214,17 @@ export class GIGeomThreejs {
         const vrmesh_edge_data_arrs: [number, TEdge, number, boolean][] = []; // edge_mat_indices, new_edge_verts_i, edge_i
         // materials
         const line_mat_black: object = {
-            color: 0x000000,
+            color: [0,0,0],
             linewidth: 1
         };
         const line_mat_white: object = {
-            color: 0xffffff,
+            color: [1,1,1],
             linewidth: 1
         };
-        const materials: object[] = [this._getPlineMaterial( line_mat_black ), this._getPlineMaterial( line_mat_white )];
+        const materials: object[] = [
+            this._getPlineMaterial( line_mat_black ), 
+            this._getPlineMaterial( line_mat_white )
+        ];
         const material_names:  string[] = ['black', 'white'];
         // check the hidden edges
         const visibility_attrib = this.modeldata.attribs.attribs_maps.get(ssid)._e.get('visibility');
@@ -223,14 +233,25 @@ export class GIGeomThreejs {
             hidden_edges_set = new Set(visibility_attrib.getEntsFromVal('hidden'));
         }
         // get the edge material attrib
-        const pline_material_attrib = this.modeldata.attribs.attribs_maps.get(ssid).pl.get('material');
-        const pgon_vr_cam_attrib: GIAttribMapBase = this.modeldata.attribs.attribs_maps.get(ssid).pg.get('vr_nav_mesh');
+        const pline_material_attrib =
+            this.modeldata.attribs.attribs_maps.get(ssid).pl.get('material');
+        const pgon_vr_cam_attrib: GIAttribMapBase =
+            this.modeldata.attribs.attribs_maps.get(ssid).pg.get('vr_nav_mesh');
+        const pgon_text_attrib: GIAttribMapBase =
+            this.modeldata.attribs.attribs_maps.get(ssid).pg.get('text');
 
         // loop through all edges
         // get ents from snapshot
         const edges_i: number[] = this.modeldata.geom.snapshot.getEnts(ssid, EEntType.EDGE);
         for (const edge_i of edges_i) {
             const edge_verts_i: TEdge = this._geom_maps.dn_edges_verts.get(edge_i);
+            if (pgon_text_attrib) {
+                const edge_pgon_i =  this._geom_maps.up_wires_pgons.get(this._geom_maps.up_edges_wires.get(edge_i));
+                const text_attrib_val: any = pgon_text_attrib.getEntVal(edge_pgon_i) as string|string[];
+                if (text_attrib_val) {
+                    continue;
+                }
+            }
             // check hidden
             const hidden: boolean = visibility_attrib && hidden_edges_set.has(edge_i);
             if (!hidden) {
@@ -241,13 +262,15 @@ export class GIGeomThreejs {
                 const edge_pline_i: number = this._geom_maps.up_wires_plines.get(edge_wire_i);
                 let pline_mat_index = 0; // default black line
                 if (pline_material_attrib !== undefined) {
-                    const pline_mat_name: string = pline_material_attrib.getEntVal(edge_pline_i) as string;
+                    const pline_mat_name: string =
+                        pline_material_attrib.getEntVal(edge_pline_i) as string;
                     // check if the polyline has a material?
                     if (pline_mat_name !== undefined) {
                         pline_mat_index = material_names.indexOf(pline_mat_name);
                         // add material
                         if (pline_mat_index === -1) {
-                            const mat_settings_obj: object = this.modeldata.attribs.attribs_maps.get(ssid).mo.get(pline_mat_name);
+                            const mat_settings_obj: object =
+                                this.modeldata.attribs.attribs_maps.get(ssid).mo.get(pline_mat_name);
                             if (mat_settings_obj !== undefined) {
                                 pline_mat_index = material_names.push(pline_mat_name) - 1;
                                 materials.push(this._getPlineMaterial(mat_settings_obj));
@@ -260,7 +283,8 @@ export class GIGeomThreejs {
                 let vrmesh_check = false;
                 let vrmesh_hidden = false;
                 if (pgon_vr_cam_attrib) {
-                    const edge_pgon_i =  this._geom_maps.up_wires_pgons.get(this._geom_maps.up_edges_wires.get(edge_i));
+                    const edge_pgon_i =
+                        this._geom_maps.up_wires_pgons.get(this._geom_maps.up_edges_wires.get(edge_i));
                     const mat_attrib_val: any = pgon_vr_cam_attrib.getEntVal(edge_pgon_i) as string|string[];
                     if (mat_attrib_val) {
                         vrmesh_check = true;

@@ -3,9 +3,9 @@
 ## Set  
   
   
-**Description:** Sets material by creating a polygon attribute called 'material' and setting the value.
-The value is a sitring, which is the name of the material.
-The properties of this material must be defined at the model level, using one of the material functions.
+**Description:** Sets material by creating a polygon attribute called 'material' and setting the value. The value
+is a string, which is the name of the material. The properties of this material must be defined
+at the model level, using one of the material functions.
 
   
   
