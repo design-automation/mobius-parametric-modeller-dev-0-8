@@ -48,6 +48,9 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
     temp_camera_pos = new AFRAME.THREE.Vector3(0, 0, 0);
     temp_camera_rot = new AFRAME.THREE.Vector3(-1, 0, 0);
 
+    // current_camera_pos = new AFRAME.THREE.Vector3(0, 0, 0);
+    // current_camera_rot = new AFRAME.THREE.Vector3(0, 0, 0);
+
     private settingsUpdateInterval;
 
     /**
@@ -95,16 +98,16 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                 aframeData.refreshModel(this.threeJSDataService.getThreejsScene());
                 this.mainDataService.aframeViewerSettingsUpdated = false;
             }
-            const cameraUpdateData = document.getElementById('aframe-cameraUpdateData');
-            if (!cameraUpdateData) { return; }
-            if ((<HTMLInputElement>cameraUpdateData.children[0]).value) {
-                this.updatePos((<HTMLInputElement>cameraUpdateData.children[1]).value);
-                (<HTMLInputElement>cameraUpdateData.children[0]).value = null;
-            }
-            if ((<HTMLInputElement>cameraUpdateData.children[2]).value) {
-                this.updateLook((<HTMLInputElement>cameraUpdateData.children[3]).value);
-                (<HTMLInputElement>cameraUpdateData.children[2]).value = null;
-            }
+            // const cameraUpdateData = document.getElementById('aframe-cameraUpdateData');
+            // if (!cameraUpdateData) { return; }
+            // if ((<HTMLInputElement>cameraUpdateData.children[0]).value) {
+            //     this.updatePos((<HTMLInputElement>cameraUpdateData.children[1]).value);
+            //     (<HTMLInputElement>cameraUpdateData.children[0]).value = null;
+            // }
+            // if ((<HTMLInputElement>cameraUpdateData.children[2]).value) {
+            //     this.updateLook((<HTMLInputElement>cameraUpdateData.children[3]).value);
+            //     (<HTMLInputElement>cameraUpdateData.children[2]).value = null;
+            // }
         }, 100);
     }
 
@@ -411,16 +414,44 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
         }
     }
 
+    public getPosition(setting: string) {
+        // const scene = this.dataService.getThreejsScene();
+        switch (setting) {
+            case 'camera.pos':
+                const camRig = <any> document.getElementById('aframe_camera_rig');
+                if (camRig) {
+                    const posData = new AFRAME.THREE.Vector3(0, 0, 0);
+                    camRig.object3D.getWorldPosition(posData);
+                    this.temp_camera_pos.x = posData.x;
+                    this.temp_camera_pos.z = - posData.z;
+                }
+                break;
+            case 'camera.rot':
+                const lookCam = <any> document.getElementById('aframe_look_camera');
+                if (lookCam) {
+                    const rot = lookCam.getAttribute('rotation');
+                    rot.y = 0 - rot.y;
+                    while (rot.y < -180) { rot.y += 360; }
+                    while (rot.y > 180) { rot.y -= 360; }
+                    this.temp_camera_rot.x = rot.x;
+                    this.temp_camera_rot.y = rot.y;
+                    this.temp_camera_rot.z = rot.z;
+                }
+                break;
+        }
+    }
+
     public resetDefault(setting: string) {
         // const scene = this.dataService.getThreejsScene();
         switch (setting) {
             case 'camera.pos':
-                this.temp_camera_pos.x = 0;
-                this.temp_camera_pos.z = 0;
+                this.temp_camera_pos.x = this.settings.camera.position.x;
+                this.temp_camera_pos.z = this.settings.camera.position.z;
                 break;
             case 'camera.rot':
-                this.temp_camera_rot.x = 0;
-                this.temp_camera_rot.y = 0;
+                this.temp_camera_rot.x = this.settings.camera.rotation.x;
+                this.temp_camera_rot.y = this.settings.camera.rotation.y;
+                this.temp_camera_rot.z = this.settings.camera.rotation.z;
                 break;
         }
     }

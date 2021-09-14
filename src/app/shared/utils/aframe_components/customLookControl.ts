@@ -236,19 +236,19 @@ export const customLookControl = {
         object3D.rotation.y = this.magicWindowDeltaEuler.y + yawObject.rotation.y;
         object3D.rotation.z = this.magicWindowDeltaEuler.z;
 
-        if (!this.prevRotation || this.prevRotation.x !== object3D.rotation.x || this.prevRotation.y !== object3D.rotation.y){
-            this.prevRotation = {
-                x: object3D.rotation.x,
-                y: object3D.rotation.y
-            };
-            const updateCamDiv = <HTMLButtonElement> document.getElementById('aframe-cameraUpdateData');
-            if (updateCamDiv) {
-                const updateLookCheck = <HTMLInputElement> updateCamDiv.children[2];
-                const updateLookInp = <HTMLInputElement> updateCamDiv.children[3];
-                updateLookCheck.value = '1';
-                updateLookInp.value = JSON.stringify(this.el.getAttribute('rotation'));
-            }
-        }
+        // if (!this.prevRotation || this.prevRotation.x !== object3D.rotation.x || this.prevRotation.y !== object3D.rotation.y) {
+        //     this.prevRotation = {
+        //         x: object3D.rotation.x,
+        //         y: object3D.rotation.y
+        //     };
+        //     const updateCamDiv = <HTMLButtonElement> document.getElementById('aframe-cameraUpdateData');
+        //     if (updateCamDiv) {
+        //         const updateLookCheck = <HTMLInputElement> updateCamDiv.children[2];
+        //         const updateLookInp = <HTMLInputElement> updateCamDiv.children[3];
+        //         updateLookCheck.value = '1';
+        //         updateLookInp.value = JSON.stringify(this.el.getAttribute('rotation'));
+        //     }
+        // }
       };
     })(),
 

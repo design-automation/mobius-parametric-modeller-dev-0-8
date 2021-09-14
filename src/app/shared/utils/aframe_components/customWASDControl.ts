@@ -73,19 +73,19 @@ export const customWASDControl = {
 
         if (!velocity[data.adAxis] && !velocity[data.wsAxis]) { return; }
 
-        const updateCamDiv = <HTMLButtonElement> document.getElementById('aframe-cameraUpdateData');
-        if (updateCamDiv && (<HTMLInputElement>updateCamDiv.children[4]).value) { return; }
+        // const updateCamDiv = <HTMLButtonElement> document.getElementById('aframe-cameraUpdateData');
+        // if (updateCamDiv && (<HTMLInputElement>updateCamDiv.children[4]).value) { return; }
 
         // Get movement vector and translate position.
         const movementVector = this.getMovementVector(delta);
         el.object3D.position.add(movementVector);
-        if (updateCamDiv) {
-            const updatePosCheck = <HTMLInputElement> updateCamDiv.children[0];
-            const updatePosInp = <HTMLInputElement> updateCamDiv.children[1];
-            updatePosCheck.value = '1';
-            el.object3D.getWorldPosition(this.pos);
-            updatePosInp.value = JSON.stringify(this.pos);
-        }
+        // if (updateCamDiv) {
+        //     const updatePosCheck = <HTMLInputElement> updateCamDiv.children[0];
+        //     const updatePosInp = <HTMLInputElement> updateCamDiv.children[1];
+        //     updatePosCheck.value = '1';
+        //     el.object3D.getWorldPosition(this.pos);
+        //     updatePosInp.value = JSON.stringify(this.pos);
+        // }
     },
 
     remove: function () {

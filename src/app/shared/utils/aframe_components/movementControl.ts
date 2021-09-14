@@ -106,8 +106,8 @@ export const movementControlComponent = {
             this.updateVelocity(dt);
         }
 
-        const updateCamDiv = <HTMLButtonElement> document.getElementById('aframe-cameraUpdateData');
-        if (updateCamDiv && (<HTMLInputElement>updateCamDiv.children[4]).value) { return; }
+        // const updateCamDiv = <HTMLButtonElement> document.getElementById('aframe-cameraUpdateData');
+        // if (updateCamDiv && (<HTMLInputElement>updateCamDiv.children[4]).value) { return; }
 
         if (data.constrainToNavMesh
             && velocityCtrl.isNavMeshConstrained !== false) {
@@ -133,14 +133,14 @@ export const movementControlComponent = {
             el.object3D.position.y += velocity.y * dt / 1000;
             el.object3D.position.z += velocity.z * dt / 1000;
         }
-        if (updateCamDiv) {
-            const updatePosCheck = <HTMLInputElement> updateCamDiv.children[0];
-            const updatePosInp = <HTMLInputElement> updateCamDiv.children[1];
-            updatePosCheck.value = '1';
-            const pos = new THREE.Vector3();
-            el.object3D.getWorldPosition(pos);
-            updatePosInp.value = JSON.stringify(pos);
-        }
+        // if (updateCamDiv) {
+        //     const updatePosCheck = <HTMLInputElement> updateCamDiv.children[0];
+        //     const updatePosInp = <HTMLInputElement> updateCamDiv.children[1];
+        //     updatePosCheck.value = '1';
+        //     const pos = new THREE.Vector3();
+        //     el.object3D.getWorldPosition(pos);
+        //     updatePosInp.value = JSON.stringify(pos);
+        // }
     };
   }()),
 

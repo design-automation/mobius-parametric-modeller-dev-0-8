@@ -46,6 +46,16 @@
                             </dd>
                         </ng-container> -->
                         <dd><hr></dd>
+                        <dd>
+                            <div class="label">Camera Acceleration</div>
+                            <div class="slidecontainer light">
+                                <input type="range" min="0" max="1000" step="1" [value]="settings.camera.acceleration" class="slider" (input)="settingOnChange('camera.acceleration', $event.target.value)">
+                                <input type="number"
+                                (change)="settingOnChange('camera.acceleration', $event.target.value)" 
+                                [value]="formatNumber(settings.camera.acceleration)">
+                            </div>
+                        </dd>
+                        <br>
                         <dd class='vector_input_div'>
                             <div class="label">Camera Position</div>
                             <input type="number"
@@ -57,7 +67,7 @@
                             <input type="number"
                             (change)="settingOnChange('camera.pos_y', $event.target.value)" 
                             [value]="formatNumber(settings.camera.position.y)">
-                            <button (click)="resetDefault('camera.pos');" class='filebtn getbtn'>Reset</button>
+                            <button (click)="getPosition('camera.pos');" class='filebtn getbtn'>Get</button>
                         </dd>
                         <dd class='vector_input_div'>
                             <div class="label">Camera Rotation</div>
@@ -67,16 +77,7 @@
                             <input type="number" 
                             (change)="settingOnChange('camera.rot_y', $event.target.value)"
                             [value]="formatNumber(settings.camera.rotation.y)" disabled>
-                            <button (click)="resetDefault('camera.rot');" class='filebtn getbtn'>Reset</button>
-                        </dd>
-                        <dd>
-                            <div class="label">Camera Acceleration</div>
-                            <div class="slidecontainer light">
-                                <input type="range" min="0" max="1000" step="1" [value]="settings.camera.acceleration" class="slider" (input)="settingOnChange('camera.acceleration', $event.target.value)">
-                                <input type="number"
-                                (change)="settingOnChange('camera.acceleration', $event.target.value)" 
-                                [value]="formatNumber(settings.camera.acceleration)">
-                            </div>
+                            <button (click)="getPosition('camera.rot');" class='filebtn getbtn'>Get</button>
                         </dd>
                     </dl>
                 </div>
