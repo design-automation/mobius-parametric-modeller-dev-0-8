@@ -183,11 +183,13 @@ export class DataAframe {
         this.navMeshEnabled = false;
         try {
             const allPgons = <string[]> Modules.query.Get(this.model, _EEntType.PGON, null) ;
-            const attrib = Modules.attrib.Get(this.model, allPgons, 'vr_nav_mesh');
-            if (attrib) {
+            const attrib = <any> Modules.attrib.Get(this.model, allPgons, 'vr_nav_mesh');
+            if (attrib && attrib.length !== 0) {
                 this.navMeshEnabled = true;
             }
-        } catch (ex) {}
+        } catch (ex) {
+            this.navMeshEnabled = false;
+        }
         for (const i of threejsScene.scene.children) {
             if (i.name.startsWith('obj')) {
                 const materials = this.getMaterial(i.material);

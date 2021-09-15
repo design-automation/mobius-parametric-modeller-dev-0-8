@@ -48,8 +48,8 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
     temp_camera_pos = new AFRAME.THREE.Vector3(0, 0, 0);
     temp_camera_rot = new AFRAME.THREE.Vector3(-1, 0, 0);
 
-    // current_camera_pos = new AFRAME.THREE.Vector3(0, 0, 0);
-    // current_camera_rot = new AFRAME.THREE.Vector3(0, 0, 0);
+    current_camera_pos = '';
+    current_camera_rot = '';
 
     private settingsUpdateInterval;
 
@@ -98,16 +98,18 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                 aframeData.refreshModel(this.threeJSDataService.getThreejsScene());
                 this.mainDataService.aframeViewerSettingsUpdated = false;
             }
-            // const cameraUpdateData = document.getElementById('aframe-cameraUpdateData');
-            // if (!cameraUpdateData) { return; }
-            // if ((<HTMLInputElement>cameraUpdateData.children[0]).value) {
-            //     this.updatePos((<HTMLInputElement>cameraUpdateData.children[1]).value);
-            //     (<HTMLInputElement>cameraUpdateData.children[0]).value = null;
-            // }
-            // if ((<HTMLInputElement>cameraUpdateData.children[2]).value) {
-            //     this.updateLook((<HTMLInputElement>cameraUpdateData.children[3]).value);
-            //     (<HTMLInputElement>cameraUpdateData.children[2]).value = null;
-            // }
+            const cameraUpdateData = document.getElementById('aframe-cameraUpdateData');
+            if (!cameraUpdateData) { return; }
+            if ((<HTMLInputElement>cameraUpdateData.children[0]).value) {
+                this.current_camera_pos = (<HTMLInputElement>cameraUpdateData.children[1]).value;
+                // this.updatePos((<HTMLInputElement>cameraUpdateData.children[1]).value);
+                // (<HTMLInputElement>cameraUpdateData.children[0]).value = null;
+            }
+            if ((<HTMLInputElement>cameraUpdateData.children[2]).value) {
+                this.current_camera_rot = (<HTMLInputElement>cameraUpdateData.children[3]).value;
+                // this.updateLook((<HTMLInputElement>cameraUpdateData.children[3]).value);
+                // (<HTMLInputElement>cameraUpdateData.children[2]).value = null;
+            }
         }, 100);
     }
 
