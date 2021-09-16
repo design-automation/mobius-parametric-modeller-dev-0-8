@@ -519,7 +519,6 @@ export class ProcedureItemComponent implements OnDestroy {
     onWheel(event: WheelEvent) {
         const target = <HTMLElement> event.target;
         if (!target.className) { return; }
-        console.log(target.className)
         if (!REGEXP.test(target.className)) { return; }
         let elm = target;
         let scrollCheck = false;
@@ -529,7 +528,6 @@ export class ProcedureItemComponent implements OnDestroy {
                 if (scrollCheck || elm.clientWidth < elm.scrollWidth) { scrollCheck = true; }
                 if (event.deltaY < 0) {
                     const diff = elm.scrollWidth - elm.clientWidth;
-                    console.log(elm.scrollLeft, diff)
                     if (elm.scrollLeft < diff - 1) {
                         elm.scrollLeft += 30;
                         if (elm.scrollLeft > diff) { elm.scrollLeft = diff; }
