@@ -12,6 +12,9 @@ import { IArgument } from '@models/code';
 
 import { modifyArgument, checkNodeValidity, modifyLocalFuncVar} from '@shared/parser';
 
+
+const REGEXP = /^(container--item|container--line|line--item|input--var|input--arg|module-name|function-text|global-function-text|basic-function-text)/i;
+
 @Component({
     selector: 'procedure-item',
     templateUrl: './procedure-item.component.html',
@@ -511,5 +514,41 @@ export class ProcedureItemComponent implements OnDestroy {
 
     updateJsVal(p: IArgument) {
         p.jsValue = p.value;
+    }
+
+    onWheel(event: WheelEvent) {
+        const target = <HTMLElement> event.target;
+        if (!target.className) { return; }
+        console.log(target.className)
+        if (!REGEXP.test(target.className)) { return; }
+        let elm = target;
+        let scrollCheck = false;
+        while (true) {
+            if (elm.className.startsWith('pro-container')) { break; }
+            if (elm.className === 'container--item') {
+                if (scrollCheck || elm.clientWidth < elm.scrollWidth) { scrollCheck = true; }
+                if (event.deltaY < 0) {
+                    const diff = elm.scrollWidth - elm.clientWidth;
+                    console.log(elm.scrollLeft, diff)
+                    if (elm.scrollLeft < diff - 1) {
+                        elm.scrollLeft += 30;
+                        if (elm.scrollLeft > diff) { elm.scrollLeft = diff; }
+                        break;
+                    }
+                } else {
+                    if (elm.scrollLeft > 0) {
+                        elm.scrollLeft -= 30;
+                        if (elm.scrollLeft < 0) { elm.scrollLeft = 0; }
+                        break;
+                    }
+                }
+            }
+            if (!elm.parentNode) { break; }
+            elm = <HTMLElement> elm.parentNode;
+        }
+        if (scrollCheck) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
     }
 }
