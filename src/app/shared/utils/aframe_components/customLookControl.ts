@@ -247,7 +247,7 @@ export const customLookControl = {
                 const updateLookCheck = <HTMLInputElement> updateCamDiv.children[2];
                 const updateLookInp = <HTMLInputElement> updateCamDiv.children[3];
                 updateLookCheck.value = '1';
-                updateLookInp.value = JSON.stringify(- this.el.getAttribute('rotation').y.toFixed(2));
+                updateLookInp.value = (- this.el.getAttribute('rotation').y).toFixed(2);
             }
         }
       };

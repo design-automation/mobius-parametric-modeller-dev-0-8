@@ -84,7 +84,7 @@ export const customWASDControl = {
             const updatePosInp = <HTMLInputElement> updateCamDiv.children[1];
             updatePosCheck.value = '1';
             el.object3D.getWorldPosition(this.pos);
-            updatePosInp.value = `${this.pos.x.toFixed(2)},${this.pos.y.toFixed(2)},${(-this.pos.z).toFixed(2)}`;
+            updatePosInp.value = `${this.pos.x.toFixed(2)},${(-this.pos.z).toFixed(2)},${this.pos.y.toFixed(2)}`;
         }
     },
 

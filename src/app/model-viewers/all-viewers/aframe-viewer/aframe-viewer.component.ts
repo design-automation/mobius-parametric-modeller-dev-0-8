@@ -102,15 +102,18 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
             if (!cameraUpdateData) { return; }
             if ((<HTMLInputElement>cameraUpdateData.children[0]).value) {
                 this.current_camera_pos = (<HTMLInputElement>cameraUpdateData.children[1]).value;
-                // this.updatePos((<HTMLInputElement>cameraUpdateData.children[1]).value);
-                // (<HTMLInputElement>cameraUpdateData.children[0]).value = null;
             }
             if ((<HTMLInputElement>cameraUpdateData.children[2]).value) {
                 this.current_camera_rot = (<HTMLInputElement>cameraUpdateData.children[3]).value;
-                // this.updateLook((<HTMLInputElement>cameraUpdateData.children[3]).value);
-                // (<HTMLInputElement>cameraUpdateData.children[2]).value = null;
             }
         }, 100);
+        setTimeout(() => {
+            const cameraRig = <any> document.getElementById('aframe_camera_rig');
+            const pos = new AFRAME.THREE.Vector3();
+            cameraRig.object3D.getWorldPosition(pos);
+            this.current_camera_pos = `${pos.x.toFixed(2)},${(-pos.z).toFixed(2)},${pos.y.toFixed(2)}`;
+            this.current_camera_rot = (- cameraRig.children[0].getAttribute('rotation').y).toFixed(2);
+        }, 0);
     }
 
     ngOnDestroy() {
@@ -270,6 +273,9 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                     return;
                 }
                 this.settings.camera.acceleration = Math.round(value);
+                break;
+            case 'camera.show_cam_info':
+                this.settings.camera.show_cam_info = !this.settings.camera.show_cam_info;
                 break;
             case 'background.get_background_pos':
                 const cam_pos = this.dataService.getAframeData().getCameraPos();
@@ -485,7 +491,8 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
             this.settings.camera = {
                 position: this.temp_camera_pos,
                 rotation: this.temp_camera_rot,
-                acceleration: this.settings.camera.acceleration
+                acceleration: this.settings.camera.acceleration,
+                show_cam_info: this.settings.camera.show_cam_info
             };
             this.settings.vr.background_url = this.vr.background_url;
             this.settings.vr.foreground_url = this.vr.foreground_url;

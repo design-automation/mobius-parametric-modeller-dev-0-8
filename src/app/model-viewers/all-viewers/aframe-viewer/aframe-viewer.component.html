@@ -18,6 +18,9 @@
             <option *ngFor="let item of camPosList; let i = index;" value ={{i}}>{{item.name}}</option>
         </select>
     </div>
+    <div class='cam-info' *ngIf='settings.camera.show_cam_info'>
+        <p>Rotation: {{current_camera_rot}} Position: {{current_camera_pos}}</p>
+    </div>
     <modal-window id="aframe_settings_modal" (closeModal) = 'onCloseModal()'>
         <h1>VR Viewer Settings</h1>
         <tabs id="settingsTab">
@@ -46,6 +49,23 @@
                             </dd>
                         </ng-container> -->
                         <dd><hr></dd>
+                        <dd>
+                            <div class="label">Show Camera Info</div>
+                            <div class="onoffswitch">
+                                <input type="checkbox"
+                                name="onoffswitch"
+                                class="onoffswitch-checkbox"
+                                id="aframeShowCamInfo"
+                                [checked]='settings.camera.show_cam_info'
+                                (change)="settingOnChange('camera.show_cam_info')"
+                                >
+                                <label class="onoffswitch-label" for="aframeShowCamInfo">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </dd>
+                        <br>
                         <dd>
                             <div class="label">Camera Acceleration</div>
                             <div class="slidecontainer light">
