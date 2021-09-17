@@ -437,60 +437,61 @@ export class DataAframe {
     }
 
     updateCamPos() {
-        const pts = <string[]> Modules.query.Get(this.model, Modules.query._EEntType.POINT, null);
-        const pos = Modules.attrib.Get(this.model, Modules.query.Get(this.model, Modules.query._EEntType.POSI, pts), 'xyz');
-        const ptAttribs = Modules.attrib.Get(this.model, pts, 'vr_hotspot');
-        this.camPosList = [
-            {
-            name: 'Default',
-            value: null
-            }, 
-            // {
-            //     name: 'Edit POV',
-            //     value: null
-            // }
-        ];
-        for (let i = 0; i < pts.length; i++) {
-            if (!ptAttribs[i]) { continue; }
-            const cam = JSON.parse(JSON.stringify(ptAttribs[i]));
-            cam.pos = pos[i];
-            if (!cam.name) { cam.name = pts[i]; }
-            this.camPosList.splice(this.camPosList.length - 1, 0, cam);
-        }
-        const viewpointsList = document.getElementById('aframe_viewpoints');
-        const newPointNum = this.camPosList.length - 2 - (viewpointsList.children.length / 2);
-        if (newPointNum > 0) {
-            for (let j = 0; j < newPointNum; j++) {
-                const newPoint_tetra = document.createElement('a-tetrahedron');
-                newPoint_tetra.id = 'aframe_viewpoint_tetra' + j.toString();
-                newPoint_tetra.setAttribute('color', '#ffc24d');
-                newPoint_tetra.setAttribute('roughness', '0');
-                newPoint_tetra.setAttribute('rotation', '35 0 45');
-                newPoint_tetra.setAttribute('fog', 'false');
-                newPoint_tetra.setAttribute('radius', '3');
-                viewpointsList.appendChild(newPoint_tetra);
-
-                const newPoint_octa = document.createElement('a-octahedron');
-                newPoint_octa.id = 'aframe_viewpoint_octa' + j.toString();
-                newPoint_octa.setAttribute('color', '#ffc24d');
-                newPoint_octa.setAttribute('roughness', '0');
-                newPoint_octa.setAttribute('radius', '3');
-                newPoint_octa.setAttribute('fog', 'false');
-                viewpointsList.appendChild(newPoint_octa);
+        try {
+            const pts = <string[]> Modules.query.Get(this.model, Modules.query._EEntType.POINT, null);
+            const pos = Modules.attrib.Get(this.model, Modules.query.Get(this.model, Modules.query._EEntType.POSI, pts), 'xyz');
+            const ptAttribs = Modules.attrib.Get(this.model, pts, 'vr_hotspot');
+            this.camPosList = [
+                {
+                name: 'Default',
+                value: null
+                },
+                // {
+                //     name: 'Edit POV',
+                //     value: null
+                // }
+            ];
+            for (let i = 0; i < pts.length; i++) {
+                if (!ptAttribs[i]) { continue; }
+                const cam = JSON.parse(JSON.stringify(ptAttribs[i]));
+                cam.pos = pos[i];
+                if (!cam.name) { cam.name = pts[i]; }
+                this.camPosList.push(cam);
+                // this.camPosList.splice(this.camPosList.length - 1, 0, cam);
             }
-        }
-        for (let k = 0; k < viewpointsList.children.length; k++) {
-            const pointPos = viewpointsList.children[k];
-            pointPos.setAttribute('visible', 'false');
-            const camPos = this.camPosList[Math.trunc(k / 2) + 1];
-            if (Math.trunc(k / 2) + 2 >= this.camPosList.length) {
-                continue;
-            } else if (camPos.background_url) {
-                if (k % 2 === 0) { continue; }
-            } else if (k % 2 === 1) { continue; }
-            pointPos.setAttribute('visible', 'true');
-            pointPos.setAttribute('position', `${camPos.pos[0]} ${camPos.pos[2]} ${- camPos.pos[1]}`);
-        }
+            const viewpointsList = document.getElementById('aframe_viewpoints');
+            const newPointNum = this.camPosList.length - 2 - (viewpointsList.children.length / 2);
+            if (newPointNum > 0) {
+                for (let j = 0; j < newPointNum; j++) {
+                    const newPoint_tetra = document.createElement('a-tetrahedron');
+                    newPoint_tetra.id = 'aframe_viewpoint_tetra' + j.toString();
+                    newPoint_tetra.setAttribute('color', '#ffc24d');
+                    newPoint_tetra.setAttribute('roughness', '0');
+                    newPoint_tetra.setAttribute('rotation', '35 0 45');
+                    newPoint_tetra.setAttribute('radius', '3');
+                    viewpointsList.appendChild(newPoint_tetra);
+
+                    const newPoint_octa = document.createElement('a-octahedron');
+                    newPoint_octa.id = 'aframe_viewpoint_octa' + j.toString();
+                    newPoint_octa.setAttribute('color', '#ffc24d');
+                    newPoint_octa.setAttribute('roughness', '0');
+                    newPoint_octa.setAttribute('radius', '3');
+                    viewpointsList.appendChild(newPoint_octa);
+                }
+            }
+            for (let k = 0; k < viewpointsList.children.length; k++) {
+                const pointPos = viewpointsList.children[k];
+                pointPos.setAttribute('visible', 'false');
+                const camPos = this.camPosList[Math.trunc(k / 2) + 1];
+                if (Math.trunc(k / 2) + 2 >= this.camPosList.length) {
+                    continue;
+                } else if (camPos.background_url) {
+                    if (k % 2 === 0) { continue; }
+                } else if (k % 2 === 1) { continue; }
+                pointPos.setAttribute('visible', 'true');
+                pointPos.setAttribute('position', `${camPos.pos[0]} ${camPos.pos[2]} ${- camPos.pos[1]}`);
+            }
+        } catch (ex) {}
     }
 
     updateCamera(camera_pos = DEFAUT_CAMERA_POS) {

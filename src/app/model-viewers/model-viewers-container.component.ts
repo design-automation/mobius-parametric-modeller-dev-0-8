@@ -185,7 +185,8 @@ export class DataViewersContainerComponent implements DoCheck, OnInit, OnDestroy
      * updateView
      * @param view
      */
-    updateView(view: IView): void {
+    updateView(view: IView, viewCheck = false): void {
+        if (viewCheck && view.name === this.activeView.name) { return; }
         this.activeView = view;
 
         if (this.views['VR Viewer']) {

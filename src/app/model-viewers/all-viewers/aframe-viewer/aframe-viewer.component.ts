@@ -102,9 +102,12 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
             if (!cameraUpdateData) { return; }
             if ((<HTMLInputElement>cameraUpdateData.children[0]).value) {
                 this.current_camera_pos = (<HTMLInputElement>cameraUpdateData.children[1]).value;
+                (<HTMLInputElement>cameraUpdateData.children[0]).value = null;
+                this.snapPosition(this.current_camera_pos);
             }
             if ((<HTMLInputElement>cameraUpdateData.children[2]).value) {
                 this.current_camera_rot = (<HTMLInputElement>cameraUpdateData.children[3]).value;
+                (<HTMLInputElement>cameraUpdateData.children[2]).value = null;
             }
         }, 100);
         setTimeout(() => {
@@ -144,15 +147,24 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                         this.dataService.aframeCamPos = 'Edit POV';
                     } else {
                         this.selectedCamPos = 0;
-                        this.dataService.aframeCamPos = 'Walk';
+                        this.dataService.aframeCamPos = 'Default';
                     }
                     this.changePos(this.selectedCamPos);
                 }
             }
-            this.showCamPosList = true;
+            if (this.camPosList.length === 1) {
+                this.showCamPosList = false;
+            } else {
+                this.showCamPosList = true;
+            }
             setTimeout(() => {
                 const selCamPosEl = <HTMLSelectElement> document.getElementById('selCamPosEl');
                 if (selCamPosEl) { selCamPosEl.value = this.selectedCamPos.toString(); }
+                const cameraRig = <any> document.getElementById('aframe_camera_rig');
+                const pos = new AFRAME.THREE.Vector3();
+                cameraRig.object3D.getWorldPosition(pos);
+                this.current_camera_pos = `${pos.x.toFixed(2)},${(-pos.z).toFixed(2)},${pos.y.toFixed(2)}`;
+                this.snapPosition(this.current_camera_pos);
             }, 0);
         }
     }
@@ -161,14 +173,15 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
         const selectedIndex = Number(value);
         this.selectedCamPos = selectedIndex;
         const aframeData = this.dataService.getAframeData();
-        if (selectedIndex === this.camPosList.length - 1) {
-            aframeData.updateCameraPos(null);
-            this.vr.enabled = true;
-            this.vr.background_url = this.settings.vr.background_url;
-            this.vr.foreground_url = this.settings.vr.foreground_url;
-            aframeData.updateVRSettings(this.vr);
-            aframeData.refreshModel(this.threeJSDataService.getThreejsScene());
-        } else if (selectedIndex === 0) {
+        // if (selectedIndex === this.camPosList.length - 1) {
+        //     aframeData.updateCameraPos(null);
+        //     this.vr.enabled = true;
+        //     this.vr.background_url = this.settings.vr.background_url;
+        //     this.vr.foreground_url = this.settings.vr.foreground_url;
+        //     aframeData.updateVRSettings(this.vr);
+        //     aframeData.refreshModel(this.threeJSDataService.getThreejsScene());
+        // } else
+        if (selectedIndex === 0) {
             aframeData.updateCameraPos(null);
             this.vr.enabled = false;
             this.vr.background_url = '';
@@ -639,7 +652,6 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                     camPosCoord.x = camPos.pos[0];
                     camPosCoord.z = camPos.pos[1];
                     const distance = camPosCoord.distanceTo(pos);
-                    // console.log('_____', distance)
                     if (distance < 2) {
                         aframeData.updateCameraPos(camPos, false);
                         this.selectedCamPos = i;
@@ -652,6 +664,38 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                 }
             }
         } catch (ex) {}
+    }
+
+    snapPosition(posData) {
+        // console.log('~~~', posData, this.camPosList)
+        if (this.camPosList.length === 1) { return; }
+        const posArray = JSON.parse('[' + posData + ']');
+        posArray[2] = posArray[1];
+        posArray[1] = 0;
+        const pos = new AFRAME.THREE.Vector3(...posArray);
+        const camPosCoord = new AFRAME.THREE.Vector3();
+        const aframeData = this.dataService.getAframeData();
+        let checkVRcam = false;
+        for (let i = 1; i < this.camPosList.length; i++) {
+            const camPos = this.camPosList[i];
+            if (checkVRcam || !camPos.pos) { continue; }
+            camPosCoord.x = camPos.pos[0];
+            camPosCoord.z = camPos.pos[1];
+            const distance = camPosCoord.distanceTo(pos);
+            // console.log('   ---', distance)
+            if (distance < 2) {
+                aframeData.updateCameraPos(camPos, false);
+                this.selectedCamPos = i;
+                this.current_camera_pos = `${camPos.pos[0].toFixed(2)},${camPos.pos[1].toFixed(2)},${camPos.pos[2].toFixed(2)}`;
+                this.dataService.aframeCamPos = camPos.name;
+                checkVRcam = true;
+            }
+        }
+        if (this.dataService.aframeCamPos !== this.camPosList[0].name && !checkVRcam) {
+            this.selectedCamPos = 0;
+            aframeData.updateCameraPos(null);
+            this.dataService.aframeCamPos = this.camPosList[0].name;
+        }
     }
 
     updateLook(lookData) {
