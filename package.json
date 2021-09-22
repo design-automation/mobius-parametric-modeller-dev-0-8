@@ -1,6 +1,6 @@
 {
   "name": "mobius-parametric-modeller",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "license": "MIT",
   "config": {
     "dev_url": "https://mobius-08.design-automation.net/",
