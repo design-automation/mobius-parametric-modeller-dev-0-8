@@ -454,7 +454,7 @@ export class ProcedureItemComponent implements OnDestroy {
             this.emitNotifyError(this.data.args[index].invalidVar);
         } else if (isVar) {
             if (this.data.variable) {
-                this.markLinkedArguments(this.data.variable, topProdList);
+                this.data.variable.forEach(v => this.markLinkedArguments(v, topProdList))
             } else if (this.data.args[index].usedVars && this.data.args[index].usedVars[0]) {
                 this.markLinkedArguments(this.data.args[index].usedVars[0], topProdList);
             }
@@ -477,7 +477,7 @@ export class ProcedureItemComponent implements OnDestroy {
                     arg.linked = true;
                 }
             }
-            if (prod.variable === varName) {
+            if (prod.variable && prod.variable.indexOf(varName) !== -1) {
                 prod.args[0].linked = true;
             }
         }

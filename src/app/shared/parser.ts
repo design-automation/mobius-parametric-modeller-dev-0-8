@@ -252,13 +252,14 @@ export function modifyVarArg(arg: IArgument, toLower = true) {
             throw(new Error('Error: bracket closed before opening'));
         }
     }
-    str = repSplit.map(splt => splt.join(']')).join('[');
+    str = repSplit.map(splt => splt.join(']')).join('[').trim();
 
     if ((str.match(/\[/g) || []).length !== (str.match(/\]/g) || []).length) {
         arg.invalidVar = 'Error: Invalid variable name';
         return str;
     }
-    const strSplit = str.split(/[\@\[\]]/g);
+
+    const strSplit = str.split(/[\@\[\]\,]/g);
     let teststr = str;
     for (const i of strSplit) {
         if (i === '') { continue; }
@@ -387,11 +388,61 @@ export function modifyArgument(procedure: IProcedure, argIndex: number, nodeProd
     // procedure.args[argIndex].value = result.trim();
 }
 
+export function parseVariable(value: string): {'error'?: string, 'declaredVar'?: string[],
+                                               'usedVars'?: string[], 'jsStr'?: string, 'valueStr'?: string} {
+    const str = value.trim();
+    if (str[0] === '[' && str[str.length - 1] === ']') {
+        const splitted = str.substr(1, str.length - 2).split(',').map(item => item.trim());
+        let idx = 0;
+        while (idx < splitted.length) {
+            if (!splitted[idx]) { continue; }
+            while ((splitted[idx].indexOf('[') !== -1 && splitted[idx].indexOf(']') === -1) ||
+                    (splitted[idx].indexOf('{') !== -1 && splitted[idx].indexOf('}') === -1)) {
+                if (idx + 1 === splitted.length) { return {'error': 'Error: Closing Bracket expected\n'}; }
+                splitted[idx] += ', ' + splitted[idx + 1];
+                splitted.splice(idx + 1, 1);
+            }
+            idx++;
+        }
+        const parsedSplits = splitted.map(splittedString => parseSingleVariable(splittedString));
+        const declaredVars = new Set();
+        const usedVars = new Set();
+        const jsStrings = [];
+        let valueStrCheck = false;
+        for (let i = 0; i < parsedSplits.length; i++) {
+            const parsed = parsedSplits[i];
+            if (parsed.error) {
+                return {'error': parsed.error};
+            }
+            if (parsed.declaredVar) {
+                parsed.declaredVar.forEach(dVar => declaredVars.add(dVar));
+            }
+            if (parsed.usedVars) {
+                parsed.usedVars.forEach(uVar => usedVars.add(uVar));
+            }
+            if (parsed.jsStr) {
+                jsStrings.push(parsed.jsStr);
+            }
+            if (parsed.valueStr) {
+                splitted[i] = parsed.valueStr.trim();
+                valueStrCheck = true;
+            }
+        }
+        const result = {
+            'declaredVar': declaredVars.size > 0 ? (<string[]> Array.from(declaredVars)) : null,
+            'usedVars': usedVars.size > 0 ? (<string[]> Array.from(usedVars)) : null,
+            'jsStr': '|*' + jsStrings.join('|'),
+            'valueStr': '[' + splitted.join(', ') + ']'
+        };
+        return result;
+    }
+    return parseSingleVariable(str);
+
+}
 // VAR INPUT
-export function parseVariable(value: string): {'error'?: string, 'declaredVar'?: string, 
+export function parseSingleVariable(str: string): {'error'?: string, 'declaredVar'?: string[],
                                                'usedVars'?: string[], 'jsStr'?: string, 'valueStr'?: string} {
 
-    const str = value.trim();
     const comps = splitComponents(str);
     if (typeof comps === 'string') {
         return {'error': comps};
@@ -445,7 +496,7 @@ export function parseVariable(value: string): {'error'?: string, 'declaredVar'?:
         }
     }
     if (comps.length === 1) {
-        return {'declaredVar': comps[0].value, 'jsStr': value + '_'};
+        return {'declaredVar': [comps[0].value], 'jsStr': str + '_'};
     }
     const vars = [];
     const check = analyzeVar(comps, 0, vars, false, true);
@@ -1435,18 +1486,22 @@ export function checkValidVar(vars: string[], procedure: IProcedure, nodeProdLis
                 if (current.type !== ProcedureTypes.Foreach) {
                     break;
                 } else {
-                    const i = vars.indexOf(prod.variable);
-                    if (i !== -1) {
-                        validVars.push(vars.splice(i, 1)[0]);
-                    }
+                    prod.variable.forEach( v => {
+                        const i = vars.indexOf(v);
+                        if (i !== -1) {
+                            validVars.push(vars.splice(i, 1)[0]);
+                        }
+                    });
                     break;
                 }
             }
             if (!prod.variable || prod.type === ProcedureTypes.Foreach || !prod.enabled) { continue; }
-            const index = vars.indexOf(prod.variable);
-            if (index !== -1) {
-                validVars.push(vars.splice(index, 1)[0]);
-            }
+            prod.variable.forEach( v => {
+                const index = vars.indexOf(v);
+                if (index !== -1) {
+                    validVars.push(vars.splice(index, 1)[0]);
+                }
+            });
         }
         current = current.parent;
         if (current.type === ProcedureTypes.LocalFuncDef) {
@@ -1466,18 +1521,23 @@ export function checkValidVar(vars: string[], procedure: IProcedure, nodeProdLis
             if (current.type !== ProcedureTypes.Foreach) {
                 break;
             } else {
-                const i = vars.indexOf(prod.variable);
-                if (i !== -1) {
-                    validVars.push(vars.splice(i, 1)[0]);
-                }
+                prod.variable.forEach( v => {
+                    const i = vars.indexOf(v);
+                    if (i !== -1) {
+                        validVars.push(vars.splice(i, 1)[0]);
+                    }
+                });
+
                 break;
             }
         }
         if (!prod.variable || prod.type === ProcedureTypes.Foreach || !prod.enabled) { continue; }
-        const index = vars.indexOf(prod.variable);
-        if (index !== -1) {
-            validVars.push(vars.splice(index, 1)[0]);
-        }
+        prod.variable.forEach( v => {
+            const index = vars.indexOf(v);
+            if (index !== -1) {
+                validVars.push(vars.splice(index, 1)[0]);
+            }
+        });
     }
     if (vars.length > 0) {
         return { 'error': `Error: Invalid vars: ${vars.join(', ')}`};
@@ -1584,84 +1644,84 @@ function checkProdShadowingConstant(prodList: IProcedure[]): boolean {
     return check;
 }
 
-export function updateInputValidity(type: 'add'|'remove', procedure: IProcedure, nodeProdList: IProcedure[]) {
-    let current = procedure;
-    while (current.parent) {
-        const prods = current.parent.children;
-        for (const prod of prods) {
-            if (prod.ID === current.ID) {
-                if (current.type !== ProcedureTypes.Foreach) {
-                    break;
-                } else {
-                    if (prod.variable !== procedure.variable) { break; }
-                    return;
-                }
-            }
-            if (!prod.variable || prod.type === ProcedureTypes.Foreach || prod.variable !== procedure.variable) { continue; }
-            return;
-        }
-        current = current.parent;
-    }
-    for (const prod of nodeProdList) {
-        if (prod.ID === current.ID) {
-            if (current.type !== ProcedureTypes.Foreach) {
-                break;
-            } else {
-                if (prod.variable !== procedure.variable) { break; }
-                return;
-            }
-        }
-        if (!prod.variable || prod.type === ProcedureTypes.Foreach || prod.variable !== procedure.variable) { continue; }
-        return;
-    }
+// export function updateInputValidity(type: 'add'|'remove', procedure: IProcedure, nodeProdList: IProcedure[]) {
+//     let current = procedure;
+//     while (current.parent) {
+//         const prods = current.parent.children;
+//         for (const prod of prods) {
+//             if (prod.ID === current.ID) {
+//                 if (current.type !== ProcedureTypes.Foreach) {
+//                     break;
+//                 } else {
+//                     if (prod.variable !== procedure.variable) { break; }
+//                     return;
+//                 }
+//             }
+//             if (!prod.variable || prod.type === ProcedureTypes.Foreach || prod.variable !== procedure.variable) { continue; }
+//             return;
+//         }
+//         current = current.parent;
+//     }
+//     for (const prod of nodeProdList) {
+//         if (prod.ID === current.ID) {
+//             if (current.type !== ProcedureTypes.Foreach) {
+//                 break;
+//             } else {
+//                 if (prod.variable !== procedure.variable) { break; }
+//                 return;
+//             }
+//         }
+//         if (!prod.variable || prod.type === ProcedureTypes.Foreach || prod.variable !== procedure.variable) { continue; }
+//         return;
+//     }
 
-    if (type === 'add') {
-        if (procedure.parent) {
-            updateAdd(procedure.parent.children, procedure.variable, procedure);
-        } else {
-            updateAdd(nodeProdList, procedure.variable, procedure);
-        }
-    } else {
-        if (procedure.parent) {
-            updateRemove(procedure.parent.children, procedure.variable, procedure);
-        } else {
-            updateRemove(nodeProdList, procedure.variable, procedure);
-        }
-    }
-}
+//     if (type === 'add') {
+//         if (procedure.parent) {
+//             updateAdd(procedure.parent.children, procedure.variable, procedure);
+//         } else {
+//             updateAdd(nodeProdList, procedure.variable, procedure);
+//         }
+//     } else {
+//         if (procedure.parent) {
+//             updateRemove(procedure.parent.children, procedure.variable, procedure);
+//         } else {
+//             updateRemove(nodeProdList, procedure.variable, procedure);
+//         }
+//     }
+// }
 
-function updateAdd(prodList: IProcedure[], varName: string, procedure?: IProcedure) {
-    for (let i = prodList.length - 1; i > 0; i--) {
-        if (procedure && procedure.ID === prodList[i].ID) { break; }
-        if (prodList[i].children) { updateAdd(prodList[i].children, varName); }
-        if (prodList[i].argCount === 0) { continue; }
-        for (const arg of prodList[i].args) {
-            if (!arg.invalidVar) { continue; }
-            if (arg.invalidVar === `Error: Invalid vars: ${varName}`) {
-                arg.invalidVar = false;
-            } else if (typeof arg.invalidVar === 'string' && arg.invalidVar.indexOf('Invalid vars') !== -1) {
-                arg.invalidVar.replace(`${varName}\s,`, '');
-                arg.invalidVar.replace(`, ${varName}`, '');
-            }
-        }
-    }
-}
+// function updateAdd(prodList: IProcedure[], varName: string, procedure?: IProcedure) {
+//     for (let i = prodList.length - 1; i > 0; i--) {
+//         if (procedure && procedure.ID === prodList[i].ID) { break; }
+//         if (prodList[i].children) { updateAdd(prodList[i].children, varName); }
+//         if (prodList[i].argCount === 0) { continue; }
+//         for (const arg of prodList[i].args) {
+//             if (!arg.invalidVar) { continue; }
+//             if (arg.invalidVar === `Error: Invalid vars: ${varName}`) {
+//                 arg.invalidVar = false;
+//             } else if (typeof arg.invalidVar === 'string' && arg.invalidVar.indexOf('Invalid vars') !== -1) {
+//                 arg.invalidVar.replace(`${varName}\s,`, '');
+//                 arg.invalidVar.replace(`, ${varName}`, '');
+//             }
+//         }
+//     }
+// }
 
-function updateRemove(prodList: IProcedure[], varName: string, procedure?: IProcedure) {
-    for (let i = prodList.length - 1; i > 0; i--) {
-        if (procedure && procedure.ID === prodList[i].ID) { break; }
-        if (prodList[i].children) { updateRemove(prodList[i].children, varName); }
-        if (prodList[i].argCount === 0) { continue; }
-        for (const arg of prodList[i].args) {
-            if (arg.usedVars.indexOf(varName) === -1) { continue; }
-            if (!arg.invalidVar) {
-                arg.invalidVar = `Error: Invalid vars: ${varName}`;
-            } else if (typeof arg.invalidVar === 'string' && arg.invalidVar.indexOf('Invalid vars') !== -1) {
-                arg.invalidVar = arg.invalidVar.concat(`, ${varName}`);
-            }
-        }
-    }
-}
+// function updateRemove(prodList: IProcedure[], varName: string, procedure?: IProcedure) {
+//     for (let i = prodList.length - 1; i > 0; i--) {
+//         if (procedure && procedure.ID === prodList[i].ID) { break; }
+//         if (prodList[i].children) { updateRemove(prodList[i].children, varName); }
+//         if (prodList[i].argCount === 0) { continue; }
+//         for (const arg of prodList[i].args) {
+//             if (arg.usedVars.indexOf(varName) === -1) { continue; }
+//             if (!arg.invalidVar) {
+//                 arg.invalidVar = `Error: Invalid vars: ${varName}`;
+//             } else if (typeof arg.invalidVar === 'string' && arg.invalidVar.indexOf('Invalid vars') !== -1) {
+//                 arg.invalidVar = arg.invalidVar.concat(`, ${varName}`);
+//             }
+//         }
+//     }
+// }
 
 export function pythonicReplace(argList) {
     const args = [];

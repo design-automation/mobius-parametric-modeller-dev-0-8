@@ -12,11 +12,20 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [
-              "util", "chroma-js", "showdown", "lodash", "mathjs", "seedrandom",
-              "cytoscape", "@doodle3d/clipper-js",
-              "entities", "fast-xml-parser", "@aws-crypto/crc32", "@aws-crypto/sha256-browser"
+              "util",
+              "chroma-js",
+              "showdown",
+              "lodash",
+              "mathjs",
+              "seedrandom",
+              "cytoscape",
+              "@doodle3d/clipper-js",
+              "entities",
+              "fast-xml-parser",
+              "@aws-crypto/crc32",
+              "@aws-crypto/sha256-browser"
             ],
-            "outputPath": "docs",
+            "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
@@ -29,8 +38,7 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [
-            ],
+            "scripts": [],
             "vendorChunk": false,
             "extractLicenses": true,
             "buildOptimizer": true,
@@ -83,7 +91,7 @@
               "browserTarget": "mobius-parametric-modeller:build:production"
             },
             "development": {
-                "browserTarget": "mobius-parametric-modeller:build:development"
+              "browserTarget": "mobius-parametric-modeller:build:development"
             }
           }
         },
@@ -121,6 +129,10 @@
               "**/assets/typedoc-json/**"
             ]
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {}
         }
       }
     },
