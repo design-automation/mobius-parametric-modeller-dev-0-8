@@ -32,6 +32,11 @@ export class GIGeoViewerComponent implements OnDestroy {
     public colorLayerList: string[];
     public elevLayerList: string[];
 
+    public viewerDate: string;
+    public viewerTime: string;
+    public viewerTimeSlider: number;
+    public viewerTimeText: string;
+
     private settingsUpdateInterval;
 
     /**
@@ -47,16 +52,18 @@ export class GIGeoViewerComponent implements OnDestroy {
             this.settings = JSON.parse(JSON.stringify(this.dataService.getGeoScene().settings));
             this.temp_camera_pos.set(this.settings.camera.pos.x, this.settings.camera.pos.y, this.settings.camera.pos.z);
             this.temp_camera_rot.set(this.settings.camera.rot.x, this.settings.camera.rot.y, this.settings.camera.rot.z);
+            this.preModalSettings();
         }, 0);
 
         this.settingsUpdateInterval = setInterval(() => {
             if (this.mainDataService.geoViewerSettingsUpdated) {
+                const geoScene = this.dataService.getGeoScene();
+                if (!geoScene.model) { return; }
+
                 const loadedSettings = JSON.parse(localStorage.getItem('geo_settings'));
                 this.updateSettings(this.settings, loadedSettings);
-                // this.settings = JSON.parse(localStorage.getItem('geo_settings'));
-                const geoScene = this.dataService.getGeoScene();
-                geoScene.settings = JSON.parse(localStorage.getItem('geo_settings'));
-                geoScene.refreshModel(this.threeJSDataService.getThreejsScene());
+                geoScene.settings = JSON.parse(JSON.stringify(loadedSettings));
+                geoScene.refreshModel(this.threeJSDataService.getThreejsScene(), true);
                 this.mainDataService.geoViewerSettingsUpdated = false;
             }
         }, 100);
@@ -164,7 +171,7 @@ export class GIGeoViewerComponent implements OnDestroy {
      *
      * @param id
      */
-    public openModal(id: string) {
+     public openModal(id: string) {
         if (localStorage.getItem('geo_settings') !== null) {
             // this.settings = JSON.parse(localStorage.getItem('mpm_settings'));
         }
@@ -175,9 +182,27 @@ export class GIGeoViewerComponent implements OnDestroy {
             const scene = this.dataService.getGeoScene();
             this.colorLayerList = scene.viewColorLayers.map(layer => layer.source.attribution.name);
             // this.elevLayerList = scene.viewElevationLayers.map(provider => provider.name);
+            this.preModalSettings();
             this.modalService.open(id);
         }
     }
+    public preModalSettings() {
+        [this.viewerDate, this.viewerTime] = this.settings.time.date.split('T');
+        const timeSplit = this.viewerTime.split(':');
+        const hr = Number(timeSplit[0]);
+        this.viewerTimeSlider = hr * 60 + Number(timeSplit[1]);
+        if (hr > 11) {
+            const hrNum = hr > 12 ? hr - 12 : hr;
+            if (hrNum < 10) {
+                this.viewerTimeText = '0' + hrNum + ':' + timeSplit[1] + 'pm';
+            } else {
+                this.viewerTimeText = hrNum + ':' + timeSplit[1] + 'pm';
+            }
+        } else {
+            this.viewerTimeText = this.viewerTime + 'am';
+        }
+    }
+
     /**
      *
      * @param id
@@ -238,12 +263,33 @@ export class GIGeoViewerComponent implements OnDestroy {
         this.settings = JSON.parse(JSON.stringify(geo_default_settings));
     }
 
-    public updateLighting(event, setLocalStorage = false) {
-        this.dataService.getGeoScene().updateLightPos(event);
-        this.settings.time.date = event;
-        if (setLocalStorage) {
-            this.dataService.getGeoScene().updateSettings(this.settings);
+    public updateLighting(date, time) {
+        this.settings.time.date = date + 'T' + time;
+        this.dataService.getGeoScene().updateLightPos(this.settings.time.date);
+    }
+    public updateLightingFromSlider(timeNum) {
+        const hr = Math.floor(timeNum / 60);
+        const mn = timeNum % 60;
+        const mnStr = mn < 10 ? '0' + mn : mn.toString();
+        let timePoint = hr + ':' + mnStr;
+        if (hr < 10) {
+            timePoint = '0' + timePoint;
         }
+        if (hr > 11) {
+            const hrNum = hr > 12 ? hr - 12 : hr;
+            if (hrNum < 10) {
+                this.viewerTimeText = '0' + hrNum + ':' + mnStr + 'pm';
+            } else {
+                this.viewerTimeText = hrNum + ':' + mnStr + 'pm';
+            }
+        } else {
+            this.viewerTimeText = timePoint + 'am';
+        }
+
+        this.settings.time.date = this.viewerDate + 'T' + timePoint;
+        this.viewerTime = timePoint;
+        this.dataService.getGeoScene().updateLightPos(this.settings.time.date);
+        this.dataService.getGeoScene().updateSettings(this.settings);
     }
 
 }

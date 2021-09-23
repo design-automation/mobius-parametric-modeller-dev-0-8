@@ -48,6 +48,9 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
     temp_camera_pos = new AFRAME.THREE.Vector3(0, 0, 0);
     temp_camera_rot = new AFRAME.THREE.Vector3(-1, 0, 0);
 
+    current_camera_pos = '';
+    current_camera_rot = '';
+
     private settingsUpdateInterval;
 
     /**
@@ -98,14 +101,22 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
             const cameraUpdateData = document.getElementById('aframe-cameraUpdateData');
             if (!cameraUpdateData) { return; }
             if ((<HTMLInputElement>cameraUpdateData.children[0]).value) {
-                this.updatePos((<HTMLInputElement>cameraUpdateData.children[1]).value);
+                this.current_camera_pos = (<HTMLInputElement>cameraUpdateData.children[1]).value;
                 (<HTMLInputElement>cameraUpdateData.children[0]).value = null;
+                this.snapPosition(this.current_camera_pos);
             }
             if ((<HTMLInputElement>cameraUpdateData.children[2]).value) {
-                this.updateLook((<HTMLInputElement>cameraUpdateData.children[3]).value);
+                this.current_camera_rot = (<HTMLInputElement>cameraUpdateData.children[3]).value;
                 (<HTMLInputElement>cameraUpdateData.children[2]).value = null;
             }
         }, 100);
+        setTimeout(() => {
+            const cameraRig = <any> document.getElementById('aframe_camera_rig');
+            const pos = new AFRAME.THREE.Vector3();
+            cameraRig.object3D.getWorldPosition(pos);
+            this.current_camera_pos = `${pos.x.toFixed(2)},${(-pos.z).toFixed(2)},${pos.y.toFixed(2)}`;
+            this.current_camera_rot = (- cameraRig.children[0].getAttribute('rotation').y).toFixed(2);
+        }, 0);
     }
 
     ngOnDestroy() {
@@ -136,15 +147,24 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                         this.dataService.aframeCamPos = 'Edit POV';
                     } else {
                         this.selectedCamPos = 0;
-                        this.dataService.aframeCamPos = 'Walk';
+                        this.dataService.aframeCamPos = 'Default';
                     }
                     this.changePos(this.selectedCamPos);
                 }
             }
-            this.showCamPosList = true;
+            if (this.camPosList.length === 1) {
+                this.showCamPosList = false;
+            } else {
+                this.showCamPosList = true;
+            }
             setTimeout(() => {
                 const selCamPosEl = <HTMLSelectElement> document.getElementById('selCamPosEl');
-                selCamPosEl.value = this.selectedCamPos.toString();
+                if (selCamPosEl) { selCamPosEl.value = this.selectedCamPos.toString(); }
+                const cameraRig = <any> document.getElementById('aframe_camera_rig');
+                const pos = new AFRAME.THREE.Vector3();
+                cameraRig.object3D.getWorldPosition(pos);
+                this.current_camera_pos = `${pos.x.toFixed(2)},${(-pos.z).toFixed(2)},${pos.y.toFixed(2)}`;
+                this.snapPosition(this.current_camera_pos);
             }, 0);
         }
     }
@@ -153,14 +173,15 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
         const selectedIndex = Number(value);
         this.selectedCamPos = selectedIndex;
         const aframeData = this.dataService.getAframeData();
-        if (selectedIndex === this.camPosList.length - 1) {
-            aframeData.updateCameraPos(null);
-            this.vr.enabled = true;
-            this.vr.background_url = this.settings.vr.background_url;
-            this.vr.foreground_url = this.settings.vr.foreground_url;
-            aframeData.updateVRSettings(this.vr);
-            aframeData.refreshModel(this.threeJSDataService.getThreejsScene());
-        } else if (selectedIndex === 0) {
+        // if (selectedIndex === this.camPosList.length - 1) {
+        //     aframeData.updateCameraPos(null);
+        //     this.vr.enabled = true;
+        //     this.vr.background_url = this.settings.vr.background_url;
+        //     this.vr.foreground_url = this.settings.vr.foreground_url;
+        //     aframeData.updateVRSettings(this.vr);
+        //     aframeData.refreshModel(this.threeJSDataService.getThreejsScene());
+        // } else
+        if (selectedIndex === 0) {
             aframeData.updateCameraPos(null);
             this.vr.enabled = false;
             this.vr.background_url = '';
@@ -184,6 +205,20 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
     }
 
     zoomfit() {
+        this.resetDefault('camera.pos');
+        this.resetDefault('camera.rot');
+        this.settings.camera.position = {
+            x: this.temp_camera_pos.x,
+            y: this.settings.camera.position.y,
+            z: this.temp_camera_pos.z,
+        };
+        this.settings.camera.rotation = {
+            x: this.temp_camera_rot.x,
+            y: this.temp_camera_rot.y,
+            z: this.settings.camera.rotation.z,
+        };
+        this.dataService.getAframeData().updateSettings(this.settings);
+        this.dataService.getAframeData().refreshModel(this.threeJSDataService.getThreejsScene());
     }
 
     /**
@@ -251,6 +286,9 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                     return;
                 }
                 this.settings.camera.acceleration = Math.round(value);
+                break;
+            case 'camera.show_cam_info':
+                this.settings.camera.show_cam_info = !this.settings.camera.show_cam_info;
                 break;
             case 'background.get_background_pos':
                 const cam_pos = this.dataService.getAframeData().getCameraPos();
@@ -396,6 +434,48 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                 break;
         }
     }
+
+    public getPosition(setting: string) {
+        // const scene = this.dataService.getThreejsScene();
+        switch (setting) {
+            case 'camera.pos':
+                const camRig = <any> document.getElementById('aframe_camera_rig');
+                if (camRig) {
+                    const posData = new AFRAME.THREE.Vector3(0, 0, 0);
+                    camRig.object3D.getWorldPosition(posData);
+                    this.temp_camera_pos.x = posData.x;
+                    this.temp_camera_pos.z = - posData.z;
+                }
+                break;
+            case 'camera.rot':
+                const lookCam = <any> document.getElementById('aframe_look_camera');
+                if (lookCam) {
+                    const rot = lookCam.getAttribute('rotation');
+                    rot.y = 0 - rot.y;
+                    while (rot.y < -180) { rot.y += 360; }
+                    while (rot.y > 180) { rot.y -= 360; }
+                    this.temp_camera_rot.x = rot.x;
+                    this.temp_camera_rot.y = rot.y;
+                    this.temp_camera_rot.z = rot.z;
+                }
+                break;
+        }
+    }
+
+    public resetDefault(setting: string) {
+        // const scene = this.dataService.getThreejsScene();
+        switch (setting) {
+            case 'camera.pos':
+                this.temp_camera_pos.x = this.settings.camera.position.x;
+                this.temp_camera_pos.z = this.settings.camera.position.z;
+                break;
+            case 'camera.rot':
+                this.temp_camera_rot.x = this.settings.camera.rotation.x;
+                this.temp_camera_rot.y = this.settings.camera.rotation.y;
+                this.temp_camera_rot.z = this.settings.camera.rotation.z;
+                break;
+        }
+    }
     /**
      *
      * @param id
@@ -424,7 +504,8 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
             this.settings.camera = {
                 position: this.temp_camera_pos,
                 rotation: this.temp_camera_rot,
-                acceleration: this.settings.camera.acceleration
+                acceleration: this.settings.camera.acceleration,
+                show_cam_info: this.settings.camera.show_cam_info
             };
             this.settings.vr.background_url = this.vr.background_url;
             this.settings.vr.foreground_url = this.vr.foreground_url;
@@ -571,7 +652,6 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                     camPosCoord.x = camPos.pos[0];
                     camPosCoord.z = camPos.pos[1];
                     const distance = camPosCoord.distanceTo(pos);
-                    // console.log('_____', distance)
                     if (distance < 2) {
                         aframeData.updateCameraPos(camPos, false);
                         this.selectedCamPos = i;
@@ -584,6 +664,38 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                 }
             }
         } catch (ex) {}
+    }
+
+    snapPosition(posData) {
+        // console.log('~~~', posData, this.camPosList)
+        if (this.camPosList.length === 1) { return; }
+        const posArray = JSON.parse('[' + posData + ']');
+        posArray[2] = posArray[1];
+        posArray[1] = 0;
+        const pos = new AFRAME.THREE.Vector3(...posArray);
+        const camPosCoord = new AFRAME.THREE.Vector3();
+        const aframeData = this.dataService.getAframeData();
+        let checkVRcam = false;
+        for (let i = 1; i < this.camPosList.length; i++) {
+            const camPos = this.camPosList[i];
+            if (checkVRcam || !camPos.pos) { continue; }
+            camPosCoord.x = camPos.pos[0];
+            camPosCoord.z = camPos.pos[1];
+            const distance = camPosCoord.distanceTo(pos);
+            // console.log('   ---', distance)
+            if (distance < 2) {
+                aframeData.updateCameraPos(camPos, false);
+                this.selectedCamPos = i;
+                this.current_camera_pos = `${camPos.pos[0].toFixed(2)},${camPos.pos[1].toFixed(2)},${camPos.pos[2].toFixed(2)}`;
+                this.dataService.aframeCamPos = camPos.name;
+                checkVRcam = true;
+            }
+        }
+        if (this.dataService.aframeCamPos !== this.camPosList[0].name && !checkVRcam) {
+            this.selectedCamPos = 0;
+            aframeData.updateCameraPos(null);
+            this.dataService.aframeCamPos = this.camPosList[0].name;
+        }
     }
 
     updateLook(lookData) {

@@ -6,7 +6,6 @@
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "target": "es2019",
@@ -29,6 +28,7 @@
       "node_modules/@types"
     ],
     "lib": [
+      "es2019",
       "dom"
     ],
     "module": "esnext",

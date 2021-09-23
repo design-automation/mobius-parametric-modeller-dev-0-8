@@ -13,9 +13,7 @@ import { DataOutputService } from '@shared/services/dataOutput.service';
 import { SaveFileComponent } from '@shared/components/file';
 import { _parameterTypes } from '@assets/core/_parameterTypes';
 import { _varString } from '@assets/core/modules';
-import { isArray } from 'util';
 import JSZip from 'jszip';
-import { GIModel } from '@assets/libs/geo-info/GIModel';
 import { WindowMessageComponent } from '@shared/components/window-message/window-message.component';
 import { EEntType } from '@assets/libs/geo-info/common';
 

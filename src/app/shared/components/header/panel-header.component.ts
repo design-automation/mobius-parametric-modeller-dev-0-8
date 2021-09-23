@@ -54,7 +54,7 @@ export class PanelHeaderComponent implements OnDestroy {
         navPage: 'dashboard',
         showNode: '',
         showNodeIdx: '',
-        showViewers: [true, true, true, true],
+        showViewers: [true, true, true, true, true],
         defaultViewer: '',
         docSection: ''
     };
@@ -850,7 +850,8 @@ export class PanelHeaderComponent implements OnDestroy {
             if (this.publishUrlSettings.showViewers[1]) { shownViewers.push('geo'); }
             if (this.publishUrlSettings.showViewers[2]) { shownViewers.push('vr'); }
             if (this.publishUrlSettings.showViewers[3]) { shownViewers.push('console'); }
-            if (shownViewers.length < 4) {
+            if (this.publishUrlSettings.showViewers[4]) { shownViewers.push('doc'); }
+            if (shownViewers.length < 5) {
                 showViewerStr = '&showViewer=%5B' + shownViewers.join(',') + '%5D';
                 if (shownViewers.indexOf((<string>this.publishUrlSettings.defaultViewer).split('=')[1]) === -1) {
                     this.publishUrlSettings.defaultViewer = '';

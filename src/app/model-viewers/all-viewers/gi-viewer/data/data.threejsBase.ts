@@ -8,6 +8,11 @@ import { ISettings } from './data.threejsSettings';
 // import { WEBVR } from 'three/examples/jsm/vr/WebVR.js';
 import { VertexNormalsHelper } from 'three/examples/jsm/helpers/VertexNormalsHelper';
 
+
+const FONT_TYPES  = ['besley', 'opensans', 'roboto'];
+const FONT_SIZES  = ['light', 'medium', 'bold'];
+const FONT_STYLES = ['regular', 'italic'];
+
 /**
  * ThreejsScene
  */
@@ -100,7 +105,7 @@ export class DataThreejsBase {
     // protected _buffer_geoms: THREE.BufferGeometry[] = [];
     protected _all_objs_sphere: THREE.Sphere;
 
-    protected _text_font: THREE.Font;
+    protected _text_font = {};
 
     /**
      * Constructs a new data subscriber.
@@ -112,7 +117,14 @@ export class DataThreejsBase {
             localStorage.setItem('mpm_settings', JSON.stringify(this.settings));
         }
         const textFontLoader = new THREE.FontLoader();
-        textFontLoader.load( 'assets/fonts/helvetiker_regular.typeface.json', font => { this._text_font = font; });
+        for (const fontType of FONT_TYPES) {
+            for (const fontSize of FONT_SIZES) {
+                for (const fontStyle of FONT_STYLES) {
+                    const fontCode = `${fontType}_${fontSize}_${fontStyle}`;
+                    textFontLoader.load( `assets/fonts/${fontCode}.json`, font => { this._text_font[fontCode] = font; });
+                }
+            }
+        }
 
         // scene
         this.scene = new THREE.Scene();

@@ -72,13 +72,6 @@ export class ViewDashboardComponent implements AfterViewInit, OnDestroy {
       }
     }
 
-    // viewerData(): any {
-    //     const node = this.dataService.flowchart.nodes[this.dataService.flowchart.meta.selected_nodes[0]];
-    //     if (!node || !node.enabled) { return ''; }
-    //     // if (node.type === 'output') { return node.input.value; }
-    //     return node.model;
-    // }
-
     setSplit(event) {
         this.dataService.splitUpdate = true;
         this.dataService.splitVal = event.sizes[1];

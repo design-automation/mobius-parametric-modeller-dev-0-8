@@ -1,4 +1,0 @@
-## CONSOLE  
-  
-**Description:** CONSOLE
-  

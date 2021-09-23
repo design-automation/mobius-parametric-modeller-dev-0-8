@@ -9,7 +9,7 @@ export interface IProcedure {
     parent: IProcedure;
     children: IProcedure[];
 
-    variable: string;
+    variable: string[];
 
     argCount: number;
     args: IArgument[];

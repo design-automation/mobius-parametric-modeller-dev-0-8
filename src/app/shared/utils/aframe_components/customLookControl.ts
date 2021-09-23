@@ -55,6 +55,7 @@ export const customLookControl = {
       // Only on mobile devices and only enabled if DeviceOrientation permission has been granted.
       if (utils.device.isMobile()) {
         magicWindowControls = this.magicWindowControls = new AFRAME_THREE.DeviceOrientationControls(this.magicWindowObject);
+        // @ts-ignore
         if (typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requestPermission) {
           magicWindowControls.enabled = false;
           if (this.el.sceneEl.components['device-orientation-permission-ui'].permissionGranted) {
@@ -236,7 +237,7 @@ export const customLookControl = {
         object3D.rotation.y = this.magicWindowDeltaEuler.y + yawObject.rotation.y;
         object3D.rotation.z = this.magicWindowDeltaEuler.z;
 
-        if (!this.prevRotation || this.prevRotation.x !== object3D.rotation.x || this.prevRotation.y !== object3D.rotation.y){
+        if (!this.prevRotation || this.prevRotation.x !== object3D.rotation.x || this.prevRotation.y !== object3D.rotation.y) {
             this.prevRotation = {
                 x: object3D.rotation.x,
                 y: object3D.rotation.y
@@ -246,7 +247,7 @@ export const customLookControl = {
                 const updateLookCheck = <HTMLInputElement> updateCamDiv.children[2];
                 const updateLookInp = <HTMLInputElement> updateCamDiv.children[3];
                 updateLookCheck.value = '1';
-                updateLookInp.value = JSON.stringify(this.el.getAttribute('rotation'));
+                updateLookInp.value = (- this.el.getAttribute('rotation').y).toFixed(2);
             }
         }
       };

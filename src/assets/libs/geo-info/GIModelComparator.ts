@@ -442,8 +442,8 @@ export class GIModelComparator {
         const attrib_names: string[] = [];
         if (this.modeldata.attribs.query.hasEntAttrib(EEntType.PGON, 'material')) {
             const pgons_i: number[] = this.modeldata.geom.snapshot.getEnts(ssid, EEntType.PGON);
-            const mat_names: Set<string> =
-                new Set(this.modeldata.attribs.get.getEntAttribVal(EEntType.PGON, pgons_i, 'material') as string[]);
+            const pgons_mats: string[][] = this.modeldata.attribs.get.getEntAttribVal(EEntType.PGON, pgons_i, 'material') as string[][];
+            const mat_names: Set<string> = new Set((<any> pgons_mats).flat() as string[]);
             for (const mat_name of Array.from(mat_names)) {
                 if (mat_name !== undefined) {
                     attrib_names.push(mat_name);

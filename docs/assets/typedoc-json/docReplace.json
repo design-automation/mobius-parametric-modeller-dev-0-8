@@ -1,4 +1,0 @@
-{
-    "coordinate": "A list of three numbers, [x, y, z]",
-    "plane": "Three lists of three numbers, [origin, x-axis, y-axis]"
-}

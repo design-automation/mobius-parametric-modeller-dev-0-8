@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GIModel } from '@libs/geo-info/GIModel';
 import { IThreeJS } from '@libs/geo-info/ThreejsJSON';
-import { EEntTypeStr, EEntType, EFilterOperatorTypes, EAttribNames } from '@libs/geo-info/common';
+import { EEntType, EAttribNames, TPlane, TColor } from '@libs/geo-info/common';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import { DataService } from '@services';
 import { Vector } from '@assets/core/modules/basic/calc';
@@ -10,6 +10,7 @@ import { ISettings } from './data.threejsSettings';
 import { DataThreejsLookAt } from './data.threejsLookAt';
 import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { VertexNormalsHelper } from 'three/examples/jsm/helpers/VertexNormalsHelper';
+import { xfromSourceTargetMatrix } from '@assets/libs/geom/matrix';
 
 enum MaterialType {
     MeshBasicMaterial = 'MeshBasicMaterial',
@@ -116,7 +117,17 @@ export class DataThreejs extends DataThreejsLookAt {
             old = null;
         }, 0);
     }
-
+    // replaces rgb values with THREE.Color objects
+    private _replaceColors(materials: object[], keys: string[]): void {
+        for (const mat of materials) {
+            for (const color_key of keys) {
+                const rgb: TColor = mat[color_key];
+                if (rgb === undefined) { continue; }
+                if (!Array.isArray(rgb)) { continue; }
+                mat[color_key] = new THREE.Color(rgb[0], rgb[1], rgb[2]);
+            }
+        }
+    }
     private _addGeom(model: GIModel): void {
         // Add geometry
         const threejs_data: IThreeJS = model.get3jsData(this.nodeIndex);
@@ -135,8 +146,10 @@ export class DataThreejs extends DataThreejsLookAt {
         // Get materials
         const pline_material_groups = threejs_data.pline_material_groups;
         const pline_materials = threejs_data.pline_materials;
+        this._replaceColors(pline_materials, ["color"]);
         const pgon_material_groups = threejs_data.pgon_material_groups;
         const pgon_materials = threejs_data.pgon_materials;
+        this._replaceColors(pgon_materials, ["color", "specular", "emissive"]);
 
         // Create buffers that will be used by all geometry
         const verts_xyz_buffer = new THREE.Float32BufferAttribute(threejs_data.verts_xyz, 3);
@@ -638,7 +651,7 @@ export class DataThreejs extends DataThreejsLookAt {
     private _addPoints(points_i: number[],
                         posis_buffer: THREE.Float32BufferAttribute,
                         colors_buffer: THREE.Float32BufferAttribute,
-                        color: [number, number, number],
+                        color: TColor,
                         size: number = 1): void {
         const geom = new THREE.BufferGeometry();
         geom.setIndex(points_i);
@@ -682,16 +695,23 @@ export class DataThreejs extends DataThreejsLookAt {
             const labelText = pgon_label[i].text;
             const labelSize = pgon_label[i].size || 20;
 
-            const shape = this._text_font.generateShapes( labelText, labelSize);
+            const fontType = pgon_label[i].font ? pgon_label[i].font : 'roboto';
+            let fontWeight = 'medium';
+            let fontStyle = 'regular';
+            if (pgon_label[i].font_style) {
+                if (pgon_label[i].font_style.indexOf('light') !== -1) { fontWeight = 'light'; }
+                if (pgon_label[i].font_style.indexOf('bold') !== -1) { fontWeight = 'bold'; }
+                if (pgon_label[i].font_style.indexOf('italic') !== -1) { fontStyle = 'italic'; }
+            }
+            const shape = this._text_font[`${fontType}_${fontWeight}_${fontStyle}`].generateShapes( labelText, labelSize);
             const geom = new THREE.ShapeBufferGeometry(shape);
 
             const lengthCheck = [];
-            // @ts-ignore
             const coords = <any> posi.map(p => new THREE.Vector3(...coords_attrib.getEntVal(p)));
             for (let j = 0; j < coords.length; j++) {
                 const p0 = coords[j];
                 const p1 = (j === posi.length - 1) ? coords[0] : coords[j + 1];
-                lengthCheck.push(p0.distanceToSquared(p1));
+                lengthCheck.push(p0.distanceTo(p1));
             }
             if (lengthCheck[1] > lengthCheck[2]) {
                 [lengthCheck[1], lengthCheck[2]] = [lengthCheck[2], lengthCheck[1]];
@@ -705,29 +725,15 @@ export class DataThreejs extends DataThreejsLookAt {
                 [lengthCheck[1], lengthCheck[2]] = [lengthCheck[2], lengthCheck[1]];
                 [coords[0], coords[1]] = [coords[1], coords[0]];
             }
-            const pgonFromVec = new THREE.Vector3(0, 0, 1);
-            const pgonCheckVecFrom = new THREE.Vector3(1, 0, 0);
-            const labelPos = coords[1];
-            const pVec1 = new THREE.Vector3().copy(coords[2]).sub(coords[1]);
-            const pVec2 = new THREE.Vector3().copy(coords[0]).sub(coords[1]);
-            const toVec = new THREE.Vector3().copy(pVec1).cross(pVec2).normalize();
-
-            if (pVec1.x !== 0 || pVec1.y !== 0) {
-                const checkVecTo = new THREE.Vector3(pVec1.x, pVec1.y, 0).normalize();
-                const rotateQuat = new THREE.Quaternion();
-                rotateQuat.setFromUnitVectors(pgonCheckVecFrom, checkVecTo);
-                const rotateMat = new THREE.Matrix4(); // create one and reuse it
-                rotateMat.makeRotationFromQuaternion(rotateQuat);
-                geom.applyMatrix4(rotateMat);
-            }
-
-            const quaternion = new THREE.Quaternion();
-            quaternion.setFromUnitVectors(pgonFromVec, toVec);
-            const matrix = new THREE.Matrix4(); // create one and reuse it
-            matrix.makeRotationFromQuaternion(quaternion);
+            const xAxis = new THREE.Vector3().copy(coords[2]).sub(coords[1]);
+            const yAxis = new THREE.Vector3().copy(coords[0]).sub(coords[1]);
+            const fromPlane = <TPlane> [[0, 0, 0], [lengthCheck[1], 0, 0], [0, lengthCheck[0], 0]];
+            const toPlane = <TPlane> [
+                            [coords[1].x, coords[1].y, coords[1].z],
+                            [xAxis.x, xAxis.y, xAxis.z],
+                            [yAxis.x, yAxis.y, yAxis.z]];
+            const matrix = xfromSourceTargetMatrix(fromPlane, toPlane);
             geom.applyMatrix4(matrix);
-
-            geom.translate(labelPos.x, labelPos.y, labelPos.z);
 
             let color = new THREE.Color(0);
             if (pgon_label[i].color  && pgon_label[i].color.length === 3) {
@@ -780,7 +786,11 @@ export class DataThreejs extends DataThreejsLookAt {
             if (!labelText || !labelOrient || !Array.isArray(labelOrient)) { continue; }
             const labelSize = label.size || 20;
 
-            const shape = this._text_font.generateShapes( labelText, labelSize);
+            const fontType = label.type ? label.type : 'roboto';
+            const fontWeight = label.weight ? label.weight : 'medium';
+            const fontStyle = label.style ? label.style : 'regular';
+
+            const shape = this._text_font[`${fontType}_${fontWeight}_${fontStyle}`].generateShapes( labelText, labelSize);
             const geom = new THREE.ShapeBufferGeometry(shape);
 
             let labelPos = labelOrient[0];

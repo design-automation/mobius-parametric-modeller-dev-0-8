@@ -18,6 +18,9 @@
             <option *ngFor="let item of camPosList; let i = index;" value ={{i}}>{{item.name}}</option>
         </select>
     </div>
+    <div class='cam-info' *ngIf='settings.camera.show_cam_info'>
+        <p>Rotation: {{current_camera_rot}} Position: {{current_camera_pos}}</p>
+    </div>
     <modal-window id="aframe_settings_modal" (closeModal) = 'onCloseModal()'>
         <h1>VR Viewer Settings</h1>
         <tabs id="settingsTab">
@@ -46,6 +49,33 @@
                             </dd>
                         </ng-container> -->
                         <dd><hr></dd>
+                        <dd>
+                            <div class="label">Show Camera Info</div>
+                            <div class="onoffswitch">
+                                <input type="checkbox"
+                                name="onoffswitch"
+                                class="onoffswitch-checkbox"
+                                id="aframeShowCamInfo"
+                                [checked]='settings.camera.show_cam_info'
+                                (change)="settingOnChange('camera.show_cam_info')"
+                                >
+                                <label class="onoffswitch-label" for="aframeShowCamInfo">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </dd>
+                        <br>
+                        <dd>
+                            <div class="label">Camera Acceleration</div>
+                            <div class="slidecontainer light">
+                                <input type="range" min="0" max="1000" step="1" [value]="settings.camera.acceleration" class="slider" (input)="settingOnChange('camera.acceleration', $event.target.value)">
+                                <input type="number"
+                                (change)="settingOnChange('camera.acceleration', $event.target.value)" 
+                                [value]="formatNumber(settings.camera.acceleration)">
+                            </div>
+                        </dd>
+                        <br>
                         <dd class='vector_input_div'>
                             <div class="label">Camera Position</div>
                             <input type="number"
@@ -57,6 +87,7 @@
                             <input type="number"
                             (change)="settingOnChange('camera.pos_y', $event.target.value)" 
                             [value]="formatNumber(settings.camera.position.y)">
+                            <button (click)="getPosition('camera.pos');" class='filebtn getbtn'>Get</button>
                         </dd>
                         <dd class='vector_input_div'>
                             <div class="label">Camera Rotation</div>
@@ -66,15 +97,7 @@
                             <input type="number" 
                             (change)="settingOnChange('camera.rot_y', $event.target.value)"
                             [value]="formatNumber(settings.camera.rotation.y)" disabled>
-                        </dd>
-                        <dd>
-                            <div class="label">Camera Acceleration</div>
-                            <div class="slidecontainer light">
-                                <input type="range" min="0" max="1000" step="1" [value]="settings.camera.acceleration" class="slider" (input)="settingOnChange('camera.acceleration', $event.target.value)">
-                                <input type="number"
-                                (change)="settingOnChange('camera.acceleration', $event.target.value)" 
-                                [value]="formatNumber(settings.camera.acceleration)">
-                            </div>
+                            <button (click)="getPosition('camera.rot');" class='filebtn getbtn'>Get</button>
                         </dd>
                     </dl>
                 </div>

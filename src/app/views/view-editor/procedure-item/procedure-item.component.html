@@ -11,6 +11,7 @@
     [class.terminate]='data.terminate'
     [ngSwitch]="data.type"
     (click)='emitSelect($event, data)'
+    (wheel)='onWheel($event)'
     (mousedown)='disableShift($event)'
     (mouseenter)='onenter($event)'
     (mouseleave)='onleave($event)'
@@ -75,6 +76,7 @@
     [class.printing]='data.print'
     [ngSwitch]="data.type"
     (click)='emitSelect($event, data)'
+    (wheel)='onWheel($event)'
     (mousedown)='disableShift($event)'
     (mouseenter)='onenter($event)'
     (mouseleave)='onleave($event)'
@@ -131,6 +133,7 @@
     [class.printing]='data.print'
     [ngSwitch]="data.type"
     (click)='emitSelect($event, data)'
+    (wheel)='onWheel($event)'
     (mousedown)='disableShift($event)'
     (mouseenter)='onenter($event)'
     (mouseleave)='onleave($event)'
@@ -186,6 +189,7 @@
     [class.printing]='data.print'
     [ngSwitch]="data.type"
     (click)='emitSelect($event, data)'
+    (wheel)='onWheel($event)'
     (mousedown)='disableShift($event)'
     (mouseenter)='onenter($event)'
     (mouseleave)='onleave($event)'
@@ -231,6 +235,7 @@
     [class.printing]='data.print'
     [ngSwitch]="data.type"
     (click)='emitSelect($event, data)'
+    (wheel)='onWheel($event)'
     (mousedown)='disableShift($event)'
     (mouseenter)='onenter($event)'
     (mouseleave)='onleave($event)'
@@ -302,6 +307,7 @@
     [class.printing]='data.print'
     [ngSwitch]="data.type"
     (click)='emitSelect($event, data)'
+    (wheel)='onWheel($event)'
     (mousedown)='disableShift($event)'
     (mouseenter)='onenter($event)'
     (mouseleave)='onleave($event)'
@@ -438,6 +444,7 @@
     [class.disabled]="!data.enabled"
     [ngSwitch]="data.type"
     (click)='emitSelect($event, data)'
+    (wheel)='onWheel($event)'
     (mousedown)='disableShift($event)'
     (mouseenter)='onenter($event)'
     (mouseleave)='onleave($event)'
@@ -494,6 +501,7 @@
     [class.disabled]="!data.enabled"
     [ngSwitch]="data.type"
     (click)='emitSelect($event, data)'
+    (wheel)='onWheel($event)'
     (mousedown)='disableShift($event)'
     (mouseenter)='onenter($event)'
     (mouseleave)='onleave($event)'
@@ -565,6 +573,7 @@
     [class.terminate]='data.terminate'
     [ngSwitch]="data.type"
     (click)='emitSelect($event, data)'
+    (wheel)='onWheel($event)'
     (mousedown)='disableShift($event)'
     (mouseenter)='onenter($event)'
     (mouseleave)='onleave($event)'
@@ -651,6 +660,7 @@
     [class.terminate]='data.terminate'
     [ngSwitch]="data.type"
     (click)='emitSelect($event, data)'
+    (wheel)='onWheel($event)'
     (mousedown)='disableShift($event)'
     (mouseenter)='onenter($event)'
     (mouseleave)='onleave($event)'
@@ -723,6 +733,7 @@
         [class.terminate]='data.terminate'
         [ngSwitch]="data.type"
         (click)='emitSelect($event, data)'
+        (wheel)='onWheel($event)'
         (mousedown)='disableShift($event)'
         (mouseenter)='onenter($event)'
         (mouseleave)='onleave($event)'>
@@ -797,6 +808,7 @@
     [class.terminate]='data.terminate'
     [ngSwitch]="data.type"
     (click)='emitSelect($event, data)'
+    (wheel)='onWheel($event)'
     (mousedown)='disableShift($event)'
     (mouseenter)='onenter($event)'
     (mouseleave)='onleave($event)'
@@ -845,6 +857,7 @@
     [class.terminate]='data.terminate'
     [ngSwitch]="data.type"
     (click)='emitSelect($event, data)'
+    (wheel)='onWheel($event)'
     (mousedown)='disableShift($event)'
     (mouseenter)='onenter($event)'
     (mouseleave)='onleave($event)'

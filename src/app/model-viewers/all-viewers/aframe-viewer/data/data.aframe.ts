@@ -183,11 +183,13 @@ export class DataAframe {
         this.navMeshEnabled = false;
         try {
             const allPgons = <string[]> Modules.query.Get(this.model, _EEntType.PGON, null) ;
-            const attrib = Modules.attrib.Get(this.model, allPgons, 'vr_nav_mesh');
-            if (attrib) {
+            const attrib = <any> Modules.attrib.Get(this.model, allPgons, 'vr_nav_mesh');
+            if (attrib && attrib.length !== 0) {
                 this.navMeshEnabled = true;
             }
-        } catch (ex) {}
+        } catch (ex) {
+            this.navMeshEnabled = false;
+        }
         for (const i of threejsScene.scene.children) {
             if (i.name.startsWith('obj')) {
                 const materials = this.getMaterial(i.material);
@@ -226,11 +228,12 @@ export class DataAframe {
         const ambLightElement = <any> document.getElementById('aframe_ambientLight');
         const hemLightElement = <any> document.getElementById('aframe_hemisphereLight');
         const dirLightElement = <any> document.getElementById('aframe_directionalLight');
+        if (!ambLightElement || !hemLightElement || !dirLightElement) { return; }
         const ambLight = ambLightElement.object3D.children[0];
         const hemLight = hemLightElement.object3D.children[0];
         const dirLight = dirLightElement.object3D.children[0];
         if (!ambLight || !hemLight || !dirLight) {
-            setTimeout(() => {this.updateLight(threeJSGroup); }, 50);
+            setTimeout(() => {this.updateLight(threeJSGroup); }, 0);
             return;
         }
         if (this.settings.ambient_light.show) {
@@ -261,14 +264,14 @@ export class DataAframe {
             dirLight.shadow.camera.bottom = -boundingSphere.radius;
             dirLight.shadow.camera.far = boundingSphere.radius * 20;
             dirLight.shadow.bias = -0.0001;
-            dirLight.shadow.mapSize.width = this.settings.directional_light.shadowSize;  // default
-            dirLight.shadow.mapSize.height = this.settings.directional_light.shadowSize; // default
             const dirLightPos = this.getDLPosition(boundingSphere.radius, this.settings.directional_light.azimuth, this.settings.directional_light.altitude, boundingSphere.center);
             dirLight.position.set(...dirLightPos);
+            if (dirLight.shadow.mapSize.width !== this.settings.directional_light.shadowSize) {
+                dirLight.shadow.mapSize.set(this.settings.directional_light.shadowSize, this.settings.directional_light.shadowSize);
+            }
         } else {
-            dirLight.visible = false;
+            dirLightElement.setAttribute('visible', 'false');
         }
-
     }
 
     /**
@@ -434,60 +437,61 @@ export class DataAframe {
     }
 
     updateCamPos() {
-        const pts = <string[]> Modules.query.Get(this.model, Modules.query._EEntType.POINT, null);
-        const pos = Modules.attrib.Get(this.model, Modules.query.Get(this.model, Modules.query._EEntType.POSI, pts), 'xyz');
-        const ptAttribs = Modules.attrib.Get(this.model, pts, 'vr_hotspot');
-        this.camPosList = [
-            {
-            name: 'Default',
-            value: null
-            }, 
-            // {
-            //     name: 'Edit POV',
-            //     value: null
-            // }
-        ];
-        for (let i = 0; i < pts.length; i++) {
-            if (!ptAttribs[i]) { continue; }
-            const cam = JSON.parse(JSON.stringify(ptAttribs[i]));
-            cam.pos = pos[i];
-            if (!cam.name) { cam.name = pts[i]; }
-            this.camPosList.splice(this.camPosList.length - 1, 0, cam);
-        }
-        const viewpointsList = document.getElementById('aframe_viewpoints');
-        const newPointNum = this.camPosList.length - 2 - (viewpointsList.children.length / 2);
-        if (newPointNum > 0) {
-            for (let j = 0; j < newPointNum; j++) {
-                const newPoint_tetra = document.createElement('a-tetrahedron');
-                newPoint_tetra.id = 'aframe_viewpoint_tetra' + j.toString();
-                newPoint_tetra.setAttribute('color', '#ffc24d');
-                newPoint_tetra.setAttribute('roughness', '0');
-                newPoint_tetra.setAttribute('rotation', '35 0 45');
-                newPoint_tetra.setAttribute('fog', 'false');
-                newPoint_tetra.setAttribute('radius', '3');
-                viewpointsList.appendChild(newPoint_tetra);
-
-                const newPoint_octa = document.createElement('a-octahedron');
-                newPoint_octa.id = 'aframe_viewpoint_octa' + j.toString();
-                newPoint_octa.setAttribute('color', '#ffc24d');
-                newPoint_octa.setAttribute('roughness', '0');
-                newPoint_octa.setAttribute('radius', '3');
-                newPoint_octa.setAttribute('fog', 'false');
-                viewpointsList.appendChild(newPoint_octa);
+        try {
+            const pts = <string[]> Modules.query.Get(this.model, Modules.query._EEntType.POINT, null);
+            const pos = Modules.attrib.Get(this.model, Modules.query.Get(this.model, Modules.query._EEntType.POSI, pts), 'xyz');
+            const ptAttribs = Modules.attrib.Get(this.model, pts, 'vr_hotspot');
+            this.camPosList = [
+                {
+                name: 'Default',
+                value: null
+                },
+                // {
+                //     name: 'Edit POV',
+                //     value: null
+                // }
+            ];
+            for (let i = 0; i < pts.length; i++) {
+                if (!ptAttribs[i]) { continue; }
+                const cam = JSON.parse(JSON.stringify(ptAttribs[i]));
+                cam.pos = pos[i];
+                if (!cam.name) { cam.name = pts[i]; }
+                this.camPosList.push(cam);
+                // this.camPosList.splice(this.camPosList.length - 1, 0, cam);
             }
-        }
-        for (let k = 0; k < viewpointsList.children.length; k++) {
-            const pointPos = viewpointsList.children[k];
-            pointPos.setAttribute('visible', 'false');
-            const camPos = this.camPosList[Math.trunc(k / 2) + 1];
-            if (Math.trunc(k / 2) + 2 >= this.camPosList.length) {
-                continue;
-            } else if (camPos.background_url) {
-                if (k % 2 === 0) { continue; }
-            } else if (k % 2 === 1) { continue; }
-            pointPos.setAttribute('visible', 'true');
-            pointPos.setAttribute('position', `${camPos.pos[0]} ${camPos.pos[2]} ${- camPos.pos[1]}`);
-        }
+            const viewpointsList = document.getElementById('aframe_viewpoints');
+            const newPointNum = this.camPosList.length - 2 - (viewpointsList.children.length / 2);
+            if (newPointNum > 0) {
+                for (let j = 0; j < newPointNum; j++) {
+                    const newPoint_tetra = document.createElement('a-tetrahedron');
+                    newPoint_tetra.id = 'aframe_viewpoint_tetra' + j.toString();
+                    newPoint_tetra.setAttribute('color', '#ffc24d');
+                    newPoint_tetra.setAttribute('roughness', '0');
+                    newPoint_tetra.setAttribute('rotation', '35 0 45');
+                    newPoint_tetra.setAttribute('radius', '3');
+                    viewpointsList.appendChild(newPoint_tetra);
+
+                    const newPoint_octa = document.createElement('a-octahedron');
+                    newPoint_octa.id = 'aframe_viewpoint_octa' + j.toString();
+                    newPoint_octa.setAttribute('color', '#ffc24d');
+                    newPoint_octa.setAttribute('roughness', '0');
+                    newPoint_octa.setAttribute('radius', '3');
+                    viewpointsList.appendChild(newPoint_octa);
+                }
+            }
+            for (let k = 0; k < viewpointsList.children.length; k++) {
+                const pointPos = viewpointsList.children[k];
+                pointPos.setAttribute('visible', 'false');
+                const camPos = this.camPosList[Math.trunc(k / 2) + 1];
+                if (Math.trunc(k / 2) + 2 >= this.camPosList.length) {
+                    continue;
+                } else if (camPos.background_url) {
+                    if (k % 2 === 0) { continue; }
+                } else if (k % 2 === 1) { continue; }
+                pointPos.setAttribute('visible', 'true');
+                pointPos.setAttribute('position', `${camPos.pos[0]} ${camPos.pos[2]} ${- camPos.pos[1]}`);
+            }
+        } catch (ex) {}
     }
 
     updateCamera(camera_pos = DEFAUT_CAMERA_POS) {
@@ -803,19 +807,20 @@ export class DataAframe {
             img.removeEventListener('load', postloadSkyBGImg);
         });
 
-        const tbrElements = [   'aframe_ambientLight', 'aframe_hemisphereLight', 'aframe_directionalLight', 'aframe_viewpoints',
+        const tbrElements = [   'aframe_ambientLight', 'aframe_hemisphereLight', 'aframe_directionalLight',
+                                'aframe_viewpoints',
                                 'aframe_assets', 'aframe_viewpoint_assets',
                                 'aframe_camera_rig', 'aframe_sky_background', 'mobius_geom', 'aframe_ground',
                                 'aframe_hud'];
         for (const tbrElmName of tbrElements) {
             const tbr = document.getElementById(tbrElmName);
             if (!tbr) { continue; }
-            tbr.id = 'tbr_' + tbrElements;
+            tbr.id = 'tbr_' + tbrElmName;
         }
         if (!this.scene || !this.scene.renderer) { return; }
         this.scene.renderer.forceContextLoss();
         this.scene.renderer.dispose();
-        this.scene.renderer = null;
+        // this.scene.renderer = null;
         for (const childObj of this.scene.children) {
             childObj.id = childObj.id + '_';
             childObj.remove();

@@ -12,6 +12,9 @@ import { IArgument } from '@models/code';
 
 import { modifyArgument, checkNodeValidity, modifyLocalFuncVar} from '@shared/parser';
 
+
+const REGEXP = /^(container--item|container--line|line--item|input--var|input--arg|module-name|function-text|global-function-text|basic-function-text)/i;
+
 @Component({
     selector: 'procedure-item',
     templateUrl: './procedure-item.component.html',
@@ -451,7 +454,7 @@ export class ProcedureItemComponent implements OnDestroy {
             this.emitNotifyError(this.data.args[index].invalidVar);
         } else if (isVar) {
             if (this.data.variable) {
-                this.markLinkedArguments(this.data.variable, topProdList);
+                this.data.variable.forEach(v => this.markLinkedArguments(v, topProdList))
             } else if (this.data.args[index].usedVars && this.data.args[index].usedVars[0]) {
                 this.markLinkedArguments(this.data.args[index].usedVars[0], topProdList);
             }
@@ -474,7 +477,7 @@ export class ProcedureItemComponent implements OnDestroy {
                     arg.linked = true;
                 }
             }
-            if (prod.variable === varName) {
+            if (prod.variable && prod.variable.indexOf(varName) !== -1) {
                 prod.args[0].linked = true;
             }
         }
@@ -511,5 +514,39 @@ export class ProcedureItemComponent implements OnDestroy {
 
     updateJsVal(p: IArgument) {
         p.jsValue = p.value;
+    }
+
+    onWheel(event: WheelEvent) {
+        const target = <HTMLElement> event.target;
+        if (!target.className) { return; }
+        if (!REGEXP.test(target.className)) { return; }
+        let elm = target;
+        let scrollCheck = false;
+        while (true) {
+            if (elm.className.startsWith('pro-container')) { break; }
+            if (elm.className === 'container--item') {
+                if (scrollCheck || elm.clientWidth < elm.scrollWidth) { scrollCheck = true; }
+                if (event.deltaY < 0) {
+                    const diff = elm.scrollWidth - elm.clientWidth;
+                    if (elm.scrollLeft < diff - 1) {
+                        elm.scrollLeft += 30;
+                        if (elm.scrollLeft > diff) { elm.scrollLeft = diff; }
+                        break;
+                    }
+                } else {
+                    if (elm.scrollLeft > 0) {
+                        elm.scrollLeft -= 30;
+                        if (elm.scrollLeft < 0) { elm.scrollLeft = 0; }
+                        break;
+                    }
+                }
+            }
+            if (!elm.parentNode) { break; }
+            elm = <HTMLElement> elm.parentNode;
+        }
+        if (scrollCheck) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
     }
 }

@@ -244,7 +244,7 @@ export class DataGeo {
         }
     }
 
-    refreshModel(threejsScene) {
+    refreshModel(threejsScene, updatePos = false) {
         this.removeMobiusObjs();
         const threeJSGroup = new itowns.THREE.Group();
         threeJSGroup.name = 'mobius_geom';
@@ -334,12 +334,12 @@ export class DataGeo {
         // this.lookAtObj(threejsScene);
 
         // this.view.scene.add(lighting);
-        if (this.settings.camera.pos.x !== 0) {
+        if (updatePos) {
             this.view.camera.camera3D.position.set(this.settings.camera.pos.x, this.settings.camera.pos.y, this.settings.camera.pos.z);
             this.view.camera.camera3D.rotation.set(this.settings.camera.rot.x, this.settings.camera.rot.y, this.settings.camera.rot.z);
             this.view.notifyChange();
         } else {
-            this.lookAtObj(threejsScene);
+            // this.lookAtObj(threejsScene);
         }
         this.updateLightPos(this.settings.time.date, lightTarget);
         this.updateHUD();
@@ -387,7 +387,7 @@ export class DataGeo {
         itowns.CameraUtils.transformCameraToLookAtTarget(this.view, cam, {
             coord: this.camTarget,
             tilt: tilt,
-            heading: -lightingPos.azimuth * 180 / Math.PI,
+            heading: lightingPos.azimuth * 180 / Math.PI,
             // tilt: 45,
             // heading: -90,
             range: this.scale

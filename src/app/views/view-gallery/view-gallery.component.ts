@@ -122,6 +122,21 @@ export class ViewGalleryComponent implements AfterViewInit {
                     case '2':
                         viewerBtn = document.getElementById('Geo Viewer');
                         break;
+                    case 'console':
+                        viewerBtn = document.getElementById('Console');
+                        break;
+                    case 'cad':
+                        viewerBtn = document.getElementById('CAD Viewer');
+                        break;
+                    case 'geo':
+                        viewerBtn = document.getElementById('Geo Viewer');
+                        break;
+                    case 'vr':
+                        viewerBtn = document.getElementById('VR Viewer');
+                        break;
+                    case 'doc':
+                        viewerBtn = document.getElementById('Documentation');
+                        break;
                 }
                 if (viewerBtn) { viewerBtn.click(); }
             }, 100);

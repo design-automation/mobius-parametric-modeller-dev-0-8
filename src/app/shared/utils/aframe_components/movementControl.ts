@@ -139,7 +139,7 @@ export const movementControlComponent = {
             updatePosCheck.value = '1';
             const pos = new THREE.Vector3();
             el.object3D.getWorldPosition(pos);
-            updatePosInp.value = JSON.stringify(pos);
+            updatePosInp.value = `${pos.x.toFixed(2)},${(-pos.z).toFixed(2)},${pos.y.toFixed(2)}`;
         }
     };
   }()),
