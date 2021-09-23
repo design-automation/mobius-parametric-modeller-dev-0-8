@@ -87,9 +87,26 @@ as-split-area{
     padding-left: 5px;
 
     .viewer-time-slider {
-        width: calc(100% - 100px);
-        margin: 0px 5px 0px 0px;
-        height: 25px;
+        width: calc(100% - 105px);
+        margin: 7px 5px 7px 5px;
+        height: 10px;
+        overflow: hidden;
+        -webkit-appearance: none;
+        background-color: $color5-5 ;
+        &::-webkit-slider-runnable-track {
+            height: 15px;
+            -webkit-appearance: none;
+            color: $color3;
+            margin-top: -2px;
+        }
+        &::-webkit-slider-thumb {
+            width: 2px;
+            -webkit-appearance: none;
+            height: 15px;
+            cursor: ew-resize;
+            background: $color1;
+            box-shadow: -300px 0 0 300px $color3;
+        }
     }
     .viewer-time-box {
         height: 20px;

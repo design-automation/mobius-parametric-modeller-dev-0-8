@@ -7,7 +7,6 @@ import { IProcedure, ProcedureTypes } from '@models/procedure';
 import * as Modules from '@modules';
 import { DataService } from '@services';
 // import { WebWorkerService } from 'ngx-web-worker';
-import { InputType } from '@models/port';
 import { Router } from '@angular/router';
 import { DataOutputService } from '@shared/services/dataOutput.service';
 import { SaveFileComponent } from '@shared/components/file';
