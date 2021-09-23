@@ -44,16 +44,14 @@
             "buildOptimizer": true,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": false,
-            "aot": true
+            "namedChunks": false
           },
           "configurations": {
             "production": {
               "optimization": false,
               "outputHashing": "all",
-              "sourceMap": true,
+              "sourceMap": false,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
