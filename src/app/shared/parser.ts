@@ -1482,6 +1482,9 @@ export function checkValidVar(vars: string[], procedure: IProcedure, nodeProdLis
     while (current.parent) {
         const prods = current.parent.children;
         for (const prod of prods) {
+            if (typeof prod.variable === 'string') {
+                prod.variable = [prod.variable];
+            }
             if (prod.ID === current.ID) {
                 if (current.type !== ProcedureTypes.Foreach) {
                     break;
