@@ -88,14 +88,15 @@ textarea{
 }
 .outputPort{
     stroke: transparent;
-    stroke-width: 11px;
-    pointer-events: stroke;
+    stroke-width: 15px;
+    pointer-events: all;
     fill: transparent;
     //fill: midnightblue;
     &.disabled{
         opacity: $disabled-opacity;
     }
     &:hover {
-        stroke: $color5;
+        // stroke: $color5;
+        fill: $color5;
     }
 }

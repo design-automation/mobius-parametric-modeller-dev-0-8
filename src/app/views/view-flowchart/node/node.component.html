@@ -6,12 +6,12 @@
 *ngIf='node.type==""'>
 
     <rect
-    width="110" height="90"
+    width="130" height="110"
     class='outputPort'
     id = 'node.output.id'
     (mousedown)='startDragPort($event, "output")'
-    [attr.x]="node.position.x - 5" 
-    [attr.y]="node.position.y - 5"
+    [attr.x]="node.position.x - 15" 
+    [attr.y]="node.position.y - 15"
     />
 
     <!-- rectangular box with border -->
@@ -55,11 +55,11 @@
     class='outputPort'
     id = 'node.output.id'
     (mousedown)='startDragPort($event, "output")'
-    [attr.d]="'M' + (node.position.x - 5) +' '+ (node.position.y + 5) +
-             ' L' + (node.position.x - 5) +' '+ (node.position.y + 43) +
-             ' L' + (node.position.x + 50) +' '+ (node.position.y + 65) +
-             ' L' + (node.position.x + 105) +' '+ (node.position.y + 43) +
-             ' L' + (node.position.x + 105) +' '+ (node.position.y + 5) + ' Z'" 
+    [attr.d]="'M' + (node.position.x - 10) +' '+ (node.position.y) +
+             ' L' + (node.position.x - 10) +' '+ (node.position.y + 48) +
+             ' L' + (node.position.x + 50) +' '+ (node.position.y + 72) +
+             ' L' + (node.position.x + 110) +' '+ (node.position.y + 48) +
+             ' L' + (node.position.x + 110) +' '+ (node.position.y) + ' Z'" 
     />
 
 
@@ -108,11 +108,11 @@
     <path
     class='outputPort'
     id = 'node.output.id'
-    [attr.d]="'M'+ (node.position.x - 5)   +' '+ (node.position.y + 75) +
-            ' L' + (node.position.x - 5)   +' '+ (node.position.y + 37) +
-            ' L' + (node.position.x + 50)  +' '+ (node.position.y + 15) +
-            ' L' + (node.position.x + 105) +' '+ (node.position.y + 37) +
-            ' L' + (node.position.x + 105) +' '+ (node.position.y + 75) + ' Z'" 
+    [attr.d]="'M'+ (node.position.x - 10)   +' '+ (node.position.y + 80) +
+            ' L' + (node.position.x - 10)   +' '+ (node.position.y + 34) +
+            ' L' + (node.position.x + 50)  +' '+ (node.position.y + 10) +
+            ' L' + (node.position.x + 110) +' '+ (node.position.y + 34) +
+            ' L' + (node.position.x + 110) +' '+ (node.position.y + 80) + ' Z'" 
     />
 
     <!-- Triangle with border -->

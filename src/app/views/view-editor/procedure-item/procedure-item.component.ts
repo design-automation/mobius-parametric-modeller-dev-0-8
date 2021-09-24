@@ -454,7 +454,7 @@ export class ProcedureItemComponent implements OnDestroy {
             this.emitNotifyError(this.data.args[index].invalidVar);
         } else if (isVar) {
             if (this.data.variable) {
-                this.data.variable.forEach(v => this.markLinkedArguments(v, topProdList))
+                this.data.variable.forEach(v => this.markLinkedArguments(v, topProdList));
             } else if (this.data.args[index].usedVars && this.data.args[index].usedVars[0]) {
                 this.markLinkedArguments(this.data.args[index].usedVars[0], topProdList);
             }

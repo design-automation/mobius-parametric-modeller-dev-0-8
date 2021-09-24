@@ -13,7 +13,20 @@ import { NodeUtils } from '@models/node';
 import { checkNodeValidity } from '@shared/parser';
 import { AllFunctionDoc } from '@shared/decorators';
 import { DefaultSettings as DefaultGISettings } from '../gi-viewer/gi-viewer.settings';
+import {customLookControl, customWASDControl, keyboardControlComponent, movementControlComponent,
+    navAgentComponent, navMeshComponent, navSystem} from '@shared/utils';
+
 declare var AFRAME;
+function registerAframeComponents() {
+    if (AFRAME.components['custom-look-controls']) { return; }
+    AFRAME.registerSystem('nav', navSystem);
+    AFRAME.registerComponent('custom-wasd-controls', customWASDControl);
+    AFRAME.registerComponent('custom-look-controls', customLookControl);
+    AFRAME.registerComponent('nav-mesh', navMeshComponent);
+    AFRAME.registerComponent('nav-agent', navAgentComponent);
+    AFRAME.registerComponent('keyboard-controls', keyboardControlComponent);
+    AFRAME.registerComponent('movement-controls', movementControlComponent);
+}
 
 /**
  * GIViewerComponent
@@ -60,6 +73,7 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
     constructor(private dataService: DataAframeService, private modalService: ModalService,
             private threeJSDataService: ThreeJSDataService, private cpService: ColorPickerService,
             private mainDataService: MD) {
+        registerAframeComponents();
         const previous_settings = JSON.parse(localStorage.getItem('aframe_settings'));
         // const devMode = isDevMode();
         const devMode = false;
