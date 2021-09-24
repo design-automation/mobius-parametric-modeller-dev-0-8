@@ -5,3 +5,10 @@ Version 0.8.x of Mobius Modeller:
 
 If you are looking for the latest stable version, please go here:
 * https://mobius.design-automation.net
+
+
+## Deployment Instruction:
+
+* Open git bash as admin
+* Enter: `git config --system core.longpaths true`
+* `npm run deploy`
