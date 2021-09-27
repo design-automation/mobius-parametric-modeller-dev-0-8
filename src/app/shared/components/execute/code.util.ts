@@ -51,7 +51,7 @@ export class CodeUtils {
                     const assembledVarList = [];
                     for (let ind = 0; ind < varList.length; ind++) {
                         if (varList[ind].indexOf('@') !== -1) {
-                            const tempVar = `__tempVar${ind}__`;
+                            const tempVar = `tempVar${ind}__`;
                             varDict.push([varList[ind], tempVar]);
                             assembledVarList.push(tempVar);
                         } else {
@@ -277,6 +277,28 @@ export class CodeUtils {
                     }
                 } else if (args[0].name === '__none__' || !args[0].jsValue) {
                     codeStr.push(`${fnCall};`);
+                } else if (args[0].jsValue.startsWith('|*')) {
+                    const varList = args[0].jsValue.substring(2).split('|');
+                    const varDict = [];
+                    const assembledVarList = [];
+                    for (let ind = 0; ind < varList.length; ind++) {
+                        if (varList[ind].indexOf('@') !== -1) {
+                            const tempVar = `tempVar${ind}__`;
+                            varDict.push([varList[ind], tempVar]);
+                            assembledVarList.push(tempVar);
+                        } else {
+                            assembledVarList.push(varList[ind]);
+                        }
+                    }
+                    codeStr.push(`[${assembledVarList.join(',')}] =  ${fnCall};`);
+                    for (const varSet of varDict) {
+                        const repVar = this.repSetAttrib(varSet[0]);
+                        if (!repVar) {
+                            codeStr.push(`${prefix}${varSet[0]} = ${varSet[1]};`);
+                        } else {
+                            codeStr.push(`${repVar[0]} ${varSet[1]} ${repVar[1]}`);
+                        }
+                    }
                 } else {
                     const repfuncVar = this.repSetAttrib(args[0].jsValue);
                     if (!repfuncVar) {
@@ -321,6 +343,29 @@ export class CodeUtils {
                 if (args[0].name === '__none__' || !args[0].jsValue) {
                     codeStr.push(`${lfn};`);
                     codeStr.push('if (__params__.terminated) { return __params__.model;}')
+                    break;
+                } else if (args[0].jsValue.startsWith('|*')) {
+                    const varList = args[0].jsValue.substring(2).split('|');
+                    const varDict = [];
+                    const assembledVarList = [];
+                    for (let ind = 0; ind < varList.length; ind++) {
+                        if (varList[ind].indexOf('@') !== -1) {
+                            const tempVar = `tempVar${ind}__`;
+                            varDict.push([varList[ind], tempVar]);
+                            assembledVarList.push(tempVar);
+                        } else {
+                            assembledVarList.push(varList[ind]);
+                        }
+                    }
+                    codeStr.push(`[${assembledVarList.join(',')}] =  ${lfn};`);
+                    for (const varSet of varDict) {
+                        const repVar = this.repSetAttrib(varSet[0]);
+                        if (!repVar) {
+                            codeStr.push(`${prefix}${varSet[0]} = ${varSet[1]};`);
+                        } else {
+                            codeStr.push(`${repVar[0]} ${varSet[1]} ${repVar[1]}`);
+                        }
+                    }
                     break;
                 }
                 const lRepImpVar = this.repSetAttrib(args[0].jsValue);
@@ -377,6 +422,28 @@ export class CodeUtils {
                 // codeStr.push(`__params__.prevModel = __params__.model.clone();`);
                 if (args[0].name === '__none__' || !args[0].jsValue) {
                     codeStr.push(`${fn};`);
+                } else if (args[0].jsValue.startsWith('|*')) {
+                    const varList = args[0].jsValue.substring(2).split('|');
+                    const varDict = [];
+                    const assembledVarList = [];
+                    for (let ind = 0; ind < varList.length; ind++) {
+                        if (varList[ind].indexOf('@') !== -1) {
+                            const tempVar = `tempVar${ind}__`;
+                            varDict.push([varList[ind], tempVar]);
+                            assembledVarList.push(tempVar);
+                        } else {
+                            assembledVarList.push(varList[ind]);
+                        }
+                    }
+                    codeStr.push(`[${assembledVarList.join(',')}] =  ${fn};`);
+                    for (const varSet of varDict) {
+                        const repVar = this.repSetAttrib(varSet[0]);
+                        if (!repVar) {
+                            codeStr.push(`${prefix}${varSet[0]} = ${varSet[1]};`);
+                        } else {
+                            codeStr.push(`${repVar[0]} ${varSet[1]} ${repVar[1]}`);
+                        }
+                    }
                 } else {
                     const repImpVar = this.repSetAttrib(args[0].jsValue);
                     if (!repImpVar) {
@@ -405,8 +472,21 @@ export class CodeUtils {
         // if (isMainFlowchart && prod.print && !specialPrint && prod.args[0].name !== '__none__' && prod.args[0].jsValue) {
         if (prod.print && !specialPrint && prod.args[0].name !== '__none__' && prod.args[0].jsValue) {
                 // const repGet = prod.args[0].jsValue;
-            const repGet = this.repGetAttrib(prod.args[0].jsValue);
-            codeStr.push(`printFunc(__params__.console,\`${prod.args[0].value}\`, ${repGet});`);
+            if (prod.args[0].jsValue.startsWith('|*')) {
+                const varList = args[0].jsValue.substring(2).split('|');
+                const assembledVarList = [];
+                for (let ind = 0; ind < varList.length; ind++) {
+                    if (varList[ind].indexOf('@') !== -1) {
+                        assembledVarList.push(`tempVar${ind}__`);
+                    } else {
+                        assembledVarList.push(varList[ind]);
+                    }
+                }
+                codeStr.push(`printFunc(__params__.console,\`${prod.args[0].value}\`, [${assembledVarList.join(', ')}]);`);
+            } else {
+                const repGet = this.repGetAttrib(prod.args[0].jsValue);
+                codeStr.push(`printFunc(__params__.console,\`${prod.args[0].value}\`, ${repGet});`);
+            }
         }
         // if (isMainFlowchart && prod.selectGeom && prod.args[0].jsValue) {
         //     // const repGet = prod.args[0].jsValue;
