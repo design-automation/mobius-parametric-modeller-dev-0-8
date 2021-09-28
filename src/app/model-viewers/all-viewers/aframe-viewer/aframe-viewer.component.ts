@@ -681,7 +681,6 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
     }
 
     snapPosition(posData) {
-        // console.log('~~~', posData, this.camPosList)
         if (this.camPosList.length === 1) { return; }
         const posArray = JSON.parse('[' + posData + ']');
         posArray[2] = posArray[1];
@@ -696,7 +695,6 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
             camPosCoord.x = camPos.pos[0];
             camPosCoord.z = camPos.pos[1];
             const distance = camPosCoord.distanceTo(pos);
-            // console.log('   ---', distance)
             if (distance < 2) {
                 aframeData.updateCameraPos(camPos, false);
                 this.selectedCamPos = i;
