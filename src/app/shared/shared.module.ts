@@ -20,9 +20,9 @@ import { PageNotFoundComponent } from './components/not-found/not-found.componen
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { PanelHeaderComponent } from './components/header/panel-header.component';
 import { PublishHeaderComponent } from './components/header/publish-header.component';
-import { AddOutputComponent } from './components/add-components/add_output.component';
-import { AddNodeComponent } from './components/add-components/add_node.component';
-import { AddInputComponent } from './components/add-components/add_input.component';
+// import { AddOutputComponent } from './components/add-components/add_output.component';
+// import { AddNodeComponent } from './components/add-components/add_node.component';
+// import { AddInputComponent } from './components/add-components/add_input.component';
 // import { ParameterViewerComponent } from './components/parameter-viewer/parameter-viewer.component';
 // import { InputPortViewerComponent } from './components/parameter-viewer/input-port-viewer/input-port-viewer.component';
 // import { ProcedureInputViewerComponent } from './components/parameter-viewer/procedure-input-viewer/procedure-input-viewer.component';
@@ -52,7 +52,7 @@ import { WindowMessageComponent } from './components/window-message/window-messa
             NotificationComponent,
             ProcedureInputViewerComponent,
             ParameterViewerComponent,
-            AddNodeComponent, AddInputComponent, AddOutputComponent,
+            // AddNodeComponent, AddInputComponent, AddOutputComponent,
             // ParameterViewerComponent,  InputPortViewerComponent, ProcedureInputViewerComponent,
             NewFileComponent, SaveFileComponent, LoadFileComponent, LoadUrlComponent, SaveJavascriptComponent,
             WindowMessageComponent,
@@ -67,26 +67,12 @@ import { WindowMessageComponent } from './components/window-message/window-messa
             AngularSplitModule,
             FormsModule,
             MatIconModule,
-            /*
-            MatMenuModule,
-            MatButtonModule,
-            MatExpansionModule,
-            MatSelectModule,
-            MatFormFieldModule,
-            */
         ],
     entryComponents: [  ],
     exports: [
             FormsModule,
             MatIconModule,
             MatSliderModule,
-            /*
-            MatMenuModule,
-            MatButtonModule,
-            MatExpansionModule,
-            MatSelectModule,
-            MatFormFieldModule,
-            */
             DataViewersContainer,
             AngularSplitModule,
             MbFileReaderDirective,
@@ -96,9 +82,9 @@ import { WindowMessageComponent } from './components/window-message/window-messa
             NavigationComponent,
             PanelHeaderComponent,
             PublishHeaderComponent,
-            AddNodeComponent,
-            AddInputComponent,
-            AddOutputComponent,
+            // AddNodeComponent,
+            // AddInputComponent,
+            // AddOutputComponent,
             SpinnerComponent,
             ChromeComponent,
             // ParameterViewerComponent,

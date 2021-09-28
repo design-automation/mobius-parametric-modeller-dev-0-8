@@ -291,6 +291,7 @@ select{
     display: inline-block;
 }
 
+
 .slider {
     -webkit-appearance: none;
     min-width: 10px;
@@ -299,54 +300,30 @@ select{
     width: 100%;
     overflow: hidden;
     // width: calc(100% - 110px);
-    background-color: $color6 !important;
-    height: 12px;
-    border: 2px solid $color5 !important;
-    margin-top: 2px;
-    // right: 50px;
-    // position: absolute;
-    // outline: none;
-    // opacity: 0.7;
-    // -webkit-transition: .2s;
-    // transition: opacity .2s;
+    // background-color: $color6 !important;
+    height: 8px;
+    border: 0px;
+    margin: 6px 0px;
 }
-// .slider:hover {
-//     border: 2px solid $color5;
-//     background-color: $color6;
-// }
-// .slider:focus {
-//     border: 2px solid $color5;
-//     background-color: $color5-5;
-// }
+.slider::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    background: $color6;
+    border: 2px solid $color5;
+  
+    // height: 15px;
+    // -webkit-appearance: none;
+    // color: $color5;
+    // border: 2px solid $color5 !important;
+    // margin-top: -2px;
+}
 .slider::-webkit-slider-thumb {
+    width: 4px;
     -webkit-appearance: none;
-    appearance: none;
-    overflow: hidden;
-
-	border-radius: 0 !important;
-	background-color: $color3;
-	// border: 1px solid $color1 !important;
-	width: 5px !important;
-    right: -5px !important;
-    bottom: -7px !important;
-    
-    transform: scale(1) !important;
-
-    height: $fsize1 !important;
-    box-shadow: -1000px 0 0 1000px $color5;
-
-    // width: 25px;
-    // height: 25px;
-    // background: #4CAF50;
-    // cursor: pointer;
-}
-.slider::-moz-range-thumb {
-	border-radius: 0 !important;
-	background-color: $color5 !important;
-	border: 1px solid $color1 !important;
-	width: 5px !important;
-    right: -5px !important;
-    bottom: -7px !important;
-    transform: scale(1) !important;
-    height: $fsize1 !important;
+    height: 12px;
+    margin-top: -2px;
+    cursor: ew-resize;
+    background: $color2;
+    box-shadow: -1000px 0 0 1000px $color4;
 }

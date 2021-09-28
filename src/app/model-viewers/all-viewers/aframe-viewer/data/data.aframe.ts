@@ -680,7 +680,6 @@ export class DataAframe {
         }
     }
 
-
     // updateCameraPos_old(posDetails) {
     //     const rigEl = <any> document.getElementById('aframe_camera_rig');
     //     const camEl = <any> document.getElementById('aframe_look_camera');
@@ -787,6 +786,7 @@ export class DataAframe {
     // }
 
     updateHUD() {
+        if (!this.model || !this.model.modeldata) { return; }
         const hud = document.getElementById('aframe_hud');
         if (!this.model.modeldata.attribs.query.hasEntAttrib(EEntType.MOD, 'hud')) {
             hud.innerHTML = '';
@@ -799,6 +799,9 @@ export class DataAframe {
     detachAframeView() {
         const assetEnt = document.getElementById('aframe_assets');
         const allImages = document.querySelectorAll('img');
+
+        this._currentPos = null;
+
         allImages.forEach(img => {
             try {
                 assetEnt.removeChild(img);
