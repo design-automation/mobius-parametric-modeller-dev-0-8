@@ -86,17 +86,32 @@ textarea{
     }
 
 }
-.outputPort{
+.outputPort-start-end{
     stroke: transparent;
-    stroke-width: 15px;
-    pointer-events: all;
+    stroke-width: 8px;
+    pointer-events: stroke;
     fill: transparent;
     //fill: midnightblue;
     &.disabled{
         opacity: $disabled-opacity;
     }
     &:hover {
-        // stroke: $color5;
-        fill: $color5;
+        stroke: $color5;
+        // fill: $color5;
+    }
+}
+
+.outputPort{
+    stroke: transparent;
+    stroke-width: 10px;
+    pointer-events: stroke;
+    fill: transparent;
+    //fill: midnightblue;
+    &.disabled{
+        opacity: $disabled-opacity;
+    }
+    &:hover {
+        stroke: $color5;
+        // fill: $color5;
     }
 }

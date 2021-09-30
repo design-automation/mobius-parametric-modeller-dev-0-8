@@ -5,14 +5,6 @@
 (dblclick)='switchToProcedure($event)'
 *ngIf='node.type==""'>
 
-    <rect
-    width="130" height="110"
-    class='outputPort'
-    id = 'node.output.id'
-    (mousedown)='startDragPort($event, "output")'
-    [attr.x]="node.position.x - 15" 
-    [attr.y]="node.position.y - 15"
-    />
 
     <!-- rectangular box with border -->
     <rect class="node" 
@@ -43,6 +35,15 @@
                 placeholder='Description of Node'></textarea>
         </xhtml:div>
     </svg:foreignObject>
+
+    <rect
+    width="112" height="92"
+    class='outputPort'
+    id = 'node.output.id'
+    (mousedown)='startDragPort($event, "output")'
+    [attr.x]="node.position.x - 6" 
+    [attr.y]="node.position.y - 6"
+    />
 </svg:g>
 
 <!-- svg group for the selectable and draggable area of start node -->
@@ -50,18 +51,6 @@
 (mousedown)='startDragNode($event)' 
 (dblclick)='switchToProcedure($event)'
 *ngIf='node.type=="start"'>
-
-    <path
-    class='outputPort'
-    id = 'node.output.id'
-    (mousedown)='startDragPort($event, "output")'
-    [attr.d]="'M' + (node.position.x - 10) +' '+ (node.position.y) +
-             ' L' + (node.position.x - 10) +' '+ (node.position.y + 48) +
-             ' L' + (node.position.x + 50) +' '+ (node.position.y + 72) +
-             ' L' + (node.position.x + 110) +' '+ (node.position.y + 48) +
-             ' L' + (node.position.x + 110) +' '+ (node.position.y) + ' Z'" 
-    />
-
 
     <!-- Triangle with border -->
     <path class="node" 
@@ -97,6 +86,18 @@
                 [(ngModel)]='node.name'></textarea>
         </xhtml:div>
     </svg:foreignObject>
+
+    <path
+    class='outputPort-start-end'
+    id = 'node.output.id'
+    (mousedown)='startDragPort($event, "output")'
+    [attr.d]="'M' + (node.position.x - 5) +' '+ (node.position.y + 5) +
+             ' L' + (node.position.x - 5) +' '+ (node.position.y + 43) +
+             ' L' + (node.position.x + 50) +' '+ (node.position.y + 65) +
+             ' L' + (node.position.x + 105) +' '+ (node.position.y + 43) +
+             ' L' + (node.position.x + 105) +' '+ (node.position.y + 5) + ' Z'"
+    />
+
 </svg:g>
 
 <!-- svg group for the selectable and draggable area of end node -->
@@ -104,16 +105,6 @@
 (mousedown)='startDragNode($event)' 
 (dblclick)='switchToProcedure($event)'
 *ngIf='node.type=="end"'>
-
-    <path
-    class='outputPort'
-    id = 'node.output.id'
-    [attr.d]="'M'+ (node.position.x - 10)   +' '+ (node.position.y + 80) +
-            ' L' + (node.position.x - 10)   +' '+ (node.position.y + 34) +
-            ' L' + (node.position.x + 50)  +' '+ (node.position.y + 10) +
-            ' L' + (node.position.x + 110) +' '+ (node.position.y + 34) +
-            ' L' + (node.position.x + 110) +' '+ (node.position.y + 80) + ' Z'" 
-    />
 
     <!-- Triangle with border -->
     <path class="node" 
@@ -165,29 +156,13 @@
                 [(ngModel)]='node.name'></xhtml:textarea> -->
         </xhtml:div>
     </svg:foreignObject>
+    <path
+    class='outputPort-start-end'
+    id = 'node.output.id'
+    [attr.d]="'M'+ (node.position.x - 5)   +' '+ (node.position.y + 75) +
+            ' L' + (node.position.x - 5)   +' '+ (node.position.y + 37) +
+            ' L' + (node.position.x + 50)  +' '+ (node.position.y + 15) +
+            ' L' + (node.position.x + 105) +' '+ (node.position.y + 37) +
+            ' L' + (node.position.x + 105) +' '+ (node.position.y + 75) + ' Z'" 
+    />
 </svg:g>
-
-
-
-
-<!-- <svg:circle
-r=3
-[attr.cx]="node.position.x + inputOffset[0]" 
-[attr.cy]="node.position.y + inputOffset[1]"
-[class.disabled]='!node.enabled'
-*ngIf="inputDraggable()" 
-class='inputPort'
-id = 'node.input.id'
-(mousedown)='startDragPort($event, "input")'/> -->
-
-<!-- <svg:circle *ngIf="outputDraggable()" 
-class='outputPort'
-id = 'node.output.id'
-(mousedown)='startDragPort($event, "output")' 
-[attr.cx]="node.position.x + outputOffset[0]" 
-[attr.cy]="node.position.y + outputOffset[1]" 
-[class.disabled]='!node.enabled'
-pointer-events="all"
-r=3
-fill="black"/> -->
-

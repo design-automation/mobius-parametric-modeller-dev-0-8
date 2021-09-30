@@ -87,8 +87,4 @@ export class NodeComponent {
         event.stopPropagation();
         this.action.emit({action: ACTIONS.PROCEDURE});
     }
-
-    onHover(event: Event) {
-        console.log('~~~~~~~', event)
-    }
 }
