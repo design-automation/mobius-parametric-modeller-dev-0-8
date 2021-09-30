@@ -372,7 +372,7 @@ If 'all' is selected, the dictionary will contain all lists just described.
 ## Degree  
   
   
-**Description:** Calculates degree centrality for positions in a netowrk. Values are normalized in the range 0 to 1.
+**Description:** Calculates degree centrality for positions in a network. Values are normalized in the range 0 to 1.
 
 
 The network is defined by a set of connected edges, consisting of polylines and/or polygons.
@@ -426,7 +426,7 @@ disregards number of edges and solely uses the edge weights in the centrality ca
   
   
 **Description:** Calculates betweenness, closeness, and harmonic centrality
-for positions in a netowrk. Values are normalized in the range 0 to 1.
+for positions in a network. Values are normalized in the range 0 to 1.
 
 
 The network is defined by a set of connected edges, consisting of polylines and/or polygons.

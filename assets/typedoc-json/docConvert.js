@@ -2,26 +2,51 @@ const dc = require('./__doc.json');
 const docReplace = require('./docReplace.json');
 const fs = require('fs');
 const config = require('../gallery/__config__.json');
-const { DataTextureLoader } = require('three');
 
-const urlString = 'https://mobius.design-automation.net';
+// const urlString = 'https://mobius.design-automation.net';
 
-const otherModsList = [{
-    name: 'UI',
-    srcDir: 'assets/typedoc-json/docUI',
-    modnames: ['gallery', 'dashboard', 'flowchart', 'editor', 'menu'],
-    opened: false
-}, {
-    name: 'Viewers',
-    srcDir: 'assets/typedoc-json/docVW',
-    modnames: ['cad-viewer', 'geo-viewer', 'vr-viewer', 'console'],
-    opened: false
-}, {
-    name: 'Operations',
-    srcDir: 'assets/typedoc-json/docCF',
-    modnames: ['variable', 'comment', 'expression', 'control_flow', 'local_func', 'global_func'],
-    opened: false
-}];
+// const otherModsList = [{
+//     name: 'UI',
+//     srcDir: 'assets/typedoc-json/docUI',
+//     modnames: ['gallery', 'dashboard', 'flowchart', 'editor', 'menu'],
+//     opened: false
+// }, {
+//     name: 'Viewers',
+//     srcDir: 'assets/typedoc-json/docVW',
+//     modnames: ['cad-viewer', 'geo-viewer', 'vr-viewer', 'console'],
+//     opened: false
+// }, {
+//     name: 'Operations',
+//     srcDir: 'assets/typedoc-json/docCF',
+//     modnames: ['variable', 'comment', 'expression', 'control_flow', 'local_func', 'global_func'],
+//     opened: false
+// }];
+
+const extraMods = [ 'variable', 'comment', 'expression',
+                    'control_flow', 'global_func', 'local_func',
+                    'dashboard', 'editor', 'flowchart', 'gallery', 'menu',
+                    'console', 'geoviewer', 'cadviewer', 'vrviewer'];
+const extraModPaths = {
+    variable: 'docCF/variable',
+    comment: 'docCF/comment',
+    expression: 'docCF/expression',
+    control_flow: 'docCF/control_flow',
+    local_func: 'docCF/local_func',
+    global_func: 'docCF/global_func',
+
+    dashboard: 'docUI/dashboard',
+    editor: 'docUI/editor',
+    flowchart: 'docUI/flowchart',
+    gallery: 'docUI/gallery',
+    menu: 'docUI/menu',
+
+    console: 'docVW/console',
+    geoviewer: 'docVW/geo-viewer',
+    cadviewer: 'docVW/cad-viewer',
+    vrviewer: 'docVW/vr-viewer',
+    vrviewerhotspot: 'docVW/vr-viewer-hotspots',
+};
+
 
 let examples;
 for (const s of config.data){
@@ -147,25 +172,13 @@ function addDoc(mod, modName, docs) {
 function genModuleDocs(docs) {
     let count = 0;
     for (const mod of docs) {
-        // let mod;
-        // for (let m of docs) {
-        //     if (m.name === modName) {
-        //         mod = m;
-        //         break;
-        //     }
-        // }
-        // if (!mod) {continue;}
         if (mod.name[0] === '_') { continue; }
-        // if (!docs[modName]) { continue; }
-        // const mod = docs[modName];
-        // Module name
-        // if (ModuleList.indexOf (mod.name) === -1) { continue; }``
+        fs.mkdirSync(`./src/assets/typedoc-json/__docs__/${mod.name.toLowerCase()}`, { recursive: true }, (err) => {
+            if (err) throw err;
+        });
         let mdString = `# ${mod.name.toUpperCase()}  \n  \n`;
         for (const func of mod.func) {
-            // if (!mod[funcName]) { continue; }
-    
-            // const func = mod[funcName];
-            fnString = `## ${func.name}  \n  \n  \n`;
+            fnString = ``;
             fnString += `**Description:** ${func.description}  \n  \n`;
             if (func.parameters && func.parameters.length > 0) {
                 fnString += `**Parameters:**  \n`;
@@ -186,13 +199,19 @@ function genModuleDocs(docs) {
                     if (func.example_info) {
                         fnString += `    ${func.example_info[i]}  \n`;
                     }
-    
                 }
             }
-            fnString += `  \n  \n`;
+            if (func.name) {
+                const writtenFnStr = `## ${mod.name}.${func.name}  \n  \n  \n` + replaceText(fnString.replace(/\\n/g, '\n'));
+                fs.writeFile(`./src/assets/typedoc-json/__docs__/${mod.name.toLowerCase()}/${func.name.toLowerCase()}.md`, writtenFnStr, function(err) {
+                    if (err) {
+                        return console.log(err);
+                    }
+                });
+            }
+            fnString = `## ${func.name}  \n  \n  \n` + fnString + `  \n  \n`;
             mdString += fnString
         }
-    
         count += 1;
         let countStr = count.toString();
         if (countStr.length === 1) {
@@ -205,6 +224,50 @@ function genModuleDocs(docs) {
             }
             console.log(`successfully saved ${mod.name}.md`);
         });
+    }
+}
+
+function addModFuncDoc(modUrl, modName) {
+    const docText = fs.readFileSync(modUrl,'utf8')
+    fs.mkdirSync(`./src/assets/typedoc-json/__docs__/${modName.toLowerCase()}`, { recursive: true }, (err) => {
+        if (err) throw err;
+    });
+    let fnString = '';
+    let funcName;
+    const splitText = docText.split('## ');
+    if (splitText.length === 1) {
+        const funcText = docText.split('# ')[1];
+        funcName = funcText.split('\n')[0].trim().toLowerCase();
+
+        if (extraMods.indexOf(modName) !== -1) {
+            fnString = '## ' + funcText.trim();
+        } else {
+            fnString = '## ' + modName + '.' + funcText.trim();
+        }
+        fs.writeFile(`./src/assets/typedoc-json/__docs__/${modName.toLowerCase()}/${funcName.toLowerCase()}.md`,
+                fnString, function(err) {
+            if (err) {
+                return console.log(err);
+            }
+        });
+    } else {
+        for (const funcText of splitText) {
+            if (funcText[0] === '#') { continue; }
+            funcName = funcText.split('\n')[0].trim().toLowerCase();
+            if (!funcName) { continue; }
+
+            if (extraMods.indexOf(modName) !== -1) {
+                fnString = '## ' + funcText.trim();
+            } else {
+                fnString = '## ' + modName + '.' + funcText.trim();
+            }
+            fs.writeFile(`./src/assets/typedoc-json/__docs__/${modName.toLowerCase()}/${funcName.toLowerCase()}.md`,
+                    fnString, function(err) {
+                if (err) {
+                    return console.log(err);
+                }
+            });
+        }
     }
 }
 
@@ -227,6 +290,9 @@ for (const mod of doc.children) {
         }
         addDoc(mod, modName, moduleDocs);
     }
+}
+for (const i of extraMods) {
+    addModFuncDoc(`./src/assets/typedoc-json/${extraModPaths[i]}.md`, i);
 }
 moduleDocs.sort(compare);
 
