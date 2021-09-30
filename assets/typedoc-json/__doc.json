@@ -39177,7 +39177,7 @@
 							"kindString": "Call signature",
 							"flags": {},
 							"comment": {
-								"shortText": "Adds a new copy of specified entities to the model, and deletes teh original entity.",
+								"shortText": "Adds a new copy of specified entities to the model, and deletes the original entity.",
 								"returns": "Entities, the cloned entity or a list of cloned entities.",
 								"tags": [
 									{
@@ -39278,7 +39278,7 @@
 					"sources": [
 						{
 							"fileName": "core/modules/basic/make.ts",
-							"line": 404,
+							"line": 443,
 							"character": 21
 						}
 					]
@@ -39299,16 +39299,16 @@
 							"kindString": "Call signature",
 							"flags": {},
 							"comment": {
-								"shortText": "Adds a new copy of specified entities to the model.",
+								"shortText": "Creates a copy of one or more entities.\n\\n\nPositions, objects, and collections can be copied. Topological entities (vertices, edges, and\nwires) cannot be copied since they cannot exist without a parent entity.\n\\n\nWhen entities are copied, their positions are also copied. The original entities and the copied\nentities will not be welded (they will not share positions).\n\\n\nThe copy operation includes an option to also move entities, by a specified vector. If the vector\nis null, then the entities will not be moved.\n\\n\nThe vector argument is overloaded. If you supply a list of vectors, the function will try to find\na 1 -to-1 match between the list of entities and the list of vectors. In the overloaded case, if\nthe two lists do not have the same length, then an error will be thrown.\n\\n",
 								"returns": "Entities, the copied entity or a list of copied entities.",
 								"tags": [
 									{
 										"tag": "example",
-										"text": "copies = make.Copy([position1,polyine1,polygon1])"
+										"text": "copies = make.Copy([position1, polyine1, polygon1], [0,0,10])"
 									},
 									{
 										"tag": "example_info",
-										"text": "Creates a copy of position1, polyine1, and polygon1.\n"
+										"text": "Creates a copy of position1, polyine1, and polygon1 and moves all three entities 10\nunits in the Z direction.\n"
 									}
 								]
 							},
@@ -39333,7 +39333,7 @@
 									"kindString": "Parameter",
 									"flags": {},
 									"comment": {
-										"text": "Entity or lists of entities to be copied. Entities can be positions, points, polylines, polygons and collections."
+										"text": "Entity or lists of entities to be copied. Entities can be positions, points,\npolylines, polygons and collections."
 									},
 									"type": {
 										"type": "union",
@@ -39375,9 +39375,22 @@
 										"text": "A vector to move the entities by after copying, can be `null`."
 									},
 									"type": {
-										"type": "reference",
-										"name": "Txyz",
-										"id": 245
+										"type": "union",
+										"types": [
+											{
+												"type": "reference",
+												"name": "Txyz",
+												"id": 245
+											},
+											{
+												"type": "array",
+												"elementType": {
+													"type": "reference",
+													"name": "Txyz",
+													"id": 245
+												}
+											}
+										]
 									}
 								}
 							],
@@ -39415,7 +39428,7 @@
 					"sources": [
 						{
 							"fileName": "core/modules/basic/make.ts",
-							"line": 369,
+							"line": 384,
 							"character": 20
 						}
 					]
@@ -40970,7 +40983,7 @@
 					"sources": [
 						{
 							"fileName": "core/modules/basic/material.ts",
-							"line": 321,
+							"line": 331,
 							"character": 21
 						}
 					]
@@ -41046,7 +41059,7 @@
 					"sources": [
 						{
 							"fileName": "core/modules/basic/material.ts",
-							"line": 356,
+							"line": 366,
 							"character": 23
 						}
 					]
@@ -41163,7 +41176,7 @@
 					"sources": [
 						{
 							"fileName": "core/modules/basic/material.ts",
-							"line": 209,
+							"line": 219,
 							"character": 23
 						}
 					]
@@ -41283,7 +41296,7 @@
 					"sources": [
 						{
 							"fileName": "core/modules/basic/material.ts",
-							"line": 280,
+							"line": 290,
 							"character": 23
 						}
 					]
@@ -41388,7 +41401,7 @@
 					"sources": [
 						{
 							"fileName": "core/modules/basic/material.ts",
-							"line": 387,
+							"line": 397,
 							"character": 21
 						}
 					]
@@ -41506,7 +41519,7 @@
 					"sources": [
 						{
 							"fileName": "core/modules/basic/material.ts",
-							"line": 473,
+							"line": 483,
 							"character": 24
 						}
 					]
@@ -41527,7 +41540,7 @@
 							"kindString": "Call signature",
 							"flags": {},
 							"comment": {
-								"shortText": "Sets material by creating a polygon attribute called 'material' and setting the value. The value\nis a string, which is the name of the material. The properties of this material must be defined\nat the model level, using one of the material functions.\n\\n",
+								"shortText": "Assign a material to one or more polylines or polygons.\n\\n\nA material name is assigned to the polygons. The named material must be separately defined as a\nmaterial in the model attributes. See the `material.LineMat()` or `material.MeshMat()` functions.\n\\n\nThe material name is a sting.\n\\n\nFor polylines, the `material` argument must be a single name.\n\\n\nFor polygons, the `material` argument can accept either be a single name, or a\nlist of two names. If it is a single name, then the same material is assigned to both the\nfront and back of teh polygon. If it is a list of two names, then the first material is assigned\nto the front, and the second material is assigned to the back.\n\\n",
 								"returns": "void\n"
 							},
 							"parameters": [
@@ -41607,7 +41620,7 @@
 					"sources": [
 						{
 							"fileName": "core/modules/basic/material.ts",
-							"line": 108,
+							"line": 118,
 							"character": 19
 						}
 					]
@@ -41711,7 +41724,7 @@
 					"sources": [
 						{
 							"fileName": "core/modules/basic/material.ts",
-							"line": 430,
+							"line": 440,
 							"character": 24
 						}
 					]
@@ -41983,7 +41996,7 @@
 					"sources": [
 						{
 							"fileName": "core/modules/basic/material.ts",
-							"line": 154,
+							"line": 164,
 							"character": 22
 						}
 					]
@@ -42053,7 +42066,7 @@
 					"sources": [
 						{
 							"fileName": "core/modules/basic/material.ts",
-							"line": 166,
+							"line": 176,
 							"character": 22
 						}
 					]
