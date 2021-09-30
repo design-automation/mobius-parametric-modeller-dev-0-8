@@ -16,14 +16,13 @@ export class ViewGalleryComponent implements AfterViewInit {
 
     // private allFiles: Observable<any>;
     allGalleries = [];
-    allGalleriesData = galleryUrls.data;
+    allGalleriesData = [];
     urlPrefix = '';
     @Output() switch = new EventEmitter();
     @ViewChild('gallerySplit') gallerySplit: SplitComponent;
 
     constructor(private http: HttpClient, private dataService: DataService,
                 private dataOutputService: DataOutputService, private router: Router) {
-        this.allGalleries = this.allGalleriesData.map(gallery => gallery.name);
         if (window.location.href.indexOf('design-automation.github.io') !== -1) {
             this.urlPrefix = '/' + window.location.href.split('design-automation.github.io/')[1].split('/')[0];
         }
@@ -31,9 +30,15 @@ export class ViewGalleryComponent implements AfterViewInit {
    }
 
     ngAfterViewInit() {
-        if (!this.dataService.activeGallery || !this.switchGallery(this.dataService.activeGallery)) {
-            this.dataService.activeGallery = this.allGalleriesData[0].name;
-        }
+        setTimeout(() => {
+            galleryUrls.data.forEach(data => {
+                this.allGalleriesData.push(data);
+                this.allGalleries.push(data.name);
+            });
+            if (!this.dataService.activeGallery || !this.switchGallery(this.dataService.activeGallery)) {
+                this.dataService.activeGallery = this.allGalleriesData[0].name;
+            }
+        }, 0);
     }
 
     viewerData() {

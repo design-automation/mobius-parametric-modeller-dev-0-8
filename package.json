@@ -8,11 +8,11 @@
   },
   "scripts": {
     "ng": "ng",
-    "start": "typedoc --mode modules -module commonjs --exclude **/*.spec.ts --json src/assets/typedoc-json/__doc.json src/assets/core/modules && node ./src/assets/typedoc-json/docConvert.js && node version.js && node --max_old_space_size=16384 node_modules/@angular/cli/bin/ng serve",
+    "start": "npm run postinstall && node --max_old_space_size=16384 node_modules/@angular/cli/bin/ng serve",
     "docs": "./node_modules/.bin/compodoc -p src/tsconfig.app.json",
-    "deploy": "typedoc --mode modules -module commonjs --exclude **/*.spec.ts --json src/assets/typedoc-json/__doc.json src/assets/core/modules && node ./src/assets/typedoc-json/docConvert.js && node version.js && node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --configuration production --base-href=%npm_package_config_prod_url% && copy dist\\index.html dist\\404.html && npx ngh",
-    "deployx": "typedoc --mode modules -module commonjs --exclude **/*.spec.ts --json src/assets/typedoc-json/__doc.json src/assets/core/modules && node ./src/assets/typedoc-json/docConvert.js && node version.js && node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --configuration production --base-href=%npm_package_config_prod_url% && copy docs\\index.html docs\\404.html",
-    "deploy0": "typedoc --mode modules -module commonjs --exclude **/*.spec.ts --json src/assets/typedoc-json/__doc.json src/assets/core/modules && node ./src/assets/typedoc-json/docConvert.js && node version.js && node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --configuration production --base-href=%npm_package_config_prod_url% && copy dist\\index.html dist\\404.html",
+    "deploy": "npm run postinstall && node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --configuration production --base-href=%npm_package_config_prod_url% && copy dist\\index.html dist\\404.html && npx ngh",
+    "deployx": "npm run postinstall && node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --configuration production --base-href=%npm_package_config_prod_url% && copy docs\\index.html docs\\404.html",
+    "deploy0": "npm run postinstall && node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build --configuration production --base-href=%npm_package_config_prod_url% && copy dist\\index.html dist\\404.html",
     "build": "ng build",
     "build-test": "ng build --configuration production && http-server ./dist",
     "build-dev": "ng build --base-href=%npm_package_config_dev_url% && rm -r ./docs && cp -r ./dist ./docs && rm -r ./dist",
@@ -24,7 +24,7 @@
     "e2e": "ng e2e",
     "postinstall": "typedoc --mode modules -module commonjs --exclude **/*.spec.ts --json src/assets/typedoc-json/__doc.json src/assets/core/modules && node ./src/assets/typedoc-json/docConvert.js && node version.js",
     "typedoc": "typedoc --mode modules -module commonjs --exclude **/*.spec.ts --out docs/typedoc src/app/",
-    "moduleDocs": "typedoc --mode modules -module commonjs --exclude **/*.spec.ts --json src/assets/typedoc-json/__doc.json src/assets/core && node ./src/assets/typedoc-json/docConvert.js"
+    "moduleDocs": "typedoc --mode modules -module commonjs --exclude **/*.spec.ts --json src/assets/typedoc-json/__doc.json src/assets/core/modules && node ./src/assets/typedoc-json/docConvert.js"
   },
   "private": true,
   "dependencies": {
