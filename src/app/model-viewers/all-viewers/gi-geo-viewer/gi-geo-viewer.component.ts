@@ -9,7 +9,6 @@ import { DataGeoService } from './data/data.geo.service';
 import { GeoSettings, geo_default_settings } from './gi-geo-viewer.settings';
 import { ModalService } from './html/modal-window.service';
 import { DataService as ThreeJSDataService } from '../gi-viewer/data/data.service';
-import { AllFunctionDoc } from '@shared/decorators';
 
 /**
  * GIViewerComponent
@@ -242,7 +241,7 @@ export class GIGeoViewerComponent implements OnDestroy {
     }
 
     openViewerHelp() {
-        this.mainDataService.helpView = AllFunctionDoc['geoviewer']['geo-viewer'];
+        this.mainDataService.helpView = '...geoviewer/geo-viewer';
         this.mainDataService.toggleHelp(true);
     }
 

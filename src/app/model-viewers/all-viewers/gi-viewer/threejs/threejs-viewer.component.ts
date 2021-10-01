@@ -605,7 +605,7 @@ export class ThreejsViewerComponent implements OnInit, DoCheck, OnChanges, OnDes
             this._data_threejs.nodeIndex = this.nodeIndex;
             try {
                 // add geometry to the scene
-                this._data_threejs.populateScene(model, this.container);
+                await this._data_threejs.populateScene(model, this.container);
                 // this.resetTable();
                 this.getGISummary(model);
                 if (localStorage.getItem('gi_summary')) {

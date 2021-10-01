@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, DoCheck, AfterViewInit, AfterViewChecked, OnDestroy } from '@angular/core';
 import { DataService } from '@services';
-import { AllFunctionDoc } from '@shared/decorators';
 
 /**
  * ConsoleViewerComponent
@@ -95,7 +94,7 @@ export class ConsoleViewerComponent implements OnInit, AfterViewInit, DoCheck, A
         return this.dataService.consoleClear;
     }
     openViewerHelp() {
-        this.dataService.helpView = AllFunctionDoc['console']['console'];
+        this.dataService.helpView =  '...console/console';
         this.dataService.toggleHelp(true);
     }
 

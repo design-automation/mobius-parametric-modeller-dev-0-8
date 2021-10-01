@@ -12,7 +12,6 @@ import { ThreejsViewerComponent } from './threejs/threejs-viewer.component';
 import { Vector3, GridHelper } from 'three';
 import { SplitComponent } from 'angular-split';
 import { ISettings } from './data/data.threejsSettings';
-import { AllFunctionDoc } from '@shared/decorators';
 
 // import others
 // import { ThreejsViewerComponent } from './threejs/threejs-viewer.component';
@@ -168,7 +167,7 @@ export class GIViewerComponent implements OnInit, OnDestroy {
     }
 
     openViewerHelp() {
-        this.mainDataService.helpView = AllFunctionDoc['cadviewer']['cad-viewer'];
+        this.mainDataService.helpView = '...cadviewer/cad-viewer';
         this.mainDataService.toggleHelp(true);
     }
 

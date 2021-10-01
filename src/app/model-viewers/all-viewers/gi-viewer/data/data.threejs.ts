@@ -19,6 +19,7 @@ enum MaterialType {
     MeshPhongMaterial = 'MeshPhongMaterial',
     MeshPhysicalMaterial = 'MeshPhysicalMaterial'
 }
+const textFontLoader = new THREE.FontLoader();
 
 /**
  * ThreejsScene Add
@@ -66,7 +67,7 @@ export class DataThreejs extends DataThreejsLookAt {
         }
     }
 
-    public populateScene(model: GIModel, container): void {
+    public async populateScene(model: GIModel, container) {
         const cameraSettings = localStorage.getItem('gi_camera');
         if (cameraSettings && JSON.parse(cameraSettings)) {
             const cam = JSON.parse(cameraSettings);
@@ -90,7 +91,7 @@ export class DataThreejs extends DataThreejsLookAt {
         this.ObjLabelMap.clear();
         this.textLabels.clear();
 
-        this._addGeom(model);
+        await this._addGeom(model);
 
         const position_size = this.settings.positions.size;
         this.raycaster.params.Points.threshold = position_size > 1 ? position_size / 3 : position_size / 4;
@@ -128,7 +129,7 @@ export class DataThreejs extends DataThreejsLookAt {
             }
         }
     }
-    private _addGeom(model: GIModel): void {
+    private async _addGeom(model: GIModel) {
         // Add geometry
         const threejs_data: IThreeJS = model.get3jsData(this.nodeIndex);
         this.select_maps = {
@@ -146,10 +147,10 @@ export class DataThreejs extends DataThreejsLookAt {
         // Get materials
         const pline_material_groups = threejs_data.pline_material_groups;
         const pline_materials = threejs_data.pline_materials;
-        this._replaceColors(pline_materials, ["color"]);
+        this._replaceColors(pline_materials, ['color']);
         const pgon_material_groups = threejs_data.pgon_material_groups;
         const pgon_materials = threejs_data.pgon_materials;
-        this._replaceColors(pgon_materials, ["color", "specular", "emissive"]);
+        this._replaceColors(pgon_materials, ['color', 'specular', 'emissive']);
 
         // Create buffers that will be used by all geometry
         const verts_xyz_buffer = new THREE.Float32BufferAttribute(threejs_data.verts_xyz, 3);
@@ -194,7 +195,7 @@ export class DataThreejs extends DataThreejsLookAt {
 
         this._addPosis(threejs_data.posis_indices, posis_xyz_buffer, this.settings.colors.position, this.settings.positions.size);
 
-        this._addPlaneLabels(model);
+        await this._addPlaneLabels(model);
 
     }
 
@@ -677,7 +678,7 @@ export class DataThreejs extends DataThreejsLookAt {
     /**
      * Add threejs points to the scene
      */
-     private _addPlaneLabels(model: GIModel): void {
+     private async _addPlaneLabels(model: GIModel) {
         let pgon, pgon_label, coords_attrib;
         try {
             pgon = model.modeldata.geom.query.getEnts(EEntType.PGON);
@@ -703,7 +704,11 @@ export class DataThreejs extends DataThreejsLookAt {
                 if (pgon_label[i].font_style.indexOf('bold') !== -1) { fontWeight = 'bold'; }
                 if (pgon_label[i].font_style.indexOf('italic') !== -1) { fontStyle = 'italic'; }
             }
-            const shape = this._text_font[`${fontType}_${fontWeight}_${fontStyle}`].generateShapes( labelText, labelSize);
+            const fontCode = `${fontType}_${fontWeight}_${fontStyle}`;
+            if (!this._text_font[fontCode]) {
+                await this._loadFont(fontCode);
+            }
+            const shape = this._text_font[fontCode].generateShapes( labelText, labelSize);
             const geom = new THREE.ShapeBufferGeometry(shape);
 
             const lengthCheck = [];
@@ -760,84 +765,88 @@ export class DataThreejs extends DataThreejsLookAt {
         this.renderer.render(this.scene, this.camera);
     }
 
-    // ============================================================================
-    /**
-     * Add threejs points to the scene
-     */
-     private _addPointLabels(model: GIModel): void {
-        const labels = model.modeldata.attribs.get.getModelAttribVal('labels');
-        if (!labels || !Array.isArray(labels) || labels.length === 0) {
-            return;
-        }
+    // // ============================================================================
+    // /**
+    //  * Add threejs points to the scene
+    //  */
+    //  private _addPointLabels(model: GIModel): void {
+    //     const labels = model.modeldata.attribs.get.getModelAttribVal('labels');
+    //     if (!labels || !Array.isArray(labels) || labels.length === 0) {
+    //         return;
+    //     }
 
-        const matLite = new THREE.MeshBasicMaterial( {
-            transparent: false,
-            side: THREE.DoubleSide,
-            vertexColors: true
-        } );
-        const shapes = [];
+    //     const matLite = new THREE.MeshBasicMaterial( {
+    //         transparent: false,
+    //         side: THREE.DoubleSide,
+    //         vertexColors: true
+    //     } );
+    //     const shapes = [];
 
-        const fromVec = new THREE.Vector3(0, 0, 1);
-        const checkVecFrom = new THREE.Vector3(1, 0, 0);
+    //     const fromVec = new THREE.Vector3(0, 0, 1);
+    //     const checkVecFrom = new THREE.Vector3(1, 0, 0);
 
-        for (const label of labels) {
-            const labelText = label.text;
-            const labelOrient = label.position || label.location;
-            if (!labelText || !labelOrient || !Array.isArray(labelOrient)) { continue; }
-            const labelSize = label.size || 20;
+    //     for (const label of labels) {
+    //         const labelText = label.text;
+    //         const labelOrient = label.position || label.location;
+    //         if (!labelText || !labelOrient || !Array.isArray(labelOrient)) { continue; }
+    //         const labelSize = label.size || 20;
 
-            const fontType = label.type ? label.type : 'roboto';
-            const fontWeight = label.weight ? label.weight : 'medium';
-            const fontStyle = label.style ? label.style : 'regular';
+    //         const fontType = label.type ? label.type : 'roboto';
+    //         const fontWeight = label.weight ? label.weight : 'medium';
+    //         const fontStyle = label.style ? label.style : 'regular';
 
-            const shape = this._text_font[`${fontType}_${fontWeight}_${fontStyle}`].generateShapes( labelText, labelSize);
-            const geom = new THREE.ShapeBufferGeometry(shape);
+    //         const fontCode = `${fontType}_${fontWeight}_${fontStyle}`;
+    //         if (!this._text_font[fontCode]) {
+    //             this._loadFont(fontCode);
+    //         }
+    //         const shape = this._text_font[fontCode].generateShapes( labelText, labelSize);
+    //         const geom = new THREE.ShapeBufferGeometry(shape);
 
-            let labelPos = labelOrient[0];
-            if (!Array.isArray(labelPos)) {
-                labelPos = labelOrient;
-            } else {
-                let toVec = new THREE.Vector3(...(<any>labelOrient[1]));
-                const pVec2 = new THREE.Vector3(...(<any>labelOrient[2]));
-                toVec = toVec.cross(pVec2).normalize();
+    //         let labelPos = labelOrient[0];
+    //         if (!Array.isArray(labelPos)) {
+    //             labelPos = labelOrient;
+    //         } else {
+    //             let toVec = new THREE.Vector3(...(<any>labelOrient[1]));
+    //             const pVec2 = new THREE.Vector3(...(<any>labelOrient[2]));
+    //             toVec = toVec.cross(pVec2).normalize();
 
-                if (labelOrient[1][0] !== 0 || labelOrient[1][1] !== 0) {
-                    const checkVecTo = new THREE.Vector3(labelOrient[1][0], labelOrient[1][1], 0).normalize();
-                    const rotateQuat = new THREE.Quaternion();
-                    rotateQuat.setFromUnitVectors(checkVecFrom, checkVecTo);
-                    const rotateMat = new THREE.Matrix4(); // create one and reuse it
-                    rotateMat.makeRotationFromQuaternion(rotateQuat);
-                    geom.applyMatrix4(rotateMat);
-                }
+    //             if (labelOrient[1][0] !== 0 || labelOrient[1][1] !== 0) {
+    //                 const checkVecTo = new THREE.Vector3(labelOrient[1][0], labelOrient[1][1], 0).normalize();
+    //                 const rotateQuat = new THREE.Quaternion();
+    //                 rotateQuat.setFromUnitVectors(checkVecFrom, checkVecTo);
+    //                 const rotateMat = new THREE.Matrix4(); // create one and reuse it
+    //                 rotateMat.makeRotationFromQuaternion(rotateQuat);
+    //                 geom.applyMatrix4(rotateMat);
+    //             }
 
-                const quaternion = new THREE.Quaternion();
-                quaternion.setFromUnitVectors(fromVec, toVec);
-                const matrix = new THREE.Matrix4(); // create one and reuse it
-                matrix.makeRotationFromQuaternion(quaternion);
-                geom.applyMatrix4(matrix);
-            }
-            geom.translate( labelPos[0], labelPos[1], labelPos[2]);
+    //             const quaternion = new THREE.Quaternion();
+    //             quaternion.setFromUnitVectors(fromVec, toVec);
+    //             const matrix = new THREE.Matrix4(); // create one and reuse it
+    //             matrix.makeRotationFromQuaternion(quaternion);
+    //             geom.applyMatrix4(matrix);
+    //         }
+    //         geom.translate( labelPos[0], labelPos[1], labelPos[2]);
 
-            let color = new THREE.Color(0);
-            if (label.color  && label.color.length === 3) {
-                color = new THREE.Color(`rgb(${label.color[0]}, ${label.color[1]}, ${label.color[2]})`);
-            }
-            const colors_buffer = new THREE.Float32BufferAttribute(new Uint8Array(geom.attributes.position.count * 3), 3);
-            if (label.color && label.color.length === 3) {
-                for (let i = 0; i < colors_buffer.count; i++) {
-                    colors_buffer.setXYZ(i, label.color[0], label.color[1], label.color[2]);
-                }
-            }
-            geom.setAttribute('color', colors_buffer);
-            shapes.push(geom);
-        }
-        if (shapes.length === 0) { return; }
-        const mergedGeom = BufferGeometryUtils.mergeBufferGeometries(shapes);
-        const text = new THREE.Mesh(mergedGeom , matLite);
-        this.scene.add(text);
-        // this.renderer.render(this.scene, this.camera);
-        this.renderer.render(this.scene, this.camera);
-    }
+    //         let color = new THREE.Color(0);
+    //         if (label.color  && label.color.length === 3) {
+    //             color = new THREE.Color(`rgb(${label.color[0]}, ${label.color[1]}, ${label.color[2]})`);
+    //         }
+    //         const colors_buffer = new THREE.Float32BufferAttribute(new Uint8Array(geom.attributes.position.count * 3), 3);
+    //         if (label.color && label.color.length === 3) {
+    //             for (let i = 0; i < colors_buffer.count; i++) {
+    //                 colors_buffer.setXYZ(i, label.color[0], label.color[1], label.color[2]);
+    //             }
+    //         }
+    //         geom.setAttribute('color', colors_buffer);
+    //         shapes.push(geom);
+    //     }
+    //     if (shapes.length === 0) { return; }
+    //     const mergedGeom = BufferGeometryUtils.mergeBufferGeometries(shapes);
+    //     const text = new THREE.Mesh(mergedGeom , matLite);
+    //     this.scene.add(text);
+    //     // this.renderer.render(this.scene, this.camera);
+    //     this.renderer.render(this.scene, this.camera);
+    // }
 
 
     // ============================================================================
@@ -1124,129 +1133,14 @@ export class DataThreejs extends DataThreejsLookAt {
         }, options );
     }
 
-
-    // ============================================================================
-    // ============================================================================
-    // Some old stuff
-    // ============================================================================
-    // ============================================================================
-
-    // public disposeWebGL() {
-    //     console.log('this._renderer.info', this._renderer.info.memory.geometries);
-    //     this.sceneObjs.forEach(obj => {
-    //         if (obj['dispose']) { obj['dispose'](); }
-    //         this._scene.remove(obj);
-    //     });
-    //     const BufferGeoms = this.BufferGeoms;
-    //     BufferGeoms.forEach(geom => {
-    //         geom.dispose();
-    //     });
-    //     this.BufferGeoms = [];
-    //     console.log('this._renderer.info', this._renderer.info.memory.geometries);
-    // }
-
-    // private cameraLookat(center, radius = 100) {
-    //     const fov = this._camera.fov * (Math.PI / 180);
-    //     const vec_centre_to_pos: THREE.Vector3 = new THREE.Vector3();
-    //     vec_centre_to_pos.subVectors(this._camera.position, vec_centre_to_pos);
-    //     const tmp_vec = new THREE.Vector3(Math.abs(radius / Math.sin(fov / 2)),
-    //         Math.abs(radius / Math.sin(fov / 2)),
-    //         Math.abs(radius / Math.sin(fov / 2)));
-    //     vec_centre_to_pos.setLength(tmp_vec.length());
-    //     const perspectiveNewPos: THREE.Vector3 = new THREE.Vector3();
-    //     perspectiveNewPos.addVectors(center, vec_centre_to_pos);
-    //     const newLookAt = this._camera.getWorldDirection(center);
-    //     // this._camera.position.copy(perspectiveNewPos);
-    //     this._camera.lookAt(newLookAt);
-    //     this._camera.updateProjectionMatrix();
-    //     this._controls.target.set(center.x, center.y, center.z);
-    //     this._controls.update();
-    //     const textLabels = this._textLabels;
-    //     if (textLabels.size !== 0) {
-    //         textLabels.forEach((label) => {
-    //             label.updatePosition();
-    //         });
-    //     }
-    // }
-
-    // public DLMapSize(size = null): void {
-    //     let _size;
-    //     if (size) {
-    //         _size = 1024 * size;
-    //     } else {
-    //         _size = 8192;
-    //     }
-    //     if (this.directional_light) {
-    //         this.directional_light.shadow.mapSize.width = _size;
-    //         this.directional_light.shadow.mapSize.width = _size;
-    //     }
-    //     // this._renderer.render(this._scene, this._camera);
-    // }
-
-    // public onWindowKeyPress(event: KeyboardEvent): boolean {
-    //     const nodeName = (<Element>event.target).nodeName;
-    //     if (nodeName === 'TEXTAREA' || nodeName === 'INPUT') { return false; }
-    //     const segment_str = window.location.pathname;
-    //     const segment_array = segment_str.split('/');
-    //     const last_segment = segment_array[segment_array.length - 1];
-    //     if (last_segment === 'editor') {
-    //         return false;
-    //     }
-    //     if (event.ctrlKey || event.metaKey) {
-    //         return false;
-    //     }
-    //     const keyCode = event.which;
-    //     // console.log(keyCode);
-    //     const positionDelta = 10;
-    //     const rotationDelta = 0.02;
-    //     const xp = this._camera.position.x;
-    //     const yp = this._camera.position.y;
-    //     switch (keyCode) {
-    //         case 65: // A: move left
-    //             this._camera.position.x -= positionDelta;
-    //             break;
-    //         case 68: // D: move right
-    //             this._camera.position.x += positionDelta;
-    //             break;
-    //         case 87: // W: move forward
-    //             this._camera.position.y += positionDelta;
-    //             break;
-    //         case 83: // S: move backward
-    //             this._camera.position.y -= positionDelta;
-    //             break;
-    //         case 90: // Z: move up
-    //             this._camera.position.z += positionDelta;
-    //             break;
-    //         case 88: // X: move down
-    //             this._camera.position.z -= positionDelta;
-    //             break;
-    //         case 81: // Q: rotate clockwise
-    //             this._camera.position.x = xp * Math.cos(rotationDelta) + yp * Math.sin(rotationDelta);
-    //             this._camera.position.y = yp * Math.cos(rotationDelta) - xp * Math.sin(rotationDelta);
-    //             this._camera.lookAt(this._scene.position);
-    //             break;
-    //         case 69: // E: rotate anticlockwise
-    //             this._camera.position.x = xp * Math.cos(rotationDelta) - yp * Math.sin(rotationDelta);
-    //             this._camera.position.y = yp * Math.cos(rotationDelta) + xp * Math.sin(rotationDelta);
-    //             this._camera.lookAt(this._scene.position);
-    //             break;
-    //         case 84: // T
-    //             this._camera.rotation.x += rotationDelta;
-    //             break;
-    //         case 71: // G
-    //             this._camera.rotation.x -= rotationDelta;
-    //             break;
-    //         case 70: // F
-    //             this._camera.rotation.y += rotationDelta;
-    //             break;
-    //         case 72: // H
-    //             this._camera.rotation.y -= rotationDelta;
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    //     return true;
-    // }
-
+    private async _loadFont(fontCode) {
+        const p = new Promise<void>(resolve => {
+            textFontLoader.load( `assets/fonts/${fontCode}.json`, font => {
+                this._text_font[fontCode] = font;
+                resolve();
+            });
+        });
+        await p;
+    }
 }
 

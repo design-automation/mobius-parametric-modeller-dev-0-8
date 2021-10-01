@@ -196,7 +196,7 @@ function addModFuncDoc(modDoc, modUrl, modName) {
             console.log('HTTP Request Error: Unable to retrieve documentation for ' + modName);
             return '';
         }
-        const mod = { };
+        const mod = {};
         modDoc[modName] = mod;
         res.text().then(docText => {
             const splitText = docText.split('## ');
@@ -223,12 +223,11 @@ function addModFuncDoc(modDoc, modUrl, modName) {
             }
         });
     });
-
 }
 
 const moduleDocs = {};
 const inlineDocs = {};
-const functionDocs = {};
+// const functionDocs = {};
 for (const mod of doc.children) {
     let modName: any = mod.name.replace(/"/g, '').replace(/'/g, '').split('/');
     const coreIndex = modName.indexOf('core');
@@ -245,13 +244,12 @@ for (const mod of doc.children) {
             continue;
         }
         addDoc(mod, modName, moduleDocs);
-        addModFuncDoc(functionDocs, `assets/typedoc-json/docMD/${modName}.md`, modName);
+        // addModFuncDoc(functionDocs, `assets/typedoc-json/docMD/${modName}.md`, modName);
     }
 }
 for (const i of extraMods) {
-    addModFuncDoc(functionDocs, `assets/typedoc-json/${extraModPaths[i]}.md`, i);
+    // addModFuncDoc(functionDocs, `assets/typedoc-json/${extraModPaths[i]}.md`, i);
 }
 export const ModuleList = module_list;
 export const ModuleDocList = moduleDocs;
-export const AllFunctionDoc = functionDocs;
 export const InlineDocList = inlineDocs;

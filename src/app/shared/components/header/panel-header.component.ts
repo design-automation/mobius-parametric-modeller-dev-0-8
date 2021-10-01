@@ -13,7 +13,7 @@ import { checkNodeValidity } from '@shared/parser';
 import { c1, c2, s1, s2 } from '@shared/utils/otherUtils';
 import { DownloadUtils } from '../file/download.utils';
 import { inline_func } from '@assets/core/inline/inline';
-import { InlineDocList, AllFunctionDoc, ModuleList } from '@shared/decorators';
+import { InlineDocList, ModuleList } from '@shared/decorators';
 import CryptoES from 'crypto-es';
 import * as showdown from 'showdown';
 import * as AWS from '@aws-sdk/client-s3';
@@ -269,7 +269,7 @@ export class PanelHeaderComponent implements OnDestroy {
 
     openMenuHelp(e: MouseEvent, path: string) {
         e.stopPropagation();
-        this.dataService.helpView = AllFunctionDoc['menu'][path];
+        this.dataService.helpView = '...menu/' + path;
         this.dataService.toggleHelp(true);
         const stl = document.getElementById('mobiusDropdownMenu').style;
         stl.display = 'none';
@@ -280,7 +280,7 @@ export class PanelHeaderComponent implements OnDestroy {
         e.stopPropagation();
         for (const pathStr of PATHSTRINGS) {
             if (window.location.pathname.indexOf('/' + pathStr) !== -1) {
-                this.dataService.helpView = AllFunctionDoc[pathStr][pathStr];
+                this.dataService.helpView = `...${pathStr}/${pathStr}`;
                 this.dataService.toggleHelp(true);
                 return;
             }

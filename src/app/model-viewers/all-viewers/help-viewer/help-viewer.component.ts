@@ -71,7 +71,12 @@ export class HelpViewerComponent implements DoCheck, OnDestroy {
 
     ngDoCheck() {
         if (this.mainDataService.helpView[1] === true) {
-            this.output = this.mainDataService.helpView[2];
+            if (this.mainDataService.helpView[2].startsWith('...')) {
+                this.output = undefined;
+                this.activeMod = `assets/typedoc-json/__docs__/${this.mainDataService.helpView[2].slice(3)}.md`;
+            } else {
+                this.output = this.mainDataService.helpView[2];
+            }
             this.mainDataService.togglePageHelp(false);
         }
     }

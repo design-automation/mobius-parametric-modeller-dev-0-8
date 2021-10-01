@@ -1760,7 +1760,7 @@ function _cyGetPosisAndElements(__model__: GIModel, ents_arr: TEntTypeIdx[],
 }
 // ================================================================================================
 /**
- * Calculates degree centrality for positions in a netowrk. Values are normalized in the range 0 to 1.
+ * Calculates degree centrality for positions in a network. Values are normalized in the range 0 to 1.
  * \n
  * The network is defined by a set of connected edges, consisting of polylines and/or polygons.
  * For edges to be connected, vertices must be welded.
@@ -1892,7 +1892,7 @@ export enum _ECentralityType {
 }
 /**
  * Calculates betweenness, closeness, and harmonic centrality
- * for positions in a netowrk. Values are normalized in the range 0 to 1.
+ * for positions in a network. Values are normalized in the range 0 to 1.
  * \n
  * The network is defined by a set of connected edges, consisting of polylines and/or polygons.
  * For edges to be connected, vertices must be welded.

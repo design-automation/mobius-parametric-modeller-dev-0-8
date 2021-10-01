@@ -4,7 +4,7 @@ import { ProcedureTypes, IFunction, IProcedure } from '@models/procedure';
 import { IFlowchart } from '@models/flowchart';
 import * as CircularJSON from 'circular-json';
 import { IArgument } from '@models/code';
-import { ModuleList, ModuleDocList, AllFunctionDoc } from '@shared/decorators';
+import { ModuleList, ModuleDocList } from '@shared/decorators';
 import { INode, NodeUtils } from '@models/node';
 
 import { DownloadUtils } from '@shared/components/file/download.utils';
@@ -48,7 +48,6 @@ export class ToolsetComponent implements OnInit {
     AllModules = {};
     Modules = [];
     ModuleDoc = ModuleDocList;
-    AllFuncsDoc = AllFunctionDoc;
 
     private timeOut;
 
@@ -662,13 +661,13 @@ export class ToolsetComponent implements OnInit {
     emitHelpText(event, functype, func) {
         event.stopPropagation();
         if (functype === 'core') {
-            this.dataService.helpView = this.AllFuncsDoc[func.module.toLowerCase()][func.name.toLowerCase()];
+            this.dataService.helpView = `...${func.module.toLowerCase()}/${func.name.toLowerCase()}`;
             this.dataService.toggleHelp(true);
         } else if (functype === 'global') {
-            this.dataService.helpView = this.assembleGlobalHelp(func)
+            this.dataService.helpView = this.assembleGlobalHelp(func);
             this.dataService.toggleHelp(true);
         } else {
-            this.dataService.helpView = this.AllFuncsDoc[functype.toLowerCase()][func.toLowerCase()];
+            this.dataService.helpView = `...${functype.toLowerCase()}/${func.toLowerCase()}`;
             this.dataService.toggleHelp(true);
         }
     }

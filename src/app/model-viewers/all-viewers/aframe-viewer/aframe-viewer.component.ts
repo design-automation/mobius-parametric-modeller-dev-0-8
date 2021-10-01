@@ -11,7 +11,6 @@ import { AframeSettings, aframe_default_settings } from './aframe-viewer.setting
 import { ProcedureTypes } from '@models/procedure';
 import { NodeUtils } from '@models/node';
 import { checkNodeValidity } from '@shared/parser';
-import { AllFunctionDoc } from '@shared/decorators';
 import { DefaultSettings as DefaultGISettings } from '../gi-viewer/gi-viewer.settings';
 import {customLookControl, customWASDControl, keyboardControlComponent, movementControlComponent,
     navAgentComponent, navMeshComponent, navSystem} from '@shared/utils';
@@ -541,7 +540,7 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
     }
 
     openViewerHelp() {
-        this.mainDataService.helpView = AllFunctionDoc['vrviewer']['vr-viewer'];
+        this.mainDataService.helpView = '...vrviewer/vr-viewer';
         this.mainDataService.toggleHelp(true);
     }
 
