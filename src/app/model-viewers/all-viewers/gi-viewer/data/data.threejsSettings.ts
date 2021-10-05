@@ -1,6 +1,3 @@
-/**
- *
- */
 export interface ISettings {
     normals: { show: boolean, size: number };
     axes: { show: boolean, size: number };
