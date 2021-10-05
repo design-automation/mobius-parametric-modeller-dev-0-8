@@ -132,7 +132,7 @@ export class DataThreejsBase {
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
             alpha: true,
-            logarithmicDepthBuffer: true,
+            // logarithmicDepthBuffer: true,
             powerPreference: 'high-performance'
         });
         this.renderer.autoClear = false;
