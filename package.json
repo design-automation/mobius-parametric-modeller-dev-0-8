@@ -71,7 +71,6 @@
     "three": "^0.131.3",
     "three-orbit-controls": "^82.1.0",
     "three-pathfinding": "^0.14.1",
-    "threejs-meshline": "^2.0.12",
     "tslib": "^2.0.0",
     "underscore": "^1.13.1",
     "zone.js": "~0.11.4"
