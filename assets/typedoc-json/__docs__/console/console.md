@@ -1,3 +1,0 @@
-## CONSOLE  
-  
-**Description:** CONSOLE
