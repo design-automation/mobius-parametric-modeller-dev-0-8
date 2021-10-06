@@ -1,5 +1,8 @@
 # IO  
   
+The `io` module has functions for importing and exporting.  
+  
+  
 ## Read  
   
   
@@ -124,42 +127,5 @@ based on the geolocation of the model.
   * *elev:* Set the elevation of the Cartesian coordinate system above the ground plane.  
   
 **Returns:** XYZ coordinates  
-  
-  
-## saveResource  
-  
-  
-**Description:** Functions for saving and loading resources to file system.  
-  
-**Parameters:**  
-  * *file:* undefined  
-  * *name:* undefined  
-  
-  
-## getURLContent  
-  
-  
-**Description:** undefined  
-  
-**Parameters:**  
-  * *url:* undefined  
-  
-  
-## openZipFile  
-  
-  
-**Description:** undefined  
-  
-**Parameters:**  
-  * *zipFile:* undefined  
-  
-  
-## loadFromFileSystem  
-  
-  
-**Description:** undefined  
-  
-**Parameters:**  
-  * *filecode:* undefined  
   
   

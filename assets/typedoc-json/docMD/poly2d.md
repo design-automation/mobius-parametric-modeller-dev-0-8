@@ -1,5 +1,8 @@
 # POLY2D  
   
+The `poly2D` module has a set of functions for working with 2D polygons, on the XY plane.  
+  
+  
 ## Voronoi  
   
   

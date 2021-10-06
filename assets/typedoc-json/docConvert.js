@@ -112,6 +112,11 @@ function addDoc(mod, modName, docs) {
     moduleDoc['id'] = mod.id;
     moduleDoc['name'] = modName;
     moduleDoc['func'] = [];
+    if (mod.comment && mod.comment.shortText) {
+        moduleDoc['description'] = mod.comment.shortText;
+    } else {
+        moduleDoc['description'] = ''
+    }
     if (!mod.children) { return; }
     for (const func of mod.children) {
         if (func.name[0] === '_') { continue; }
@@ -177,6 +182,9 @@ function genModuleDocs(docs) {
             if (err) throw err;
         });
         let mdString = `# ${mod.name.toUpperCase()}  \n  \n`;
+        if (mod.description) {
+            mdString += mod.description + '  \n  \n  \n'
+        }
         for (const func of mod.func) {
             fnString = ``;
             fnString += `**Description:** ${func.description}  \n  \n`;
@@ -276,15 +284,14 @@ const doc = dc;
 const moduleDocs = [];
 
 for (const mod of doc.children) {
-    const modNameSplit = mod.name.replace(/"/g, '').replace(/'/g, '').split('/');
-    const coreIndex = modNameSplit.indexOf('core');
-    if (modNameSplit.length < 3 || coreIndex === -1) {
-        continue;
-    }
-    if (modNameSplit[coreIndex + 1] === 'inline') {
-
-    } else if (modNameSplit[coreIndex + 1] === 'modules') {
-        const modName = modNameSplit[modNameSplit.length - 1];
+    const modSourceSplit = mod.sources[0].fileName.replace(/"/g, '').replace(/'/g, '').split('/');
+    // const coreIndex = modSourceSplit.indexOf('core');
+    // if (modSourceSplit.length < 3 || coreIndex === -1) {
+    //     continue;
+    // }
+    if (modSourceSplit[0] === 'inline') {
+    } else if (modSourceSplit[0] === 'modules') {
+        const modName = mod.name;
         if (modName.substr(0, 1) === '_' || modName === 'index' || modName === 'categorization') {
             continue;
         }

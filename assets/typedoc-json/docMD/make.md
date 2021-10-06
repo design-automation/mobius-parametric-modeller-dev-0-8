@@ -1,5 +1,9 @@
 # MAKE  
   
+The `make` module has functions for making new entities in the model.
+All these functions return the IDs of the entities that are created.  
+  
+  
 ## Position  
   
   

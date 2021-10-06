@@ -1,5 +1,8 @@
 # UTIL  
   
+The `util` module has some utility functions used for debugging.  
+  
+  
 ## Select  
   
   

@@ -1,5 +1,10 @@
 # CALC  
   
+The `calc` module has functions for performing various types of calculations with entities in the model.
+These functions neither make nor modify anything in the model.
+These functions all return either numbers or lists of numbers.  
+  
+  
 ## Distance  
   
   

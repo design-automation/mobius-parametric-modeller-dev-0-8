@@ -1,5 +1,11 @@
 # MODIFY  
   
+The `modify` module has functions for modifying existing entities in the model.
+These functions do not make any new entities, and they do not change the topology of objects.
+These functions only change attribute values.
+All these functions have no return value.  
+  
+  
 ## Move  
   
   

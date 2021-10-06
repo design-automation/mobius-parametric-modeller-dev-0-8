@@ -1,5 +1,11 @@
 # DICT  
   
+The `dict` module has functions for working with dictionaries.
+These functions have no direct link with the model, the are generic functions for manipulating dictionaries.
+These functions neither make nor modify anything in the model.
+In addition to these functions, there are also inline functions available for working with dictionaries.  
+  
+  
 ## Add  
   
   

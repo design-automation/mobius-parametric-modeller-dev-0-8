@@ -1,5 +1,8 @@
 # INTERSECT  
   
+The `intersect` module has functions for calculating intersections between different types of entities.  
+  
+  
 ## RayFace  
   
   

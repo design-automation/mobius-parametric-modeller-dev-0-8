@@ -1,5 +1,10 @@
 # MATERIAL  
   
+The `material` module has functions for defining materials.
+The material definitions are saved as attributes at the model level.
+For more informtion, see the threejs docs: https://threejs.org/  
+  
+  
 ## Set  
   
   

@@ -1,5 +1,10 @@
 # PATTERN  
   
+The `pattern` module has functions for creating patters of positions.
+These functions all return lists of position IDs.
+The list may be nested, depending on which function is selected.  
+  
+  
 ## Line  
   
   
@@ -690,18 +695,5 @@ to 'catmullrom'.
 'chordal','close', 0.2, 50)`  
     Creates a list of 50 positions distributed along a spline curve pattern.
   
-  
-  
-## nurbsToPosis  
-  
-  
-**Description:** undefined  
-  
-**Parameters:**  
-  * *curve\_verb:* undefined  
-  * *degree:* undefined  
-  * *closed:* undefined  
-  * *num\_positions:* undefined  
-  * *start:* undefined  
   
   

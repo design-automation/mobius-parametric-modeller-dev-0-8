@@ -1,5 +1,8 @@
 # COLLECTION  
   
+The `collections` module has functions for creating and modifying collections.  
+  
+  
 ## Create  
   
   
