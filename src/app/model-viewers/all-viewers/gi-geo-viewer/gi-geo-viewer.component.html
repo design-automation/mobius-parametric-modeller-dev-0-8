@@ -1,9 +1,9 @@
 <div id="gi-viewer-container">
     <three-geo-viewer [model]="data" [nodeIndex]="nodeIndex"></three-geo-viewer>
-    <button class='btn' id="settings_button" mat-icon-button (click)="openModal('geo_settings_modal')" title="Settings"><mat-icon svgIcon="settings"></mat-icon></button>
-    <button class='btn' id="geo_viewer_help_button" mat-icon-button (click)="openViewerHelp()" title="Help"><mat-icon svgIcon="cHelp"></mat-icon></button>
+    <button class='btn' id="settings_button" mat-icon-button (click)="openModal('geo_settings_modal')" title="Settings"><mat-icon svgIcon='icon_settings'></mat-icon></button>
+    <button class='btn' id="geo_viewer_help_button" mat-icon-button (click)="openViewerHelp()" title="Help"><mat-icon svgIcon='icon_help'></mat-icon></button>
     <button id="zoomingfit" mat-icon-button (click)="zoomfit()" title='Zoom to Fit Model'>
-        <mat-icon svgIcon="cZoom"></mat-icon>
+        <mat-icon svgIcon="icon_zoom"></mat-icon>
     </button>
     <div class='date-picker-div'>
         <div class='viewer-time-box'>Time: </div>

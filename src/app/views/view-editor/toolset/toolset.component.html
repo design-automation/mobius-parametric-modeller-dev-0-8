@@ -10,7 +10,7 @@
                 (click)='add_basic_func(0)'> 
                 Variable
                 <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "variable", "Variable")'>
-                    <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                    <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                 </button>
             </li>
             <li class='tooltip-variable'
@@ -19,7 +19,7 @@
                 (click)='add_basic_func(ProcedureTypes.Comment)'> 
                 Comment
                 <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "comment", "Comment")'>
-                    <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                    <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                 </button>
             </li>
         </ul>
@@ -29,7 +29,7 @@
             (mousedown)='preventfocus($event)'
             (click)='open_inline_dialog($event)'>Expression
             <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "expression", "Expression")'>
-                <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
             </button>
         </button>
         <!--Divider-->
@@ -68,7 +68,7 @@
                         (click)='add_basic_func(1)'> 
                             If
                             <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "control_flow", "If")'>
-                                <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                                <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                             </button>
                     </li>
                     <li class='tooltip-basic' [class.invalid]='checkInvalid("Elseif")'
@@ -77,7 +77,7 @@
                         (click)='add_basic_func(2)'> 
                             Else-if
                             <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "control_flow", "Elseif")'>
-                                <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                                <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                             </button>
                     </li>
                     <li class='tooltip-basic' [class.invalid]='checkInvalid("Else")'
@@ -86,7 +86,7 @@
                         (click)='add_basic_func(3)'> 
                             Else
                             <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "control_flow", "Else")'>
-                                <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                                <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                             </button>
                     </li>
                     <li class='tooltip-basic' [class.invalid]='checkInvalid("Foreach")'
@@ -95,7 +95,7 @@
                         (click)='add_basic_func(4)'> 
                             For-each
                             <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "control_flow", "Foreach")'>
-                                <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                                <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                             </button>
                     </li>
                     <li class='tooltip-basic' [class.invalid]='checkInvalid("While")'
@@ -104,7 +104,7 @@
                         (click)='add_basic_func(5)'> 
                             While
                             <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "control_flow", "While")'>
-                                <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                                <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                             </button>
                     </li>
                     <li class='tooltip-basic' [class.invalid]='checkInvalid("Break")'
@@ -113,7 +113,7 @@
                         (click)='add_basic_func(6)'> 
                             Break-loop
                             <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "control_flow", "Break-loop")'>
-                                <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                                <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                             </button>
                     </li>
                     <li class='tooltip-basic' [class.invalid]='checkInvalid("Continue")'
@@ -122,7 +122,7 @@
                         (click)='add_basic_func(7)'> 
                             Continue-loop
                             <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "control_flow", "Continue-loop")'>
-                                <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                                <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                             </button>
                     </li>
                     <li class='tooltip-basic'
@@ -131,7 +131,7 @@
                         (click)='add_basic_func(ProcedureTypes.Return)'>
                             Return
                             <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "control_flow", "Return")'>
-                                <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                                <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                             </button>
                     </li>
                     <!-- <li class='tooltip-basic'
@@ -146,7 +146,7 @@
                         (click)='add_basic_func(ProcedureTypes.BreakBranch)'> 
                             Break-branch
                             <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "control_flow", "Break-branch")'>
-                                <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                                <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                             </button>
                     </li>
                     <li class='tooltip-basic' [class.basic]='true' (mousedown)='selectPrevProd()'
@@ -154,7 +154,7 @@
                         Exit
                         <button class='helpButton' mat-icon-button title="Help" tabindex="-1"
                             (click)='emitHelpText($event, "control_flow", "Exit")'>
-                            <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                            <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                         </button>
                     </li>
                 </ul>
@@ -200,7 +200,7 @@
                                     (click)='add_main_func(fn)'> 
                                         {{fn.name}} 
                                         <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "core", fn)'>
-                                            <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                                            <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                                         </button>
                                     </li>
                                     <!-- <span class="tooltiptext" [innerHTML]='fn.doc'></span> -->
@@ -223,7 +223,7 @@
                             (click)='add_local_func_def(0)'>
                                 Def Func
                                 <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "local_func", "local function")'>
-                                    <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                                    <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                                 </button>
                             </li>
                             <li *ngFor='let func_prod of getNode().localFunc.slice(1)' 
@@ -243,7 +243,7 @@
                             <li class = 'user--manage' (click)="open_globalFunc_dialog($event);" title="Manage Global Functions">
                                 Manage
                                 <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "global_func", "global function")'>
-                                    <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                                    <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                                 </button>    
                             </li>
                             <div class='tooltip user--def' *ngFor='let fn of getFlowchart().functions'>
@@ -254,7 +254,7 @@
                                     (mousedown)='selectPrevProd()'
                                     (click)='add_global_func(fn)'> {{fn.name}} 
                                         <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='emitHelpText($event, "global", fn)'>
-                                            <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                                            <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                                         </button>
                                     </li>
                                 </div>

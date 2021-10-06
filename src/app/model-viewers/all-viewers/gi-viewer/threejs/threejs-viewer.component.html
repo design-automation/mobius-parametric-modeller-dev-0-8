@@ -27,7 +27,7 @@
         (click)="zoomfit()"
         title='Zoom to Fit Model'
     >
-        <mat-icon svgIcon="cZoom"></mat-icon>
+        <mat-icon svgIcon="icon_zoom"></mat-icon>
     </button>
 
     <span
@@ -36,7 +36,7 @@
         (click)="switchCamera()"
         title='Switch Camera'
     >
-        <mat-icon svgIcon="cControlCam"></mat-icon>
+        <mat-icon svgIcon="icon_ctrl_cam"></mat-icon>
         <p>{{_data_threejs.currentCamera}}</p>
     </span>
     <ng-container *ngIf="enableSelect()">
@@ -46,7 +46,7 @@
             (click)="openEntitySelectType()"
             title='Selecting {{SelectingEntityType.name}}'
         >
-            <mat-icon svgIcon="select"></mat-icon>
+            <mat-icon svgIcon='icon_select'></mat-icon>
         </button>
         <span
             *ngIf="!selectDropdownVisible"

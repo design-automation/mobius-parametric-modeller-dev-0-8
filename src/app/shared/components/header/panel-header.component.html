@@ -19,19 +19,19 @@
 
         <!-- buttons to navigate to the 4 pages -->
         <button class='btn' [class.active]='getUrl()=="/about"' [routerLink]="'/about'" title='About'>
-            <mat-icon svgIcon="cGallery"></mat-icon>
+            <mat-icon svgIcon="icon_home"></mat-icon>
         </button>
         <button class='btn' [class.active]='getUrl()=="/gallery"' [routerLink]="'/gallery'" title='Gallery'>
-            <mat-icon>view_comfy</mat-icon>
+            <mat-icon svgIcon="icon_gallery"></mat-icon>
         </button>
         <button class='btn' [class.active]='getUrl()=="/dashboard"' [routerLink]="'/dashboard'" title='Dashboard'>
-            <mat-icon svgIcon="cDashboard"></mat-icon>
+            <mat-icon svgIcon="icon_dashboard"></mat-icon>
         </button>
         <button class='btn' [class.active]='getUrl()=="/flowchart"' [routerLink]="'/flowchart'" title='Flowchart'>
-            <mat-icon svgIcon="cFlowchart"></mat-icon>
+            <mat-icon svgIcon="icon_flowchart"></mat-icon>
         </button>
         <button class='btn' [class.active]='getUrl()=="/editor"' [routerLink]="'/editor'" title='Editor'>
-            <mat-icon svgIcon="cEditor"></mat-icon>
+            <mat-icon svgIcon="icon_editor"></mat-icon>
         </button>
                 
         <!-- execute button -->
@@ -54,94 +54,94 @@
 
         <!-- <div id='filename' (click)='openMobiusDropdownMenu($event)'>{{getTitle()}}</div> -->
         <button id='mobiusDropdownMenuButton' class='menu-btn' (click)='openMobiusDropdownMenu($event)' title='Menu'>
-            <mat-icon>menu</mat-icon>
+            <mat-icon svgIcon='icon_menu'></mat-icon>
         </button>
         <div class='dropdownContainer'>
             <div id="mobiusDropdownMenu">
                 <button onclick="document.getElementById('newfile').click();"
                 title="Create a new Möbius script file"> 
-                    <mat-icon>rotate_left</mat-icon> 
+                    <mat-icon svgIcon='icon_rotate_left'></mat-icon>
                     New File
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "new file")'>
-                        <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                        <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                     </button>
                 </button>
                 <br>
                 <button (click)="loadFile()"
                 title="Load Möbius script file from computer">
-                    <mat-icon>launch</mat-icon>
+                    <mat-icon svgIcon='icon_launch'></mat-icon>
                     Load File 
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "load file")'>
-                        <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                        <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                     </button>
                 </button>
                 <br>
                 <button onclick="document.getElementById('savefile').click();"
                 title="Save Möbius script file to computer">
-                    <mat-icon>save_alt</mat-icon>
+                    <mat-icon svgIcon='icon_save_alt'></mat-icon>
                     Save File
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "save file")'>
-                        <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                        <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                     </button>
                 </button>
                 <br>
                 <button (click)="openHeaderDialog($event, 'savels')"
                 title="Save Möbius script file to Local Storage">
-                    <mat-icon>input</mat-icon>
+                    <mat-icon svgIcon='icon_input'></mat-icon>
                     Save to LS
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "save to ls")'>
-                        <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                        <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                     </button>
                 </button>
                 <br>
                 <button onclick="document.getElementById('savejavascript').click();"
                 title="Save Javascript code to computer">
-                    <mat-icon>save</mat-icon>
+                    <mat-icon svgIcon='icon_save'></mat-icon>
                     Save JS
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "save js")'>
-                        <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                        <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                     </button>
                 </button>
                 <br>
                 <button onclick="document.getElementById('savedata').click();"
                 title="Save a static model to computer">
-                    <mat-icon>play_for_work</mat-icon>
+                    <mat-icon svgIcon='icon_play_for_work'></mat-icon>
                     Save Model
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "save model")'>
-                        <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                        <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                     </button>
                 </button>
                 <br>
                 <button (click)="openHeaderDialog($event, 'backup')"
                 title="Manage files in Local Storage">
-                    <mat-icon>autorenew</mat-icon>
+                    <mat-icon svgIcon='icon_autorenew'></mat-icon>
                     Local Storage 
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "local storage")'>
-                        <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                        <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                     </button>
                 </button>
                 <br>
                 <button (click)="openHeaderDialog($event, 'publish')"
                 title="Publish a Möbius script">
-                    <mat-icon>link</mat-icon>
+                    <mat-icon svgIcon='icon_link'></mat-icon>
                     Publish
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "publish")'>
-                        <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                        <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                     </button>
                 </button>
                 <br>
                 <button (click)="openHeaderDialog($event, 'settings')"
                 title="Möbius Settings">
-                    <mat-icon class='mat-icon-svg' svgIcon="settings"></mat-icon>
+                    <mat-icon class='mat-icon-svg' svgIcon='icon_settings'></mat-icon>
                     Settings
                     <button id='pageHelpButton' class='help-btn' (click)='openMenuHelp($event, "settings")'>
-                        <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                        <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                     </button>
                 </button>
             </div>
         </div>
         <button id='pageHelpButton' class='menu-btn' (click)='openPageHelp($event)' title='Page Help'>
-            <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+            <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
         </button>
     </div>
 </div>
@@ -327,7 +327,7 @@
                         <li *ngFor='let fn of fnCategory[1]' (mousedown)='disableFocus($event)' (click)='addInlineFunc(fn)'>
                             {{fn}}
                             <button class='helpButton' mat-icon-button title="Help" tabindex="-1" (click)='updateInlineHelpText($event, fn, fnCategory[0])'>
-                                <mat-icon class='icon' svgIcon='cHelp'></mat-icon>
+                                <mat-icon class='icon' svgIcon='icon_help'></mat-icon>
                             </button>
                         </li>
                     </ul>
