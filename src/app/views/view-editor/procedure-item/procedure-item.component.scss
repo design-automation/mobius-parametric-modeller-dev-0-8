@@ -404,15 +404,15 @@
     }
     &.disableOn {
         color: $selectGeom-color-dk !important;
-        background-color: $color6;
+        // background-color: $color6;
     }
     &.printingOn {
         color: $print-color !important;
-        background-color: $color6;
+        // background-color: $color6;
     }
     &.terminateOn {
         color: $terminate-color !important;
-        background-color: $color6;
+        // background-color: $color6;
     }
 }
 .btn{

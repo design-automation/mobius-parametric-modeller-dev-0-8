@@ -229,21 +229,16 @@ const moduleDocs = {};
 const inlineDocs = {};
 // const functionDocs = {};
 for (const mod of doc.children) {
-    let modName: any = mod.name.replace(/"/g, '').replace(/'/g, '').split('/');
-    const coreIndex = modName.indexOf('core');
-    if (modName.length < 3 || coreIndex === -1) {
-        continue;
-    }
-    if (modName[coreIndex + 1] === 'inline') {
+    let modName: any = mod.sources[0].fileName.replace(/"/g, '').replace(/'/g, '').split('/');
+    if (modName[0] === 'inline') {
         modName = modName[modName.length - 1];
-        addDoc(mod, modName, inlineDocs);
-
-    } else if (modName[coreIndex + 1] === 'modules') {
+        addDoc(mod, mod.name, inlineDocs);
+    } else if (modName[0] === 'modules') {
         modName = modName[modName.length - 1];
         if (modName.substr(0, 1) === '_' || modName === 'index' || modName === 'categorization') {
             continue;
         }
-        addDoc(mod, modName, moduleDocs);
+        addDoc(mod, mod.name, moduleDocs);
         // addModFuncDoc(functionDocs, `assets/typedoc-json/docMD/${modName}.md`, modName);
     }
 }

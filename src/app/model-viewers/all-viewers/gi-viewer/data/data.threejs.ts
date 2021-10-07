@@ -734,9 +734,10 @@ export class DataThreejs extends DataThreejsLookAt {
             const yAxis = new THREE.Vector3().copy(coords[0]).sub(coords[1]);
             const fromPlane = <TPlane> [[0, 0, 0], [lengthCheck[1], 0, 0], [0, lengthCheck[0], 0]];
             const toPlane = <TPlane> [
-                            [coords[1].x, coords[1].y, coords[1].z],
-                            [xAxis.x, xAxis.y, xAxis.z],
-                            [yAxis.x, yAxis.y, yAxis.z]];
+                [coords[1].x, coords[1].y, coords[1].z],
+                [xAxis.x, xAxis.y, xAxis.z],
+                [yAxis.x, yAxis.y, yAxis.z]
+            ];
             const matrix = xfromSourceTargetMatrix(fromPlane, toPlane);
             geom.applyMatrix4(matrix);
 

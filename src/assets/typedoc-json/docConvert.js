@@ -178,7 +178,7 @@ function genModuleDocs(docs) {
     let count = 0;
     for (const mod of docs) {
         if (mod.name[0] === '_') { continue; }
-        fs.mkdirSync(`./src/assets/typedoc-json/__docs__/${mod.name.toLowerCase()}`, { recursive: true }, (err) => {
+        fs.mkdirSync(`./src/assets/typedoc-json/docs__/${mod.name.toLowerCase()}`, { recursive: true }, (err) => {
             if (err) throw err;
         });
         let mdString = `# ${mod.name.toUpperCase()}  \n  \n`;
@@ -211,7 +211,7 @@ function genModuleDocs(docs) {
             }
             if (func.name) {
                 const writtenFnStr = `## ${mod.name}.${func.name}  \n  \n  \n` + replaceText(fnString.replace(/\\n/g, '\n'));
-                fs.writeFile(`./src/assets/typedoc-json/__docs__/${mod.name.toLowerCase()}/${func.name.toLowerCase()}.md`, writtenFnStr, function(err) {
+                fs.writeFile(`./src/assets/typedoc-json/docs__/${mod.name.toLowerCase()}/${func.name.toLowerCase()}.md`, writtenFnStr, function(err) {
                     if (err) {
                         return console.log(err);
                     }
@@ -237,7 +237,7 @@ function genModuleDocs(docs) {
 
 function addModFuncDoc(modUrl, modName) {
     const docText = fs.readFileSync(modUrl,'utf8')
-    fs.mkdirSync(`./src/assets/typedoc-json/__docs__/${modName.toLowerCase()}`, { recursive: true }, (err) => {
+    fs.mkdirSync(`./src/assets/typedoc-json/docs__/${modName.toLowerCase()}`, { recursive: true }, (err) => {
         if (err) throw err;
     });
     let fnString = '';
@@ -252,7 +252,7 @@ function addModFuncDoc(modUrl, modName) {
         } else {
             fnString = '## ' + modName + '.' + funcText.trim();
         }
-        fs.writeFile(`./src/assets/typedoc-json/__docs__/${modName.toLowerCase()}/${funcName.toLowerCase()}.md`,
+        fs.writeFile(`./src/assets/typedoc-json/docs__/${modName.toLowerCase()}/${funcName.toLowerCase()}.md`,
                 fnString, function(err) {
             if (err) {
                 return console.log(err);
@@ -269,7 +269,7 @@ function addModFuncDoc(modUrl, modName) {
             } else {
                 fnString = '## ' + modName + '.' + funcText.trim();
             }
-            fs.writeFile(`./src/assets/typedoc-json/__docs__/${modName.toLowerCase()}/${funcName.toLowerCase()}.md`,
+            fs.writeFile(`./src/assets/typedoc-json/docs__/${modName.toLowerCase()}/${funcName.toLowerCase()}.md`,
                     fnString, function(err) {
                 if (err) {
                     return console.log(err);

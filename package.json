@@ -1,6 +1,6 @@
 {
   "name": "mobius-parametric-modeller",
-  "version": "0.8.7",
+  "version": "0.8.9",
   "license": "MIT",
   "config": {
     "dev_url": "https://mobius-08.design-automation.net/",
@@ -23,7 +23,7 @@
     "e2e": "ng e2e",
     "postinstall": "npm run moduleDocs",
     "typedoc": "typedoc --exclude **/*.spec.ts --out docs/typedoc src/app/",
-    "moduleDocs": "typedoc --exclude **/*.spec.ts --json src/assets/typedoc-json/__doc.json src/assets/core/modules && node ./src/assets/typedoc-json/docConvert.js && node version.js",
+    "moduleDocs": "node ./src/assets/gallery/img_resize.js && typedoc --exclude **/*.spec.ts --json src/assets/typedoc-json/__doc.json src/assets/core/modules && node ./src/assets/typedoc-json/docConvert.js && node version.js",
     "resizeImg": "node ./src/assets/gallery/img_resize.js"
   },
   "private": true,

@@ -6,6 +6,7 @@
 /tmp
 /out-tsc
 /src/assets/typedoc-json/__docs__
+/src/assets/typedoc-json/docs__
 /src/assets/typedoc-json/docMD
 /src/assets/typedoc-json/__doc.json
 /src/assets/typedoc-json/doc.json

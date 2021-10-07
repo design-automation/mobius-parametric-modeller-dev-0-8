@@ -1,7 +1,6 @@
 import { Component, DoCheck, OnDestroy } from '@angular/core';
 import { ModuleList} from '@shared/decorators';
 import { DataService } from '@shared/services';
-import * as showdown from 'showdown';
 /**
  * HelpViewerComponent
  */
@@ -14,7 +13,6 @@ export class HelpViewerComponent implements DoCheck, OnDestroy {
     output: any;
     description = '';
     activeMod: string;
-    mdConverter = new showdown.Converter({literalMidWordUnderscores: true});
     modList;
 
     /**
@@ -55,7 +53,7 @@ export class HelpViewerComponent implements DoCheck, OnDestroy {
             if (helpSectionURI.length > 1) {
                 const modData = helpSectionURI[1].split('&')[0].split('.');
                 for (const modGroup of this.modList) {
-                    if (modGroup.name === modData[0]) {
+                    if (modGroup.name.toLowerCase() === modData[0].toLowerCase()) {
                         this.output = undefined;
                         this.activeMod = `${modGroup.srcDir}/${modData[1]}.md`;
                         break;
@@ -73,7 +71,7 @@ export class HelpViewerComponent implements DoCheck, OnDestroy {
         if (this.mainDataService.helpView[1] === true) {
             if (this.mainDataService.helpView[2].startsWith('...')) {
                 this.output = undefined;
-                this.activeMod = `assets/typedoc-json/__docs__/${this.mainDataService.helpView[2].slice(3)}.md`;
+                this.activeMod = `assets/typedoc-json/docs__/${this.mainDataService.helpView[2].slice(3)}.md`;
             } else {
                 this.output = this.mainDataService.helpView[2];
             }
@@ -110,5 +108,25 @@ export class HelpViewerComponent implements DoCheck, OnDestroy {
         }
         const stl = document.getElementById('helpMenu').style;
         stl.display = 'block';
+    }
+
+    urlCheck(event: MouseEvent) {
+        if (event.target) {
+            const targethref = (<any> event.target).href;
+            if (targethref && targethref.indexOf('defaultViewer=doc') !== -1 && targethref.indexOf('docSection=') !== -1) {
+                const helpSectionURI = targethref.split('docSection=');
+                const modData = helpSectionURI[1].split('&')[0].split('.');
+                for (const modGroup of this.modList) {
+                    if (modGroup.name.toLowerCase() === modData[0].toLowerCase()) {
+                        this.output = undefined;
+                        this.activeMod = `${modGroup.srcDir}/${modData[1]}.md`;
+                        const helpcontainer = document.getElementById('help-container');
+                        helpcontainer.scrollTop = 0;
+                        event.stopPropagation();
+                        event.preventDefault();
+                    }
+                }
+            }
+        }
     }
 }

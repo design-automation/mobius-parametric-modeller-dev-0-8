@@ -1,4 +1,4 @@
-<div id="help-container">
+<div id="help-container" (click)='urlCheck($event)'>
     <h1 id = 'help-tab' (click)='openHelpMenu($event)'><span class='activeModName'>Select Module</span><span>▾</span></h1>
     <div id="helpMenu">
         <ng-container *ngFor='let modGroup of modList'>

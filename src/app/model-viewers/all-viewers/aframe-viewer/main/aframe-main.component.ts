@@ -7,7 +7,7 @@ import { DataService as ThreeJSDataService } from '../../gi-viewer/data/data.ser
 import { GIModel } from '@libs/geo-info/GIModel';
 
 declare var AFRAME;
-const SKY_REFRESH_RATE = 5;
+// const SKY_REFRESH_RATE = 200;
 
 let prevCamPos = new AFRAME.THREE.Vector3();
 /**
@@ -38,7 +38,7 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy,
      * @param dataService
      */
     constructor(private dataService: DataAframeService, private threeJSDataService: ThreeJSDataService) {
-        this.interval = setInterval(AframeMainComponent.updateCamSkyPos, SKY_REFRESH_RATE);
+        // this.interval = setInterval(AframeMainComponent.updateCamSkyPos, SKY_REFRESH_RATE);
     }
 
     static updateCamSkyPos() {
@@ -52,7 +52,7 @@ export class AframeMainComponent implements AfterViewInit, OnChanges, OnDestroy,
     }
 
     ngOnDestroy() {
-        clearInterval(this.interval);
+        // clearInterval(this.interval);
         const data = this.dataService.getAframeData();
         if (!this.camPosSaved) {
             this.dataService.aframe_cam = data.getCameraPos();
