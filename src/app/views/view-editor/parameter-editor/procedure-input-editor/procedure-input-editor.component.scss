@@ -11,6 +11,8 @@
     display: flex;
     flex-flow: column nowrap;
 
+    background-color: #f1f1f1;
+
     color: $color1;
     vertical-align: bottom;
     // border-left: 1px solid red;
@@ -174,6 +176,7 @@ select{
     .input--type{
         font-family: $inputTextFontFam;
         color: $function-text-color;
+        background-color: transparent;
         font-weight: 700;
         font-style: italic;
         width: 90px;
@@ -289,6 +292,9 @@ select{
 }
 .chbox-inp{
     display: inline-block;
+    label {
+        background-color: white;
+    }
 }
 
 
@@ -326,4 +332,9 @@ select{
     cursor: ew-resize;
     background: $color2;
     box-shadow: -1000px 0 0 1000px $color4;
+}
+
+.param-blank {
+    background-color: #f1f1f1;
+    height: 8px;
 }

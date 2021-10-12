@@ -1,5 +1,5 @@
 <div class='container--parameter' 
-*ngIf='prod.meta?.module =="Input"'
+*ngIf='prod.meta?.module =="Input"; else blankTemplate'
 [class.error]='prod.hasError' 
 [class.selected]='prod.selected'
 [class.lastSelected]="prod.lastSelected"
@@ -155,6 +155,16 @@
         </div> 
     </ng-container>
 </div>
+<ng-template #blankTemplate>
+    <div class='container--parameter param-blank' 
+    *ngIf='prod.meta?.module =="ParamBlank"'
+    [class.error]='prod.hasError' 
+    [class.selected]='prod.selected'
+    [class.lastSelected]="prod.lastSelected"
+    (mousedown)='disableShift($event)'
+    (click)='selectInput($event)'>
+    </div>
+</ng-template>
 
 
 <!-- <div class='container container--parameter' *ngIf='prod.meta?.module=="Output"'>

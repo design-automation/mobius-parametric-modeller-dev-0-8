@@ -269,7 +269,10 @@ export class ViewEditorComponent implements AfterViewInit, OnDestroy {
         const node = this.dataService.node;
         let i = 0;
         while (i < node.state.procedure.length) {
-            if (node.state.procedure[i].type === ProcedureTypes.Blank || node.state.procedure[i].type === ProcedureTypes.EndReturn) {
+            if (node.state.procedure[i].type === ProcedureTypes.Blank
+                        || node.state.procedure[i].type === ProcedureTypes.EndReturn
+                        || (node.state.procedure[i].type === ProcedureTypes.Constant
+                        && node.state.procedure[i].meta.module === 'ParamBlank')) {
                 node.state.procedure[i].selected = false;
                 node.state.procedure[i].lastSelected = false;
                 node.state.procedure.splice(i, 1);

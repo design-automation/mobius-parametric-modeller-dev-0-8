@@ -1,5 +1,5 @@
 import { INode } from './node.interface';
-import { ProcedureTypes, IFunction, IProcedure } from '@models/procedure';
+import { ProcedureTypes, IProcedure } from '@models/procedure';
 import { InputType, PortUtils } from '@models/port';
 import * as circularJSON from 'circular-json';
 import { IdGenerator } from '@utils';
@@ -61,6 +61,30 @@ export abstract class NodeUtils {
         node.state.show_func = false;
         node.name = 'Start';
         node.type = 'start';
+
+        const newParamBlank = {
+            type: ProcedureTypes.Constant,
+            ID: 'parameters_blank',
+            parent: undefined,
+            meta: {
+                description: '',
+                inputMode: InputType.Constant,
+                module: 'ParamBlank',
+                name: 'Constant',
+            },
+            children: undefined,
+            variable: undefined,
+            argCount: 0,
+            args: [],
+            print: false,
+            enabled: false,
+            selected: false,
+            terminate: false,
+            hasError: false
+        };
+
+        node.procedure.push(newParamBlank);
+
         return node;
     }
 

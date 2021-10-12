@@ -9,6 +9,7 @@ import { fn } from '@angular/compiler/src/output/output_ast';
 import { VERSION } from '@env/version';
 import { IMobius } from '@models/mobius';
 import { INode } from '@models/node';
+import { InputType } from '@models/port';
 
 
 export function checkMobFile(file: IMobius) {
@@ -18,7 +19,6 @@ export function checkMobFile(file: IMobius) {
     checkFileVersion(file.version);
     // check the end node
     // checkEndReturn(file);
-
     // check if there's any missing procedure in each node
     let hasError = false;
     for (const node of file.flowchart.nodes) {
@@ -66,6 +66,63 @@ export function checkMobFile(file: IMobius) {
 
 function updateNode(flowchart) {
     for (const node of flowchart.nodes) {
+        if (node.type === 'start') {
+            let addCheck = true;
+            for (let i = 0; i < node.procedure.length; i++) {
+                const prod = node.procedure[i];
+                if (prod.type === ProcedureTypes.Constant) {
+                    addCheck = false;
+                    if (prod.meta.module === 'ParamBlank') {
+                        break;
+                    } else {
+                        const newProd = {
+                            type: ProcedureTypes.Constant,
+                            ID: 'parameters_blank',
+                            parent: undefined,
+                            meta: {
+                                description: '',
+                                inputMode: InputType.Constant,
+                                module: 'ParamBlank',
+                                name: 'Constant',
+                            },
+                            children: undefined,
+                            variable: undefined,
+                            argCount: 0,
+                            args: [],
+                            print: false,
+                            enabled: false,
+                            selected: false,
+                            terminate: false,
+                            hasError: false
+                        };
+                        node.procedure.splice(i, 0, newProd);
+                        break;
+                    }
+                }
+            }
+            if (addCheck) {
+                node.procedure.push({
+                    type: ProcedureTypes.Constant,
+                    ID: 'parameters_blank',
+                    parent: undefined,
+                    meta: {
+                        description: '',
+                        inputMode: InputType.Constant,
+                        module: 'ParamBlank',
+                        name: 'Constant',
+                    },
+                    children: undefined,
+                    variable: undefined,
+                    argCount: 0,
+                    args: [],
+                    print: false,
+                    enabled: false,
+                    selected: false,
+                    terminate: false,
+                    hasError: false
+                });
+            }
+        }
         if (node.type === 'end') {
             node.procedure[node.procedure.length - 1].ID = 'Return';
         }
