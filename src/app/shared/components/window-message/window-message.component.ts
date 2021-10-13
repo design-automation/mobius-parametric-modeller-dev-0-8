@@ -69,7 +69,7 @@ export class WindowMessageComponent {
                     }
                     const params = event.data.params;
                     for (const prod of this.dataService.flowchart.nodes[0].procedure) {
-                        if (prod.type === ProcedureTypes.Constant) {
+                        if (prod.type === ProcedureTypes.Constant && prod.args[0]) {
                             if (params[prod.args[0].value] !== undefined) {
                                 prod.args[1].value = params[prod.args[0].value];
                             }

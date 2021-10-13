@@ -231,7 +231,7 @@ export class LoadUrlComponent {
         }
         if (newParams) {
             for (const prod of this.dataService.flowchart.nodes[0].procedure) {
-                if (prod.type === ProcedureTypes.Constant) {
+                if (prod.type === ProcedureTypes.Constant && prod.args[0]) {
                     if (newParams[prod.args[0].value] !== undefined) {
                         prod.args[1].value = newParams[prod.args[0].value];
                     }

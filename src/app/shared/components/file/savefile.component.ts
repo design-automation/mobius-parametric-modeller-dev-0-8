@@ -343,34 +343,6 @@ export class SaveFileComponent implements OnDestroy{
             FlowchartUtils.orderNodes(f.flowchart);
         }
 
-        // for (const prod of f.flowchart.nodes[0].procedure) {
-        //     if (prod.type !== ProcedureTypes.Constant) { continue; }
-        //     if (prod.meta.inputMode.toString() === InputType.File.toString()) {
-        //         const arg = prod.args[1];
-        //         if (arg.value && arg.value.lastModified) {
-        //             const p = new Promise((resolve) => {
-        //                 const reader = new FileReader();
-        //                 reader.onload = function () {
-        //                     resolve(reader.result);
-        //                 };
-        //                 reader.readAsText(arg.value);
-        //             });
-        //             window.localStorage.setItem(arg.value.name, '`' + await p + '`');
-        //             arg.value = { 'name': arg.value.name };
-        //         }
-        //         if (arg.value && arg.value.lastModified) {
-        //             const p = new Promise((resolve) => {
-        //                 const reader = new FileReader();
-        //                 reader.onload = function () {
-        //                     resolve(reader.result);
-        //                 };
-        //                 reader.readAsText(arg.value);
-        //             });
-        //             window.localStorage.setItem(arg.value.name, '`' + await p + '`');
-        //             arg.value = { 'name': arg.value.name };
-        //         }
-        //     }
-        // }
 
 
         // clear the nodes' input/output in the flowchart, save them in modelMap
@@ -532,7 +504,7 @@ export class SaveFileComponent implements OnDestroy{
         let flowchart_desc = '';
 
         for (const prod of this.dataService.flowchart.nodes[0].procedure) {
-            if (prod.type !== ProcedureTypes.Constant) { continue; }
+            if (!prod.enabled || prod.type !== ProcedureTypes.Constant || prod.argCount === 0) { continue; }
             for (let j = 0; j < splitDesc.length; j ++) {
                 const trimmedLine = splitDesc[j].replace(/ /g, '');
                 if (trimmedLine.startsWith(prod.args[0].value + ':[')) {

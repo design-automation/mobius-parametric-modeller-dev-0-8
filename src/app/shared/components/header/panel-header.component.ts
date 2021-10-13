@@ -399,7 +399,7 @@ export class PanelHeaderComponent implements OnDestroy {
 
             func.args = [];
             for (const prod of fl.nodes[0].procedure) {
-                if (!prod.enabled || prod.type !== ProcedureTypes.Constant) { continue; }
+                if (!prod.enabled || prod.type !== ProcedureTypes.Constant || prod.argCount === 0) { continue; }
                 let v: string = prod.args[prod.argCount - 2].value || 'undefined';
                 if (v[0] === '"' || v[0] === '\'') { v = v.substring(1, v.length - 1); }
                 if (prod.meta.inputMode !== InputType.Constant) {
@@ -503,7 +503,7 @@ export class PanelHeaderComponent implements OnDestroy {
 
             // func.args = [];
             // for (const prod of fl.nodes[0].procedure) {
-            //     if (!prod.enabled || prod.type !== ProcedureTypes.Constant) { continue; }
+            //     if (!prod.enabled || prod.type !== ProcedureTypes.Constant || prod.argCount === 0) { continue; }
             //     let v: string = prod.args[prod.argCount - 2].value || 'undefined';
             //     if (v[0] === '"' || v[0] === '\'') { v = v.substring(1, v.length - 1); }
             //     if (prod.meta.inputMode !== InputType.Constant) {
@@ -948,7 +948,7 @@ export class PanelHeaderComponent implements OnDestroy {
 
         func.args = [];
         for (const prod of fl.nodes[0].procedure) {
-            if (!prod.enabled || prod.type !== ProcedureTypes.Constant) { continue; }
+            if (!prod.enabled || prod.type !== ProcedureTypes.Constant || prod.argCount === 0) { continue; }
             let v: string = prod.args[prod.argCount - 2].value || 'undefined';
             if (v[0] === '"' || v[0] === '\'') { v = v.substring(1, v.length - 1); }
             if (prod.meta.inputMode !== InputType.Constant) {
@@ -1098,20 +1098,19 @@ export class PanelHeaderComponent implements OnDestroy {
 
         const parameters = [];
         for (const prod of this.flowchart.nodes[0].procedure) {
-            if (prod.type === ProcedureTypes.Constant && prod.enabled) {
-                parameters.push(prod.args[0].value);
-                let description = 'Global Parameter ' + prod.args[0].value;
-                if (prod.meta.description) {
-                    description += ': ' + prod.meta.description;
-                }
-                this.inlineDocs['param_' + prod.args[0].value] = {
-                    description: description,
-                    module: '_parameters',
-                    name: prod.args[0].value,
-                    parameters: [],
-                    returns: undefined
-                };
+            if (!prod.enabled || prod.type !== ProcedureTypes.Constant || prod.argCount === 0) { continue; }
+            parameters.push(prod.args[0].value);
+            let description = 'Global Parameter ' + prod.args[0].value;
+            if (prod.meta.description) {
+                description += ': ' + prod.meta.description;
             }
+            this.inlineDocs['param_' + prod.args[0].value] = {
+                description: description,
+                module: '_parameters',
+                name: prod.args[0].value,
+                parameters: [],
+                returns: undefined
+            };
         }
         let allInlineFuncs = [['parameters', parameters]];
         allInlineFuncs = allInlineFuncs.concat(this.inlineFunc);

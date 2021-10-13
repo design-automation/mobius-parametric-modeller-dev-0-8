@@ -288,7 +288,7 @@ export class ToolsetComponent implements OnInit {
 
                     func.args = [];
                     for (const prod of fl.nodes[0].procedure) {
-                        if (!prod.enabled || prod.type !== ProcedureTypes.Constant) { continue; }
+                        if (!prod.enabled || prod.type !== ProcedureTypes.Constant || prod.argCount === 0) { continue; }
                         let v: string = prod.args[prod.argCount - 2].value || 'undefined';
                         if (v[0] === '"' || v[0] === '\'') { v = v.substring(1, v.length - 1); }
                         if (prod.meta.inputMode !== InputType.Constant) {
