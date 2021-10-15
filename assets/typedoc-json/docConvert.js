@@ -1,4 +1,4 @@
-const dc = require('./__doc.json');
+const dc = require('./doc.json');
 const docReplace = require('./docReplace.json');
 const fs = require('fs');
 const config = require('../gallery/__config__.json');
