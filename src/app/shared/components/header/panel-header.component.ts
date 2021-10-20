@@ -1080,10 +1080,7 @@ export class PanelHeaderComponent implements OnDestroy {
     addGlobalFuncLS(event: MouseEvent) {
         event.stopPropagation();
         this.dataService.dialog.close();
-        this.dataService.dialog.style.right = '0px';
-        this.dataService.dialogType = 'backup';
-        this.dataService.dialog = <HTMLDialogElement>document.getElementById('headerDialog');
-        this.dataService.dialog.showModal();
+        this.dataService.openHeaderDialog('backup')
         this.dataService.setbackup_updateImported(true);
     }
 
