@@ -40,6 +40,7 @@ export class NewFileComponent {
         const confirmed = confirm('Loading a new file will delete the current flowchart. Would you like to continue?');
         if (!confirmed) { return; }
         const file: IMobius = {
+            __filetype__: 'mobius',
             name: 'Untitled',
             author: 'new_user',
             flowchart: FlowchartUtils.newflowchart(),

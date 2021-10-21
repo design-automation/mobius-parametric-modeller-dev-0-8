@@ -1,8 +1,3 @@
-export const c1 = 'U2FsdGVkX1+zCIhPa8bSUq3XdHqXz6NlXEFsSAp6nPrTqj0wHhF+psZSxVMkrSiGtfLkUXlFWUq0HSQZizWHUH60cFC+5Zp6dzV1ezMoy2fHHY0k+5xH6gZfXYgipuln';
-export const c2 = 'U2FsdGVkX189XpwTweKYV+ZUwAua2VXTRnLO2LS6ZzmfostIUe4oC0NoUGgi505s4U1KvyRjmdaCe+MTYzibWBKaQ+XjI7bSs/PDZVsRw3eM0nz9s5OOX0/d+r1nNEvnnhTf1I+m5WnQmhZ3chvyjg==';
-export const s1 = 'BlAWhCKmo6';
-export const s2 = 't3tyIHrIJH';
-
 export function updateLocalViewerSettings(settings: any): boolean {
     if (!settings) { return false; }
     let settings_string;

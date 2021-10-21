@@ -10,23 +10,13 @@ import { InputType } from '@models/port';
 import { IArgument } from '@models/code';
 import * as Modules from '@modules';
 import { checkNodeValidity } from '@shared/parser';
-import { c1, c2, s1, s2 } from '@shared/utils/otherUtils';
 import { DownloadUtils } from '../file/download.utils';
 import { inline_func } from '@assets/core/inline/inline';
 import { InlineDocList, ModuleList } from '@shared/decorators';
-import CryptoES from 'crypto-es';
 import * as showdown from 'showdown';
-import * as AWS from '@aws-sdk/client-s3';
+import axios from 'axios';
 
-const ak = CryptoES.AES.decrypt(CryptoES.AES.decrypt(c1, s2.slice(2, 5)).toString(CryptoES.enc.Utf8), s1).toString(CryptoES.enc.Utf8);
-const sa = CryptoES.AES.decrypt(CryptoES.AES.decrypt(c2, s1.slice(3, 6)).toString(CryptoES.enc.Utf8), s2).toString(CryptoES.enc.Utf8);
-const s3Client = new AWS.S3({
-    region: 'us-east-1',
-    credentials: {
-        accessKeyId: ak,
-        secretAccessKey: sa
-    }
-});
+const API_ENDPOINT = 'https://rwytlj8v41.execute-api.us-east-1.amazonaws.com/test0/upload';
 
 const inputEvent = new Event('input', {
     'bubbles': true,
@@ -1293,29 +1283,26 @@ export class PanelHeaderComponent implements OnDestroy {
     publishUpload(event) {
         document.getElementById('spinner-on').click();
         const fileStr = SaveFileComponent.fileDownloadString(this.dataService.file, true);
-        const hashStr = CryptoES.SHA256(fileStr.file).toString();
-        console.log('hashedString:', hashStr)
-        s3Client.putObject(
-            {
-                Bucket: 'mobius-modeller-publish-bucket',
-                Key: hashStr,
-                Body: fileStr.file,
-                ContentType: 'text/plain',
-            },
-            (err, result) => {
-                if (err) {
-                    console.log('Error placing file:', err);
-                    document.getElementById('spinner-off').click();
-                } else {
-                    this.publishUrlSettings.mainURL = hashStr;
-                    this.urlValid = true;
-                    this.urlNodes = this.dataService.flowchart.nodes;
-                    console.log('successfully placed file');
-                    document.getElementById('spinner-off').click();
-                    this.openHeaderDialog(event, 'publish_url');
-                }
+        axios({
+            method: 'PUT',
+            url: API_ENDPOINT,
+            data: {
+                file: fileStr.file,
+                filetype: 'mobius'
             }
-        );
+        }).then(r => {
+            if (!(<any>r.data).success) {
+                console.log((<any>r.data).message);
+                document.getElementById('spinner-off').click();
+            } else {
+                this.publishUrlSettings.mainURL = (<any>r.data).filename;
+                this.urlValid = true;
+                this.urlNodes = this.dataService.flowchart.nodes;
+                console.log('successfully placed file');
+                document.getElementById('spinner-off').click();
+                this.openHeaderDialog(event, 'publish_url');
+            }
+        });
     }
 
     publishUrl(event) {

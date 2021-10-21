@@ -17,6 +17,7 @@ const DIALOGSLIST = ['publish', 'publish_url', 'backup', 'globalfunc',
 @Injectable()
 export class DataService {
     private static _data: IMobius = {
+        __filetype__: 'mobius',
         name: 'Untitled',
         author: 'new_user',
         version: VERSION.version,
@@ -127,6 +128,7 @@ export class DataService {
     get file() { return DataService._data; }
     set file(data: IMobius) {
         DataService._data = <IMobius>{
+            __filetype__: 'mobius',
             name: data.name,
             author: data.author,
             flowchart: data.flowchart,

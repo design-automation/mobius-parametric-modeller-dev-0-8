@@ -470,6 +470,7 @@ export class SaveFileComponent implements OnDestroy{
 
     async savedata() {
         const newFile: IMobius = {
+            __filetype__: 'mobius',
             name: this.dataService.file.name,
             author: 'new_user',
             version: this.dataService.file.version,

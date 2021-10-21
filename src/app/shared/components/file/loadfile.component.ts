@@ -65,6 +65,7 @@ export class LoadFileComponent {
                     f.flowchart.id = IdGenerator.getId();
                 }
                 const file: IMobius = {
+                    __filetype__: 'mobius',
                     name: selectedFile.name.split('.mob')[0],
                     author: f.author,
                     flowchart: f.flowchart,
