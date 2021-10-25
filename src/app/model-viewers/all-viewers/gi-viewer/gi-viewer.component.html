@@ -8,6 +8,9 @@
             [nodeIndex] = 'nodeIndex'
 			(action)="threejsAction($event)"
 			></threejs-viewer>
+            <div class='nodeSelect_container'>
+                <viewer-select-node [model]='data' [nodeIndex]='nodeIndex'></viewer-select-node>
+            </div>
 			<button class='btn' id="settings_button" mat-icon-button (click)="openModal('settings_modal')" title="Settings"><mat-icon svgIcon='icon_settings'></mat-icon></button>
 			<button class='btn' id="gi_viewer_help_button" mat-icon-button (click)="openViewerHelp()" title="Help"><mat-icon svgIcon='icon_help'></mat-icon></button>
 		</as-split-area>

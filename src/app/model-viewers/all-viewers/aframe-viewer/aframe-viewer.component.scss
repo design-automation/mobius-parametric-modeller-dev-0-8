@@ -488,3 +488,10 @@ body.modal-open {
     display: none;
 }
 
+
+.nodeSelect_container {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    z-index: 5;
+}

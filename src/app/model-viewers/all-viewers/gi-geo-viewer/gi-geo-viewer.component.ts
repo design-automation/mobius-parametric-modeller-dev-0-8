@@ -7,8 +7,8 @@ import { DataService as MD } from '@services';
 import { Vector3 } from 'three';
 import { DataGeoService } from './data/data.geo.service';
 import { GeoSettings, geo_default_settings } from './gi-geo-viewer.settings';
-import { ModalService } from './html/modal-window.service';
 import { DataService as ThreeJSDataService } from '../gi-viewer/data/data.service';
+import { ModalService } from '@shared/services/modal-window.service';
 
 /**
  * GIViewerComponent

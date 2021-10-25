@@ -5,7 +5,6 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { DataService as MD } from '@services';
 import { ColorPickerService } from 'ngx-color-picker';
 import { DataAframeService } from './data/data.aframe.service';
-import { ModalService } from './html/modal-window.service';
 import { DataService as ThreeJSDataService } from '../gi-viewer/data/data.service';
 import { AframeSettings, aframe_default_settings } from './aframe-viewer.settings';
 import { ProcedureTypes } from '@models/procedure';
@@ -14,6 +13,7 @@ import { checkNodeValidity } from '@shared/parser';
 import { DefaultSettings as DefaultGISettings } from '../gi-viewer/gi-viewer.settings';
 import {customLookControl, customWASDControl, keyboardControlComponent, movementControlComponent,
     navAgentComponent, navMeshComponent, navSystem} from '@shared/utils';
+import { ModalService } from '@shared/services/modal-window.service';
 
 declare var AFRAME;
 function registerAframeComponents() {

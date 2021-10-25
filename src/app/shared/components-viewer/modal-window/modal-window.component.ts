@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnDestroy, ElementRef, Output, EventEmitter } from '@angular/core';
-import { ModalService } from './modal-window.service';
+import { ModalService } from '../../services/modal-window.service';
 
 @Component({
     selector: 'modal-window',
@@ -63,7 +63,8 @@ export class ModalWindowComponent implements OnInit, OnDestroy {
 
     // open modal
     open(): void {
-        let modalWindow = document.getElementById('geo-modal-window');
+        let modalWindow = document.getElementById('modal-window');
+        // modalWindow.style.left = 0;
         modalWindow.classList.add('open');
         this.element.style.display = 'block';
         document.body.classList.add('modal-open');

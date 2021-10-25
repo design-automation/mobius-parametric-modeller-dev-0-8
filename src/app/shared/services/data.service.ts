@@ -62,7 +62,7 @@ export class DataService {
     private static _notificationMessage: string;
     private static _notificationTrigger = false;
 
-    private static _dialog: HTMLDialogElement;
+    private static _dialog: any;
     private static _dialogType: string;
 
     private static _mobiusSettings; // {'execute': true};
@@ -235,7 +235,7 @@ export class DataService {
     get node(): INode { return DataService._data.flowchart.nodes[DataService._data.flowchart.meta.selected_nodes[0]]; }
 
     get dialog() {return DataService._dialog; }
-    set dialog(dialog: HTMLDialogElement) {DataService._dialog = dialog; }
+    set dialog(dialog: any) {DataService._dialog = dialog; }
 
     get dialogType() {return DataService._dialogType; }
     set dialogType(dialogType: string) {DataService._dialogType = dialogType; }
@@ -391,12 +391,12 @@ export class DataService {
 
     openHeaderDialog(dialogType) {
         DataService._dialogType = dialogType;
-        DataService._dialog = <HTMLDialogElement>document.getElementById('headerDialog');
+        DataService._dialog = <any>document.getElementById('headerDialog');
         try {
             DataService._dialog.showModal();
         } catch (ex) {}
         for (const dialog of DIALOGSLIST) {
-            const childNode = <HTMLDialogElement>document.getElementById('headerDialog_' + dialog);
+            const childNode = <any>document.getElementById('headerDialog_' + dialog);
             if (!childNode) { continue; }
             if (dialog === DataService._dialogType) {
                 childNode.style.display = 'block';

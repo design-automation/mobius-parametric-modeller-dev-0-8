@@ -110,7 +110,6 @@ export class DataThreejs extends DataThreejsLookAt {
             if (old) {
                 container.removeChild(old);
             }
-            setTimeout(() => { this._getNodeSelect(); }, 10);
             if (!this.model.modeldata.attribs.query.hasEntAttrib(EEntType.MOD, 'hud')) { return; }
             const hud = this.model.modeldata.attribs.get.getModelAttribVal('hud') as string;
             const element = this._createHud(hud).element;
@@ -262,27 +261,6 @@ export class DataThreejs extends DataThreejsLookAt {
         }
         if (this.settings.directional_light.show) {
             this._addDirectionalLight();
-        }
-    }
-    private _getNodeSelect(): void {
-        const select_node: any = this.model.modeldata.attribs.get.getModelAttribVal('select_node');
-        this.timelineEnabled = null;
-        if (!select_node || !select_node.nodes) { return; }
-        this.timeline_groups = select_node.nodes;
-        const currentIndex = this.timeline_groups.indexOf(this.dataService.node.name);
-        if (currentIndex !== -1) {
-            this.timelineEnabled = 1;
-            this.timelineIndex = currentIndex.toString();
-            this.timelineValue = this.dataService.node.name;
-            if (select_node.widget === 'dropdown') {
-                this.timelineEnabled = 2;
-            }
-        }
-        if (this.dataService.timelineDefault && select_node.default) {
-            const nodeSelInput = <HTMLInputElement> document.getElementById('hidden_node_selection');
-            nodeSelInput.value = select_node.default;
-            (<HTMLButtonElement> document.getElementById('hidden_node_selection_button')).click();
-            this.dataService.timelineDefault = false;
         }
     }
     /**

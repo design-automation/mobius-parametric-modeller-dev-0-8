@@ -6,12 +6,12 @@ import { Component, Input, OnInit } from '@angular/core';
 // import app services
 import { DataService } from './data/data.service';
 import { DataService as MD } from '@services';
-import { ModalService } from './html/modal-window.service';
 import { ColorPickerService } from 'ngx-color-picker';
 import { ThreejsViewerComponent } from './threejs/threejs-viewer.component';
 import { Vector3, GridHelper } from 'three';
 import { SplitComponent } from 'angular-split';
 import { ISettings } from './data/data.threejsSettings';
+import { ModalService } from '@shared/services/modal-window.service';
 
 // import others
 // import { ThreejsViewerComponent } from './threejs/threejs-viewer.component';

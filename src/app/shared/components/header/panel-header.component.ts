@@ -1180,8 +1180,10 @@ export class PanelHeaderComponent implements OnDestroy {
         const expressionElement = <HTMLTextAreaElement> document.getElementById('inlineExpression');
         this.dataService.focusedInput.value = expressionElement.value;
         this.dataService.focusedInput.dispatchEvent(inputEvent);
-        document.getElementById('hidden_node_selection').click();
         this.dataService.focusedInput.focus();
+        setTimeout(() => {
+            this.dataService.dialog.close();
+        }, 0);
     }
 
     async copyInlineFunc() {
@@ -1191,7 +1193,9 @@ export class PanelHeaderComponent implements OnDestroy {
         // document.execCommand('copy', true);
         await navigator.clipboard.writeText(expressionElement.value);
         this.dataService.notifyMessage('Copied "' + expressionElement.value + '" to clipboard');
-        document.getElementById('hidden_node_selection').click();
+        setTimeout(() => {
+            this.dataService.dialog.close();
+        }, 0);
     }
 
     updateInlineHelpText(event: MouseEvent, inlineFunc: string, category?: string) {
@@ -1202,7 +1206,6 @@ export class PanelHeaderComponent implements OnDestroy {
             fnDoc = this.inlineDocs['param_' + inlineFunc];
         } else {
             fnDoc = this.inlineDocs[inlineFunc.split('(')[0]];
-            console.log(fnDoc)
         }
         if (!fnDoc) {
             inlineHelp.innerHTML = `<h3>${inlineFunc}</h3><br><div></div>`;
@@ -1260,20 +1263,6 @@ export class PanelHeaderComponent implements OnDestroy {
         }
     }
 
-
-    updateNode() {
-        const nodeSelInput = <HTMLInputElement> document.getElementById('hidden_node_selection');
-        const selectedNode = nodeSelInput.value;
-        nodeSelInput.value = null;
-        if (selectedNode === this.dataService.node.name) { return; }
-        for (let i = 0; i < this.dataService.flowchart.nodes.length; i ++) {
-            const node = this.dataService.flowchart.nodes[i];
-            if (node.name === selectedNode) {
-                this.dataService.flowchart.meta.selected_nodes = [i];
-                return;
-            }
-        }
-    }
 
     notifyMessage(event) {
         this.dataService.notifyMessage(event.target.value);

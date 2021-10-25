@@ -57,7 +57,7 @@ import { WindowMessageComponent } from './components/window-message/window-messa
             NewFileComponent, SaveFileComponent, LoadFileComponent, LoadUrlComponent, SaveJavascriptComponent,
             WindowMessageComponent,
             SpinnerComponent,
-            ChromeComponent
+            ChromeComponent,
         ],
     imports: [
             CommonModule,
@@ -91,7 +91,7 @@ import { WindowMessageComponent } from './components/window-message/window-messa
             NotificationComponent,
             NewFileComponent, SaveFileComponent, LoadFileComponent, LoadUrlComponent, SaveJavascriptComponent,
             WindowMessageComponent,
-            ParameterViewerComponent
+            ParameterViewerComponent,
     ]
 })
 export class SharedModule {

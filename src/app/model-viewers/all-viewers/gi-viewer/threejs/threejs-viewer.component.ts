@@ -8,10 +8,10 @@ import { DataThreejs } from '../data/data.threejs';
 // import { IModel } from 'gs-json';
 import { DataService } from '../data/data.service';
 import { EEntType, EEntTypeStr, Txyz } from '@libs/geo-info/common';
-import { DropdownMenuComponent } from '../html/dropdown-menu.component';
-import { ModalService } from '../html/modal-window.service';
 import { ThreeJSViewerService } from './threejs-viewer.service';
 import { sortByKey } from '@libs/util/maps';
+import { DropdownMenuComponent } from '@shared/components-viewer/dropdown-menu/dropdown-menu.component';
+import { ModalService } from '@shared/services/modal-window.service';
 
 let renderCheck = true;
 
@@ -1791,34 +1791,6 @@ export class ThreejsViewerComponent implements OnInit, DoCheck, OnChanges, OnDes
             }, 0);
         }
     }
-
-    getMaxNodeSelect() {
-        if (this._data_threejs.timeline_groups) {
-            return this._data_threejs.timeline_groups.length - 1;
-        }
-        return 0;
-    }
-
-    getSliderWidth() {
-        let width = 10;
-        for (const g of this._data_threejs.timeline_groups) {
-            width += g.length * 7 + 5;
-        }
-        return width + 'px';
-    }
-
-    changeNodeSlider(event: Event) {
-        const nodeSelInput = <HTMLInputElement> document.getElementById('hidden_node_selection');
-        nodeSelInput.value = this._data_threejs.timeline_groups[(<HTMLInputElement> event.target).value];
-        (<HTMLButtonElement> document.getElementById('hidden_node_selection_button')).click();
-    }
-
-    changeNodeDropdown(event: Event) {
-        const nodeSelInput = <HTMLInputElement> document.getElementById('hidden_node_selection');
-        nodeSelInput.value = (<HTMLInputElement> event.target).value;
-        (<HTMLButtonElement> document.getElementById('hidden_node_selection_button')).click();
-    }
-
 
     @HostListener('document:mouseleave', [])
     onmouseleave() {

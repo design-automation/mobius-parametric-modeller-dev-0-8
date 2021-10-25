@@ -4,9 +4,7 @@ import { OnChanges, OnDestroy, DoCheck } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 // import app services
 import { DataGeoService } from '../data/data.geo.service';
-import { API_MAPS, API_MAPS_KEY_MAPPING, DataGeo } from '../data/data.geo';
 import { GeoSettings, geo_default_settings } from '../gi-geo-viewer.settings';
-import { ModalService } from '../html/modal-window.service';
 import { DataService as ThreeJSDataService } from '../../gi-viewer/data/data.service';
 import { DefaultSettings } from '../../gi-viewer/gi-viewer.settings';
 

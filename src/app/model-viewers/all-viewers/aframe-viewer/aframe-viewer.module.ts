@@ -13,12 +13,9 @@ import { ColorPickerModule } from 'ngx-color-picker';
 // import app components
 import { AframeViewerComponent } from './aframe-viewer.component';
 
-import { ModalService } from './html/modal-window.service';
 import { AframeMainComponent } from './main/aframe-main.component';
-import { ModalWindowComponent } from './html/modal-window.component';
-import { DropdownMenuComponent } from './html/dropdown-menu.component';
-import { TabsComponent } from './html/tabs.component';
-import { TabComponent } from './html/tab.component';
+import { SharedViewerModule } from '@shared/shared-viewer.module';
+import { ModalService } from '@shared/services/modal-window.service';
 
 /**
  * GIViewer
@@ -28,10 +25,6 @@ import { TabComponent } from './html/tab.component';
     declarations: [
         AframeViewerComponent,
         AframeMainComponent,
-        TabComponent,
-        TabsComponent,
-        DropdownMenuComponent,
-        ModalWindowComponent
     ],
     exports: [
         AframeViewerComponent
@@ -45,7 +38,8 @@ import { TabComponent } from './html/tab.component';
         MatExpansionModule,
         MatTooltipModule,
         FormsModule,
-        ColorPickerModule
+        ColorPickerModule,
+        SharedViewerModule
     ],
     providers: [
         ModalService
