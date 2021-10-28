@@ -14,6 +14,7 @@ import { InputType } from '@models/port';
 import { IdGenerator } from '@utils';
 import { SaveFileComponent } from '@shared/components/file';
 import * as Modules from '@modules';
+import JSZip from 'jszip';
 
 const keys = Object.keys(ProcedureTypes);
 const inputEvent = new Event('input', {
@@ -38,12 +39,6 @@ export class ToolsetComponent implements OnInit {
     ProcedureTypes = ProcedureTypes;
     ProcedureTypesArr = keys.slice(keys.length / 2);
     searchedMainFuncs = [];
-    // searchedInlineFuncs = [];
-    // searchedUserFuncs = [];
-
-    // inlineQueryExpr = inline_query_expr;
-    // inlineSortExpr = inline_sort_expr;
-    // inlineFunc = inline_func;
 
     AllModules = {};
     Modules = [];
@@ -248,99 +243,117 @@ export class ToolsetComponent implements OnInit {
 
     // import a flowchart as function
     async import_global_func(event) {
+        function prep_global_file(fileString) {
+            // parse the flowchart
+            const fl = CircularJSON.parse(fileString).flowchart;
+
+            // create function and documentation of the function
+            const funcs = {'main': null, 'sub': []};
+            let funcName = fl.name.replace(/[^A-Za-z0-9_]/g, '_');
+            if (funcName.match(/^[\d_]/)) {
+                funcName = 'func' + funcName;
+            }
+            const documentation = {
+                name: funcName,
+                module: 'globalFunc',
+                description: fl.description,
+                summary: fl.description,
+                parameters: [],
+                returns: fl.returnDescription
+            };
+            const func: IFunction = <IFunction>{
+                flowchart: <IFlowchart>{
+                    id: fl.id ? fl.id : IdGenerator.getId(),
+                    name: fl.name,
+                    nodes: fl.nodes,
+                    edges: fl.edges
+                },
+                name: funcName,
+                module: 'globalFunc',
+                doc: documentation,
+                importedFile: fileString
+            };
+
+            func.args = [];
+            for (const prod of fl.nodes[0].procedure) {
+                if (!prod.enabled || prod.type !== ProcedureTypes.Constant || prod.argCount === 0) { continue; }
+                let v: string = prod.args[prod.argCount - 2].value || 'undefined';
+                if (v[0] === '"' || v[0] === '\'') { v = v.substring(1, v.length - 1); }
+                if (prod.meta.inputMode !== InputType.Constant) {
+                    documentation.parameters.push({
+                        name: v,
+                        description: prod.meta.description
+                    });
+                }
+                func.args.push(<IArgument>{
+                    name: v,
+                    value: prod.args[prod.argCount - 1].value,
+                    type: prod.meta.inputMode,
+                    isEntity: prod.selectGeom
+                });
+            }
+            func.argCount = func.args.length;
+
+            const end = fl.nodes[fl.nodes.length - 1];
+            const returnProd = end.procedure[end.procedure.length - 1];
+            if (returnProd.args[1].value) {
+                func.hasReturn = true;
+            } else {
+                func.hasReturn = false;
+            }
+
+            // add func and all the imported functions of the imported flowchart to funcs
+            funcs.main = func;
+            for (const i of fl.functions) {
+                i.name = func.name + '_' + i.name;
+                funcs.sub.push(i);
+            }
+            if (fl.subFunctions) {
+                for (const i of fl.subFunctions) {
+                    i.name = func.name + '_' + i.name;
+                    funcs.sub.push(i);
+                }
+            }
+            return funcs;
+        }
+
         // read the file and create the function based on the flowchart
         const p = new Promise((resolve) => {
             let numFiles = 0;
             const funcList = [];
             for (const f of event.target.files) {
-                const reader = new FileReader();
-                reader.onload = function() {
-                    // parse the flowchart
-                    const fileString = reader.result.toString();
-                    const fl = CircularJSON.parse(fileString).flowchart;
-
-                    // create function and documentation of the function
-                    const funcs = {'main': null, 'sub': []};
-                    let funcName = fl.name.replace(/[^A-Za-z0-9_]/g, '_');
-                    if (funcName.match(/^[\d_]/)) {
-                        funcName = 'func' + funcName;
-                    }
-                    const documentation = {
-                        name: funcName,
-                        module: 'globalFunc',
-                        description: fl.description,
-                        summary: fl.description,
-                        parameters: [],
-                        returns: fl.returnDescription
-                    };
-                    const func: IFunction = <IFunction>{
-                        flowchart: <IFlowchart>{
-                            id: fl.id ? fl.id : IdGenerator.getId(),
-                            name: fl.name,
-                            nodes: fl.nodes,
-                            edges: fl.edges
-                        },
-                        name: funcName,
-                        module: 'globalFunc',
-                        doc: documentation,
-                        importedFile: fileString
-                    };
-
-                    func.args = [];
-                    for (const prod of fl.nodes[0].procedure) {
-                        if (!prod.enabled || prod.type !== ProcedureTypes.Constant || prod.argCount === 0) { continue; }
-                        let v: string = prod.args[prod.argCount - 2].value || 'undefined';
-                        if (v[0] === '"' || v[0] === '\'') { v = v.substring(1, v.length - 1); }
-                        if (prod.meta.inputMode !== InputType.Constant) {
-                            documentation.parameters.push({
-                                name: v,
-                                description: prod.meta.description
+                if (f.name.indexOf('.zip') !== -1) {
+                    JSZip.loadAsync(f).then(async function (zip) {
+                        for (const filename of Object.keys(zip.files)) {
+                            // const splittedNames = filename.split('/').slice(1).join('/');
+                            await zip.files[filename].async('text').then(fileData => {
+                                const functions = prep_global_file(fileData);
+                                funcList.push(functions);
                             });
                         }
-                        func.args.push(<IArgument>{
-                            name: v,
-                            value: prod.args[prod.argCount - 1].value,
-                            type: prod.meta.inputMode,
-                            isEntity: prod.selectGeom
-                        });
-                    }
-                    func.argCount = func.args.length;
-
-                    const end = fl.nodes[fl.nodes.length - 1];
-                    const returnProd = end.procedure[end.procedure.length - 1];
-                    if (returnProd.args[1].value) {
-                        func.hasReturn = true;
-                    } else {
-                        func.hasReturn = false;
-                    }
-
-                    // add func and all the imported functions of the imported flowchart to funcs
-                    funcs.main = func;
-                    for (const i of fl.functions) {
-                        i.name = func.name + '_' + i.name;
-                        funcs.sub.push(i);
-                    }
-                    if (fl.subFunctions) {
-                        for (const i of fl.subFunctions) {
-                            i.name = func.name + '_' + i.name;
-                            funcs.sub.push(i);
+                        if (numFiles + 1 === event.target.files.length) {
+                            resolve(funcList);
+                        } else {
+                            numFiles += 1;
                         }
-                    }
-
-                    if (numFiles + 1 === event.target.files.length) {
-                        funcList.push(funcs);
-                        resolve(funcList);
-                    } else {
+                    });
+                } else {
+                    const reader = new FileReader();
+                    reader.onerror = function() {
                         numFiles += 1;
-                        funcList.push(funcs);
-                    }
-                };
-                reader.onerror = function() {
-                    numFiles += 1;
-                    funcList.push('error');
-                };
-
-                reader.readAsText(f);
+                        funcList.push('error');
+                    };
+                    reader.onload = function() {
+                        const functions = prep_global_file(reader.result.toString());
+                        funcList.push(functions);
+                        if (numFiles + 1 === event.target.files.length) {
+                            resolve(funcList);
+                        } else {
+                            numFiles += 1;
+                        }
+                    };
+                    reader.readAsText(f);
+                }
             }
         });
         const fncs: any = await p;
