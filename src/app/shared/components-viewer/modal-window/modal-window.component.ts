@@ -33,7 +33,7 @@ export class ModalWindowComponent implements OnInit, OnDestroy {
         // modalWindow.style.left = `${-this.containerWidth - 11}px`;
 
         modalWindow.style.width  = '500px';
-        modalWindow.style.left = '-500px';
+        modalWindow.style.left = '0px';
 
         // move element to bottom of page (just before </body>) so it can be displayed above everything else
         document.body.appendChild(this.element);
@@ -63,7 +63,7 @@ export class ModalWindowComponent implements OnInit, OnDestroy {
 
     // open modal
     open(): void {
-        let modalWindow = document.getElementById('modal-window');
+        let modalWindow = document.getElementById(this.id);
         // modalWindow.style.left = 0;
         modalWindow.classList.add('open');
         this.element.style.display = 'block';
@@ -74,7 +74,7 @@ export class ModalWindowComponent implements OnInit, OnDestroy {
     // close modal
     close(): void {
         this.element.style.display = 'none';
-        const modalWindow = this.element.querySelector('.modal-window');
+        const modalWindow = document.getElementById(this.id);
         // modalWindow.style.left = `${-this.containerWidth - 11}px`;
         modalWindow.classList.remove('open');
         document.body.classList.remove('modal-open');
