@@ -715,7 +715,7 @@
             "type": "intrinsic",
             "name": "number"
           },
-          "defaultValue": "..."
+          "defaultValue": "Math.PI"
         },
         {
           "id": 1887,
@@ -737,7 +737,7 @@
             "type": "reference",
             "name": "TPlane"
           },
-          "defaultValue": "..."
+          "defaultValue": "XYPLANE"
         },
         {
           "id": 1892,
@@ -759,7 +759,7 @@
             "type": "reference",
             "name": "TPlane"
           },
-          "defaultValue": "..."
+          "defaultValue": "XZPLANE"
         },
         {
           "id": 1890,
@@ -781,7 +781,7 @@
             "type": "reference",
             "name": "TPlane"
           },
-          "defaultValue": "..."
+          "defaultValue": "YXPLANE"
         },
         {
           "id": 1888,
@@ -803,7 +803,7 @@
             "type": "reference",
             "name": "TPlane"
           },
-          "defaultValue": "..."
+          "defaultValue": "YZPLANE"
         },
         {
           "id": 1889,
@@ -825,7 +825,7 @@
             "type": "reference",
             "name": "TPlane"
           },
-          "defaultValue": "..."
+          "defaultValue": "ZXPLANE"
         },
         {
           "id": 1891,
@@ -847,7 +847,7 @@
             "type": "reference",
             "name": "TPlane"
           },
-          "defaultValue": "..."
+          "defaultValue": "ZYPLANE"
         }
       ],
       "groups": [
@@ -35856,7 +35856,7 @@
                   ]
                 }
               },
-              "defaultValue": "..."
+              "defaultValue": "__clone__"
             },
             {
               "id": 1929,
@@ -35992,7 +35992,7 @@
                   ]
                 }
               },
-              "defaultValue": "..."
+              "defaultValue": "__merge__"
             },
             {
               "id": 1927,
@@ -36051,7 +36051,7 @@
                   ]
                 }
               },
-              "defaultValue": "..."
+              "defaultValue": "__new__"
             },
             {
               "id": 1935,
@@ -36066,7 +36066,7 @@
                   "name": "GIMetaData"
                 }
               },
-              "defaultValue": "..."
+              "defaultValue": "GIMetaData"
             },
             {
               "id": 1948,
