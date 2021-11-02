@@ -345,7 +345,9 @@ export class GIViewerComponent implements OnInit, OnDestroy {
                 break;
             case 'ambient_light.intensity':
                 this.settings.ambient_light.intensity = Number(value);
-                scene.ambient_light.intensity = this.settings.ambient_light.intensity;
+                if (scene.ambient_light) {
+                    scene.ambient_light.intensity = this.settings.ambient_light.intensity;
+                }
                 break;
             case 'hemisphere_light.show': // Hemisphere Light
                 this.settings.hemisphere_light.show = !this.settings.hemisphere_light.show;
@@ -358,7 +360,9 @@ export class GIViewerComponent implements OnInit, OnDestroy {
                 break;
             case 'hemisphere_light.intensity':
                 this.settings.hemisphere_light.intensity = Number(value);
-                scene.hemisphere_light.intensity = this.settings.hemisphere_light.intensity;
+                if (scene.hemisphere_light) {
+                    scene.hemisphere_light.intensity = this.settings.hemisphere_light.intensity;
+                }
                 break;
             case 'directional_light.show': // Directional Light
                 this.settings.directional_light.show = !this.settings.directional_light.show;
@@ -386,7 +390,9 @@ export class GIViewerComponent implements OnInit, OnDestroy {
                 break;
             case 'directional_light.intensity':
                 this.settings.directional_light.intensity = Number(value);
-                scene.directional_light.intensity = this.settings.directional_light.intensity;
+                if (scene.directional_light) {
+                    scene.directional_light.intensity = this.settings.directional_light.intensity;
+                }
                 break;
             case 'directional_light.shadow':
                 this.settings.directional_light.shadow = !this.settings.directional_light.shadow;
