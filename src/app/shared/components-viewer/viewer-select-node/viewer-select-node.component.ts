@@ -27,6 +27,7 @@ export class ViewerSelectNodeComponent implements OnChanges {
     }
 
     private _getNodeSelect(changes): void {
+        if (!this.model) { return; }
         const select_node: any = this.model.modeldata.attribs.get.getModelAttribVal('select_node');
         this.timelineEnabled = null;
         if (!select_node || !select_node.nodes) { return; }
