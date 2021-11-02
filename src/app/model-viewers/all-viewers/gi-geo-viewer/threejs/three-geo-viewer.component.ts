@@ -105,7 +105,11 @@ export class ThreeGeoComponent implements OnInit, OnChanges, OnDestroy, DoCheck 
                     data.removeMobiusObjs();
                     return;
                 }
-                if ((changes.model && !changes.model.previousValue) || (changes.nodeIndex && !changes.nodeIndex.previousValue)) { return; }
+                if ((changes.model && !changes.model.previousValue) || (changes.nodeIndex && !changes.nodeIndex.previousValue)) {
+                    if (threejsScene.model === this.model && threejsScene.nodeIndex === this.nodeIndex) {
+                        return;
+                    }
+                }
                 data.model = this.model;
                 if (!threejsScene.model || threejsScene.model !== this.model || threejsScene.nodeIndex !== this.nodeIndex) {
                     threejsScene.model = this.model;

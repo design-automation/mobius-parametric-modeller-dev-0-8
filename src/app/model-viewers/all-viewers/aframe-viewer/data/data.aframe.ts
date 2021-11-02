@@ -306,6 +306,7 @@ export class DataAframe {
     }
 
     updateGround() {
+        if (!this.scene || !this.scene.children) { return; }
         for (const childNode of this.scene.children) {
             if (childNode.id === 'aframe_ground') {
                 this.scene.removeChild(childNode);
