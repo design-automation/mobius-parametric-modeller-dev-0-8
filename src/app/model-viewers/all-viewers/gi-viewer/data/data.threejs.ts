@@ -145,9 +145,11 @@ export class DataThreejs extends DataThreejsLookAt {
 
         // Get materials
         const pline_material_groups = threejs_data.pline_material_groups;
+        const vrmesh_pline_material_groups = threejs_data.vrmesh_pline_material_groups;
         const pline_materials = threejs_data.pline_materials;
         this._replaceColors(pline_materials, ['color']);
         const pgon_material_groups = threejs_data.pgon_material_groups;
+        const vrmesh_pgon_material_groups = threejs_data.vrmesh_pgon_material_groups;
         const pgon_materials = threejs_data.pgon_materials;
         this._replaceColors(pgon_materials, ['color', 'specular', 'emissive']);
 
@@ -158,9 +160,9 @@ export class DataThreejs extends DataThreejsLookAt {
         const posis_xyz_buffer = new THREE.Float32BufferAttribute(threejs_data.posis_xyz, 3);
         this._addTris(threejs_data.tri_indices, threejs_data.vrmesh_tri_indices, threejs_data.vrmesh_hidden_tri_indices,
             verts_xyz_buffer, colors_buffer, normals_buffer,
-            pgon_material_groups, pgon_materials);
+            pgon_material_groups, vrmesh_pgon_material_groups, pgon_materials);
         this._addLines(threejs_data.edge_indices, threejs_data.vrmesh_edge_indices, threejs_data.vrmesh_hidden_edge_indices,
-            verts_xyz_buffer, colors_buffer, pline_material_groups, pline_materials);
+            verts_xyz_buffer, colors_buffer, pline_material_groups, vrmesh_pline_material_groups, pline_materials);
         this._addPoints(threejs_data.point_indices, verts_xyz_buffer, colors_buffer, [255, 255, 255], this.settings.positions.size + 1);
 
         // if (threejs_data.timeline) {
@@ -431,7 +433,7 @@ export class DataThreejs extends DataThreejsLookAt {
                      posis_buffer: THREE.Float32BufferAttribute,
                      colors_buffer: THREE.Float32BufferAttribute,
                      normals_buffer: THREE.Float32BufferAttribute,
-                     material_groups, materials): void {
+                     material_groups, vrmesh_material_groups, materials): void {
         const geom = new THREE.BufferGeometry();
         geom.setIndex(tris_i);
         geom.setAttribute('position', posis_buffer);
@@ -455,7 +457,7 @@ export class DataThreejs extends DataThreejsLookAt {
         }
         vrmesh_geom.setAttribute('color', colors_buffer);
         vrmesh_geom.clearGroups();
-        material_groups.forEach(element => {
+        vrmesh_material_groups.forEach(element => {
             vrmesh_geom.addGroup(element[0], element[1], element[2]);
         });
 
@@ -467,7 +469,7 @@ export class DataThreejs extends DataThreejsLookAt {
         }
         vrmesh_hidden_geom.setAttribute('color', colors_buffer);
         vrmesh_hidden_geom.clearGroups();
-        material_groups.forEach(element => {
+        vrmesh_material_groups.forEach(element => {
             vrmesh_hidden_geom.addGroup(element[0], element[1], element[2]);
         });
 
@@ -563,7 +565,7 @@ export class DataThreejs extends DataThreejsLookAt {
     private _addLines(lines_i: number[], vrmesh_lines_i: number[], vrmesh_hidden_lines_i: number[],
                     posis_buffer: THREE.Float32BufferAttribute,
                     color_buffer: THREE.Float32BufferAttribute,
-                    material_groups, materials): void {
+                    material_groups, vrmesh_material_groups, materials): void {
         const geom = new THREE.BufferGeometry();
         geom.setIndex(lines_i);
         geom.setAttribute('position', posis_buffer);
@@ -603,6 +605,8 @@ export class DataThreejs extends DataThreejsLookAt {
         }
         material_groups.forEach(element => {
             geom.addGroup(element[0], element[1], element[2]);
+        });
+        vrmesh_material_groups.forEach(element => {
             vrmesh_geom.addGroup(element[0], element[1], element[2]);
         });
         const newGeom = geom.toNonIndexed();
