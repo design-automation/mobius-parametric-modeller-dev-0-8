@@ -96,28 +96,24 @@ export class ThreejsViewerComponent implements OnInit, DoCheck, OnChanges, OnDes
 
     tab_map = {
         0: EEntType.POSI,
-        1: EEntType.VERT,
-        2: EEntType.EDGE,
-        3: EEntType.WIRE,
-        // 4: EEntType.FACE,
-        4: EEntType.POINT,
-        5: EEntType.PLINE,
-        6: EEntType.PGON,
-        7: EEntType.COLL,
-        8: EEntType.MOD
+        1: EEntType.POINT,
+        2: EEntType.PLINE,
+        3: EEntType.PGON,
+        4: EEntType.COLL,
+        5: EEntType.MOD
     };
 
     tab_rev_map = {
         0: 0,
-        2: 1,
-        3: 2,
-        4: 3,
-        5: 4, // point
-        6: 5, // plines
-        7: 6, // pgons
-        8: 7,
-        9: 8,
-        // 10: 9
+        // 1: 0,
+        // 2: 0,
+        // 3: 0,
+        // 4: 0,
+        5: 1, // point
+        6: 2, // plines
+        7: 3, // pgons
+        8: 4,
+        9: 5
     };
 
     /**
