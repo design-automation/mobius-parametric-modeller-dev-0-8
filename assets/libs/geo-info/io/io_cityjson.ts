@@ -50,6 +50,7 @@ export function importCityJSON(model: GIModel, geojson_str: string): IEntSets {
         const obj_coll_i: number = model.modeldata.geom.add.addColl();
         _addObjAttribs(model, obj_coll_i, cityobj, cityobj_key);
         // add geom
+        if (!cityobj.geometry) { continue; }
         for (const geom of cityobj.geometry) {
             // create collection for geometry (lod and type)
             const geom_coll_i: number = model.modeldata.geom.add.addColl();
@@ -123,11 +124,7 @@ export function importCityJSON(model: GIModel, geojson_str: string): IEntSets {
     };
 }
 
-/*
-"metadata": {
-  "referenceSystem": "urn:ogc:def:crs:EPSG::7415"
-}
-*/
+
 /**
  * Create a projection object that projects from the CitJSON CRS to the Mobius CRS.
  * The projection object has a method called `forward()` that can be used to transform the
@@ -139,11 +136,7 @@ export function importCityJSON(model: GIModel, geojson_str: string): IEntSets {
  */
 function _createProjector(model: GIModel, cityjson_obj: any): proj4.Converter {
     // create the source CRS
-    let proj_from_str = 'WGS84';
-    if ('metadata' in cityjson_obj && 'referenceSystem' in cityjson_obj.metadata) {
-        const crs: string = cityjson_obj.metadata.referenceSystem;
-        proj_from_str = _getProj4jsProjection(crs);
-    }
+    const proj_from_str: string = _getProj4jsProjection(cityjson_obj);
     // get the long lat
     // is the mobius model already has a geolocation, then use that
     // if not, then calculate the long lat of the first vertex
@@ -657,10 +650,20 @@ function _expandNullValues(arr1: any[][], arr2: any[][]): void {
     }
 }
 
+/* CityJSON VERION 1.0.x
+"metadata": {
+  "referenceSystem": "urn:ogc:def:crs:EPSG::7415"
+}
+*/
+/* CityJSON VERION 1.1.x
+"metadata": {
+  "referenceSystem": "https://www.opengis.net/def/crs/EPSG/0/7415"
+}
+*/
 /**
  * Converts a CRS string into a proj4js projection by doing an http request to epsg.io.
  *
- * See teh CityJSON spec on the CRS here: https://www.cityjson.org/specs/1.0.3/#crs
+ * See the CityJSON spec on the CRS here: https://www.cityjson.org/specs/1.0.3/#crs
  *
  * The crs should something like this:
  * - "urn:ogc:def:crs:EPSG::7415"
@@ -668,19 +671,28 @@ function _expandNullValues(arr1: any[][], arr2: any[][]): void {
  *
  * @param crs The crs string
  */
-function _getProj4jsProjection(crs: string): string {
+function _getProj4jsProjection(cityjson_obj: any): string {
+    // no CRS, then assume 3857
+    if (!('metadata' in cityjson_obj) || !('referenceSystem' in cityjson_obj.metadata)) {
+        return 'EPSG:3857';
+    }
+    // get EPSG CRS
+    const crs: string = cityjson_obj.metadata.referenceSystem;
     if (!crs.includes('EPSG')) {
         throw new Error('The Coordinate Reference System is invalid: ' + crs +
-        '. An EPSG CRS is requred.');
+            '. An EPSG CRS is requred.');
     }
-    const crs_list: string[] = crs.split(':');
+    const splitter: string = crs.includes('/') ? '/' : ':';
+    const crs_list: string[] = crs.split(splitter);
     const epsg: string = crs_list[crs_list.length - 1].trim();
+    // get projection string from epsg.io
     const url: string = 'https://epsg.io/' + epsg + '.js';
     const request = new XMLHttpRequest();
     request.open('GET', url, false);  // `false` makes the request synchronous
     request.send(null);
     if (request.status !== 200) {
-        throw new Error('Retrieving projection for Coordinate Reference System failed: ' + crs);
+        throw new Error('Retrieving projection for Coordinate Reference System failed: ' +
+            'EPSG:' + epsg);
     }
     const result: string = request.responseText;
     const result_list: string[] = result.split('"');
