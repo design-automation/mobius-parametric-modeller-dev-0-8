@@ -2,8 +2,6 @@ import { GIModel } from '../GIModel';
 import { Txyz, EEntType, TAttribDataTypes, IEntSets } from '../common';
 import proj4 from 'proj4';
 
-
-
 enum ECityJSONGeomType {
     MULTIPOINT = 'MultiPoint',
     MULTILINESTRING = 'MultiLineString',
@@ -30,22 +28,16 @@ export function importCityJSON(model: GIModel, geojson_str: string): IEntSets {
         throw new Error('The CityJSON data is the wrong version. It must be version 1.x.');
     }
     // crs projection
-    let proj_obj: proj4.Converter = null;
-    if ('metadata' in cityjson_obj && 'referenceSystem' in cityjson_obj.metadata) {
-        proj_obj = _createGeoJSONProjection2(model, cityjson_obj.vertices[0], cityjson_obj.transform);
-    }
+    const projector: proj4.Converter = _createProjector(model, cityjson_obj);
     // create positions
     const posis_i: number[] = [];
     for (const xyz of cityjson_obj.vertices) {
         // create the posi
-        const posi_i: number = _addPosi(model, xyz, cityjson_obj.transform, proj_obj);
+        const posi_i: number = _addPosi(model, xyz, cityjson_obj, projector);
         posis_i.push(posi_i);
     }
     // add materials
-    let mat_names: string[] = null;
-    if ('appearance' in cityjson_obj) {
-        mat_names = _addMaterials(model, cityjson_obj.appearance);
-    }
+    const mat_names: string[] = _addMaterials(model, cityjson_obj);
     // arrays for objects
     const points_i: Set<number> = new Set();
     const plines_i: Set<number> = new Set();
@@ -131,21 +123,30 @@ export function importCityJSON(model: GIModel, geojson_str: string): IEntSets {
     };
 }
 
-function _createGeoJSONProjection2(model: GIModel, first_xyz: Txyz, transform: any): proj4.Converter {
-    let x = first_xyz[0];
-    let y = first_xyz[1];
-    if (transform) {
-        x = (x * transform.scale[0]) + transform.translate[0];
-        y = (y * transform.scale[1]) + transform.translate[1];
+/*
+"metadata": {
+  "referenceSystem": "urn:ogc:def:crs:EPSG::7415"
+}
+*/
+/**
+ * Create a projection object that projects from the CitJSON CRS to the Mobius CRS.
+ * The projection object has a method called `forward()` that can be used to transform the
+ * coordinates.
+ *
+ * @param model
+ * @param cityjson_obj
+ * @returns The projection opbject, with `forward()` method.
+ */
+function _createProjector(model: GIModel, cityjson_obj: any): proj4.Converter {
+    // create the source CRS
+    let proj_from_str = 'WGS84';
+    if ('metadata' in cityjson_obj && 'referenceSystem' in cityjson_obj.metadata) {
+        const crs: string = cityjson_obj.metadata.referenceSystem;
+        proj_from_str = _getProj4jsProjection(crs);
     }
-    // from
-    let proj_from_str: string = null;
-    if (model.modeldata.attribs.query.hasModelAttrib('proj')) {
-        proj_from_str = model.modeldata.attribs.get.getModelAttribVal('proj') as string;
-    } else {
-        proj_from_str = 'WGS84';
-    }
-    // long lat
+    // get the long lat
+    // is the mobius model already has a geolocation, then use that
+    // if not, then calculate the long lat of the first vertex
     let longitude = null;
     let latitude = null;
     if (model.modeldata.attribs.query.hasModelAttrib('geolocation')) {
@@ -153,6 +154,14 @@ function _createGeoJSONProjection2(model: GIModel, first_xyz: Txyz, transform: a
         longitude = geolocation['longitude'];
         latitude = geolocation['latitude'];
     } else {
+        const first_xyz: Txyz = cityjson_obj.vertices[0];
+        let x = first_xyz[0];
+        let y = first_xyz[1];
+        if (cityjson_obj.transform) {
+            const xform: any = cityjson_obj.transform;
+            x = (x * xform.scale[0]) + xform.translate[0];
+            y = (y * xform.scale[1]) + xform.translate[1];
+        }
         const long_lat: number[] = proj4(proj_from_str, 'WGS84', [x, y]);
         // change long lat
         longitude = long_lat[0];
@@ -162,58 +171,44 @@ function _createGeoJSONProjection2(model: GIModel, first_xyz: Txyz, transform: a
             'latitude': latitude
         });
     }
-    // create the function for transformation
+    // create the target CRS
     const proj_str_a = '+proj=tmerc +lat_0=';
     const proj_str_b = ' +lon_0=';
     const proj_str_c = '+k=1 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs';
     const proj_to_str2 = proj_str_a + latitude + proj_str_b + longitude + proj_str_c;
     // create projector
-    const proj_obj: proj4.Converter = proj4(proj_from_str, proj_to_str2);
-    return proj_obj;
+    const projector: proj4.Converter = proj4(proj_from_str, proj_to_str2);
+    return projector;
 }
 
 /*
-"metadata": {
-  "referenceSystem": "urn:ogc:def:crs:EPSG::7415"
+"transform": {
+    "scale": [0.01, 0.01, 0.01],
+    "translate": [4424648.79, 5482614.69, 310.19]
 }
 */
 /**
- * Get long lat TESTING
- * @param crs The crs string 
- */
-function _setLongLat(model: GIModel, crs: any): number[] {
-    // const proj_str_a = '+proj=tmerc +lat_0=';
-    // const proj_str_b = ' +lon_0=';
-    // const proj_str_c = '+k=1 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs';
-    // const proj_from_str = proj_str_a + latitude + proj_str_b + longitude + proj_str_c;
-
-
-
-    const proj_to_str  = 'WGS84';
-    const proj_from_str = '+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +vunits=m +no_defs'
-    return proj4(proj_from_str, proj_to_str, [0, 0]);
-}
-
-
-/**
- * Add a point to the model
+ * Add a position to the model
  * @param model The model.
- * @param point The features to add.
+ * @param xyz The xyz coords
+ * @param cityjson_obj Cityjson data
+ * @param projector The proj4 projector.
  */
-function _addPosi(model: GIModel, xyz: Txyz, transform: any, proj_obj: proj4.Converter): number {
+function _addPosi(model: GIModel, xyz: Txyz, cityjson_obj: any, projector: proj4.Converter): number {
     // // rotate to north
     // if (rot_matrix) {
     //     xyz = multMatrix(xyz, rot_matrix);
     // }
     // transform
-    if (transform) {
-        xyz[0] = (xyz[0] * transform.scale[0]) + transform.translate[0];
-        xyz[1] = (xyz[1] * transform.scale[1]) + transform.translate[1];
-        xyz[2] = (xyz[2] * transform.scale[2]) + transform.translate[2];
+    if (cityjson_obj.transform) {
+        const xform: any = cityjson_obj.transform;
+        xyz[0] = (xyz[0] * xform.scale[0]) + xform.translate[0];
+        xyz[1] = (xyz[1] * xform.scale[1]) + xform.translate[1];
+        xyz[2] = (xyz[2] * xform.scale[2]) + xform.translate[2];
     }
     // project
-    if (proj_obj) {
-        const xy = proj_obj.forward([xyz[0], xyz[1]]);
+    if (projector) {
+        const xy = projector.forward([xyz[0], xyz[1]]);
         xyz[0] = xy[0];
         xyz[1] = xy[1];
     }
@@ -231,7 +226,6 @@ function _addPosi(model: GIModel, xyz: Txyz, transform: any, proj_obj: proj4.Con
   "boundaries": [2, 44, 0, 7]
 }
 */
-
 /**
  * Add a MultiPoint to the model
  * @param model The model
@@ -349,7 +343,6 @@ function _addSolid(model: GIModel, geom: any, posis_i: number[]): number[] {
     ]
   }
 */
-
 /*
 {
    "type": "CompositeSolid",
@@ -608,10 +601,11 @@ function _addObjAttribs(model: GIModel, coll_i: number, obj: any, id: String): v
  * @param model The model
  * @param appearance The CityJSON appearance object
  */
-function _addMaterials(model: GIModel, appearance: any): string[] {
-    if (!appearance.materials) { return; }
+function _addMaterials(model: GIModel, cityjson_obj: any): string[] {
+    if (!cityjson_obj.appearance) { return null; }
+    if (!cityjson_obj.appearance.materials) { return null; }
     const mat_names: string[] = [];
-    for (const material of appearance.materials) {
+    for (const material of cityjson_obj.appearance.materials) {
         const mat_obj = {
             'type': 'MeshPhongMaterial',
             'color': 'diffuseColor' in material ? material.diffuseColor : [1, 1, 1],
@@ -663,3 +657,33 @@ function _expandNullValues(arr1: any[][], arr2: any[][]): void {
     }
 }
 
+/**
+ * Converts a CRS string into a proj4js projection by doing an http request to epsg.io.
+ *
+ * See teh CityJSON spec on the CRS here: https://www.cityjson.org/specs/1.0.3/#crs
+ *
+ * The crs should something like this:
+ * - "urn:ogc:def:crs:EPSG::7415"
+ * - "EPSG:7415"
+ *
+ * @param crs The crs string
+ */
+function _getProj4jsProjection(crs: string): string {
+    if (!crs.includes('EPSG')) {
+        throw new Error('The Coordinate Reference System is invalid: ' + crs +
+        '. An EPSG CRS is requred.');
+    }
+    const crs_list: string[] = crs.split(':');
+    const epsg: string = crs_list[crs_list.length - 1].trim();
+    const url: string = 'https://epsg.io/' + epsg + '.js';
+    const request = new XMLHttpRequest();
+    request.open('GET', url, false);  // `false` makes the request synchronous
+    request.send(null);
+    if (request.status !== 200) {
+        throw new Error('Retrieving projection for Coordinate Reference System failed: ' + crs);
+    }
+    const result: string = request.responseText;
+    const result_list: string[] = result.split('"');
+    const proj4js: string = result_list[result_list.length - 2].trim();
+    return proj4js;
+}
