@@ -132,7 +132,7 @@ export class DataThreejsBase {
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
             alpha: true,
-            // logarithmicDepthBuffer: true,
+            logarithmicDepthBuffer: true,
             powerPreference: 'high-performance'
         });
         this.renderer.autoClear = false;
@@ -176,6 +176,7 @@ export class DataThreejsBase {
         this.orthoControls.screenSpacePanning = true;
         this.orthoControls.enableRotate = false;
         this.orthoControls.enabled = false;
+        this.orthoControls.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN };
         this.orthoControls.update();
 
         this.camera = this.perspCam;

@@ -368,8 +368,9 @@ export class DataThreejsSelect extends DataThreejsBase {
         this.scene_objs_selected.delete(ent_id);
 
         this.ObjLabelMap.delete(ent_id);
-        if (document.getElementById(`textLabel_${ent_id}`)) {
-            container.removeChild(document.getElementById(`textLabel_${ent_id}`));
+        const textLabelObj = document.getElementById(`textLabel_${ent_id}`);
+        if (textLabelObj) {
+            container.removeChild(textLabelObj);
         }
     }
     /**
@@ -394,8 +395,9 @@ export class DataThreejsSelect extends DataThreejsBase {
         removing.forEach((v, k) => {
             this.scene.remove(this.scene.getObjectById(v));
             this.ObjLabelMap.delete(k);
-            if (document.getElementById(`textLabel_${k}`)) {
-                container.removeChild(document.getElementById(`textLabel_${k}`));
+            const textLabelObj = document.getElementById(`textLabel_${k}`);
+            if (textLabelObj) {
+                container.removeChild(textLabelObj);
             }
         });
         if (group === 'positions') {

@@ -35,7 +35,7 @@ export class AttributeComponent implements OnChanges {
     @Output() selectSwitch = new EventEmitter<Boolean>();
     @Output() attribLabel = new EventEmitter<string>();
     showSelected = false;
-    currentShowingCol = '';
+    currentShowingCol = '_id';
     shiftKeyPressed = false;
     preventSimpleClick;
     timer;
@@ -53,10 +53,13 @@ export class AttributeComponent implements OnChanges {
         { title: 'Obj Topo' },
         { title: 'Col Topo' }
     ];
+    currentTab = 0;
+
     selected_ents = new Map();
     multi_selection = new Map();
     last_selected;
     current_selected;
+    lastShowingColMap = {};
 
     table_scroll = null;
 
@@ -186,8 +189,29 @@ export class AttributeComponent implements OnChanges {
                         entity = entSet;
                         entType = entityType;
                     }
-                    if (!this.topoSelectedType) { this.topoSelectedType = 'ps'; }
+
+                    this.multi_selection.clear();
+                    if (!this.topoSelectedType) {
+                        this.topoSelectedType = entType.slice(0, 2);
+                    }
                     this.generateTopoTable(entity[0], this.tab_rev_map[this.string_map[entType]], this.topoSelectedType);
+                    if (tabIndex === 6 && this.topoSelectedType !== entType) {
+                        const s = new Map<any, any>();
+                        this.current_selected = null;
+                        for (const datarow of this.dataSourceTopo.data) {
+                            const row_ent_id = datarow['_id'].trim();
+                            if (row_ent_id.substr(0, 2) === this.topoSelectedType) {
+                                if (!this.current_selected) { this.current_selected = row_ent_id; }
+                                s.set(row_ent_id, Number(row_ent_id.substr(2)));
+                            }
+                        }
+                        if (s.size > 0) {
+                            this.multi_selection = s;
+                            this.attrTableSelect.emit({ action: 'select', ent_type: 'multiple', id: this.multi_selection});
+                            this.generateTopoTable(this.topoID, this.topoTabIndex, this.current_selected);
+                        }
+                        break;
+                    }
                     break;
                 }
             }
@@ -301,7 +325,7 @@ export class AttributeComponent implements OnChanges {
         this.displayedTopoColumns = topoHeader;
         this.dataSourceTopo.data = topoDataSource;
         this.dataSourceTopo.paginator = this.paginator.toArray()[6];
-        this.topoSelectedType = selected_type;
+        this.topoSelectedType = selected_type.slice(0, 2);
         if (this.topoTabIndex === tabIndex && this.topoID === ent_id) {
             setTimeout(() => {
                 document.getElementById('topotable--container').scrollTop = currentScroll;
@@ -352,9 +376,18 @@ export class AttributeComponent implements OnChanges {
             } else if (tabIndex === 6) {
             } else if (tabIndex === 7) {
             } else {
+                this.lastShowingColMap[this.currentTab] = this.currentShowingCol;
                 this.generateTable(tabIndex);
             }
+            if (this.lastShowingColMap[tabIndex]) {
+                this.currentShowingCol = this.lastShowingColMap[tabIndex];
+                this.attribLabel.emit(this.lastShowingColMap[tabIndex]);
+            } else {
+                this.currentShowingCol = '_id';
+                this.attribLabel.emit('_id');
+            }
             this.last_selected = undefined;
+            this.currentTab = tabIndex;
         });
         sessionStorage.setItem('mpm_showSelected', JSON.stringify(this.showSelected));
     }
@@ -628,27 +661,6 @@ export class AttributeComponent implements OnChanges {
 
     prevTopo() {
         if (!this.topoID || !this.topoTabIndex) { return; }
-    }
-
-    add_remove_selected(ent_id, event) {
-        const ent_type = ent_id.substr(0, 2);
-        const id = Number(ent_id.substr(2));
-        const target = event.target || event.srcElement || event.currentTarget;
-        if (this.selected_ents.has(ent_id)) {
-            this.attrTableSelect.emit({ action: 'unselect', ent_type: ent_type, id: id });
-            this.selected_ents.delete(ent_id);
-            // @ts-ignore
-            target.parentNode.classList.remove('selected-row');
-        } else {
-            if (event.shiftKey) {
-                this.shiftKeyPressed = true;
-                // console.log(ent_id);
-            }
-            this.attrTableSelect.emit({ action: 'select', ent_type: ent_type, id: id });
-            this.selected_ents.set(ent_id, id);
-            // @ts-ignore
-            target.parentNode.classList.add('selected-row');
-        }
     }
 
     showAttribLabel($event, column) {
