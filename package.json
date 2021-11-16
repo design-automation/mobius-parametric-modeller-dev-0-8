@@ -21,7 +21,7 @@
     "lint": "ng lint",
     "lint-fix": "ng lint --fix",
     "e2e": "ng e2e",
-    "postinstall": "npm run moduleDocs && npm run mod3js",
+    "postinstall": "node version.js && npm run moduleDocs && npm run mod3js",
     "moduleDocs": "npm run typedoc && node ./src/assets/typedoc-json/docConvert.js && node version.js && npm run resizeImg",
     "mod3js": "node mod3js.js",
     "typedoc": "copy src\\assets\\typedoc-json\\__doc__.json src\\assets\\typedoc-json\\doc.json && typedoc --exclude **/*.spec.ts --json src/assets/typedoc-json/doc.json src/assets/core/modules",
