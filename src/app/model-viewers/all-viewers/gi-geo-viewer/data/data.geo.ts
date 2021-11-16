@@ -90,11 +90,11 @@ export class DataGeo {
         // ORBIT: {mouseButton: 0, keyboard: 17, enable: true, finger: 2}
         // PAN: {mouseButton: 2, up: 38, bottom: 40, left: 37, right: 39, up: 38}
         // PANORAMIC: {mouseButton: 0, keyboard: 16, enable: true}
-        this.view.controls.states.ORBIT = {mouseButton: itowns.THREE.MOUSE.LEFT, enable: true, finger: 2};
-        // this.view.controls.states.PAN = {mouseButton: 2, bottom: 40, left: 37, right: 39, up: 38, enable: true};
-        // this.view.controls.states.MOVE_GLOBE = {mouseButton: 0, keyboard: 17, enable: true, finger: 1};
-        this.view.controls.states.PAN = {mouseButton: itowns.THREE.MOUSE.LEFT, keyboard: 17, enable: true, finger: 1};
-        this.view.controls.states.MOVE_GLOBE = {mouseButton: itowns.THREE.MOUSE.RIGHT, bottom: 40, left: 37, right: 39, up: 38, enable: true};
+        this.view.controls.states.setFromOptions({
+            ORBIT: {mouseButton: itowns.THREE.MOUSE.LEFT, enable: true, finger: 2},
+            PAN: {mouseButton: itowns.THREE.MOUSE.LEFT, keyboard: 17, enable: true, finger: 1},
+            MOVE_GLOBE: {mouseButton: itowns.THREE.MOUSE.RIGHT, bottom: 40, left: 37, right: 39, up: 38, enable: true}
+        });
 
         let layerIndex = 0;
         if ( this.settings && this.settings.imagery && this.settings.imagery.layer ) {
