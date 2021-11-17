@@ -195,7 +195,7 @@ export class DataGeo {
         }
         if (newSetting.camera) {
             if (newSetting.camera.pos) {
-                if (newSetting.camera.pos.x !== 0 &&
+                if (newSetting.camera.pos.x && newSetting.camera.pos.y && newSetting.camera.pos.z &&
                     this.settings.camera.pos.x !== newSetting.camera.pos.x &&
                     this.settings.camera.pos.y !== newSetting.camera.pos.y &&
                     this.settings.camera.pos.z !== newSetting.camera.pos.z) {
@@ -334,8 +334,10 @@ export class DataGeo {
 
         // this.view.scene.add(lighting);
         if (updatePos) {
-            this.view.camera.camera3D.position.set(this.settings.camera.pos.x, this.settings.camera.pos.y, this.settings.camera.pos.z);
-            this.view.camera.camera3D.rotation.set(this.settings.camera.rot.x, this.settings.camera.rot.y, this.settings.camera.rot.z);
+            if (this.settings.camera.pos.x && this.settings.camera.pos.y && this.settings.camera.pos.z) {
+                this.view.camera.camera3D.position.set(this.settings.camera.pos.x, this.settings.camera.pos.y, this.settings.camera.pos.z);
+                this.view.camera.camera3D.rotation.set(this.settings.camera.rot.x, this.settings.camera.rot.y, this.settings.camera.rot.z);
+            }
             this.view.notifyChange();
         } else {
             // this.lookAtObj(threejsScene);
