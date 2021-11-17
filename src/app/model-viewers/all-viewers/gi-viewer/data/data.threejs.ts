@@ -195,8 +195,8 @@ export class DataThreejs extends DataThreejsLookAt {
         // }
 
         this._addPosis(threejs_data.posis_indices, posis_xyz_buffer, this.settings.colors.position, this.settings.positions.size);
-        this._addPointLabels(model);
 
+        await this._addPointLabels(model);
         await this._addPlaneLabels(model);
 
     }
@@ -753,7 +753,7 @@ export class DataThreejs extends DataThreejsLookAt {
     /**
      * Add threejs points to the scene
      */
-     private _addPointLabels(model: GIModel): void {
+    private async _addPointLabels(model: GIModel) {
         const labels = model.modeldata.attribs.get.getModelAttribVal('labels');
         if (!labels || !Array.isArray(labels) || labels.length === 0) {
             return;
@@ -781,7 +781,7 @@ export class DataThreejs extends DataThreejsLookAt {
 
             const fontCode = `${fontType}_${fontWeight}_${fontStyle}`;
             if (!this._text_font[fontCode]) {
-                this._loadFont(fontCode);
+                await this._loadFont(fontCode);
             }
             const shape = this._text_font[fontCode].generateShapes( labelText, labelSize);
             const geom = new THREE.ShapeBufferGeometry(shape);
