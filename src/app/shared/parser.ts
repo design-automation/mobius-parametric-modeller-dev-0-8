@@ -751,9 +751,9 @@ function analyzeVar(comps: {'type': strType, 'value': string}[], i: number, vars
                     {'error'?: string, 'i'?: number, 'value'?: number, 'str'?: string, 'jsStr'?: string} {
     const comp = comps[i];
 
-    if (globals.indexOf(comp.value.toUpperCase()) !== -1 && !disallowAt) {
-        comp.value = comp.value.toUpperCase();
-    }
+    // if (globals.indexOf(comp.value.toUpperCase()) !== -1 && !disallowAt) {
+    //     comp.value = comp.value.toUpperCase();
+    // }
 
     let newString = comp.value;
     let jsString = comp.value;
