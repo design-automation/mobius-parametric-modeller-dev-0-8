@@ -209,6 +209,11 @@ export class AttributeComponent implements OnChanges {
                             this.multi_selection = s;
                             this.attrTableSelect.emit({ action: 'select', ent_type: 'multiple', id: this.multi_selection});
                             this.generateTopoTable(this.topoID, this.topoTabIndex, this.current_selected);
+                            localStorage.setItem('mpm_attrib_current_topo_obj', this.string_map[this.topoSelectedType].toString());
+                            if (this.lastShowingColMap['topo'] && this.lastShowingColMap['topo'][0] === this.topoSelectedType) {
+                                this.attribLabel.emit('');
+                                this.attribLabel.emit(this.lastShowingColMap['topo'][1]);
+                            }
                         }
                         break;
                     }
@@ -671,6 +676,9 @@ export class AttributeComponent implements OnChanges {
         } else {
             this.currentShowingCol = column;
             this.attribLabel.emit(column);
+        }
+        if (this.currentTab === 6) {
+            this.lastShowingColMap['topo'] = [this.topoSelectedType, this.currentShowingCol];
         }
     }
 
