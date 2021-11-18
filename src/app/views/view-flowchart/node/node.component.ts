@@ -29,6 +29,15 @@ export class NodeComponent {
         this.node.position = position;
     }
 
+
+    /*
+    check and update the name of the node
+    */
+    updateNodeName(event) {
+        this.node.name = event.replace(/[\'\"\`\\\/]/g, '');
+        (<HTMLTextAreaElement> document.getElementById(this.node.id)).value = this.node.name;
+    }
+
     /*
     select a node
     */
