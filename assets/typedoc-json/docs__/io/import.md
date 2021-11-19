@@ -15,7 +15,7 @@ Note that a script using a file in local storage may fail when others try to ope
   
   
 **Parameters:**  
-  * *input\_data:* undefined  
+  * *data\_url:* The url to retrieve the data from  
   * *data\_format:* Enum, the file format.  
   
 **Returns:** A list of the positions, points, polylines, polygons and collections added to the model.  

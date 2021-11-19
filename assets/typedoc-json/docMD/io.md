@@ -27,6 +27,24 @@ The `io` module has functions for importing and exporting.
 **Returns:** whether the data is successfully saved.  
   
   
+## ImportData  
+  
+  
+**Description:** Imports a string of data into the model.
+
+  
+  
+**Parameters:**  
+  * *model\_data:* The model data  
+  * *data\_format:* Enum, the file format.  
+  
+**Returns:** A list of the positions, points, polylines, polygons and collections added to the model.  
+**Examples:**  
+  * io.Import ("my_data.obj", obj)  
+    Imports the data from my_data.obj, from local storage.
+  
+  
+  
 ## Import  
   
   
@@ -44,13 +62,31 @@ Note that a script using a file in local storage may fail when others try to ope
   
   
 **Parameters:**  
-  * *input\_data:* undefined  
+  * *data\_url:* The url to retrieve the data from  
   * *data\_format:* Enum, the file format.  
   
 **Returns:** A list of the positions, points, polylines, polygons and collections added to the model.  
 **Examples:**  
   * io.Import ("my_data.obj", obj)  
     Imports the data from my_data.obj, from local storage.
+  
+  
+  
+## ExportData  
+  
+  
+**Description:** Export data from the model as a string.
+
+  
+  
+**Parameters:**  
+  * *entities:* Optional. Entities to be exported. If null, the whole model will be exported.  
+  * *data\_format:* Enum, the file format.  
+  
+**Returns:** the model data as a string.  
+**Examples:**  
+  * io.Export (#pg, 'my_model.obj', obj)  
+    Exports all the polgons in the model as an OBJ.
   
   
   
