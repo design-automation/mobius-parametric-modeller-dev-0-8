@@ -250,6 +250,7 @@ button.mat-menu-item:hover{
     position: relative;
     background-color: $color6;
     margin-top: 50px;
+    max-height: calc(100% - 100px);
     // top: 10%;
     input {
         vertical-align: bottom;
@@ -517,16 +518,16 @@ button.mat-menu-item:hover{
             font-weight: 700;
             display: inline-block;
             width: 178px;
-            height: calc(50vh + 30px);
+            height: 395px;
             overflow-y: scroll;
             border: 1px solid $color4;
             .searchBar{
-                position: fixed;
+                position: absolute;
                 z-index: 2;
                 width: 164px;
                 font-size: 12px;
                 padding: 0px 0px 0px 0px;
-                margin: 2px;
+                margin: 4px 2px 4px 2px;
                 // border: 1px solid $color4;
                 height: $fsize1;
                 // border-bottom: 5px solid $color6;
@@ -535,7 +536,7 @@ button.mat-menu-item:hover{
         }
         .inlineFuncHelpContainer{
             display: inline-block;
-            width: 380px;
+            width: calc(100% - 220px);
             height: 395px;
             overflow-y: scroll;
             padding: 0px 15px 15px 15px;
