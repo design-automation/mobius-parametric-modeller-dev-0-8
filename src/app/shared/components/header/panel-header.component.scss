@@ -524,14 +524,21 @@ button.mat-menu-item:hover{
             .searchBar{
                 position: absolute;
                 z-index: 2;
-                width: 164px;
-                font-size: 12px;
-                padding: 0px 0px 0px 0px;
-                margin: 4px 2px 4px 2px;
-                // border: 1px solid $color4;
-                height: $fsize1;
-                // border-bottom: 5px solid $color6;
-                border: 1px solid $color5;
+                padding: 0px;
+                width: fit-content;
+                height: fit-content;
+                background-color: $color6;
+                border: 0px;
+                .searchInput {
+                    width: 164px;
+                    font-size: 12px;
+                    padding: 0px 0px 0px 0px;
+                    margin: 4px 2px 6px 2px;
+                    // border: 1px solid $color4;
+                    height: $fsize1;
+                    // border-bottom: 5px solid $color6;
+                    border: 1px solid $color5;
+                }
             }
         }
         .inlineFuncHelpContainer{
