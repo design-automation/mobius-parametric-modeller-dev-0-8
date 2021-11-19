@@ -696,7 +696,7 @@ async function getURLContent(url: string): Promise<any> {
 }
 async function openZipFile(zipFile) {
     const result = {};
-    await JSZip.loadAsync(zipFile).then(async function (zip) {
+    await JSZip.loadAsync(zipFile.arrayBuffer()).then(async function (zip) {
         for (const filename of Object.keys(zip.files)) {
             // const splittedNames = filename.split('/').slice(1).join('/');
             await zip.files[filename].async('text').then(function (fileData) {
