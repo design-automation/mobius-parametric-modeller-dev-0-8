@@ -315,7 +315,9 @@
         <p>Expression Builder</p>
         <br>
         <div class='inlineFuncContainer'>
-            <input id='search_inline' class='searchBar' placeholder='Search Inline Function' value='' (keyup)="searchInlineFuncs()">
+            <div class='searchBar'>
+                <input class='searchInput' id='search_inline' placeholder='Search Inline Function' value='' (keyup)="searchInlineFuncs()">
+            </div>
             <br>
             <br>
             <ng-container *ngFor='let fnCategory of searchedInlineFunc'>
