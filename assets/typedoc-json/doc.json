@@ -250,7 +250,7 @@
           "sources": [
             {
               "fileName": "inline/_colors.ts",
-              "line": 15,
+              "line": 16,
               "character": 16
             }
           ],
@@ -355,7 +355,7 @@
           "sources": [
             {
               "fileName": "inline/_colors.ts",
-              "line": 77,
+              "line": 87,
               "character": 16
             }
           ],
@@ -367,8 +367,9 @@
               "kindString": "Call signature",
               "flags": {},
               "comment": {
-                "shortText": "Creates a colour from a string representation. Examples of strings are as follows:",
-                "text": "- \"rgb(255, 0, 0)\"\n- \"rgb(100%, 0%, 0%)\"\n- \"hsl(0, 100%, 50%)\"\n- '#ff0000'\n- '#f00'\n- 'skyblue'\n\nFor colour names, all 140 names are supported. See <a\nhref=\"https://www.w3schools.com/colors/colors_names.asp\" target=\"_blank\">w3schools</a>. Note that\nthe names are all lowercase. CamelCase names are not supported.\n\nThe function is overloaded. If you pass in a list of strings, it will return a list of colours.\n"
+                "shortText": "Creates a color from a string representation.",
+                "text": "\\n\n\nExamples of color strings are as follows:\n\n- `colFromStr( \"rgb(255, 0, 0)`\" )`\n- `colFromStr( \"rgb(100%, 0%, 0%)`\" )`\n- `colFromStr( \"hsl(0, 100%, 50%)`\" )`\n- `colFromStr( \"#ff0000\" )`\n- `colFromStr( \"#FFAABB\" )`\n- `colFromStr( \"#f00\" )`\n- `colFromStr( \"skyblue\" )`\n- `colFromStr( \"Maroon\" )`\n- `colFromStr( \"MediumSeaGreen\" )`\n\nFor colour names, all 140 names are supported. See <a\nhref=\"https://www.w3schools.com/colors/colors_names.asp\" target=\"_blank\">w3schools</a>.\n\nIf the string cannot be interpreted as a color, then `[1, 1, 1]` is returned (i.e. white).\n\nThe function is overloaded. If you pass in a list of strings, it will return a list of colors.\n",
+                "returns": "A list of three numbers, `[r, g, b]`, in the range 0 to 1.\n"
               },
               "parameters": [
                 {
@@ -388,9 +389,7 @@
                   "kind": 32768,
                   "kindString": "Parameter",
                   "flags": {},
-                  "comment": {
-                    "shortText": "\n"
-                  },
+                  "comment": {},
                   "type": {
                     "type": "union",
                     "types": [
@@ -437,7 +436,7 @@
           "sources": [
             {
               "fileName": "inline/_colors.ts",
-              "line": 40,
+              "line": 41,
               "character": 16
             }
           ],
@@ -798,7 +797,7 @@
             "type": "intrinsic",
             "name": "number"
           },
-          "defaultValue": "..."
+          "defaultValue": "Math.PI"
         },
         {
           "id": 1903,
@@ -820,7 +819,7 @@
             "type": "reference",
             "name": "TPlane"
           },
-          "defaultValue": "..."
+          "defaultValue": "XYPLANE"
         },
         {
           "id": 1908,
@@ -842,7 +841,7 @@
             "type": "reference",
             "name": "TPlane"
           },
-          "defaultValue": "..."
+          "defaultValue": "XZPLANE"
         },
         {
           "id": 1906,
@@ -864,7 +863,7 @@
             "type": "reference",
             "name": "TPlane"
           },
-          "defaultValue": "..."
+          "defaultValue": "YXPLANE"
         },
         {
           "id": 1904,
@@ -886,7 +885,7 @@
             "type": "reference",
             "name": "TPlane"
           },
-          "defaultValue": "..."
+          "defaultValue": "YZPLANE"
         },
         {
           "id": 1905,
@@ -908,7 +907,7 @@
             "type": "reference",
             "name": "TPlane"
           },
-          "defaultValue": "..."
+          "defaultValue": "ZXPLANE"
         },
         {
           "id": 1907,
@@ -930,7 +929,7 @@
             "type": "reference",
             "name": "TPlane"
           },
-          "defaultValue": "..."
+          "defaultValue": "ZYPLANE"
         }
       ],
       "groups": [
@@ -36184,7 +36183,7 @@
                   ]
                 }
               },
-              "defaultValue": "..."
+              "defaultValue": "__clone__"
             },
             {
               "id": 1945,
@@ -36320,7 +36319,7 @@
                   ]
                 }
               },
-              "defaultValue": "..."
+              "defaultValue": "__merge__"
             },
             {
               "id": 1943,
@@ -36379,7 +36378,7 @@
                   ]
                 }
               },
-              "defaultValue": "..."
+              "defaultValue": "__new__"
             },
             {
               "id": 1951,
@@ -36394,7 +36393,7 @@
                   "name": "GIMetaData"
                 }
               },
-              "defaultValue": "..."
+              "defaultValue": "GIMetaData"
             },
             {
               "id": 1964,
