@@ -815,7 +815,9 @@ async function loadFromFileSystem(filecode): Promise<any> {
     return await p;
 }
 export async function _getFile(source: string) {
-    if (source.indexOf('://') !== -1) {
+    if (source.startsWith('__model_data__')) {
+        return source.substring(14);
+    } else if (source.indexOf('://') !== -1) {
         const val = source.replace(/ /g, '');
         const result = await getURLContent(val);
         if (result === undefined) {
@@ -829,7 +831,7 @@ export async function _getFile(source: string) {
         }
     } else {
         if (source.length > 1 && source[0] === '{') {
-            return null;
+            return source;
         }
         const val = source.replace(/\"|\'/g, '');
         const backup_list: string[] = JSON.parse(localStorage.getItem('mobius_backup_list'));
