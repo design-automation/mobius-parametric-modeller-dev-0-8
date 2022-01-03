@@ -831,7 +831,7 @@ export async function _getFile(source: string) {
         }
     } else {
         if (source.length > 1 && source[0] === '{') {
-            return null;
+            return source;
         }
         const val = source.replace(/\"|\'/g, '');
         const backup_list: string[] = JSON.parse(localStorage.getItem('mobius_backup_list'));
