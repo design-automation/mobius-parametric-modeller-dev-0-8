@@ -55,10 +55,13 @@ export class CodeUtils {
                             varDict.push([varList[ind], tempVar]);
                             assembledVarList.push(tempVar);
                         } else {
+                            if (varList[ind].indexOf('[') === -1 && existingVars.indexOf(varList[ind]) === -1) {
+                                existingVars.push(varList[ind])
+                                codeStr.push(`let ${varList[ind]};`)
+                            }
                             assembledVarList.push(varList[ind]);
                         }
                     }
-                    codeStr.push(`[${assembledVarList.join(',')}] = ${args[1].jsValue};`);
                     for (const varSet of varDict) {
                         const repVar = this.repSetAttrib(varSet[0]);
                         if (!repVar) {
@@ -287,6 +290,10 @@ export class CodeUtils {
                             varDict.push([varList[ind], tempVar]);
                             assembledVarList.push(tempVar);
                         } else {
+                            if (varList[ind].indexOf('[') === -1 && existingVars.indexOf(varList[ind]) === -1) {
+                                existingVars.push(varList[ind])
+                                codeStr.push(`let ${varList[ind]};`)
+                            }
                             assembledVarList.push(varList[ind]);
                         }
                     }
@@ -354,6 +361,10 @@ export class CodeUtils {
                             varDict.push([varList[ind], tempVar]);
                             assembledVarList.push(tempVar);
                         } else {
+                            if (varList[ind].indexOf('[') === -1 && existingVars.indexOf(varList[ind]) === -1) {
+                                existingVars.push(varList[ind])
+                                codeStr.push(`let ${varList[ind]};`)
+                            }
                             assembledVarList.push(varList[ind]);
                         }
                     }
@@ -432,6 +443,10 @@ export class CodeUtils {
                             varDict.push([varList[ind], tempVar]);
                             assembledVarList.push(tempVar);
                         } else {
+                            if (varList[ind].indexOf('[') === -1 && existingVars.indexOf(varList[ind]) === -1) {
+                                existingVars.push(varList[ind])
+                                codeStr.push(`let ${varList[ind]};`)
+                            }
                             assembledVarList.push(varList[ind]);
                         }
                     }
@@ -479,6 +494,10 @@ export class CodeUtils {
                     if (varList[ind].indexOf('@') !== -1) {
                         assembledVarList.push(`tempVar${ind}__`);
                     } else {
+                        if (varList[ind].indexOf('[') === -1 && existingVars.indexOf(varList[ind]) === -1) {
+                            existingVars.push(varList[ind])
+                            codeStr.push(`let ${varList[ind]};`)
+                        }
                         assembledVarList.push(varList[ind]);
                     }
                 }
