@@ -145,7 +145,7 @@
 </div>
 
 <dialog id='headerDialog'>
-    <button class='closebutton' (click)='closeDialog(false)'><mat-icon class='icon'>close</mat-icon></button>
+    <button class='closebutton' (click)='closeDialog(false)'><mat-icon class='icon' svgIcon='icon_close'></mat-icon></button>
     <div id='headerDialog_publish'>
         <p>In order publish your script, your Möbius (.mob) file needs to be uploaded to cloud. Clicking the 'Upload' button 
         will upload the currently open script to the Mobius cloud. The file will be saved on the cloud for 1 year, after which it will be
@@ -283,8 +283,8 @@
         <br>
         <button id='addBackupButton' onclick="document.getElementById('addBackup').click();">+</button>
         <input id='addBackup' type="file" (change)="addBackup()" style=" display: none;"/>
-        <button class='downloadBackupButton' (click)="downloadBackup($event)"><mat-icon class='icon'>cloud_download_outline</mat-icon></button>
-        <button class='deleteBackupButton' (click)="deleteBackup($event)"><mat-icon class='icon'>delete_outline</mat-icon></button>
+        <button class='downloadBackupButton' (click)="downloadBackup($event)"><mat-icon class='icon' svgIcon='icon_cloud_download'></mat-icon></button>
+        <button class='deleteBackupButton' (click)="deleteBackup($event)"><mat-icon class='icon' svgIcon='icon_delete'></mat-icon></button>
     </div>
     <div id='headerDialog_globalfunc'>
         <p>Manage Global Functions: </p>
@@ -293,19 +293,19 @@
             <button class='globalFuncName' disabled>{{fn.name}}</button>
             <button class='manageGlobalButton' (click)='refresh_global_func($event, fn)'
             title='Refresh the function with mob file with the same name in the local storage'>
-                <mat-icon class='icon'>cached</mat-icon>
+                <mat-icon class='icon' svgIcon='icon_cached'></mat-icon>
             </button>
             <button class='manageGlobalButton' (click)='edit_global_func($event, fn)'
             title='Edit the global function'>
-                <mat-icon class='icon'>edit</mat-icon>
+                <mat-icon class='icon' svgIcon='icon_edit'></mat-icon>
             </button>
             <button class='manageGlobalButton' (click)='download_global_func($event, fn)'
             title='Download the global function'>
-                <mat-icon class='icon'>get_app</mat-icon>
+                <mat-icon class='icon' svgIcon='icon_get_app'></mat-icon>
             </button>
             <button class='manageGlobalButton' (click)='delete_global_func($event, fn)'
             title='Delete the global function'>
-                <mat-icon class='icon'>delete_outline</mat-icon>
+                <mat-icon class='icon' svgIcon='icon_delete'></mat-icon>
             </button>
         </div>
         <button class='addGlobalButton' (click)="addGlobalFunc($event)">Import File</button>

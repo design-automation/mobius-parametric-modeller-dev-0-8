@@ -18,13 +18,13 @@
             <!-- data viewers panel -->
             <div class='content__viewer' >
                 <button class="sliderBtn" mat-icon-button (click)='toggleSlider()'>
-                    <mat-icon *ngIf='getSplit() === 100; else other_icon'>chevron_right</mat-icon>
+                    <mat-icon *ngIf='getSplit() === 100; else other_icon' svgIcon='icon_chevron_right'></mat-icon>
                     <ng-template #other_icon>
                         <mat-icon svgIcon='icon_chevron_left'></mat-icon>
                     </ng-template>
                 </button>
                 <button id='attribToggle' class="attribBtn" mat-icon-button (click)='toggleAttrib()' [class.closed] = 'getAttribSplit() === 0'>
-                    <mat-icon *ngIf='getAttribSplit() === 0; else hide_attrib'>expand_less</mat-icon>
+                    <mat-icon *ngIf='getAttribSplit() === 0; else hide_attrib' svgIcon='icon_expand_less'></mat-icon>
                     <ng-template #hide_attrib>
                         <mat-icon svgIcon='icon_expand_more'></mat-icon>
                     </ng-template>
