@@ -1,16 +1,16 @@
-import * as THREE from 'three';
+import { xfromSourceTargetMatrix } from '@assets/libs/geom/matrix';
+import { EAttribNames, EEntType, TColor, TPlane } from '@libs/geo-info/common';
 import { GIModel } from '@libs/geo-info/GIModel';
 import { IThreeJS } from '@libs/geo-info/ThreejsJSON';
-import { EEntType, EAttribNames, TPlane, TColor } from '@libs/geo-info/common';
-import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import { DataService } from '@services';
-import { Vector } from '@assets/core/modules/basic/calc';
-import { ISettings } from './data.threejsSettings';
+import * as THREE from 'three';
+import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
+import { VertexNormalsHelper } from 'three/examples/jsm/helpers/VertexNormalsHelper';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import { mergeBufferGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 import { DataThreejsLookAt } from './data.threejsLookAt';
-import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { VertexNormalsHelper } from 'three/examples/jsm/helpers/VertexNormalsHelper';
-import { xfromSourceTargetMatrix } from '@assets/libs/geom/matrix';
+import { ISettings } from './data.threejsSettings';
 
 enum MaterialType {
     MeshBasicMaterial = 'MeshBasicMaterial',
@@ -19,7 +19,7 @@ enum MaterialType {
     MeshPhongMaterial = 'MeshPhongMaterial',
     MeshPhysicalMaterial = 'MeshPhysicalMaterial'
 }
-const textFontLoader = new THREE.FontLoader();
+const textFontLoader = new FontLoader();
 
 /**
  * ThreejsScene Add
@@ -738,7 +738,7 @@ export class DataThreejs extends DataThreejsLookAt {
             pgonTextShapes.push(geom);
         }
         if (pgonTextShapes.length === 0) { return; }
-        const pgonMergedGeom = BufferGeometryUtils.mergeBufferGeometries(pgonTextShapes);
+        const pgonMergedGeom = mergeBufferGeometries(pgonTextShapes);
         const pgonText = new THREE.Mesh(pgonMergedGeom , new THREE.MeshBasicMaterial( {
             transparent: false,
             side: THREE.DoubleSide,
@@ -825,7 +825,7 @@ export class DataThreejs extends DataThreejsLookAt {
             shapes.push(geom);
         }
         if (shapes.length === 0) { return; }
-        const mergedGeom = BufferGeometryUtils.mergeBufferGeometries(shapes);
+        const mergedGeom = mergeBufferGeometries(shapes);
         const text = new THREE.Mesh(mergedGeom , matLite);
         this.scene.add(text);
         // this.renderer.render(this.scene, this.camera);

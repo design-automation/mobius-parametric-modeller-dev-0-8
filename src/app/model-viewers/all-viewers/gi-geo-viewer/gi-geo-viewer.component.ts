@@ -1,15 +1,15 @@
+import { Component, Input, OnDestroy } from '@angular/core';
 import { GIModel } from '@libs/geo-info/GIModel';
-import { OnDestroy } from '@angular/core';
-// import @angular stuff
-import { Component, Input } from '@angular/core';
-// import app services
 import { DataService as MD } from '@services';
-import { Vector3 } from 'three';
-import { DataGeoService } from './data/data.geo.service';
-import { GeoSettings, geo_default_settings } from './gi-geo-viewer.settings';
-import { DataService as ThreeJSDataService } from '../gi-viewer/data/data.service';
 import { ModalService } from '@shared/services/modal-window.service';
+import { Vector3 } from 'three';
 
+import { DataService as ThreeJSDataService } from '../gi-viewer/data/data.service';
+import { DataGeoService } from './data/data.geo.service';
+import { geo_default_settings, GeoSettings } from './gi-geo-viewer.settings';
+
+// import @angular stuff
+// import app services
 /**
  * GIViewerComponent
  * This component is used in /app/model-viewers/model-viewers-container.component.html

@@ -1,9 +1,10 @@
+import { EEntType, LONGLAT, TAttribDataTypes } from '@libs/geo-info/common';
 import { GIModel } from '@libs/geo-info/GIModel';
-import { GeoSettings } from '../gi-geo-viewer.settings';
-import { TAttribDataTypes, LONGLAT, EEntType } from '@libs/geo-info/common';
 import * as itowns from 'itowns/dist/itowns';
-import * as THREE from 'three';
 import * as suncalc from 'suncalc';
+import * as THREE from 'three';
+
+import { GeoSettings } from '../gi-geo-viewer.settings';
 
 
 export const API_MAPS = [

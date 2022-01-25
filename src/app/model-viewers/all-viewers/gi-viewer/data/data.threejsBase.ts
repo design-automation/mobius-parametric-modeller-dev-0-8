@@ -1,13 +1,13 @@
-import * as THREE from 'three';
-// import * as OrbitControls from 'three-orbit-controls';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-
 import { GIModel } from '@libs/geo-info/GIModel';
 import { DataService } from '@services';
-import { ISettings } from './data.threejsSettings';
-// import { WEBVR } from 'three/examples/jsm/vr/WebVR.js';
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { VertexNormalsHelper } from 'three/examples/jsm/helpers/VertexNormalsHelper';
 
+import { ISettings } from './data.threejsSettings';
+
+// import * as OrbitControls from 'three-orbit-controls';
+// import { WEBVR } from 'three/examples/jsm/vr/WebVR.js';
 
 const FONT_TYPES  = ['besley', 'opensans', 'roboto'];
 const FONT_SIZES  = ['light', 'medium', 'bold'];
@@ -116,15 +116,6 @@ export class DataThreejsBase {
             this.settings.directional_light.type = 'directional';
             localStorage.setItem('mpm_settings', JSON.stringify(this.settings));
         }
-        // const textFontLoader = new THREE.FontLoader();
-        // for (const fontType of FONT_TYPES) {
-        //     for (const fontSize of FONT_SIZES) {
-        //         for (const fontStyle of FONT_STYLES) {
-        //             const fontCode = `${fontType}_${fontSize}_${fontStyle}`;
-        //             textFontLoader.load( `assets/fonts/${fontCode}.json`, font => { this._text_font[fontCode] = font; });
-        //         }
-        //     }
-        // }
 
         // scene
         this.scene = new THREE.Scene();
