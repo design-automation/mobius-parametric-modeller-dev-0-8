@@ -5913,10 +5913,14 @@
                   },
                   {
                     "type": "reference",
+                    "qualifiedName": "math.MathArray",
+                    "package": "mathjs",
                     "name": "MathArray"
                   },
                   {
                     "type": "reference",
+                    "qualifiedName": "math.Matrix",
+                    "package": "mathjs",
                     "name": "Matrix"
                   }
                 ]
@@ -6328,6 +6332,8 @@
                   },
                   {
                     "type": "reference",
+                    "qualifiedName": "math.BigNumber",
+                    "package": "mathjs",
                     "name": "BigNumber"
                   }
                 ]
@@ -6394,10 +6400,14 @@
                   },
                   {
                     "type": "reference",
+                    "qualifiedName": "math.MathArray",
+                    "package": "mathjs",
                     "name": "MathArray"
                   },
                   {
                     "type": "reference",
+                    "qualifiedName": "math.Matrix",
+                    "package": "mathjs",
                     "name": "Matrix"
                   }
                 ]
@@ -6638,10 +6648,14 @@
                   },
                   {
                     "type": "reference",
+                    "qualifiedName": "math.MathArray",
+                    "package": "mathjs",
                     "name": "MathArray"
                   },
                   {
                     "type": "reference",
+                    "qualifiedName": "math.Matrix",
+                    "package": "mathjs",
                     "name": "Matrix"
                   }
                 ]
@@ -21883,6 +21897,8 @@
                     "name": "void"
                   }
                 ],
+                "qualifiedName": "Promise",
+                "package": "typescript",
                 "name": "Promise"
               }
             }
@@ -21995,6 +22011,8 @@
                     "name": "string"
                   }
                 ],
+                "qualifiedName": "Promise",
+                "package": "typescript",
                 "name": "Promise"
               }
             }
@@ -22287,6 +22305,8 @@
                     ]
                   }
                 ],
+                "qualifiedName": "Promise",
+                "package": "typescript",
                 "name": "Promise"
               }
             }
@@ -22558,6 +22578,8 @@
                     ]
                   }
                 ],
+                "qualifiedName": "Promise",
+                "package": "typescript",
                 "name": "Promise"
               }
             }
@@ -22648,9 +22670,13 @@
                 "typeArguments": [
                   {
                     "type": "reference",
+                    "qualifiedName": "Boolean",
+                    "package": "typescript",
                     "name": "Boolean"
                   }
                 ],
+                "qualifiedName": "Promise",
+                "package": "typescript",
                 "name": "Promise"
               }
             }
@@ -22857,6 +22883,8 @@
                     ]
                   }
                 ],
+                "qualifiedName": "Promise",
+                "package": "typescript",
                 "name": "Promise"
               }
             }
@@ -22936,6 +22964,8 @@
                     ]
                   }
                 ],
+                "qualifiedName": "Promise",
+                "package": "typescript",
                 "name": "Promise"
               }
             }
@@ -23013,9 +23043,13 @@
                 "typeArguments": [
                   {
                     "type": "reference",
+                    "qualifiedName": "Boolean",
+                    "package": "typescript",
                     "name": "Boolean"
                   }
                 ],
+                "qualifiedName": "Promise",
+                "package": "typescript",
                 "name": "Promise"
               }
             }
@@ -23102,6 +23136,8 @@
                     "name": "any"
                   }
                 ],
+                "qualifiedName": "Promise",
+                "package": "typescript",
                 "name": "Promise"
               }
             }
@@ -29757,6 +29793,8 @@
                   "flags": {},
                   "type": {
                     "type": "reference",
+                    "qualifiedName": "Matrix4",
+                    "package": "@types/three",
                     "name": "Matrix4"
                   }
                 },
@@ -33718,6 +33756,8 @@
                     "name": "string"
                   }
                 ],
+                "qualifiedName": "Promise",
+                "package": "typescript",
                 "name": "Promise"
               }
             }
@@ -33832,6 +33872,8 @@
                     }
                   }
                 ],
+                "qualifiedName": "Promise",
+                "package": "typescript",
                 "name": "Promise"
               }
             }
@@ -34289,6 +34331,8 @@
                     "name": "string"
                   }
                 ],
+                "qualifiedName": "Promise",
+                "package": "typescript",
                 "name": "Promise"
               }
             }
@@ -34349,6 +34393,8 @@
                     }
                   }
                 ],
+                "qualifiedName": "Promise",
+                "package": "typescript",
                 "name": "Promise"
               }
             }
