@@ -64,12 +64,13 @@ export class LoadUrlComponent {
     async loadStartUpURL(routerUrl: string): Promise<boolean> {
         const url = this.extractUrl(routerUrl);
         if (!url) { return; }
+        const nogridCheck = routerUrl.indexOf('nogrid=true') !== -1
         if (routerUrl.indexOf('node=') !== -1) {
             let nodeID: any = routerUrl.split('node=')[1].split('&')[0];
             nodeID = Number(nodeID.replace(/%22|%27|'/g, ''));
-            return await this.loadURL(url, nodeID, false);
+            return await this.loadURL(url, nodeID, false, false, nogridCheck);
         } else {
-            return await this.loadURL(url, null, false);
+            return await this.loadURL(url, null, false, false, nogridCheck);
         }
     }
 
@@ -103,7 +104,7 @@ export class LoadUrlComponent {
         return url;
     }
 
-    async loadURL(url: string, nodeID?: number, loadURLSettings?: any, newParams?: any): Promise<boolean> {
+    async loadURL(url: string, nodeID?: number, loadURLSettings?: any, newParams?: any, nogridCheck?: boolean): Promise<boolean> {
         const p = new Promise((resolve) => {
             const request = new XMLHttpRequest();
             if (url.indexOf('/') === -1) {
@@ -187,6 +188,12 @@ export class LoadUrlComponent {
         SaveFileComponent.clearModelData(this.dataService.flowchart);
         delete this.dataService.file.flowchart;
         this.dataService.file = loadeddata;
+        if (nogridCheck) {
+            const settings = JSON.parse(loadeddata.settings)
+            settings.grid.show = false;
+            settings.axes.show = false;
+            loadeddata.settings = JSON.stringify(settings)
+        }
         if (!loadURLSettings || !loadURLSettings.keepSettings) {
             if (updateGeoViewerSettings(loadeddata.settings)) {
                 this.dataService.geoViewerSettingsUpdated = true;
