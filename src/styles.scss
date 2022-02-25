@@ -135,10 +135,13 @@ as-split-area{
 //     padding: 0px;
 // }
 
-input, textarea, select, a { 
+textarea, select, a { 
     outline: none; 
 }
-
+input {
+    outline: none;
+    color: black;
+}
 // scroll bar
 
 ::-webkit-scrollbar {
