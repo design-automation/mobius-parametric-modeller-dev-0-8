@@ -462,7 +462,7 @@ export class DataAframe {
                 // this.camPosList.splice(this.camPosList.length - 1, 0, cam);
             }
             const viewpointsList = document.getElementById('aframe_viewpoints');
-            const newPointNum = this.camPosList.length - 2 - (viewpointsList.children.length / 2);
+            const newPointNum = this.camPosList.length - 1 - (viewpointsList.children.length / 2);
             if (newPointNum > 0) {
                 for (let j = 0; j < newPointNum; j++) {
                     const newPoint_tetra = document.createElement('a-tetrahedron');
@@ -485,7 +485,7 @@ export class DataAframe {
                 const pointPos = viewpointsList.children[k];
                 pointPos.setAttribute('visible', 'false');
                 const camPos = this.camPosList[Math.trunc(k / 2) + 1];
-                if (Math.trunc(k / 2) + 2 >= this.camPosList.length) {
+                if (Math.trunc(k / 2) + 1 >= this.camPosList.length) {
                     continue;
                 } else if (camPos.background_url) {
                     if (k % 2 === 0) { continue; }
@@ -569,7 +569,7 @@ export class DataAframe {
                 // skyBG.setAttribute('rotation', '0 0 0');
                 // skyFG.setAttribute('rotation', '0 0 0');
                 if (viewpointsList) {
-                    for (let i = 1; i < (this.camPosList.length - 1); i++) {
+                    for (let i = 1; i < this.camPosList.length; i++) {
                         const extra = this.camPosList[i].background_url ? 1 : 0;
                         viewpointsList.children[(i - 1) * 2 + extra].setAttribute('visible', true);
                     }
