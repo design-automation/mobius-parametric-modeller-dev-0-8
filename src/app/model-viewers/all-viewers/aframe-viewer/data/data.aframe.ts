@@ -1,10 +1,11 @@
-import { GIModel } from '@assets/libs/geo-info/GIModel';
-import * as THREE from 'three';
-import { AframeSettings } from '../aframe-viewer.settings';
 import * as Modules from '@assets/core/modules';
-import { _EEntType, _EFilterOperator } from '@assets/core/modules/basic/query';
+import { _EEntType } from '@assets/core/modules/basic/query';
 import { EEntType } from '@assets/libs/geo-info/common';
+import { GIModel } from '@assets/libs/geo-info/GIModel';
 import { processDownloadURL } from '@shared/utils/otherUtils';
+import * as THREE from 'three';
+
+import { AframeSettings } from '../aframe-viewer.settings';
 
 declare var AFRAME;
 const DEFAUT_CAMERA_POS = {
@@ -577,9 +578,10 @@ export class DataAframe {
             return;
         }
         this._currentPos = posDetails.name;
-
         if (viewpointsList) {
-            viewpointsList.children.forEach(vp => vp.setAttribute('visible', false));
+            for (const vp of viewpointsList.children) {
+                vp.setAttribute('visible', false);
+            }
         }
         const disablePosInput = <HTMLInputElement> document.getElementById('aframe-disablePosUpdate');
         if (disablePosInput) {
