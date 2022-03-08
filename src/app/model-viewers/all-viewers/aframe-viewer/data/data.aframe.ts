@@ -208,6 +208,25 @@ export class DataAframe {
                 }
             }
         }
+
+        // if there's a north attribute
+        if (this.model.modeldata.attribs.query.hasModelAttrib('north')) {
+
+            // get north attribute
+            const north_dir: any = this.model.modeldata.attribs.get.getModelAttribVal('north');
+
+            if (north_dir.constructor === [].constructor && north_dir.length === 2) {
+                // make the north vector and the default north vector
+                const model_cartesian = new THREE.Vector3(north_dir[0], north_dir[1], 0);
+                const north_cartesian = new THREE.Vector3(0, 1, 0);
+                let angle = north_cartesian.angleTo(model_cartesian);
+                if (north_cartesian.cross(model_cartesian).z > 0) {
+                    angle = -angle;
+                }
+                threeJSGroup.rotateZ(angle);
+            }
+        }
+
         threeJSGroup.name = 'mobius_geom';
         const entity = document.getElementById('mobius_geom');
         if (entity) {
