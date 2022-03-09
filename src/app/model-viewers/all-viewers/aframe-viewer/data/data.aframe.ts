@@ -448,7 +448,8 @@ export class DataAframe {
                 position: new AFRAME.THREE.Vector3(),
                 rotation: camEl.getAttribute('rotation')
             };
-            rigEl.object3D.getWorldPosition(camera_pos.position);
+            // rigEl.object3D.getWorldPosition(camera_pos.position);
+            camera_pos.position.copy(rigEl.getAttribute('position'));
             camera_pos.position.z =  - camera_pos.position.z;
             camera_pos.position.y = this.settings.camera.position.y;
             camera_pos.rotation.y = 0 - camera_pos.rotation.y;

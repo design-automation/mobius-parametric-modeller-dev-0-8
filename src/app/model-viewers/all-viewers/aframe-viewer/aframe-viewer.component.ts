@@ -1,20 +1,28 @@
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { GIModel } from '@libs/geo-info/GIModel';
-// import @angular stuff
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-// import app services
-import { DataService as MD } from '@services';
-import { ColorPickerService } from 'ngx-color-picker';
-import { DataAframeService } from './data/data.aframe.service';
-import { DataService as ThreeJSDataService } from '../gi-viewer/data/data.service';
-import { AframeSettings, aframe_default_settings } from './aframe-viewer.settings';
-import { ProcedureTypes } from '@models/procedure';
 import { NodeUtils } from '@models/node';
+import { ProcedureTypes } from '@models/procedure';
+import { DataService as MD } from '@services';
 import { checkNodeValidity } from '@shared/parser';
-import { DefaultSettings as DefaultGISettings } from '../gi-viewer/gi-viewer.settings';
-import {customLookControl, customWASDControl, keyboardControlComponent, movementControlComponent,
-    navAgentComponent, navMeshComponent, navSystem} from '@shared/utils';
 import { ModalService } from '@shared/services/modal-window.service';
+import {
+    customLookControl,
+    customWASDControl,
+    keyboardControlComponent,
+    movementControlComponent,
+    navAgentComponent,
+    navMeshComponent,
+    navSystem,
+} from '@shared/utils';
+import { ColorPickerService } from 'ngx-color-picker';
 
+import { DataService as ThreeJSDataService } from '../gi-viewer/data/data.service';
+import { DefaultSettings as DefaultGISettings } from '../gi-viewer/gi-viewer.settings';
+import { aframe_default_settings, AframeSettings } from './aframe-viewer.settings';
+import { DataAframeService } from './data/data.aframe.service';
+
+// import @angular stuff
+// import app services
 declare var AFRAME;
 function registerAframeComponents() {
     if (AFRAME.components['custom-look-controls']) { return; }
@@ -150,7 +158,7 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                 for (let i = 0 ; i < this.camPosList.length; i ++) {
                     if (this.dataService.aframeCamPos === this.camPosList[i].name) {
                         this.selectedCamPos = i;
-                        this.changePos(i);
+                        // this.changePos(i);
                         posCheck = true;
                     }
                 }
@@ -162,7 +170,7 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                         this.selectedCamPos = 0;
                         this.dataService.aframeCamPos = 'Default';
                     }
-                    this.changePos(this.selectedCamPos);
+                    // this.changePos(this.selectedCamPos);
                 }
             }
             if (this.camPosList.length === 1) {
@@ -186,14 +194,6 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
         const selectedIndex = Number(value);
         this.selectedCamPos = selectedIndex;
         const aframeData = this.dataService.getAframeData();
-        // if (selectedIndex === this.camPosList.length - 1) {
-        //     aframeData.updateCameraPos(null);
-        //     this.vr.enabled = true;
-        //     this.vr.background_url = this.settings.vr.background_url;
-        //     this.vr.foreground_url = this.settings.vr.foreground_url;
-        //     aframeData.updateVRSettings(this.vr);
-        //     aframeData.refreshModel(this.threeJSDataService.getThreejsScene());
-        // } else
         if (selectedIndex === 0) {
             aframeData.updateCameraPos(null);
             this.vr.enabled = false;

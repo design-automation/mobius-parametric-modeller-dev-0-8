@@ -1,21 +1,22 @@
 import { Component, isDevMode } from '@angular/core';
-import { FlowchartUtils } from '@models/flowchart';
-import { CodeUtils } from './code.util';
-import { INode } from '@models/node';
-import { IProcedure, ProcedureTypes } from '@models/procedure';
-
-import * as Modules from '@modules';
-import { DataService } from '@services';
-// import { WebWorkerService } from 'ngx-web-worker';
 import { Router } from '@angular/router';
-import { DataOutputService } from '@shared/services/dataOutput.service';
-import { SaveFileComponent } from '@shared/components/file';
 import { _parameterTypes } from '@assets/core/_parameterTypes';
 import { _varString } from '@assets/core/modules';
-import JSZip from 'jszip';
-import { WindowMessageComponent } from '@shared/components/window-message/window-message.component';
 import { EEntType } from '@assets/libs/geo-info/common';
+import { FlowchartUtils } from '@models/flowchart';
+import { INode } from '@models/node';
+import { IProcedure, ProcedureTypes } from '@models/procedure';
+import * as Modules from '@modules';
+import { DataService } from '@services';
+import { SaveFileComponent } from '@shared/components/file';
+import { WindowMessageComponent } from '@shared/components/window-message/window-message.component';
+import { checkNodeValidity } from '@shared/parser';
+import { DataOutputService } from '@shared/services/dataOutput.service';
+import JSZip from 'jszip';
 
+import { CodeUtils } from './code.util';
+
+// import { WebWorkerService } from 'ngx-web-worker';
 // function pythonList(x, l) {
 //     if (x < 0) {
 //         return x + l;
@@ -281,6 +282,8 @@ export class ExecuteComponent {
             if (!node.enabled) {
                 continue;
             }
+
+            checkNodeValidity(node);
 
             let validCheck = await this.checkProdValidity(node, node.localFunc);
             InvalidECheck = InvalidECheck || validCheck[0];

@@ -1,11 +1,11 @@
-import { OnChanges, Component, Input, AfterViewInit, OnDestroy, Output, EventEmitter, DoCheck } from '@angular/core';
-// import @angular stuff
-import {  } from '@angular/core';
-// import app services
-import { DataAframeService } from '../data/data.aframe.service';
-import { DataService as ThreeJSDataService } from '../../gi-viewer/data/data.service';
+import { AfterViewInit, Component, DoCheck, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import { GIModel } from '@libs/geo-info/GIModel';
 
+import { DataService as ThreeJSDataService } from '../../gi-viewer/data/data.service';
+import { DataAframeService } from '../data/data.aframe.service';
+
+// import @angular stuff
+// import app services
 declare var AFRAME;
 // const SKY_REFRESH_RATE = 200;
 
