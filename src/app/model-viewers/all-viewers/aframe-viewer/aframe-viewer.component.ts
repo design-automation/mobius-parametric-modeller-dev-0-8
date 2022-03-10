@@ -246,37 +246,37 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                 if (isNaN(value)) {
                     return;
                 }
-                this.temp_camera_pos.x = Math.round(value);
+                this.temp_camera_pos.x = value;
                 break;
             case 'camera.pos_y':
                 if (isNaN(value)) {
                     return;
                 }
-                this.temp_camera_pos.y = Math.round(value);
+                this.temp_camera_pos.y = value;
                 break;
             case 'camera.pos_z':
                 if (isNaN(value)) {
                     return;
                 }
-                this.temp_camera_pos.z = Math.round(value);
+                this.temp_camera_pos.z = value;
                 break;
             case 'camera.rot_x':
                 if (isNaN(value)) {
                     return;
                 }
-                this.temp_camera_rot.x = Math.round(value);
+                this.temp_camera_rot.x = value;
                 break;
             case 'camera.rot_y':
                 if (isNaN(value)) {
                     return;
                 }
-                this.temp_camera_rot.y = Math.round(value);
+                this.temp_camera_rot.y = value;
                 break;
             case 'camera.rot_z':
                 if (isNaN(value)) {
                     return;
                 }
-                this.temp_camera_rot.z = Math.round(value);
+                this.temp_camera_rot.z = value;
                 break;
             case 'camera.get_camera_pos':
                 const cam_pos_data = this.dataService.getAframeData().getCameraPos();
@@ -354,31 +354,31 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                 if (isNaN(value)) {
                     return;
                 }
-                this.vr.camera_position.x = Math.round(value);
+                this.vr.camera_position.x = value;
                 break;
             case 'vr.camera.pos_y':
                 if (isNaN(value)) {
                     return;
                 }
-                this.vr.camera_position.y = Math.round(value);
+                this.vr.camera_position.y = value;
                 break;
             case 'vr.camera.pos_z':
                 if (isNaN(value)) {
                     return;
                 }
-                this.vr.camera_position.z = Math.round(value);
+                this.vr.camera_position.z = value;
                 break;
             case 'vr.camera.rot_x':
                 if (isNaN(value)) {
                     return;
                 }
-                this.vr.camera_rotation.x = Math.round(value);
+                this.vr.camera_rotation.x = value;
                 break;
             case 'vr.camera.rot_y':
                 if (isNaN(value)) {
                     return;
                 }
-                this.vr.camera_rotation.y = Math.round(value);
+                this.vr.camera_rotation.y = value;
                 break;
             case 'camera.get_vr_camera_pos':
                 const vr_cam_pos_data = this.dataService.getAframeData().getCameraPos();
@@ -610,7 +610,7 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
 
     formatNumber(value) {
         if (!value) { value = 0; }
-        return Math.round(value * 100) / 100;
+        return Math.round(value * 1000) / 1000;
     }
     /**
      * Check whether the current settings has same structure with
