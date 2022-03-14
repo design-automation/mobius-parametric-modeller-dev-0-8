@@ -723,7 +723,8 @@ export class PanelHeaderComponent implements OnDestroy {
     onWindowCopy(event: KeyboardEvent) {
         if (this.router.url.startsWith('/editor')) {
             const targetName = (<HTMLElement> document.activeElement).nodeName;
-            if ( targetName === 'TEXTAREA' || targetName === 'INPUT') { return; }
+            if ( targetName === 'TEXTAREA' || targetName === 'INPUT' ||
+                ((<HTMLElement> event.target).nodeName === 'TEXTAREA' && (<HTMLTextAreaElement> event.target).disabled)) { return; }
             document.getElementById('copyProdButton').click();
         }
     }
