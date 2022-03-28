@@ -592,7 +592,9 @@ export class DataThreejs extends DataThreejsLookAt {
                     scale: 1,
                     dashSize: 1000,
                     gapSize: 0,
-                });
+                    linecap: 'round', // ignored by WebGLRenderer
+                    linejoin: 'round' // ignored by WebGLRenderer
+                        });
                 material_arr.push(mat);
             } else {
                 const mat = new THREE.LineDashedMaterial({
@@ -602,6 +604,8 @@ export class DataThreejs extends DataThreejsLookAt {
                     scale: element.scale || 1,
                     dashSize: element.dashSize || 2,
                     gapSize: element.gapSize !== null ? element.gapSize : 0,
+                    linecap: 'round', // ignored by WebGLRenderer
+                    linejoin: 'round' // ignored by WebGLRenderer
                 });
                 material_arr.push(mat);
             }
