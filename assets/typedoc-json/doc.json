@@ -782,7 +782,9 @@
           "name": "PI",
           "kind": 32,
           "kindString": "Variable",
-          "flags": {},
+          "flags": {
+            "isConst": true
+          },
           "comment": {
             "shortText": "The mathematical constant PI, 3.141..."
           },
@@ -804,7 +806,9 @@
           "name": "XY",
           "kind": 32,
           "kindString": "Variable",
-          "flags": {},
+          "flags": {
+            "isConst": true
+          },
           "comment": {
             "shortText": "A plane at the origin, aligned with the XY plane."
           },
@@ -826,7 +830,9 @@
           "name": "XZ",
           "kind": 32,
           "kindString": "Variable",
-          "flags": {},
+          "flags": {
+            "isConst": true
+          },
           "comment": {
             "shortText": "A plane at the origin, aligned with the XZ plane."
           },
@@ -848,7 +854,9 @@
           "name": "YX",
           "kind": 32,
           "kindString": "Variable",
-          "flags": {},
+          "flags": {
+            "isConst": true
+          },
           "comment": {
             "shortText": "A plane at the origin, aligned with the YX plane."
           },
@@ -870,7 +878,9 @@
           "name": "YZ",
           "kind": 32,
           "kindString": "Variable",
-          "flags": {},
+          "flags": {
+            "isConst": true
+          },
           "comment": {
             "shortText": "A plane at the origin, aligned with the YZ plane."
           },
@@ -892,7 +902,9 @@
           "name": "ZX",
           "kind": 32,
           "kindString": "Variable",
-          "flags": {},
+          "flags": {
+            "isConst": true
+          },
           "comment": {
             "shortText": "A plane at the origin, aligned with the ZX plane."
           },
@@ -914,7 +926,9 @@
           "name": "ZY",
           "kind": 32,
           "kindString": "Variable",
-          "flags": {},
+          "flags": {
+            "isConst": true
+          },
           "comment": {
             "shortText": "A plane at the origin, aligned with the ZY plane."
           },
@@ -36137,7 +36151,9 @@
       "name": "_parameterTypes",
       "kind": 32,
       "kindString": "Variable",
-      "flags": {},
+      "flags": {
+        "isConst": true
+      },
       "sources": [
         {
           "fileName": "_parameterTypes.ts",
@@ -36564,7 +36580,9 @@
       "name": "_varString",
       "kind": 32,
       "kindString": "Variable",
-      "flags": {},
+      "flags": {
+        "isConst": true
+      },
       "sources": [
         {
           "fileName": "_parameterTypes.ts",

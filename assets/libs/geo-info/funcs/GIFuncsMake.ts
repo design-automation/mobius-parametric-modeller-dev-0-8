@@ -613,8 +613,10 @@ export class GIFuncsMake {
         const edges_i: number[] = this.modeldata.geom.nav.navAnyToEdge(ent_type, index);
         const strip_posis_map: Map<number, number[]> = new Map();
         for (const edge_i of edges_i) {
-            // get exist posis_i
+            // get exist posis_i, should be 2 posis
             const exist_posis_i: number[] = this.modeldata.geom.nav.navAnyToPosi(EEntType.EDGE, edge_i);
+            // check if there is only one posi (i.e. the edge has two posis that are the same)
+            if (exist_posis_i.length === 1) { continue; }
             // create the new posis strip if necessary
             for (const exist_posi_i of exist_posis_i) {
                 if (strip_posis_map.get(exist_posi_i) === undefined) {
