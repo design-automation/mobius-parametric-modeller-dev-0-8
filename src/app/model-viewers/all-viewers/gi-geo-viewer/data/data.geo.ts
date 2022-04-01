@@ -1,6 +1,6 @@
 import { EEntType, LONGLAT, TAttribDataTypes } from '@libs/geo-info/common';
 import { GIModel } from '@libs/geo-info/GIModel';
-import * as itowns from 'itowns/dist/itowns';
+import * as itowns from 'itowns';
 import * as suncalc from 'suncalc';
 import * as THREE from 'three';
 
@@ -80,7 +80,7 @@ export class DataGeo {
         this.view = new itowns.GlobeView(this.container, placement);
         this.view.mainLoop.gfxEngine.renderer.setPixelRatio( window.devicePixelRatio );
         this.view.mainLoop.gfxEngine.renderer.shadowMap.enabled = true;
-        this.view.mainLoop.gfxEngine.renderer.shadowMap.type = itowns.THREE.PCFSoftShadowMap;
+        this.view.mainLoop.gfxEngine.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         this.camTarget = this.view.controls.getLookAtCoordinate();
         // this.viewControl = new itowns.GlobeControls(this.view, this.camTarget, 200);
 
@@ -92,9 +92,9 @@ export class DataGeo {
         // PAN: {mouseButton: 2, up: 38, bottom: 40, left: 37, right: 39, up: 38}
         // PANORAMIC: {mouseButton: 0, keyboard: 16, enable: true}
         this.view.controls.states.setFromOptions({
-            ORBIT: {mouseButton: itowns.THREE.MOUSE.LEFT, enable: true, finger: 2},
-            PAN: {mouseButton: itowns.THREE.MOUSE.LEFT, keyboard: 17, enable: true, finger: 1},
-            MOVE_GLOBE: {mouseButton: itowns.THREE.MOUSE.RIGHT, bottom: 40, left: 37, right: 39, up: 38, enable: true}
+            ORBIT: {mouseButton: THREE.MOUSE.LEFT, enable: true, finger: 2},
+            PAN: {mouseButton: THREE.MOUSE.LEFT, keyboard: 17, enable: true, finger: 1},
+            MOVE_GLOBE: {mouseButton: THREE.MOUSE.RIGHT, bottom: 40, left: 37, right: 39, up: 38, enable: true}
         });
 
         let layerIndex = 0;
@@ -246,7 +246,7 @@ export class DataGeo {
 
     refreshModel(threejsScene, updatePos = false) {
         this.removeMobiusObjs();
-        const threeJSGroup = new itowns.THREE.Group();
+        const threeJSGroup = new THREE.Group();
         threeJSGroup.name = 'mobius_geom';
 
 
@@ -370,7 +370,7 @@ export class DataGeo {
             }
         }
         if (!lighting_check) {
-            lighting = new itowns.THREE.DirectionalLight(0xFFFFFF, 1);
+            lighting = new THREE.DirectionalLight(0xFFFFFF, 1);
             lighting.name = 'mobius_lighting';
             this.view.scene.add(lighting);
         }

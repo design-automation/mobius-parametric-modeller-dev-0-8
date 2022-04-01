@@ -127,7 +127,14 @@ export class AframeViewerComponent implements OnInit, OnDestroy {
                 this.snapPosition(this.current_camera_pos);
             }
             if ((<HTMLInputElement>cameraUpdateData.children[2]).value) {
-                this.current_camera_rot = (<HTMLInputElement>cameraUpdateData.children[3]).value;
+                let rotVal = Number((<HTMLInputElement>cameraUpdateData.children[3]).value)
+                while (rotVal < -180) {
+                    rotVal += 360
+                }
+                while (rotVal > 180) {
+                    rotVal -= 360
+                }
+                this.current_camera_rot = rotVal.toFixed(2);
                 (<HTMLInputElement>cameraUpdateData.children[2]).value = null;
             }
         }, 100);
