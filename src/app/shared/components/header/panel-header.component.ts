@@ -155,6 +155,12 @@ export class PanelHeaderComponent implements OnDestroy {
             this.docModList[3].modnames.push('Modules.' + mod.module);
         }
 
+        window.onbeforeunload = function (e) {
+            e.preventDefault();
+            e.returnValue = '';
+            return false;
+        };
+        
     }
 
     ngOnDestroy() {
